@@ -450,19 +450,19 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
 def main():
     ensure_acervo()
     
-    # Limpar conflitos anteriores - forçar novo offset
+    # Forçar reset de todas as sessões getUpdates pendentes
     import requests
     try:
-        r = requests.get(f"https://api.telegram.org/bot{TOKEN}/getUpdates?timeout=1")
+        r = requests.get(f"https://api.telegram.org/bot{TOKEN}/getUpdates?offset=-1", timeout=5)
         if r.status_code == 200:
             data = r.json()
             if data.get('result'):
-                last_update = data['result'][-1]['update_id']
-                requests.get(f"https://api.telegram.org/bot{TOKEN}/getUpdates?offset={last_update + 1}")
+                last_id = data['result'][-1]['update_id']
+                requests.get(f"https://api.telegram.org/bot{TOKEN}/getUpdates?offset={last_id + 1}", timeout=5)
     except:
         pass
     
-    app = Application.builder().token(TOKEN).build()
+    app = Application.builder().token(TOKEN).connect_kwargs({"timeout": 30}).build()
     
     app.add_handler(CommandHandler("start", start_command))
     app.add_handler(CommandHandler("help", help_command))
