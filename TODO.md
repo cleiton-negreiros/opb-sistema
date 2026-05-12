@@ -10,7 +10,7 @@
 - [x] **Configurar GH CLI e autenticar** ✓
 - [x] Criar repositório Git no GitHub ✓
 - [x] Deploy inicial no Vercel ✓
-- [ ] Configurar CI/CD automático (GitHub Actions)
+- [x] Configurar CI/CD automático (GitHub Actions) ✓
 
 ### Agentes a Desenvolver
 - [ ] **Agente Coordenador** - Coordena todos os outros agentes
