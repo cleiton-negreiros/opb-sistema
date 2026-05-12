@@ -1,6 +1,10 @@
 # Output generated files
 output/
 
+# Obsidian (local settings)
+.obsidian/
+*.obsidian
+
 # Python
 __pycache__/
 *.py[cod]

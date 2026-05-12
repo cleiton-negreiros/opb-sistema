@@ -80,20 +80,22 @@ async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
         "🎯 *NegreirosBot - OPB Sistema*\n\n"
         "Olá! Sou seu assistant daily driver.\n\n"
-        "🌅 *Rotina:*\n"
-        "• /iniciar - Rotina matinal (contexto do dia)\n\n"
-        "📝 *Captura de ideias:*\n"
-        "• Envie uma ideia diretamente\n"
-        "• Use /ideia [sua ideia]\n\n"
-        "💻 *Sistema:*\n"
-        "• /status - Status completo\n"
-        "• /agents - Ver agentes\n"
-        "• /hub - Hub produtividade\n"
-        "• /projetos - Projetos ativos\n"
+        "🧠 *CÉREBRO:*\n"
+        "• /cerebro - Resumo completo\n"
+        "• /iniciar - Rotina matinal\n"
         "• /regras - Quem sou\n"
-        "• /transcrever - Transcrever vídeo\n"
-        "• /obsidian - Integracao Obsidian\n\n"
-        "⚠️ /executar [cmd] - Executar (apenas onde o bot está rodando)",
+        "• /projetos - Projetos ativos\n\n"
+        "💡 *IDEIAS:*\n"
+        "• Envie ideia diretamente\n"
+        "• /ideia [texto]\n"
+        "• /ideias - Ver ideias\n\n"
+        "🤖 *AGENTES:*\n"
+        "• /status - Status completo\n"
+        "• /agents - Ver agentes\n\n"
+        "🔗 *LINKS:*\n"
+        "• /hub - Hub produtividade\n"
+        "• /obsidian - Obsidian\n\n"
+        "⚠️ /executar - Executar comando (PC)",
         parse_mode="Markdown"
     )
 
@@ -209,6 +211,99 @@ async def regras_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text(f"📜 *Quem Sou:*\n\n{conteudo[:2000]}", parse_mode="Markdown")
     else:
         await update.message.reply_text("Arquivo de regras não encontrado.")
+
+async def cerebro_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Mostra resumo completo do cérebro"""
+    
+    # 1. Identidade
+    quem_sou = ""
+    quem_sou_path = PROJECT_PATH / "negocio" / "governanca" / "regras" / "quem-sou.md"
+    if quem_sou_path.exists():
+        lines = quem_sou_path.read_text(encoding="utf-8").split("\n")
+        for line in lines:
+            if "**Nome**:" in line:
+                quem_sou += f"• *Nome:* {line.split('**Nome**:')[-1].strip()}\n"
+            if "**Missao**:" in line:
+                quem_sou += f"• *Missao:* {line.split('**Missao**:')[-1].strip()[:60]}...\n"
+            if "**Tom de Voz**:" in line or "tom_de_voz" in line.lower():
+                quem_sou += f"• *Tom:* {line.split(':')[-1].strip()[:40]}...\n"
+            if "**Valores**:" in line:
+                valores = line.split('**Valores**:')[-1].strip()[:50]
+                quem_sou += f"• *Valores:* {valores}...\n"
+    
+    # 2. Projetos
+    projetos = ""
+    projetos_path = PROJECT_PATH / "negocio" / "projetos" / "ativos.md"
+    if projetos_path.exists():
+        content = projetos_path.read_text(encoding="utf-8")
+        for line in content.split("\n"):
+            if line.strip().startswith("- **") and "**—" in line:
+                projeto = line.split("**")[1] if len(line.split("**")) > 1 else ""
+                projetos += f"• {projeto}\n"
+            elif line.strip().startswith("- **") and "**" in line:
+                # Pegar só o nome do projeto
+                pass
+    
+    # 3. Stats
+    agentes = len([d for d in (PROJECT_PATH / "agents").iterdir() if d.is_dir() and (d / "main.py").exists()])
+    ideias = len(list((ACERVO_PATH).glob("*.md"))) if ACERVO_PATH.exists() else 0
+    transcricoes = len(list((PROJECT_PATH / "acervo" / "transcricoes").glob("*.md"))) if (PROJECT_PATH / "acervo" / "transcricoes").exists() else 0
+    
+    msg = f"""🧠 *CÉREBRO COMPLETO*
+
+📋 *IDENTIDADE:*
+{quem_sou or "Nao definido"}
+
+📁 *PROJETOS:*
+{projetos or "Nenhum projeto ativo"}
+
+📊 *ESTATÍSTICAS:*
+• Agentes: {agentes}
+• Ideias: {ideias}
+• Transcrições: {transcricoes}
+
+🔗 *LINKS:*
+• Hub: https://opb-sistema.vercel.app/hub.html
+• GitHub: https://github.com/cleiton-negreiros/opb-sistema
+
+💡 *Ver detalhes:*
+/regras - Ver identidade completa
+/projetos - Ver projetos detalhados
+/agents - Ver agentes
+/ideias - Ver ideias"""
+    
+    await update.message.reply_text(msg, parse_mode="Markdown")
+
+async def ideias_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Lista ideias cadastradas"""
+    ensure_acervo()
+    ideias = sorted(ACERVO_PATH.glob("*.md"), reverse=True)[:10]
+    
+    if ideias:
+        msg = "💡 *Últimas Ideias:*\n\n"
+        for f in ideias:
+            content = f.read_text(encoding="utf-8")
+            # Extrair título
+            for line in content.split("\n"):
+                if line.startswith("# "):
+                    titulo = line.replace("# ", "")[:60]
+                    break
+            else:
+                titulo = f.name
+            
+            # Data
+            for line in content.split("\n"):
+                if "**Data**:" in line:
+                    data = line.split("**Data**:")[-1].strip()[:10]
+                    break
+            else:
+                data = ""
+            
+            msg += f"• {titulo} ({data})\n"
+    else:
+        msg = "💡 Nenhuma ideia ainda.\n\nEnvie uma ideia!"
+    
+    await update.message.reply_text(msg, parse_mode="Markdown")
 
 async def transcrever_help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
@@ -330,6 +425,8 @@ def main():
     app.add_handler(CommandHandler("iniciar", iniciar_command))
     app.add_handler(CommandHandler("transcrever", transcrever_help_command))
     app.add_handler(CommandHandler("obsidian", obsidian_command))
+    app.add_handler(CommandHandler("cerebro", cerebro_command))
+    app.add_handler(CommandHandler("ideias", ideias_command))
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
     
     print("🤖 NegreirosBot iniciado!")
