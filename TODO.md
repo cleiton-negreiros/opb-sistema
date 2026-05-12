@@ -19,10 +19,11 @@
 - [ ] Configurar install.sh para Windows (opcional)
 
 ### Agentes a Desenvolver
-- [x] **Agente Coordenador** ✓
+- [x] **Agente Coordenador** ✓ (atualizado para usar cérebro)
 - [x] **Agente Telegram Bot** ✓ (captura ideias via Telegram)
 - [x] **Agente Posicionamento** ✓ (pesquisa perfis no YouTube, Instagram, Threads)
 - [x] **Agente Transcrição** ✓ (transcreve vídeos do YouTube)
+- [x] **Agente Capa de Vídeo** ✓ (gera ideias de thumbnail)
 - [ ] **Agente Carrossel** - Transforma texto em estrutura de carrossel
 - [ ] **Agente Email** - Gera e envia emails automáticos
 - [ ] **Agente Analytics** - Dashboard de métricas e insights
