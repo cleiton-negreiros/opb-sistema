@@ -1,9 +1,9 @@
 {
+  "buildCommand": null,
+  "outputDirectory": ".",
+  "framework": null,
   "redirects": [
     { "source": "/", "destination": "/hub.html" },
     { "source": "/index", "destination": "/index.html" }
-  ],
-  "rewrites": [
-    { "source": "/api/(.*)", "destination": "/api/index.js" }
   ]
 }
