@@ -5,7 +5,7 @@ import subprocess
 from datetime import datetime
 from pathlib import Path
 from telegram import Update
-from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
+from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes, VoiceHandler
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -88,14 +88,17 @@ async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "💡 *IDEIAS:*\n"
         "• Envie ideia diretamente\n"
         "• /ideia [texto]\n"
-        "• /ideias - Ver ideias\n\n"
+        "• /ideias - Ver ideias\n"
+        "• 🎤 Envie áudio (gravação) → salva nota de voz\n\n"
+        "🎬 *TRANSCRIÇÃO:*\n"
+        "• /transcrever - Como transcrever YouTube\n\n"
         "🤖 *AGENTES:*\n"
         "• /status - Status completo\n"
         "• /agents - Ver agentes\n\n"
         "🔗 *LINKS:*\n"
         "• /hub - Hub produtividade\n"
         "• /obsidian - Obsidian\n\n"
-        "⚠️ /executar - Executar comando (PC)",
+        "⚠️ /executar - Executar (PC)",
         parse_mode="Markdown"
     )
 
@@ -305,6 +308,43 @@ async def ideias_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     
     await update.message.reply_text(msg, parse_mode="Markdown")
 
+async def voice_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Recebe mensagem de voz e salva (precisa ser transcrita manualmente)"""
+    await update.message.reply_text(
+        "🎤 *Mensagem de voz recebida!*\n\n"
+        "Infelizmente ainda não consigo transcrever áudio automaticamente.\n\n"
+        "Por enquanto:\n"
+        "• Transcreva a ideia em texto\n"
+        "• Ou use `/transcrever` para transcrever vídeos do YouTube\n\n"
+        "💡 *Dica:* Fale o que pensou e depois mande em texto!",
+        parse_mode="Markdown"
+    )
+    
+    # Salvar como nota de voz (para futura transcrição)
+    from datetime import datetime
+    timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    filepath = ACERVO_PATH / f"voz_{timestamp}.md"
+    
+    user = update.effective_user.name
+    content = f"""---
+name: "Nota de Voz {timestamp}"
+tipo: nota_voz
+autor: {user}
+data: {datetime.now().strftime("%Y-%m-%d")}
+---
+
+# 🎤 Nota de Voz
+
+**Autor:** {user}
+**Data:** {datetime.now().strftime("%Y-%m-%d %H:%M")}
+**Status:** ⏳ Aguardando transcrição
+
+---
+
+*Envie a transcrição desta ideia para atualizar.*"""
+
+    filepath.write_text(content, encoding='utf-8')
+
 async def transcrever_help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
         "🎥 *Transcrever Video do YouTube*\n\n"
@@ -434,6 +474,7 @@ def main():
     app.add_handler(CommandHandler("obsidian", obsidian_command))
     app.add_handler(CommandHandler("cerebro", cerebro_command))
     app.add_handler(CommandHandler("ideias", ideias_command))
+    app.add_handler(MessageHandler(filters.VOICE, voice_command))
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
     
     print("🤖 NegreirosBot iniciado!")
