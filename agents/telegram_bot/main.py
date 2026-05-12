@@ -91,7 +91,8 @@ async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "• /hub - Hub produtividade\n"
         "• /projetos - Projetos ativos\n"
         "• /regras - Quem sou\n"
-        "• /transcrever - Como transcrever vídeo\n\n"
+        "• /transcrever - Transcrever vídeo\n"
+        "• /obsidian - Integracao Obsidian\n\n"
         "⚠️ /executar [cmd] - Executar (apenas onde o bot está rodando)",
         parse_mode="Markdown"
     )
@@ -225,6 +226,25 @@ async def transcrever_help_command(update: Update, context: ContextTypes.DEFAULT
         parse_mode="Markdown"
     )
 
+async def obsidian_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text(
+        "🔗 *Obsidian Integration*\n\n"
+        "O cerebro do OPB Sistema usa arquivos markdown compatíveis com Obsidian!\n\n"
+        "*No seu PC:*\n"
+        "```\n"
+        "python utils/obsidian_integration.py open quem-sou\n"
+        "python utils/obsidian_integration.py open projetos\n"
+        "python utils/obsidian_integration.py\n"
+        "```\n\n"
+        "*Arquivos principais:*\n"
+        "• MAPA.md - Indice do cerebro\n"
+        "• quem-sou.md - Sua identidade\n"
+        "• projetos/ativos.md - Projetos\n"
+        "• AGENTS.md - Documentacao\n\n"
+        "*Dica:* Abra o projeto como vault no Obsidian!",
+        parse_mode="Markdown"
+    )
+
 async def iniciar_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Executa rotina matinal"""
     await update.message.reply_text("🌅 *Carregando Rotina Matinal...*", parse_mode="Markdown")
@@ -309,6 +329,7 @@ def main():
     app.add_handler(CommandHandler("regras", regras_command))
     app.add_handler(CommandHandler("iniciar", iniciar_command))
     app.add_handler(CommandHandler("transcrever", transcrever_help_command))
+    app.add_handler(CommandHandler("obsidian", obsidian_command))
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
     
     print("🤖 NegreirosBot iniciado!")
