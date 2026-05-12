@@ -17,6 +17,14 @@ description: "Lista viva de projetos em andamento — atualizar toda semana"
     - Agente de geração de texto para Instagram produzindo posts utilizáveis
     - Sistema de contexto carregando corretamente em todos os agentes
 
+- **Agente Designer** — Assistente de design gráfico para criar diagramas, briefings, paletas e mockups
+  - **Início:** 2026-05-12
+  - **Status:** Novo
+  - **Key Results:**
+    - Gerar diagramas de acorde SVG para aulas de violão
+    - Produzir briefings criativos com identidade visual consistente
+    - Reduzir tempo de criação de design de 2h para 15min
+
 - **Rotina de Conteúdo** — Estabelecer rotina de criação de conteúdo consistente
   - **Início:** 2026-04-01
   - **Status:** Planejado
