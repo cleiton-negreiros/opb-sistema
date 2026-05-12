@@ -98,49 +98,43 @@ def transcrever_video(url: str, idioma: str = "pt") -> dict:
     print(f"[Idioma] {idioma}")
     
     try:
-        # Tentar idioma preferido
-        transcript = YouTubeTranscriptApi.get_transcript(video_id, languages=[idioma, 'pt-BR', 'en'])
+        ytta = YouTubeTranscriptApi()
+        transcripts = ytta.list(video_id)
+        
+        # Tentar encontrar transcript no idioma preferido
+        transcript_obj = None
+        try:
+            transcript_obj = transcripts.find_transcript([idioma, 'pt-BR', 'pt', 'en'])
+        except:
+            pass
+        
+        # Se não encontrou, pegar o primeiro disponível
+        if not transcript_obj:
+            for t in transcripts._transcripts:
+                transcript_obj = t
+                break
+        
+        if not transcript_obj:
+            return {"erro": "Nenhuma transcript disponivel"}
+        
+        # Fetch da transcript
+        transcript_data = transcript_obj.fetch()
         
         texto_completo = []
-        for item in transcript:
-            tempo = formatar_tempo(item['start'])
-            texto_completo.append(f"[{tempo}] {item['text']}")
+        for item in transcript_data:
+            tempo = formatar_tempo(item.start)
+            texto_completo.append(f"[{tempo}] {item.text}")
         
         return {
             "video_id": video_id,
             "url": url,
-            "idioma": idioma,
+            "idioma": transcript_obj.language_code,
             "transcricao": texto_completo,
-            "duracao": max(item['start'] + item['duration'] for item in transcript) if transcript else 0
+            "duracao": max(item.start + item.duration for item in transcript_data) if transcript_data else 0
         }
         
     except Exception as e:
-        erro_str = str(e)
-        
-        # Tentar com fallback de idiomas
-        if "Could not find a transcript" in erro_str or "No transcripts were found" in erro_str:
-            try:
-                # Listar idiomas disponíveis
-                lista = YouTubeTranscriptApi.list_transcripts(video_id)
-                transcript = lista.find_transcript(['en', 'pt'])
-                transcript = transcript.fetch()
-                
-                texto_completo = []
-                for item in transcript:
-                    tempo = formatar_tempo(item['start'])
-                    texto_completo.append(f"[{tempo}] {item['text']}")
-                
-                return {
-                    "video_id": video_id,
-                    "url": url,
-                    "idioma": "en",
-                    "transcricao": texto_completo,
-                    "duracao": max(item['start'] + item['duration'] for item in transcript) if transcript else 0
-                }
-            except Exception as e2:
-                return {"erro": f"Sem transcript disponivel: {e2}"}
-        
-        return {"erro": erro_str}
+        return {"erro": str(e)}
 
 def salvar_transcricao(dados: dict) -> str:
     """Salva a transcrição em um arquivo markdown"""
