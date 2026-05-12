@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OPB - Meu Perfil</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { font-family: 'Inter', sans-serif; }
+        :root {
+            --primary: #6C63FF;
+            --primary-light: #8B85FF;
+            --success: #10B981;
+            --warning: #F59E0B;
+            --danger: #EF4444;
+            --bg: #F8FAFC;
+            --card-bg: #FFFFFF;
+        }
+        body { 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px 0;
+        }
+        .main-card {
+            background: var(--card-bg);
+            border-radius: 24px;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
+            overflow: hidden;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+        .header h1 { font-weight: 700; font-size: 28px; margin-bottom: 8px; }
+        .header p { opacity: 0.9; font-size: 16px; }
+        .header-icon {
+            width: 80px;
+            height: 80px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 36px;
+        }
+        .steps {
+            display: flex;
+            justify-content: center;
+            padding: 30px;
+            gap: 40px;
+            background: var(--bg);
+        }
+        .step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .step-number {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: #E2E8F0;
+            color: #64748B;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 18px;
+            margin-bottom: 8px;
+            transition: all 0.3s;
+        }
+        .step-label { font-size: 13px; color: #64748B; font-weight: 500; }
+        .step.active .step-number { background: var(--primary); color: white; }
+        .step.active .step-label { color: var(--primary); }
+        .step.done .step-number { background: var(--success); color: white; }
+        .step.done .step-label { color: var(--success); }
+        .content { padding: 40px; }
+        .form-section { display: none; }
+        .form-section.active { display: block; animation: fadeIn 0.4s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .form-section h3 {
+            color: #1E293B;
+            font-weight: 600;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .form-section h3 i { color: var(--primary); }
+        .form-label {
+            font-weight: 500;
+            color: #475569;
+            margin-bottom: 6px;
+            font-size: 14px;
+        }
+        .form-control, .form-select {
+            border: 2px solid #E2E8F0;
+            border-radius: 12px;
+            padding: 12px 16px;
+            font-size: 15px;
+            transition: all 0.3s;
+        }
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(108, 99, 255, 0.1);
+        }
+        .form-hint {
+            font-size: 12px;
+            color: #94A3B8;
+            margin-top: 4px;
+        }
+        .btn-save {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+            border: none;
+            padding: 14px 40px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 15px;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-save:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(108, 99, 255, 0.3);
+            color: white;
+        }
+        .btn-save.saved {
+            background: var(--success);
+            pointer-events: none;
+        }
+        .btn-nav {
+            background: #E2E8F0;
+            color: #475569;
+            border: none;
+            padding: 14px 30px;
+            border-radius: 12px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        .btn-nav:hover { background: #CBD5E1; color: #1E293B; }
+        .progress-bar-custom {
+            height: 6px;
+            background: #E2E8F0;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--success));
+            transition: width 0.5s ease;
+        }
+        .toast-custom {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1E293B;
+            color: white;
+            padding: 16px 28px;
+            border-radius: 12px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            opacity: 0;
+            transition: all 0.4s;
+            z-index: 9999;
+        }
+        .toast-custom.show { opacity: 1; }
+        .icon-circle {
+            width: 44px;
+            height: 44px;
+            background: rgba(108, 99, 255, 0.1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-size: 20px;
+        }
+        .info-card {
+            background: linear-gradient(135deg, #F0FDF4 0%, #ECFDF5 100%);
+            border: 1px solid #D1FAE5;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 20px;
+        }
+        .info-card i { color: var(--success); }
+        .nav-buttons { display: flex; justify-content: space-between; margin-top: 30px; }
+        .avatar-preview {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 40px;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-card">
+        <div class="header">
+            <div class="header-icon"><i class="bi bi-rocket-takeoff"></i></div>
+            <h1>Vamos configurar seu perfil</h1>
+            <p>Responda as perguntas abaixo para personalizar seu assistente</p>
+        </div>
+
+        <div class="progress-bar-custom">
+            <div class="progress-bar-fill" id="progressBar" style="width: 33%"></div>
+        </div>
+
+        <div class="steps">
+            <div class="step active" onclick="goToStep(1)">
+                <div class="step-number">1</div>
+                <div class="step-label">Negócio</div>
+            </div>
+            <div class="step" onclick="goToStep(2)">
+                <div class="step-number">2</div>
+                <div class="step-label">Pessoal</div>
+            </div>
+            <div class="step" onclick="goToStep(3)">
+                <div class="step-number">3</div>
+                <div class="step-label">Metas</div>
+            </div>
+        </div>
+
+        <div class="content">
+            <!-- Step 1: Business -->
+            <div class="form-section active" id="section1">
+                <h3><i class="bi bi-building"></i>Sobre seu Negócio</h3>
+                
+                <div class="mb-4">
+                    <label class="form-label">Qual é a missão do seu negócio?</label>
+                    <textarea class="form-control" id="missao" rows="3" placeholder="Ex: Ajudar profissionais liberais a organizarem suas finanças de forma simples"></textarea>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label">E a visão? Como você quer que seja no futuro?</label>
+                    <textarea class="form-control" id="visao" rows="3" placeholder="Ex: Ser referência em educação financeira para autônomos no Brasil"></textarea>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <label class="form-label">Tom de voz</label>
+                        <input type="text" class="form-control" id="tom_de_voz" placeholder="Ex: Direto, amigável, sem jargões">
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <label class="form-label">Público alvo</label>
+                        <input type="text" class="form-control" id="publico_alvo" placeholder="Ex: Freelancers e autônomos">
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label">Quais são seus valores de marca?</label>
+                    <input type="text" class="form-control" id="valores" placeholder="Ex: Autenticidade, praticidade, impacto">
+                    <div class="form-hint">Separe por vírgula</div>
+                </div>
+
+                <div class="nav-buttons">
+                    <div></div>
+                    <button class="btn-save" onclick="saveStep(1)">
+                        <i class="bi bi-check-lg"></i> Salvar e Continuar
+                    </button>
+                </div>
+            </div>
+
+            <!-- Step 2: Personal -->
+            <div class="form-section" id="section2">
+                <h3><i class="bi bi-person"></i>Sobre Você</h3>
+                
+                <div class="mb-4">
+                    <label class="form-label">Seu nome</label>
+                    <input type="text" class="form-control" id="nome" placeholder="Como você quer ser chamado?">
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label">Como você se descreve?</label>
+                    <textarea class="form-control" id="descricao" rows="3" placeholder="Ex: Contador que ama tecnologia, ajudando autônomos a economizarem tempo"></textarea>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label">Quais são suas principais habilidades?</label>
+                    <input type="text" class="form-control" id="habilidades" placeholder="Ex: Comunicação, análise de dados, criação de conteúdo">
+                    <div class="form-hint">Separe por vírgula</div>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label">O que você prefere evitar ou não gosta de fazer?</label>
+                    <input type="text" class="form-control" id="limitacoes" placeholder="Ex: Redes sociais, tarefas burocráticas">
+                    <div class="form-hint">Separe por vírgula</div>
+                </div>
+
+                <div class="info-card">
+                    <div class="d-flex align-items-center gap-2 mb-2">
+                        <i class="bi bi-clock"></i>
+                        <strong>Seus horários produtivos</strong>
+                    </div>
+                    <div class="row g-3">
+                        <div class="col-4">
+                            <label class="form-label" style="font-size:12px">Manhã</label>
+                            <input type="text" class="form-control" id="horario_manha" placeholder="Ex: 8h-12h">
+                        </div>
+                        <div class="col-4">
+                            <label class="form-label" style="font-size:12px">Tarde</label>
+                            <input type="text" class="form-control" id="horario_tarde" placeholder="Ex: 14h-18h">
+                        </div>
+                        <div class="col-4">
+                            <label class="form-label" style="font-size:12px">Noite</label>
+                            <input type="text" class="form-control" id="horario_noite" placeholder="Ex: 20h-22h">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="nav-buttons">
+                    <button class="btn-nav" onclick="goToStep(1)">
+                        <i class="bi bi-arrow-left"></i> Voltar
+                    </button>
+                    <button class="btn-save" onclick="saveStep(2)">
+                        <i class="bi bi-check-lg"></i> Salvar e Continuar
+                    </button>
+                </div>
+            </div>
+
+            <!-- Step 3: Goals -->
+            <div class="form-section" id="section3">
+                <h3><i class="bi bi-bullseye"></i>Suas Metas</h3>
+                
+                <div class="mb-4">
+                    <label class="form-label">Qual trimestre estamos?</label>
+                    <select class="form-select" id="trimestre">
+                        <option>Q1 2026</option>
+                        <option selected>Q2 2026</option>
+                        <option>Q3 2026</option>
+                        <option>Q4 2026</option>
+                    </select>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label">Qual é seu objetivo principal para este trimestre?</label>
+                    <textarea class="form-control" id="objetivo" rows="3" placeholder="Ex: Criar um sistema de automação para gerar 10 posts por semana"></textarea>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label">Liste seus Key Results (resultados-chave)</label>
+                    <textarea class="form-control" id="key_results" rows="4" placeholder="Ex: Agente de texto funcionando&#10;Publicar 3x por semana&#10;Economizar 5h/semana"></textarea>
+                    <div class="form-hint">Um por linha</div>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label">Status atual</label>
+                    <select class="form-select" id="status">
+                        <option value="planejado">🟡 Planejado</option>
+                        <option value="em_andamento">🔵 Em Andamento</option>
+                        <option value="concluido">🟢 Concluído</option>
+                    </select>
+                </div>
+
+                <div class="info-card">
+                    <div class="d-flex align-items-center gap-2">
+                        <i class="bi bi-lightbulb"></i>
+                        <strong>Dica</strong>
+                    </div>
+                    <p class="mb-0 mt-2" style="font-size: 14px; color: #065F46;">
+                        Defina objetivos SMART: específicos, mensuráveis, alcançáveis, relevantes e com prazo definido.
+                    </p>
+                </div>
+
+                <div class="nav-buttons">
+                    <button class="btn-nav" onclick="goToStep(2)">
+                        <i class="bi bi-arrow-left"></i> Voltar
+                    </button>
+                    <button class="btn-save" onclick="saveStep(3)">
+                        <i class="bi bi-check-lg"></i> Finalizar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast-custom" id="toast">
+        <i class="bi bi-check-circle-fill" style="color: var(--success)"></i>
+        <span id="toastMsg"></span>
+    </div>
+
+    <script>
+        const BASE = 'http://localhost:8088/context-brain';
+        let currentStep = 1;
+        let saved = { 1: false, 2: false, 3: false };
+
+        async function loadJSON(file) {
+            try {
+                const r = await fetch(`${BASE}/${file}?_=${Date.now()}`);
+                return r.ok ? r.json() : null;
+            } catch { return null; }
+        }
+
+        async function saveJSON(file, data) {
+            const r = await fetch(`${BASE}/${file}`, {
+                method: 'PUT',
+                body: JSON.stringify(data, null, 2)
+            });
+            return r.ok;
+        }
+
+        async function loadData() {
+            const d = await loadJSON('business-core.json');
+            if (d) {
+                document.getElementById('missao').value = d.missao || '';
+                document.getElementById('visao').value = d.visao || '';
+                document.getElementById('tom_de_voz').value = d.tom_de_voz || '';
+                document.getElementById('publico_alvo').value = d.publico_alvo || '';
+                document.getElementById('valores').value = (d.valores || []).join(', ');
+                if (d.missao) saved[1] = true;
+            }
+            const p = await loadJSON('personal-profile.json');
+            if (p) {
+                document.getElementById('nome').value = p.nome || '';
+                document.getElementById('descricao').value = p.descricao || '';
+                document.getElementById('habilidades').value = (p.habilidades_principais || []).join(', ');
+                document.getElementById('limitacoes').value = (p.limitacoes || []).join(', ');
+                document.getElementById('horario_manha').value = p.horarios_produtivos?.manha || '';
+                document.getElementById('horario_tarde').value = p.horarios_produtivos?.tarde || '';
+                document.getElementById('horario_noite').value = p.horarios_produtivos?.noite || '';
+                if (p.nome) saved[2] = true;
+            }
+            const g = await loadJSON('goals.json');
+            if (g) {
+                document.getElementById('trimestre').value = g.trimestre_atual || 'Q2 2026';
+                const obj = g.objetivos?.[0];
+                if (obj) {
+                    document.getElementById('objetivo').value = obj.descricao || '';
+                    document.getElementById('key_results').value = (obj.key_results || []).join('\n');
+                    document.getElementById('status').value = obj.status || 'planejado';
+                    if (obj.descricao) saved[3] = true;
+                }
+            }
+            updateUI();
+        }
+
+        function goToStep(n) {
+            document.querySelectorAll('.form-section').forEach(s => s.classList.remove('active'));
+            document.getElementById(`section${n}`).classList.add('active');
+            document.querySelectorAll('.step').forEach((s, i) => {
+                s.classList.remove('active');
+                if (i + 1 === n) s.classList.add('active');
+                if (saved[i + 1] && i + 1 < n) s.classList.add('done');
+            });
+            document.getElementById('progressBar').style.width = `${(n / 3) * 100}%`;
+            currentStep = n;
+        }
+
+        function updateUI() {
+            document.querySelectorAll('.step').forEach((s, i) => {
+                s.classList.remove('active', 'done');
+                if (saved[i + 1]) s.classList.add('done');
+            });
+            const activeStep = document.querySelector('.step.active');
+            if (!activeStep) {
+                document.querySelectorAll('.step')[currentStep - 1].classList.add('active');
+            }
+        }
+
+        async function saveStep(step) {
+            let data, file;
+            if (step === 1) {
+                data = {
+                    valores: document.getElementById('valores').value.split(',').map(v => v.trim()).filter(v => v),
+                    tom_de_voz: document.getElementById('tom_de_voz').value,
+                    publico_alvo: document.getElementById('publico_alvo').value,
+                    missao: document.getElementById('missao').value,
+                    visao: document.getElementById('visao').value,
+                    marca_visual: { cores_primarias: [], cores_secundarias: [], fonte_titulo: "", fonte_corpo: "", estilo: "" }
+                };
+                file = 'business-core.json';
+            } else if (step === 2) {
+                data = {
+                    nome: document.getElementById('nome').value,
+                    descricao: document.getElementById('descricao').value,
+                    habilidades_principais: document.getElementById('habilidades').value.split(',').map(h => h.trim()).filter(h => h),
+                    limitacoes: document.getElementById('limitacoes').value.split(',').map(l => l.trim()).filter(l => l),
+                    horarios_produtivos: {
+                        manha: document.getElementById('horario_manha').value,
+                        tarde: document.getElementById('horario_tarde').value,
+                        noite: document.getElementById('horario_noite').value
+                    },
+                    preferencias_comunicacao: { tom_preferido: "", canais_favoritos: [], frequencia_ideal_posts: "" },
+                    objetivos_pessoais: []
+                };
+                file = 'personal-profile.json';
+            } else {
+                data = {
+                    trimestre_atual: document.getElementById('trimestre').value,
+                    objetivos: [{
+                        id: "obj1",
+                        descricao: document.getElementById('objetivo').value,
+                        key_results: document.getElementById('key_results').value.split('\n').map(k => k.trim()).filter(k => k),
+                        status: document.getElementById('status').value
+                    }],
+                    metricas_acompanhamento: { tempo_economizado_semanal: 0, posts_gerados: 0, carousels_criados: 0, emails_enviados: 0 }
+                };
+                file = 'goals.json';
+            }
+
+            await saveJSON(file, data);
+            saved[step] = true;
+            updateUI();
+            
+            const btn = document.querySelector(`#section${step} .btn-save`);
+            btn.innerHTML = '<i class="bi bi-check-circle"></i> Salvo!';
+            btn.classList.add('saved');
+            setTimeout(() => {
+                btn.innerHTML = '<i class="bi bi-check-lg"></i> Salvar e Continuar';
+                btn.classList.remove('saved');
+                if (step < 3) goToStep(step + 1);
+            }, 1500);
+
+            showToast(step === 3 ? 'Perfil configurado com sucesso!' : 'Salvo com sucesso!');
+        }
+
+        function showToast(msg) {
+            const t = document.getElementById('toast');
+            document.getElementById('toastMsg').textContent = msg;
+            t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), 3000);
+        }
+
+        loadData();
+    </script>
+</body>
+</html>

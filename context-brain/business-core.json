@@ -1,0 +1,19 @@
+{
+  "valores": [
+    "autenticidade",
+    "praticidade", 
+    "impacto",
+    "crescimento consciente"
+  ],
+  "tom_de_voz": "direto, inspirador, sem jargões, próximo como uma conversa de café",
+  "publico_alvo": "empreendedores solitários e pequenos times que querem crescer sem burnout",
+  "missao": "ajudar solopreneurs a automatizar o repetitivo para focar no que realmente importa: criação, conexão e liberdade",
+  "visao": "ser o cérebro por trás de mil negócios unipessoais lucrativos e sustentáveis",
+  "marca_visual": {
+    "cores_primarias": ["#FF6B6B", "#4ECDC4", "#45B7D1"],
+    "cores_secundarias": ["#FFE66D", "#95E1D3"],
+    "fonte_titulo": "Montserrat Bold",
+    "fonte_corpo": "Open Sans Regular",
+    "estilo": "limpo, moderno com toques de cor vibrante"
+  }
+}

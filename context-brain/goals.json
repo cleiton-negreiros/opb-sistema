@@ -1,0 +1,31 @@
+{
+  "trimestre_atual": "Q2 2026",
+  "objetivos": [
+    {
+      "id": "obj1",
+      "descricao": "Consolidar sistema de agentes básicos para economia de 5h/semana",
+      "key_results": [
+        "Agente de transcrição funcionando com 90%+ de acurácia",
+        "Agente de geração de texto para Instagram produzindo posts utilizáveis",
+        "Sistema de contexto carregando corretamente em todos os agentes"
+      ],
+      "status": "em_andamento"
+    },
+    {
+      "id": "obj2",
+      "descricao": "Estabelecer rotina de criação de conteúdo consistente",
+      "key_results": [
+        "Publicar 2x por semana no Instagram",
+        "Ter pelo menos 1 carrossel educativo por mês pronto",
+        "Reduzir tempo de criação de post de 2h para 30min"
+      ],
+      "status": "planejado"
+    }
+  ],
+  "metricas_acompanhamento": {
+    "tempo_economizado_semanal": 0,
+    "posts_gerados": 0,
+    "carousels_criados": 0,
+    "emails_enviados": 0
+  }
+}

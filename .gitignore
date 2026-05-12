@@ -1,0 +1,26 @@
+# Output generated files
+output/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Vercel
+.vercel/
+
+# Logs
+*.log
+
+# Temp
+*.tmp
+*.bak

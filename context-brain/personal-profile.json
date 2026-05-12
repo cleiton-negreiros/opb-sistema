@@ -1,0 +1,27 @@
+{
+  "nome": "Seu Nome Aqui",
+  "descricao": "Descreva quem você é em 2-3 frases (ex: Desenvolvedor, criador de conteúdo, especialista em X)",
+  "habilidades_principais": [
+    "Habilidade 1",
+    "Habilidade 2", 
+    "Habilidade 3"
+  ],
+  "limitacoes": [
+    "O que você prefere não fazer ou tem menos paciência",
+    "Tarefas que consomem muita energia"
+  ],
+  "horarios_produtivos": {
+    "manha": "8h-12h",
+    "tarde": "14h-18h", 
+    "noite": "20h-22h"
+  },
+  "preferencias_comunicacao": {
+    "tom_preferido": "amigável mas profissional",
+    "canais_favoritos": ["email", "whatsapp", "instagram"],
+    "frequencia_ideal_posts": "3x por semana"
+  },
+  "objetivos_pessoais": [
+    "Objetivo 1 para os próximos 3 meses",
+    "Objetivo 2 para os próximos 3 meses"
+  ]
+}
