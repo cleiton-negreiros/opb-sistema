@@ -140,8 +140,9 @@ python agents/coordinator/main.py
 - Configuração Vercel e CI/CD
 - Documentação completa
 
-### 🔜 Próximo Passo (BLOQUEADO)
-- **Deploy**: Aguardando autenticação do GH CLI
+### ✅ Deploy & Repo Concluídos
+- **Vercel**: https://opb-sistema.vercel.app
+- **GitHub**: https://github.com/cleiton-negreiros/opb-sistema
 
 ### 🔜 Backlog
 - Agente Carrossel

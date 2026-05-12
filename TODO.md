@@ -7,12 +7,9 @@
 ## 📋 Backlog
 
 ### Deploy & Infraestrutura
-- [ ] **Configurar GH CLI e autenticar** ⚠️ PRIORIDADE
-  - Instalar via `winget install GitHub.cli`
-  - Executar `gh auth login`
-- [ ] Criar repositório Git no GitHub
-- [ ] Configurar credenciais Vercel no GitHub
-- [ ] Deploy inicial no Vercel
+- [x] **Configurar GH CLI e autenticar** ✓
+- [x] Criar repositório Git no GitHub ✓
+- [x] Deploy inicial no Vercel ✓
 - [ ] Configurar CI/CD automático (GitHub Actions)
 
 ### Agentes a Desenvolver
