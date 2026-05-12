@@ -1,6 +1,7 @@
 import os
 import json
 import logging
+import subprocess
 from datetime import datetime
 from pathlib import Path
 from telegram import Update
@@ -9,9 +10,10 @@ from telegram.ext import Application, CommandHandler, MessageHandler, filters, C
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-TOKEN = "8789174206:AAG8Ns8KJTi2cnGGRkuEYea7OGTj6pp4qW0"
+TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN", "8789174206:AAG8Ns8KJTi2cnGGRkuEYea7OGTj6pp4qW0")
 
-ACERVO_PATH = Path(__file__).parent.parent.parent / "acervo" / "ideias"
+PROJECT_PATH = Path(__file__).parent.parent.parent
+ACERVO_PATH = PROJECT_PATH / "acervo" / "ideias"
 
 def ensure_acervo():
     ACERVO_PATH.mkdir(parents=True, exist_ok=True)
@@ -64,26 +66,46 @@ autor: {usuario}
     logger.info(f"Ideia salva: {filename}")
     return filename
 
+def execute_command(cmd: str) -> str:
+    try:
+        result = subprocess.run(
+            cmd, shell=True, capture_output=True, text=True, timeout=30
+        )
+        output = result.stdout if result.returncode == 0 else f"Erro: {result.stderr}"
+        return output[:1500] if output else "Comando executado (sem output)"
+    except Exception as e:
+        return f"Erro: {str(e)[:200]}"
+
 async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
         "🎯 *NegreirosBot*\n\n"
-        "Olá! Sou seu bot de captura de ideias.\n\n"
-        "Como usar:\n"
+        "Olá! Sou seu bot de captura de ideias e execução remota.\n\n"
+        "📝 *Captura de ideias:*\n"
         "• Envie uma ideia diretamente\n"
-        "• Use /ideia [sua ideia]\n"
-        "• Use /listar para ver ideias\n\n"
-        "As ideias são salvas no cérebro automaticamente!",
+        "• Use /ideia [sua ideia]\n\n"
+        "💻 *Comandos do sistema:*\n"
+        "• /listar - Ver últimas ideias\n"
+        "• /status - Status do sistema\n"
+        "• /agents - Ver agentes disponíveis\n"
+        "• /hub - Abrir hub de produtividade\n"
+        "• /executar [comando] - Executar comando\n\n"
+        "⚠️ *Executar comando roda no dispositivo onde o bot está rodando!*",
         parse_mode="Markdown"
     )
 
 async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
-        "📋 *Comandos disponíveis:*\n\n"
-        "/start - Iniciar o bot\n"
-        "/help - Ver comandos\n"
+        "📋 *Todos os comandos:*\n\n"
+        "*Ideias:*\n"
         "/ideia [texto] - Cadastrar ideia\n"
-        "/listar - Ver últimas ideias\n"
-        "/status - Ver status do sistema",
+        "/listar - Ver últimas ideias\n\n"
+        "*Sistema:*\n"
+        "/status - Ver status\n"
+        "/agents - Listar agentes\n"
+        "/hub - Ver hub\n"
+        "/executar [cmd] - Executar comando\n"
+        "/projetos - Ver projetos ativos\n"
+        "/regras - Ver regras do cérebro",
         parse_mode="Markdown"
     )
 
@@ -113,13 +135,76 @@ async def listar_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def status_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     ensure_acervo()
     total = len(list(ACERVO_PATH.glob("*.md")))
+    
+    agents_path = PROJECT_PATH / "agents"
+    agentes = [d.name for d in agents_path.iterdir() if d.is_dir() and (d / "main.py").exists()]
+    
     await update.message.reply_text(
         f"📊 *Status do NegreirosBot*\n\n"
         f"• Ideias cadastradas: {total}\n"
-        f"• Cérebro: ✅ conectado\n"
-        f"• Pasta: `{ACERVO_PATH}`",
+        f"• Agentes disponíveis: {len(agentes)}\n"
+        f"• Pasta do projeto: `{PROJECT_PATH}`\n"
+        f"• Modo: {'Termux' if 'com.termux' in str(PROJECT_PATH) else 'PC'}",
         parse_mode="Markdown"
     )
+
+async def agents_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    agents_path = PROJECT_PATH / "agents"
+    agentes = [d.name for d in agents_path.iterdir() if d.is_dir()]
+    
+    msg = "🤖 *Agentes disponíveis:*\n\n"
+    for ag in agentes:
+        soul_path = agents_path / ag / "SOUL.md"
+        if soul_path.exists():
+            linhas = soul_path.read_text(encoding="utf-8").split("\n")
+            nome = linhas[3].replace("**Nome**: ", "") if len(linhas) > 3 else ag
+        else:
+            nome = ag
+        msg += f"• `{ag}` - {nome}\n"
+    
+    await update.message.reply_text(msg, parse_mode="Markdown")
+
+async def hub_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text(
+        "🌐 *Hub de Produtividade*\n\n"
+        "O hub contém:\n"
+        "• 🍅 Pomodoro Timer\n"
+        "• 📋 Planner Diário\n"
+        "• 💰 Finanças\n"
+        "• 💡 Ideias\n\n"
+        f"URL: https://opb-sistema.vercel.app/hub.html",
+        parse_mode="Markdown"
+    )
+
+async def executar_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    if context.args:
+        cmd = " ".join(context.args)
+        await update.message.reply_text(f"⏳ Executando: `{cmd}`...", parse_mode="Markdown")
+        
+        result = execute_command(cmd)
+        
+        if len(result) > 3000:
+            result = result[:3000] + "\n\n... (truncado)"
+        
+        await update.message.reply_text(f"📤 *Resultado:*\n\n```\n{result}\n```", parse_mode="Markdown")
+    else:
+        await update.message.reply_text("用法: /executar [comando]\n\nExemplo: /executar ls -la")
+
+async def projetos_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    projetos_path = PROJECT_PATH / "negocio" / "projetos" / "ativos.md"
+    if projetos_path.exists():
+        conteudo = projetos_path.read_text(encoding="utf-8")
+        await update.message.reply_text(f"📋 *Projetos Ativos:*\n\n{conteudo[:2000]}", parse_mode="Markdown")
+    else:
+        await update.message.reply_text("Nenhum projeto encontrado.")
+
+async def regras_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    regras_path = PROJECT_PATH / "negocio" / "governanca" / "regras" / "quem-sou.md"
+    if regras_path.exists():
+        conteudo = regras_path.read_text(encoding="utf-8")
+        await update.message.reply_text(f"📜 *Quem Sou:*\n\n{conteudo[:2000]}", parse_mode="Markdown")
+    else:
+        await update.message.reply_text("Arquivo de regras não encontrado.")
 
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     texto = update.message.text
@@ -143,10 +228,16 @@ def main():
     app.add_handler(CommandHandler("ideia", ideia_command))
     app.add_handler(CommandHandler("listar", listar_command))
     app.add_handler(CommandHandler("status", status_command))
+    app.add_handler(CommandHandler("agents", agents_command))
+    app.add_handler(CommandHandler("hub", hub_command))
+    app.add_handler(CommandHandler("executar", executar_command))
+    app.add_handler(CommandHandler("projetos", projetos_command))
+    app.add_handler(CommandHandler("regras", regras_command))
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
     
     print("🤖 NegreirosBot iniciado!")
-    print(f"📁 Salvando ideias em: {ACERVO_PATH}")
+    print(f"📁 Projeto: {PROJECT_PATH}")
+    print(f"📁 Ideias: {ACERVO_PATH}")
     
     app.run_polling(poll_interval=3)
 
