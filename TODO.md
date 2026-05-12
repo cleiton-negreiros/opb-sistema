@@ -1,6 +1,6 @@
 # TODO.md - Quadro de Tarefas do OPB Sistema
 
-> Para agentes: leia este quadro antes de começar qualquer trabalho.
+> Para agentes: leia este quadro antes de qualquer trabalho!
 
 ---
 
@@ -12,9 +12,15 @@
 - [x] Deploy inicial no Vercel ✓
 - [x] Configurar CI/CD automático (GitHub Actions) ✓
 
+### Cérebro (OPB School Template)
+- [x] Integrar template cerebro-template ✓
+- [x] Converter context-brain JSON para markdown ✓
+- [x] Atualizar AGENTS.md para usar cérebro ✓
+- [ ] Configurar install.sh para Windows (opcional)
+
 ### Agentes a Desenvolver
-- [ ] **Agente Coordenador** - Coordena todos os outros agentes
-- [ ] **Agente Carrossel** - Transforma texto em estrutura de carrossel (imagens)
+- [x] **Agente Coordenador** ✓
+- [ ] **Agente Carrossel** - Transforma texto em estrutura de carrossel
 - [ ] **Agente Transcrição** - Transcreve áudios/vídeos para texto
 - [ ] **Agente Email** - Gera e envia emails automáticos
 - [ ] **Agente Analytics** - Dashboard de métricas e insights
@@ -22,7 +28,7 @@
 ### Melhorias no Hub
 - [ ] Adicionar gráficos de finanças (chart.js)
 - [ ] Exportar dados para JSON/CSV
-- [ ] Sincronizar com context-brain para personalização
+- [x] Sincronizar com cérebro para personalização ✓
 - [ ] Adicionar modo offline (PWA)
 - [ ] Temas claro/escuro
 
@@ -49,53 +55,47 @@ _(Nenhuma tarefa em progresso)_
 | 2026-05-08 | Hub de produtividade | opencode |
 | 2026-05-08 | Página de configuração de perfil | opencode |
 | 2026-05-08 | Agente coordenador | opencode |
-| 2026-05-08 | Documentação (AGENTS.md, TODO.md) | opencode |
 | 2026-05-08 | Configuração Vercel e GitHub Actions | opencode |
+| 2026-05-12 | GH CLI autenticado | opencode |
+| 2026-05-12 | Repositório GitHub criado | opencode |
+| 2026-05-12 | CI/CD configurado | opencode |
+| 2026-05-12 | Deploy Vercel (via Vercel CLI) | opencode |
+| 2026-05-12 | Template Cerebro integrado | opencode |
 
 ---
 
-## 📝 Notas da Sessão
+## 📝 Estrutura do Cérebro
 
-### Problema Atual
-- GH CLI não está autenticado
-- Usuário tentou instalar mas não conseguiu fazer login
-- **Solução**: Tentar novamente depois ou usar método alternativo
-
-### Alternativas se GH CLI não funcionar
-1. Usar GitHub REST API diretamente (requer Personal Access Token)
-2. Usar SSH/HTTPS manual (git clone, git push)
-3. Deploy via Vercel CLI (`vercel deploy`)
-
-### Como Continuar na Próxima Sessão
-1. Abrir terminal PowerShell
-2. `gh auth login` 
-3. Seguir instruções (preferir autenticação via browser)
-4. Continuar do passo de Deploy
+```
+cérebro/
+├── MAPA.md                           ← LEIA PRIMEIRO
+├── negocio/governanca/
+│   ├── regras/
+│   │   ├── quem-sou.md              ← IDENTIDADE
+│   │   ├── linguagem-escrita.md
+│   │   └── cerebro-manutencao.md
+│   └── projetos/
+│       └── ativos.md                 ← METAS ATUAIS
+├── agentes/
+├── playbooks/
+└── acervo/
+```
 
 ---
 
 ## 🔄 Fluxo de Trabalho
 
 ```
-Novo Agente → Leia AGENTS.md → Leia TODO.md → Escolha tarefa → Execute → Atualize TODO.md → Commit → Deploy
+Novo Agente → Leia AGENTS.md → Leia MAPA → Execute → Atualize cérebro → Commit → Deploy
 ```
 
 ---
 
-## 📌 Checklist para Deploy
+## 📌 URLs
 
-- [x] Estrutura do projeto criada
-- [x] Hub HTML (Pomodoro, Planner, Finanças, Ideias)
-- [x] Página de perfil
-- [x] Agente coordenador
-- [x] Configuração Vercel (vercel.json)
-- [x] CI/CD (GitHub Actions)
-- [x] .gitignore
-- [ ] GH CLI autenticado ← **BLOQUEADO**
-- [ ] Repo criado no GitHub ← **AGUARDA GH CLI**
-- [ ] Primeiro commit pushado
-- [ ] Deploy no Vercel via GitHub
+- **Vercel**: https://opb-sistema.vercel.app
+- **GitHub**: https://github.com/cleiton-negreiros/opb-sistema
 
 ---
 
-_Last updated: 2026-05-08_
+_Last updated: 2026-05-12_

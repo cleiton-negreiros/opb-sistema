@@ -6,12 +6,13 @@
 
 ## 🆕 Guia Rápido para Novo Agente
 
-1. **Leia TODO.md** - Veja as tarefas pendentes e progresso
-2. **Leia context-brain/*.json** - Entenda o contexto do negócio
-3. **Execute sua tarefa**
-4. **Atualize TODO.md** - Marque como concluído
-5. **Commite no Git**
-6. **Deploy no Vercel**
+1. **Leia MAPA.md** - Estrutura do cérebro
+2. **Leia negocio/governanca/** - Contexto do negócio
+3. **Leia negocio/projetos/ativos.md** - Projetos em andamento
+4. **Execute sua tarefa**
+5. **Atualize o cérebro** se necessário (crie arquivos em negocio/governanca/regras/)
+6. **Commite no Git**
+7. **Deploy no Vercel**
 
 ---
 
@@ -25,8 +26,8 @@
 ### Infraestrutura
 | Serviço | URL |
 |---------|-----|
-| **GitHub** | https://github.com/cleiton-negreiros/ |
-| **Vercel** | https://vercel.com/cleiton-negreiros-projects/ |
+| **GitHub** | https://github.com/cleiton-negreiros/opb-sistema |
+| **Vercel** | https://opb-sistema.vercel.app |
 
 ---
 
@@ -34,53 +35,68 @@
 
 ```
 opb-sistema/
-├── agents/
-│   ├── coordinator/main.py      # Agente coordenador (orquestrador)
-│   └── text_generator/main.py  # Gerador de posts Instagram
-├── context-brain/               # CONTEXTO DO NEGÓCIO (LEIA ESTES)
-│   ├── business-core.json       # Missão, visão, valores, tom de voz
-│   ├── personal-profile.json   # Perfil pessoal, habilidades, agenda
-│   └── goals.json             # Objetivos, KRs, métricas
-├── utils/
-│   ├── context_loader.py       # Carregador de contexto
-│   └── llm_provider.py        # Provedor LLM (Ollama)
-├── output/text_posts/          # Posts gerados (não versionar)
-├── hub.html                    # Hub produtividade (Pomodoro, Planner, Finanças, Ideias)
-├── index.html                  # Configurador de perfil
-├── server.py                   # Servidor local (porta 8088)
-├── iniciar.bat                 # Atalho iniciar
-├── vercel.json                # Config Vercel
-├── .github/workflows/deploy.yml # CI/CD
-├── AGENTS.md                  # ESTE ARQUIVO
-├── TODO.md                    # Quadro de tarefas
-└── README.md
+├── MAPA.md                    # Mapa raiz do cérebro
+├── agents/                    # Agentes Python (código executável)
+│   ├── coordinator/          # Agente coordenador
+│   └── text_generator/      # Gerador de posts
+├── cerebro/                  # CÉREBRO - contexto vivo (MARKDOWN)
+│   ├── MAPA.md              # Índice raiz
+│   ├── negocio/             # Tudo do trabalho
+│   │   ├── governanca/      # Regras, decisões, lições, referências
+│   │   │   ├── regras/      # Regras de operação
+│   │   │   │   ├── quem-sou.md        ← IDENTIDADE
+│   │   │   │   ├── linguagem-escrita.md
+│   │   │   │   └── cerebro-manutencao.md
+│   │   │   ├── decisoes/
+│   │   │   └── licoes/
+│   │   ├── areas/           # Marketing, conteúdo, suporte...
+│   │   ├── produtos/        # Catálogo de produtos
+│   │   ├── infra/           # Sistemas internos
+│   │   └── projetos/        # Iniciativas
+│   │       └── ativos.md   ← METAS ATUAIS
+│   ├── pessoal/             # Vida pessoal (ACL)
+│   ├── agentes/             # Config de agentes IA
+│   ├── playbooks/           # Manuais executáveis
+│   ├── acervo/              # Conteúdo produzido
+│   └── seguranca/           # Permissões
+├── hub.html                  # Hub produtividade
+├── index.html               # Configurador de perfil
+├── server.py                # Servidor local
+└── vercel.json              # Config Vercel
 ```
 
 ---
 
-## 🎯 Contexto do Negócio (Ler Obrigatório)
+## 🧠 Cérebro - Como Usar
 
-### business-core.json
-```json
-{
-  "valores": ["autenticidade", "praticidade", "impacto", "crescimento consciente"],
-  "tom_de_voz": "direto, inspirador, sem jargões, próximo como uma conversa de café",
-  "publico_alvo": "empreendedores solitários e pequenos times que querem crescer sem burnout",
-  "missao": "ajudar solopreneurs a automatizar o repetitivo para focar no que realmente importa",
-  "visao": "ser o cérebro por trás de mil negócios unipessoais lucrativos e sustentáveis"
-}
+O cérebro é a **fonte de verdade** para contexto. Todo agente deve ler:
+
+### Leitura obrigatória (toda sessão)
+1. `MAPA.md` - Estrutura geral
+2. `negocio/governanca/regras/quem-sou.md` - Identidade e tom de voz
+3. `negocio/projetos/ativos.md` - O que está em andamento
+
+### Escrita (quando relevante)
+- Novas regras → `negocio/governanca/regras/`
+- Decisões → `negocio/governanca/decisoes/AAAA-MM.md`
+- Lições aprendidas → `negocio/governanca/licoes/`
+- Conteúdo gerado → `acervo/`
+
+### Padrão de arquivo
+```markdown
+---
+name: "Título"
+description: "O que é"
+tipo: referencia|decisao|licao|regra
+updated_at: AAAA-MM-DD
+---
+
+# Título
+
+> Descrição em uma linha
+
+## Detalhes...
 ```
-
-### personal-profile.json
-- Nome, descrição, habilidades principais
-- Limitações (o que prefere evitar)
-- Horários produtivos (manhã/tarde/noite)
-- Preferências de comunicação
-
-### goals.json
-- Trimestre atual
-- Objetivos com Key Results
-- Métricas de acompanhamento
 
 ---
 
@@ -91,13 +107,8 @@ opb-sistema/
 
 **Uso**:
 ```bash
-# Modo interativo
 python agents/coordinator/main.py
-
-# Listar tarefas
 python agents/coordinator/main.py list
-
-# Executar tarefa específica
 python agents/coordinator/main.py run 1
 ```
 
@@ -116,17 +127,17 @@ python agents/text_generator/main.py "<objetivo>" [tipo_post]
 ## 🔧 Comandos Úteis
 
 ```bash
-# Iniciar tudo
+# Iniciar servidor local
 python server.py
 
 # Hub de produtividade
 http://localhost:8088/hub.html
 
-# Configurar perfil
-http://localhost:8088/index.html
-
 # Usar coordenador
 python agents/coordinator/main.py
+
+# Deploy (já automatizado via CI/CD)
+# A cada push no master, deploy automático no Vercel
 ```
 
 ---
@@ -138,11 +149,8 @@ python agents/coordinator/main.py
 - Página de configuração de perfil
 - Agente coordenador
 - Configuração Vercel e CI/CD
-- Documentação completa
-
-### ✅ Deploy & Repo Concluídos
-- **Vercel**: https://opb-sistema.vercel.app
-- **GitHub**: https://github.com/cleiton-negreiros/opb-sistema
+- Cérebro (template OPB School integrado)
+- Deploy automático
 
 ### 🔜 Backlog
 - Agente Carrossel
@@ -152,20 +160,14 @@ python agents/coordinator/main.py
 
 ---
 
-## 📝 Notas da Sessão
+## 📝 Mantendo o Cérebro Vivo
 
-### Problema: GH CLI não autenticado
-O usuário tentou instalar o GitHub CLI (`winget install GitHub.cli`) mas não conseguiu fazer login com `gh auth login`.
+Após qualquer conversa importante, o agente deve perguntar:
+> "Quer que eu atualize o cérebro com o que aprendemos?"
 
-**Soluções alternativas:**
-1. Tentar novamente: `gh auth login` (escolher autenticação via browser)
-2. Criar Personal Access Token manualmente
-3. Usar Vercel CLI para deploy direto
-
-### Como Continuar
-1. `gh auth login` no terminal PowerShell
-2. Continuar deploy (ver TODO.md)
+Ou executar:
+> "Atualiza o cérebro com as decisões e lições desta sessão."
 
 ---
 
-_Last updated: 2026-05-08_
+_Last updated: 2026-05-12_
