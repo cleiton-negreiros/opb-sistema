@@ -22,8 +22,8 @@
 - [x] **Agente Coordenador** ✓
 - [x] **Agente Telegram Bot** ✓ (captura ideias via Telegram)
 - [x] **Agente Posicionamento** ✓ (pesquisa perfis no YouTube, Instagram, Threads)
+- [x] **Agente Transcrição** ✓ (transcreve vídeos do YouTube)
 - [ ] **Agente Carrossel** - Transforma texto em estrutura de carrossel
-- [ ] **Agente Transcrição** - Transcreve áudios/vídeos para texto
 - [ ] **Agente Email** - Gera e envia emails automáticos
 - [ ] **Agente Analytics** - Dashboard de métricas e insights
 
@@ -65,6 +65,7 @@ _(Nenhuma tarefa em progresso)_
 | 2026-05-12 | Template Cerebro integrado | opencode |
 | 2026-05-12 | Agente Telegram Bot | opencode |
 | 2026-05-12 | Agente Posicionamento | opencode |
+| 2026-05-12 | Agente Transcricao (YouTube) | opencode |
 
 ---
 
