@@ -450,19 +450,22 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
 def main():
     ensure_acervo()
     
-    # Forçar reset de todas as sessões getUpdates pendentes
-    import requests
+    # Resetar sessão no servidor do Telegram
+    import requests, time
     try:
-        r = requests.get(f"https://api.telegram.org/bot{TOKEN}/getUpdates?offset=-1", timeout=5)
+        requests.get(f"https://api.telegram.org/bot{TOKEN}/deleteWebhook?drop_pending_updates=true", timeout=10)
+        time.sleep(2)
+        r = requests.get(f"https://api.telegram.org/bot{TOKEN}/getUpdates", timeout=10)
         if r.status_code == 200:
-            data = r.json()
-            if data.get('result'):
-                last_id = data['result'][-1]['update_id']
-                requests.get(f"https://api.telegram.org/bot{TOKEN}/getUpdates?offset={last_id + 1}", timeout=5)
+            updates = r.json().get('result', [])
+            if updates:
+                last_id = updates[-1]['update_id']
+                requests.get(f"https://api.telegram.org/bot{TOKEN}/getUpdates?offset={last_id + 1}", timeout=10)
+        time.sleep(1)
     except:
         pass
     
-    app = Application.builder().token(TOKEN).connect_kwargs({"timeout": 30}).build()
+    app = Application.builder().token(TOKEN).build()
     
     app.add_handler(CommandHandler("start", start_command))
     app.add_handler(CommandHandler("help", help_command))
