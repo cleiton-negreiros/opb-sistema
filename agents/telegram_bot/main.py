@@ -78,18 +78,21 @@ def execute_command(cmd: str) -> str:
 
 async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
-        "🎯 *NegreirosBot*\n\n"
-        "Olá! Sou seu bot de captura de ideias e execução remota.\n\n"
+        "🎯 *NegreirosBot - OPB Sistema*\n\n"
+        "Olá! Sou seu assistant daily driver.\n\n"
+        "🌅 *Rotina:*\n"
+        "• /iniciar - Rotina matinal (contexto do dia)\n\n"
         "📝 *Captura de ideias:*\n"
         "• Envie uma ideia diretamente\n"
         "• Use /ideia [sua ideia]\n\n"
-        "💻 *Comandos do sistema:*\n"
-        "• /listar - Ver últimas ideias\n"
-        "• /status - Status do sistema\n"
-        "• /agents - Ver agentes disponíveis\n"
-        "• /hub - Abrir hub de produtividade\n"
-        "• /executar [comando] - Executar comando\n\n"
-        "⚠️ *Executar comando roda no dispositivo onde o bot está rodando!*",
+        "💻 *Sistema:*\n"
+        "• /status - Status completo\n"
+        "• /agents - Ver agentes\n"
+        "• /hub - Hub produtividade\n"
+        "• /projetos - Projetos ativos\n"
+        "• /regras - Quem sou\n"
+        "• /transcrever - Como transcrever vídeo\n\n"
+        "⚠️ /executar [cmd] - Executar (apenas onde o bot está rodando)",
         parse_mode="Markdown"
     )
 
@@ -206,6 +209,77 @@ async def regras_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     else:
         await update.message.reply_text("Arquivo de regras não encontrado.")
 
+async def transcrever_help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text(
+        "🎥 *Transcrever Video do YouTube*\n\n"
+        "No seu PC/celular, execute:\n\n"
+        "```\n"
+        "cd agents/transcricao\n"
+        "python main.py \"URL_DO_VIDEO\"\n"
+        "```\n\n"
+        "Exemplo:\n"
+        "```\n"
+        "python main.py \"https://youtu.be/VIDEO_ID\"\n"
+        "```\n\n"
+        "O video sera transcrito e salvo em `acervo/transcricoes/`",
+        parse_mode="Markdown"
+    )
+
+async def iniciar_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Executa rotina matinal"""
+    await update.message.reply_text("🌅 *Carregando Rotina Matinal...*", parse_mode="Markdown")
+    
+    # Carregar contexto do cérebro
+    quem_sou = ""
+    quem_sou_path = PROJECT_PATH / "negocio" / "governanca" / "regras" / "quem-sou.md"
+    if quem_sou_path.exists():
+        lines = quem_sou_path.read_text(encoding="utf-8").split("\n")
+        for line in lines:
+            if "**Nome**:" in line:
+                quem_sou = line.split("**Nome**:")[-1].strip()
+    
+    # Projetos ativos
+    projetos = ""
+    projetos_path = PROJECT_PATH / "negocio" / "projetos" / "ativos.md"
+    if projetos_path.exists():
+        content = projetos_path.read_text(encoding="utf-8")
+        for line in content.split("\n"):
+            if line.strip().startswith("- **") and "**—" in line:
+                projetos += line.strip() + "\n"
+    
+    # Contadores
+    agentes = len([d for d in (PROJECT_PATH / "agents").iterdir() if d.is_dir()])
+    ideias = len(list((ACERVO_PATH).glob("*.md"))) if ACERVO_PATH.exists() else 0
+    transcricoes = len(list((PROJECT_PATH / "acervo" / "transcricoes").glob("*.md"))) if (PROJECT_PATH / "acervo" / "transcricoes").exists() else 0
+    
+    msg = f"""🌅 *Bom Dia! - OPB Sistema*
+
+🧠 *Contexto:*
+• Nome: {quem_sou or 'Nao definido'}
+• Acesse `/regras` para ver perfil completo
+
+📋 *Projetos:*
+{projetos or 'Nenhum projeto ativo'}
+
+📊 *Estatisticas:*
+• Agentes: {agentes}
+• Ideias: {ideias}
+• Transcricoes: {transcricoes}
+
+🔗 *Links:*
+• Hub: https://opb-sistema.vercel.app/hub.html
+• GitHub: https://github.com/cleiton-negreiros/opb-sistema
+
+💡 *Acoes Rapidas:*
+/ideia [texto] - Nova ideia
+/transcrever - Como transcrever video
+/agents - Ver todos os agentes
+/status - Status completo
+
+*Tenha um otimo dia!*"""
+    
+    await update.message.reply_text(msg, parse_mode="Markdown")
+
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     texto = update.message.text
     
@@ -233,6 +307,8 @@ def main():
     app.add_handler(CommandHandler("executar", executar_command))
     app.add_handler(CommandHandler("projetos", projetos_command))
     app.add_handler(CommandHandler("regras", regras_command))
+    app.add_handler(CommandHandler("iniciar", iniciar_command))
+    app.add_handler(CommandHandler("transcrever", transcrever_help_command))
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
     
     print("🤖 NegreirosBot iniciado!")
