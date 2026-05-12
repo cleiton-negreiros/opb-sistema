@@ -40,7 +40,7 @@
 
 ## Configuração
 
-- **Token**: `8789174206:AAG8Ns8KJTi2cnGGRkuEYea7OGTj6pp4qW0`
+- **Token**: `8789174206:AAEFbU9kz0PQQLFlCw4vMVzIYiXSnmVRjxQ`
 - **Pasta de saída**: `acervo/ideias/`
 - **Modo**: Polling (contínuo)
 

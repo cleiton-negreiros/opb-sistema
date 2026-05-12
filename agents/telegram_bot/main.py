@@ -10,7 +10,7 @@ from telegram.ext import Application, CommandHandler, MessageHandler, filters, C
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN", "8789174206:AAG8Ns8KJTi2cnGGRkuEYea7OGTj6pp4qW0")
+TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN", "8789174206:AAEFbU9kz0PQQLFlCw4vMVzIYiXSnmVRjxQ")
 
 PROJECT_PATH = Path(__file__).parent.parent.parent
 ACERVO_PATH = PROJECT_PATH / "acervo" / "ideias"
