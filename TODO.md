@@ -20,6 +20,7 @@
 
 ### Agentes a Desenvolver
 - [x] **Agente Coordenador** ✓
+- [x] **Agente Telegram Bot** - Bot para cadastrar ideias ✓ (NOVO)
 - [ ] **Agente Carrossel** - Transforma texto em estrutura de carrossel
 - [ ] **Agente Transcrição** - Transcreve áudios/vídeos para texto
 - [ ] **Agente Email** - Gera e envia emails automáticos
@@ -61,6 +62,7 @@ _(Nenhuma tarefa em progresso)_
 | 2026-05-12 | CI/CD configurado | opencode |
 | 2026-05-12 | Deploy Vercel (via Vercel CLI) | opencode |
 | 2026-05-12 | Template Cerebro integrado | opencode |
+| 2026-05-12 | Agente Telegram Bot | opencode |
 
 ---
 
