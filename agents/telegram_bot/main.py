@@ -454,14 +454,7 @@ def main():
     import requests, time
     try:
         requests.get(f"https://api.telegram.org/bot{TOKEN}/deleteWebhook?drop_pending_updates=true", timeout=10)
-        time.sleep(2)
-        r = requests.get(f"https://api.telegram.org/bot{TOKEN}/getUpdates", timeout=10)
-        if r.status_code == 200:
-            updates = r.json().get('result', [])
-            if updates:
-                last_id = updates[-1]['update_id']
-                requests.get(f"https://api.telegram.org/bot{TOKEN}/getUpdates?offset={last_id + 1}", timeout=10)
-        time.sleep(1)
+        time.sleep(3)
     except:
         pass
     
@@ -489,7 +482,7 @@ def main():
     print(f"📁 Projeto: {PROJECT_PATH}")
     print(f"📁 Ideias: {ACERVO_PATH}")
     
-    app.run_polling(poll_interval=3)
+    app.run_polling(poll_interval=3, drop_pending_updates=True)
 
 if __name__ == "__main__":
     main()
