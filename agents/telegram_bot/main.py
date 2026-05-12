@@ -5,7 +5,7 @@ import subprocess
 from datetime import datetime
 from pathlib import Path
 from telegram import Update
-from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes, VoiceHandler
+from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -450,10 +450,15 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
 def main():
     ensure_acervo()
     
-    # Limpar conflitos anteriores
+    # Limpar conflitos anteriores - forçar novo offset
     import requests
     try:
-        requests.get(f"https://api.telegram.org/bot{TOKEN}/getUpdates?offset=-1")
+        r = requests.get(f"https://api.telegram.org/bot{TOKEN}/getUpdates?timeout=1")
+        if r.status_code == 200:
+            data = r.json()
+            if data.get('result'):
+                last_update = data['result'][-1]['update_id']
+                requests.get(f"https://api.telegram.org/bot{TOKEN}/getUpdates?offset={last_update + 1}")
     except:
         pass
     
@@ -474,7 +479,7 @@ def main():
     app.add_handler(CommandHandler("obsidian", obsidian_command))
     app.add_handler(CommandHandler("cerebro", cerebro_command))
     app.add_handler(CommandHandler("ideias", ideias_command))
-    app.add_handler(MessageHandler(filters.VOICE, voice_command))
+    app.add_handler(MessageHandler(filters.VOICE | filters.AUDIO, voice_command))
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
     
     print("🤖 NegreirosBot iniciado!")
