@@ -1,0 +1,1179 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OPB — Perfil do Empreendedor Solo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #FF6B6B;
+            --secondary: #4ECDC4;
+            --accent: #45B7D1;
+            --bg: #FAFAFA;
+            --card: #FFFFFF;
+            --text: #2C3E50;
+            --text-light: #7F8C8D;
+            --border: #E8E8E8;
+            --shadow: rgba(0,0,0,0.08);
+            --radius: 12px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary), #EE5A24);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+        }
+
+        .header h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 2rem;
+            font-weight: 700;
+            position: relative;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 1.1rem;
+            margin-top: 0.5rem;
+            position: relative;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            background: var(--card);
+            padding: 0.5rem;
+            border-radius: var(--radius);
+            box-shadow: 0 2px 10px var(--shadow);
+        }
+
+        .tab-btn {
+            flex: 1;
+            min-width: 140px;
+            padding: 0.8rem 1rem;
+            border: none;
+            background: transparent;
+            border-radius: 8px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-light);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn:hover { background: #F0F0F0; color: var(--text); }
+        .tab-btn.active { background: var(--primary); color: white; }
+
+        .tab-content { display: none; animation: fadeIn 0.3s ease; }
+        .tab-content.active { display: block; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Cards */
+        .card {
+            background: var(--card);
+            border-radius: var(--radius);
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 10px var(--shadow);
+        }
+
+        .card h2 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.4rem;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .card h3 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.1rem;
+            color: var(--text);
+            margin: 1.5rem 0 0.5rem;
+        }
+
+        .card p { color: var(--text-light); margin-bottom: 1rem; }
+
+        .subtitle {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            margin-bottom: 1.5rem;
+        }
+
+        .example {
+            background: #FFF8E7;
+            border-left: 4px solid var(--accent);
+            padding: 1rem 1.2rem;
+            border-radius: 0 8px 8px 0;
+            margin: 1rem 0;
+            font-size: 0.95rem;
+            font-style: italic;
+        }
+
+        /* Form Elements */
+        label {
+            display: block;
+            font-weight: 600;
+            margin: 1rem 0 0.3rem;
+            font-size: 0.9rem;
+            color: var(--text);
+        }
+
+        input[type="text"], textarea, select {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-family: 'Open Sans', sans-serif;
+            font-size: 0.95rem;
+            transition: border-color 0.3s ease;
+            background: #FFF;
+            color: var(--text);
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: var(--secondary);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        /* Checklist */
+        .checklist {
+            list-style: none;
+            margin: 1rem 0;
+        }
+
+        .checklist li {
+            padding: 0.5rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .checklist input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            accent-color: var(--secondary);
+        }
+
+        /* Progress */
+        .progress-bar {
+            background: #E8E8E8;
+            border-radius: 10px;
+            height: 8px;
+            margin: 1.5rem 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--secondary), var(--accent));
+            border-radius: 10px;
+            transition: width 0.5s ease;
+            width: 0%;
+        }
+
+        .progress-text {
+            text-align: center;
+            font-size: 0.85rem;
+            color: var(--text-light);
+            margin-bottom: 1rem;
+        }
+
+        /* Table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+        }
+
+        th, td {
+            padding: 0.7rem;
+            border: 1px solid var(--border);
+            text-align: left;
+            font-size: 0.9rem;
+        }
+
+        th {
+            background: #F8F9FA;
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+
+        td input, td textarea {
+            border: none;
+            background: transparent;
+            width: 100%;
+            padding: 0.3rem;
+            font-family: 'Open Sans', sans-serif;
+            font-size: 0.9rem;
+            resize: vertical;
+        }
+
+        td input:focus, td textarea:focus {
+            outline: 2px solid var(--secondary);
+            border-radius: 4px;
+        }
+
+        /* Buttons */
+        .btn-row {
+            display: flex;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+            margin: 1.5rem 0;
+        }
+
+        .btn {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-primary:hover { background: #EE5A24; transform: translateY(-2px); }
+
+        .btn-secondary { background: var(--secondary); color: #FFF; }
+        .btn-secondary:hover { background: #3DBDB4; transform: translateY(-2px); }
+
+        .btn-accent { background: var(--accent); color: #FFF; }
+        .btn-accent:hover { background: #359CC7; transform: translateY(-2px); }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--border);
+            color: var(--text);
+        }
+        .btn-outline:hover { border-color: var(--primary); color: var(--primary); }
+
+        .btn-sm { padding: 0.5rem 1rem; font-size: 0.8rem; }
+
+        /* Output */
+        .output {
+            background: #1E1E2E;
+            color: #CDD6F4;
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            white-space: pre-wrap;
+            max-height: 400px;
+            overflow-y: auto;
+            margin: 1rem 0;
+            display: none;
+        }
+
+        .output.visible { display: block; }
+
+        /* Saved indicator */
+        .saved {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--secondary);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .saved.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        /* Tips */
+        .tip {
+            background: #E8F4FD;
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+            font-size: 0.9rem;
+        }
+
+        .tip strong { color: var(--accent); }
+
+        /* Section header */
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin: 2rem 0 1rem;
+        }
+
+        .section-header .icon { font-size: 1.3rem; }
+        .section-header h3 { font-size: 1.1rem; }
+
+        .counter {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            margin-bottom: 0.5rem;
+        }
+
+        @media (max-width: 600px) {
+            .header h1 { font-size: 1.4rem; }
+            .container { padding: 1rem; }
+            .card { padding: 1.2rem; }
+            .tab-btn { min-width: 100px; font-size: 0.75rem; padding: 0.6rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <h1>🧠 OPB — Perfil do Empreendedor Solo</h1>
+    <p>Construa sua identidade, uma seção por vez</p>
+</div>
+
+<div class="container">
+    <div class="progress-text">Progresso geral: <span id="progress-label">0%</span></div>
+    <div class="progress-bar">
+        <div class="progress-fill" id="progress-bar"></div>
+    </div>
+
+    <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('habilidades')">🎯 Habilidades</button>
+        <button class="tab-btn" onclick="switchTab('historias')">📖 Histórias</button>
+        <button class="tab-btn" onclick="switchTab('cosmovisao')">🌍 Cosmovisão</button>
+        <button class="tab-btn" onclick="switchTab('publico')">👥 Público</button>
+        <button class="tab-btn" onclick="switchTab('posicionamento')">🗺️ Posicionamento</button>
+        <button class="tab-btn" onclick="switchTab('narrativa')">🎯 Narrativa</button>
+    </div>
+
+    <!-- ==================== HABILIDADES ==================== -->
+    <div class="tab-content active" id="tab-habilidades">
+        <div class="card">
+            <h2>🎯 Mapeamento de Habilidades</h2>
+            <p class="subtitle">Liste suas habilidades e descubra o que pode virar conteúdo, serviço ou produto.</p>
+
+            <div class="tab">
+                <button class="tab-btn active btn-sm" onclick="switchSubTab('hab', 'tecnicas')">🖥 Técnicas</button>
+                <button class="tab-btn btn-sm" onclick="switchSubTab('hab', 'humanas')">🤝 Humanas</button>
+                <button class="tab-btn btn-sm" onclick="switchSubTab('hab', 'conhecimentos')">📚 Conhecimentos</button>
+                <button class="tab-btn btn-sm" onclick="switchSubTab('hab', 'experiencias')">💼 Experiências</button>
+            </div>
+
+            <!-- Técnicas -->
+            <div id="hab-tecnicas" class="subtab active">
+                <h3>Habilidades Técnicas</h3>
+                <div id="habilidades-tecnicas"></div>
+                <button class="btn btn-outline btn-sm" onclick="addRow('habilidades-tecnicas')">+ Adicionar</button>
+            </div>
+
+            <!-- Humanas -->
+            <div id="hab-humanas" class="subtab" style="display:none">
+                <h3>Habilidades Humanas</h3>
+                <div id="habilidades-humanas"></div>
+                <button class="btn btn-outline btn-sm" onclick="addRow('habilidades-humanas')">+ Adicionar</button>
+            </div>
+
+            <!-- Conhecimentos -->
+            <div id="hab-conhecimentos" class="subtab" style="display:none">
+                <h3>Conhecimentos Específicos</h3>
+                <div id="habilidades-conhecimentos"></div>
+                <button class="btn btn-outline btn-sm" onclick="addRow('habilidades-conhecimentos')">+ Adicionar</button>
+            </div>
+
+            <!-- Experiências -->
+            <div id="hab-experiencias" class="subtab" style="display:none">
+                <h3>Experiências Relevantes</h3>
+                <div id="habilidades-experiencias"></div>
+                <button class="btn btn-outline btn-sm" onclick="addRow('habilidades-experiencias')">+ Adicionar</button>
+            </div>
+
+            <h3>🎯 Meu Resumo de Habilidades</h3>
+            <textarea id="hab-resumo" placeholder="Hoje, minhas principais habilidades são..."></textarea>
+
+            <div class="tip">💡 Dica: Selecione as habilidades mais fortes com ⭐ para direcionar seu conteúdo.</div>
+
+            <div class="btn-row">
+                <button class="btn btn-primary" onclick="exportSection('habilidades')">📋 Copiar Texto Formatado</button>
+                <button class="btn btn-secondary" onclick="generateAndCopy('habilidades')">🤖 Texto para Agente Consumo</button>
+                <button class="btn btn-accent" onclick="gerarCarrossel('habilidades')">🎠 Gerar Carrossel</button>
+            </div>
+
+            <div class="output" id="output-habilidades"></div>
+        </div>
+    </div>
+
+    <!-- ==================== HISTÓRIAS ==================== -->
+    <div class="tab-content" id="tab-historias">
+        <div class="card">
+            <h2>📖 Mapeamento de Histórias</h2>
+            <p class="subtitle">Mapeie suas histórias marcantes e transforme-as em base para conteúdo.</p>
+
+            <div class="section-header">
+                <span class="icon">💼</span>
+                <h3>Trabalho / Carreira</h3>
+            </div>
+            <div id="historias-trabalho"></div>
+            <button class="btn btn-outline btn-sm" onclick="addStoryRow('historias-trabalho')">+ História</button>
+
+            <div class="section-header">
+                <span class="icon">🎓</span>
+                <h3>Estudos / Formação</h3>
+            </div>
+            <div id="historias-estudos"></div>
+            <button class="btn btn-outline btn-sm" onclick="addStoryRow('historias-estudos')">+ História</button>
+
+            <div class="section-header">
+                <span class="icon">👨‍👩‍👧</span>
+                <h3>Família / Vida Pessoal</h3>
+            </div>
+            <div id="historias-familia"></div>
+            <button class="btn btn-outline btn-sm" onclick="addStoryRow('historias-familia')">+ História</button>
+
+            <div class="section-header">
+                <span class="icon">💥</span>
+                <h3>Superações / Viradas de Jogo</h3>
+            </div>
+            <div id="historias-superacoes"></div>
+            <button class="btn btn-outline btn-sm" onclick="addStoryRow('historias-superacoes')">+ História</button>
+
+            <h3 style="margin-top:2rem">⭐ 5 Histórias Essenciais</h3>
+            <p class="subtitle">As histórias que mais representam quem você é.</p>
+            <div id="historias-essenciais"></div>
+
+            <div class="tip">💡 Dica: Histórias com vulnerabilidade geram mais conexão que histórias de sucesso.</div>
+
+            <div class="btn-row">
+                <button class="btn btn-primary" onclick="exportSection('historias')">📋 Copiar Texto Formatado</button>
+                <button class="btn btn-secondary" onclick="generateAndCopy('historias')">🤖 Texto para Agente Consumo</button>
+                <button class="btn btn-accent" onclick="gerarCarrossel('historias')">🎠 Gerar Carrossel</button>
+            </div>
+
+            <div class="output" id="output-historias"></div>
+        </div>
+    </div>
+
+    <!-- ==================== COSMOVISAÃO ==================== -->
+    <div class="tab-content" id="tab-cosmovisao">
+        <div class="card">
+            <h2>🌍 Cosmovisão de Valores</h2>
+            <p class="subtitle">Defina como você vê o mundo, o trabalho e o que guia suas escolhas.</p>
+
+            <h3>1. Minhas Crenças</h3>
+            <p class="subtitle">Escreva 10 crenças pessoais que guiam suas decisões.</p>
+            <div id="crencas-list"></div>
+            <button class="btn btn-outline btn-sm" onclick="addCrenca()">+ Crença</button>
+
+            <h3>2. Valores Inegociáveis</h3>
+            <p class="subtitle">Seus 5 valores que nunca abro mão.</p>
+            <div id="valores-list"></div>
+            <button class="btn btn-outline btn-sm" onclick="addValor()">+ Valor</button>
+
+            <h3>3. Filosofia de Vida / Trabalho</h3>
+            <div style="margin-top:0.5rem">
+                <label>Meu lema de vida:</label>
+                <textarea id="lema-vida" placeholder="Ex: Menos conversa, mais ação."></textarea>
+                <label>Como vejo o trabalho:</label>
+                <textarea id="visao-trabalho" placeholder="Ex: Trabalho é criação, não sacrifício."></textarea>
+                <label>Como vejo disciplina e produtividade:</label>
+                <textarea id="visao-disciplina" placeholder="Ex: Disciplina é liberdade, não restrição."></textarea>
+            </div>
+
+            <div class="tip">💡 Dica: Seus valores devem ser testados no dia a dia. Se não guiam decisões, são apenas palavras.</div>
+
+            <div class="btn-row">
+                <button class="btn btn-primary" onclick="exportSection('cosmovisao')">📋 Copiar Texto Formatado</button>
+                <button class="btn btn-secondary" onclick="generateAndCopy('cosmovisao')">🤖 Texto para Agente Consumo</button>
+                <button class="btn btn-accent" onclick="gerarCarrossel('cosmovisao')">🎠 Gerar Carrossel</button>
+            </div>
+
+            <div class="output" id="output-cosmovisao"></div>
+        </div>
+    </div>
+
+    <!-- ==================== PÚBLICO-ALVO ==================== -->
+    <div class="tab-content" id="tab-publico">
+        <div class="card">
+            <h2>👥 Público-Alvo Ideal</h2>
+            <p class="subtitle">Sem clareza de quem você ajuda, você não consegue se comunicar nem vender.</p>
+
+            <h3>1. Perfis Possíveis</h3>
+            <div id="perfis-list"></div>
+            <button class="btn btn-outline btn-sm" onclick="addPerfil()">+ Perfil</button>
+
+            <h3>2. Perfil Escolhido</h3>
+            <div class="tip">
+                <strong>Dica:</strong> Escolha o perfil com maior dor ativa — aquele que já busca soluções.
+            </div>
+            <div id="perfil-escolhido"></div>
+
+            <h3>3. Frase Oficial</h3>
+            <p class="subtitle">Template: "Eu ajudo <strong>QUEM</strong> a conquistar <strong>O QUÊ</strong>, mesmo que <strong>Z</strong>."</p>
+            <div id="frase-oficial"></div>
+
+            <div class="tip">💡 Dica: Teste sua frase dizendo em voz alta. Se soar forçada, ainda não está pronta.</div>
+
+            <div class="btn-row">
+                <button class="btn btn-primary" onclick="exportSection('publico')">📋 Copiar Texto Formatado</button>
+                <button class="btn btn-secondary" onclick="generateAndCopy('publico')">🤖 Texto para Agente Consumo</button>
+                <button class="btn btn-accent" onclick="gerarCarrossel('publico')">🎠 Gerar Carrossel</button>
+            </div>
+
+            <div class="output" id="output-publico"></div>
+        </div>
+    </div>
+
+    <!-- ==================== POSICIONAMENTO ==================== -->
+    <div class="tab-content" id="tab-posicionamento">
+        <div class="card">
+            <h2>🗺️ Posicionamento</h2>
+            <p class="subtitle">A forma como você quer ser percebido no mercado. Base da sua autoridade.</p>
+
+            <h3>1. Análise de Concorrentes</h3>
+            <div id="concorrentes-list"></div>
+            <button class="btn btn-outline btn-sm" onclick="addConcorrente()">+ Concorrente</button>
+
+            <h3>2. Meus Desvios</h3>
+            <div id="desvios-list"></div>
+            <button class="btn btn-outline btn-sm" onclick="addDesvio()">+ Desvio</button>
+
+            <h3>3. Meu Ponto de Vista Único</h3>
+            <div id="ponto-vista"></div>
+
+            <h3>4. Frase de Posicionamento</h3>
+            <p class="subtitle">Escreva 3 versões e escolha a final:</p>
+            <div id="frase-posicionamento"></div>
+
+            <div class="tip">💡 Dica: Um bom posicionamento é tão claro que alguém consegue repetir para outra pessoa.</div>
+
+            <div class="btn-row">
+                <button class="btn btn-primary" onclick="exportSection('posicionamento')">📋 Copiar Texto Formatado</button>
+                <button class="btn btn-secondary" onclick="generateAndCopy('posicionamento')">🤖 Texto para Agente Consumo</button>
+                <button class="btn btn-accent" onclick="gerarCarrossel('posicionamento')">🎠 Gerar Carrossel</button>
+            </div>
+
+            <div class="output" id="output-posicionamento"></div>
+        </div>
+    </div>
+
+    <!-- ==================== NARRATIVA ==================== -->
+    <div class="tab-content" id="tab-narrativa">
+        <div class="card">
+            <h2>🎯 Narrativa Principal</h2>
+            <p class="subtitle">Sua grande tese — a história que costura todo o seu conteúdo e produtos.</p>
+
+            <div id="narrativa-content"></div>
+
+            <div class="tip">💡 Dica: Sua narrativa deve funcionar como um roteiro. Se alguém contar sobre você, ela deve soar como você.</div>
+
+            <div class="btn-row">
+                <button class="btn btn-primary" onclick="exportSection('narrativa')">📋 Copiar Texto Formatado</button>
+                <button class="btn btn-secondary" onclick="generateAndCopy('narrativa')">🤖 Texto para Agente Consumo</button>
+                <button class="btn btn-accent" onclick="gerarCarrossel('narrativa')">🎠 Gerar Carrossel</button>
+            </div>
+
+            <div class="output" id="output-narrativa"></div>
+        </div>
+    </div>
+
+    <!-- ==================== AÇÕES GERAIS ==================== -->
+    <div class="card" style="text-align:center; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+        <h2 style="color:white;">🚀 Pronto para Alimentar o Cérebro?</h2>
+        <p style="color:rgba(255,255,255,0.9); max-width:600px; margin:0 auto 1.5rem;">
+            Preencha as seções acima e use os botões para enviar ao Agente de Consumo.
+            Cada seção preenchida alimenta automaticamente o cérebro do OPB Sistema.
+        </p>
+        <div class="btn-row" style="justify-content:center;">
+            <button class="btn btn-secondary" onclick="exportAllSections()" style="background:white; color:#667eea; font-weight:700;">
+                📦 Exportar Tudo
+            </button>
+            <button class="btn" onclick="saveAll()" style="background:rgba(255,255,255,0.2); color:white; border:2px solid white;">
+                💾 Salvar Progresso
+            </button>
+            <button class="btn" onclick="loadAll()" style="background:rgba(255,255,255,0.2); color:white; border:2px solid white;">
+                📂 Carregar Progresso
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Notification -->
+<div class="saved" id="saved-notification">✅ Salvo!</div>
+
+<script>
+// ==============================
+// UTILITY FUNCTIONS
+// ==============================
+
+function showNotification(msg) {
+    const el = document.getElementById('saved-notification');
+    el.textContent = msg;
+    el.classList.add('show');
+    setTimeout(() => el.classList.remove('show'), 2000);
+}
+
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
+// ==============================
+// TAB NAVIGATION
+// ==============================
+
+function switchTab(tabName) {
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tabs .tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('tab-' + tabName).classList.add('active');
+    event.target.classList.add('active');
+}
+
+function switchSubTab(prefix, name) {
+    const container = document.querySelectorAll('[id^="' + prefix + '-"]');
+    container.forEach(el => el.style.display = 'none');
+    const btns = event.target.parentElement.querySelectorAll('.tab-btn');
+    btns.forEach(b => b.classList.remove('active'));
+    event.target.classList.add('active');
+    document.getElementById(prefix + '-' + name).style.display = 'block';
+}
+
+// ==============================
+// PROGRESS TRACKING
+// ==============================
+
+function updateProgress() {
+    const sections = ['habilidades', 'historias', 'cosmovisao', 'publico', 'posicionamento', 'narrativa'];
+    let total = 0;
+    let filled = 0;
+    sections.forEach(s => {
+        const inputs = document.querySelectorAll('#tab-' + s + ' input, #tab-' + s + ' textarea');
+        inputs.forEach(i => {
+            total++;
+            if (i.value.trim().length > 0) filled++;
+        });
+        // Check for dynamic rows
+        const sectionsMap = {
+            'habilidades': ['habilidades-tecnicas', 'habilidades-humanas', 'habilidades-conhecimentos', 'habilidades-experiencias'],
+            'historias': ['historias-trabalho', 'historias-estudos', 'historias-familia', 'historias-superacoes', 'historias-essenciais'],
+        };
+        if (sectionsMap[s]) {
+            sectionsMap[s].forEach(containerId => {
+                const rows = document.querySelectorAll('#' + containerId + ' tr');
+                rows.forEach(r => { total++; if (r.querySelector('input')?.value.trim()) filled++; });
+            });
+        }
+    });
+    const pct = total > 0 ? Math.round((filled / total) * 100) : 0;
+    document.getElementById('progress-bar').style.width = pct + '%';
+    document.getElementById('progress-label').textContent = pct + '%';
+}
+
+// Auto-update progress
+document.addEventListener('input', updateProgress);
+
+// ==============================
+// DYNAMIC ROW MANAGEMENT
+// ==============================
+
+function addRow(containerId) {
+    const container = document.getElementById(containerId);
+    const row = document.createElement('tr');
+    const inputs = container.querySelectorAll('tr')[0]?.querySelectorAll('input, textarea, select');
+    let cells = '';
+    if (containerId.includes('habilidades')) {
+        cells = `<td><input type="text" placeholder="Habilidade" oninput="updateProgress()"></td>
+                <td><select onchange="updateProgress()"><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></td>
+                <td><input type="checkbox" onchange="updateProgress()"></td>
+                <td><input type="text" placeholder="Conteúdo / Serviço / Produto" oninput="updateProgress()"></td>
+                <td><button class="btn btn-sm btn-outline" onclick="this.closest('tr').remove();updateProgress();">✕</button></td>`;
+    } else if (containerId.includes('concorrentes')) {
+        cells = `<td><input type="text" placeholder="Nome" oninput="updateProgress()"></td>
+                <td><input type="text" placeholder="Faz bem" oninput="updateProgress()"></td>
+                <td><input type="text" placeholder="Faz mal" oninput="updateProgress()"></td>
+                <td><input type="text" placeholder="Copiar" oninput="updateProgress()"></td>
+                <td><input type="text" placeholder="Evitar" oninput="updateProgress()"></td>
+                <td><button class="btn btn-sm btn-outline" onclick="this.closest('tr').remove();updateProgress();">✕</button></td>`;
+    } else if (containerId.includes('historias')) {
+        cells = `<td><input type="text" placeholder="História" style="width:35%" oninput="updateProgress()"></td>
+                <td><input type="text" placeholder="O que aprendi" style="width:35%" oninput="updateProgress()"></td>
+                <td><input type="checkbox" onchange="updateProgress()"></td>
+                <td><input type="text" placeholder="Tema de conteúdo" oninput="updateProgress()"></td>
+                <td><button class="btn btn-sm btn-outline" onclick="this.closest('tr').remove();updateProgress();">✕</button></td>`;
+    } else if (containerId.includes('desvios')) {
+        cells = `<td><input type="text" placeholder="Concorrente" oninput="updateProgress()"></td>
+                <td><input type="text" placeholder="Não quero copiar" oninput="updateProgress()"></td>
+                <td><input type="text" placeholder="Por quê" oninput="updateProgress()"></td>
+                <td><button class="btn btn-sm btn-outline" onclick="this.closest('tr').remove();updateProgress();">✕</button></td>`;
+    }
+    row.innerHTML = cells;
+    container.appendChild(row);
+    updateProgress();
+}
+
+function addStoryRow(containerId) {
+    addRow(containerId);
+}
+
+// ==============================
+// INITIAL ROWS
+// ==============================
+
+function initRows() {
+    // Add initial empty rows
+    addRow('habilidades-tecnicas');
+    addRow('habilidades-humanas');
+    addRow('habilidades-conhecimentos');
+    addRow('habilidades-experiencias');
+
+    addStoryRow('historias-trabalho');
+    addStoryRow('historias-estudos');
+    addStoryRow('historias-familia');
+    addStoryRow('historias-superacoes');
+    addStoryRow('historias-essenciais');
+    addStoryRow('historias-essenciais');
+    addStoryRow('historias-essenciais');
+    addStoryRow('historias-essenciais');
+    addStoryRow('historias-essenciais');
+
+    addRow('concorrentes-list');
+    addRow('concorrentes-list');
+    addRow('concorrentes-list');
+    addRow('concorrentes-list');
+    addRow('concorrentes-list');
+
+    addRow('desvios-list');
+    addRow('desvios-list');
+    addRow('desvios-list');
+
+    addCrenca();
+    addValor();
+    addPerfil();
+}
+
+// ==============================
+// CRENÇAS & VALORES
+// ==============================
+
+function addCrenca() {
+    const list = document.getElementById('crencas-list');
+    const div = document.createElement('div');
+    div.style.margin = '0.5rem 0';
+    div.innerHTML = `<div style="display:flex;gap:0.5rem;align-items:center;">
+        <span style="color:var(--primary);font-weight:700;">${list.children.length + 1}.</span>
+        <input type="text" placeholder="Sua crença..." style="flex:1;" oninput="updateProgress()">
+        <label style="display:flex;align-items:center;gap:0.3rem;font-size:0.85rem;color:var(--text-light);">
+            ⭐ <input type="checkbox" onchange="updateProgress()" style="width:16px;height:16px;">
+        </label>
+    </div>`;
+    list.appendChild(div);
+}
+
+function addValor() {
+    const list = document.getElementById('valores-list');
+    const div = document.createElement('div');
+    div.style.margin = '0.5rem 0';
+    div.innerHTML = `<div style="display:flex;gap:0.5rem;align-items:center;">
+        <span style="color:var(--secondary);font-weight:700;">${list.children.length + 1}.</span>
+        <input type="text" placeholder="Valor inegociável..." style="flex:1;" oninput="updateProgress()">
+        <input type="text" placeholder="O que significa na prática" style="flex:1.5;" oninput="updateProgress()">
+    </div>`;
+    list.appendChild(div);
+}
+
+function addPerfil() {
+    const list = document.getElementById('perfis-list');
+    const div = document.createElement('div');
+    div.style.margin = '0.5rem 0';
+    div.style.padding = '0.8rem';
+    div.style.background = '#F8F9FA';
+    div.style.borderRadius = '8px';
+    div.innerHTML = `
+        <div style="display:flex;gap:0.5rem;align-items:center;margin-bottom:0.5rem;">
+            <strong style="color:var(--accent);">Perfil ${list.children.length + 1}:</strong>
+            <label style="display:flex;align-items:center;gap:0.3rem;font-size:0.85rem;">
+                ⭐ <input type="checkbox" onchange="highlightProfile(this)" style="width:16px;height:16px;"> Escolhido
+            </label>
+        </div>
+        <input type="text" placeholder="Descreva o perfil (ex: empreendedores iniciantes no Instagram)" style="width:100%;margin-bottom:0.3rem;" oninput="updateProgress()">
+        <textarea placeholder="Qual a maior dor desse perfil?" style="width:100%;min-height:50px;margin-bottom:0.3rem;" oninput="updateProgress()"></textarea>
+        <input type="text" placeholder="Onde esse perfil está online?" oninput="updateProgress()">
+    `;
+    list.appendChild(div);
+}
+
+function highlightProfile(checkbox) {
+    document.querySelectorAll('#perfis-list input[type="checkbox"]').forEach(c => {
+        if (c !== checkbox) c.checked = false;
+    });
+    updateProgress();
+}
+
+// ==============================
+// POSICIONAMENTO
+// ==============================
+
+function addConcorrente() {
+    addRow('concorrentes-list');
+}
+
+function addDesvio() {
+    addRow('desvios-list');
+}
+
+// ==============================
+// NARRATIVA FIELDS
+// ==============================
+
+function buildNarrativaFields() {
+    const container = document.getElementById('narrativa-content');
+    container.innerHTML = `
+        <h3>Problema Central</h3>
+        <label>Problema superficial:</label>
+        <textarea id="narr-prob-superficial" placeholder="O que parece ser o problema..."></textarea>
+        <label>Problema real (raiz):</label>
+        <textarea id="narr-prob-real" placeholder="A verdadeira causa profunda..."></textarea>
+
+        <h3>Minha Verdade</h3>
+        <textarea id="narr-verdade" placeholder="A crença fundamental que guia seu trabalho..."></textarea>
+        <label>Por que eu acredito nisso:</label>
+        <textarea id="narr-verdade-porque" placeholder="A evidência ou experiência que sustenta..."></textarea>
+
+        <h3>O Inimigo Comum</h3>
+        <textarea id="narr-inimigo" placeholder="O que você combate? (ideia, comportamento, mentalidade)..."></textarea>
+
+        <h3>Frase-Mãe (Tese)</h3>
+        <p class="subtitle">Template: "Eu [ação] + [público] + [resultado], mesmo que [obstáculo]."</p>
+        <textarea id="narr-tese" placeholder="Sua frase-mãe poderosa..."></textarea>
+    `;
+}
+
+// ==============================
+// EXPORT FUNCTIONS
+// ==============================
+
+function getSectionText(section) {
+    const map = {
+        'habilidades': () => {
+            let text = '# 🎯 Mapeamento de Habilidades\n\n## Habilidades Técnicas\n';
+            document.querySelectorAll('#habilidades-tecnicas tr').forEach(row => {
+                const inputs = row.querySelectorAll('input');
+                if (inputs[0]?.value.trim()) {
+                    const star = inputs[2]?.checked ? ' ⭐' : '';
+                    text += `- **${inputs[0].value}** (${inputs[1]?.value}/5)${star} — Potencial: ${inputs[3]?.value || 'não definido'}\n`;
+                }
+            });
+            text += '\n## Habilidades Humanas\n';
+            document.querySelectorAll('#habilidades-humanas tr').forEach(row => {
+                const inputs = row.querySelectorAll('input');
+                if (inputs[0]?.value.trim()) {
+                    const star = inputs[2]?.checked ? ' ⭐' : '';
+                    text += `- **${inputs[0].value}** (${inputs[1]?.value}/5)${star}\n`;
+                }
+            });
+            text += '\n## Conhecimentos Específicos\n';
+            document.querySelectorAll('#habilidades-conhecimentos tr').forEach(row => {
+                const inputs = row.querySelectorAll('input');
+                if (inputs[0]?.value.trim()) {
+                    text += `- **${inputs[0].value}** (${inputs[1]?.value}/5)\n`;
+                }
+            });
+            text += '\n## Experiências Relevantes\n';
+            document.querySelectorAll('#habilidades-experiencias tr').forEach(row => {
+                const inputs = row.querySelectorAll('input');
+                if (inputs[0]?.value.trim()) {
+                    text += `- ${inputs[0].value} (${inputs[1]?.value})\n  Aprendizado: ${inputs[2]?.value}\n`;
+                }
+            });
+            text += '\n## 🎯 Resumo\n\n' + (document.getElementById('hab-resumo')?.value || 'Preencha aqui...');
+            return text;
+        },
+        'historias': () => {
+            let text = '# 📖 Mapeamento de Histórias\n\n';
+            ['historias-trabalho', 'historias-estudos', 'historias-familia', 'historias-superacoes'].forEach(id => {
+                const title = {
+                    'historias-trabalho': 'Trabalho / Carreira',
+                    'historias-estudos': 'Estudos / Formação',
+                    'historias-familia': 'Família / Vida Pessoal',
+                    'historias-superacoes': 'Superações / Viradas de Jogo'
+                };
+                text += `## ${title[id]}\n`;
+                document.querySelectorAll('#' + id + ' tr').forEach(row => {
+                    const inputs = row.querySelectorAll('input');
+                    if (inputs[0]?.value.trim()) {
+                        text += `- "${inputs[0].value}"\n  Aprendizado: ${inputs[1]?.value || 'não definido'}\n`;
+                    }
+                });
+                text += '\n';
+            });
+            text += '## ⭐ 5 Histórias Essenciais\n\n';
+            document.querySelectorAll('#historias-essenciais tr').forEach((row, i) => {
+                const inputs = row.querySelectorAll('input, textarea');
+                if (inputs[0]?.value.trim()) {
+                    text += `${i+1}. **${inputs[0].value}**\n   Categoria: ${inputs[1]?.value || 'não definido'}\n   Aprendizado: ${inputs[2]?.value || 'não definido'}\n\n`;
+                }
+            });
+            return text;
+        },
+        'cosmovisao': () => {
+            let text = '# 🌍 Cosmovisão de Valores\n\n## Crenças\n\n';
+            document.querySelectorAll('#crencas-list div').forEach((div, i) => {
+                const input = div.querySelector('input[type="text"]');
+                const star = div.querySelector('input[type="checkbox"]')?.checked ? ' ⭐' : '';
+                if (input?.value.trim()) text += `${i+1}. ${input.value}${star}\n`;
+            });
+            text += '\n## Valores Inegociáveis\n\n';
+            document.querySelectorAll('#valores-list div').forEach((div, i) => {
+                const inputs = div.querySelectorAll('input');
+                if (inputs[0]?.value.trim()) {
+                    text += `${i+1}. **${inputs[0].value}** — ${inputs[1]?.value || 'significado não definido'}\n`;
+                }
+            });
+            text += '\n## Filosofia de Vida\n\n';
+            text += `Meu lema de vida: ${document.getElementById('lema-vida')?.value || 'não definido'}\n\n`;
+            text += `Como vejo o trabalho: ${document.getElementById('visao-trabalho')?.value || 'não definido'}\n\n`;
+            text += `Como vejo disciplina e produtividade: ${document.getElementById('visao-disciplina')?.value || 'não definido'}\n`;
+            return text;
+        },
+        'publico': () => {
+            let text = '# 👥 Público-Alvo Ideal\n\n## Perfis Possíveis\n\n';
+            document.querySelectorAll('#perfis-list > div').forEach((div, i) => {
+                const inputs = div.querySelectorAll('input, textarea');
+                if (inputs[0]?.value.trim()) {
+                    const star = div.querySelector('input[type="checkbox"]')?.checked ? ' ⭐ ESCOLHIDO' : '';
+                    text += `${i+1}. **${inputs[0].value}**${star}\n   Dor: ${inputs[1]?.value || 'não definida'}\n   Onde está: ${inputs[2]?.value || 'não definido'}\n\n`;
+                }
+            });
+            text += '## Frase Oficial\n\n';
+            text += `"${document.getElementById('frase-oficial')?.querySelector('textarea')?.value || 'Preencha a frase...'}"\n`;
+            return text;
+        },
+        'posicionamento': () => {
+            let text = '# 🗺️ Posicionamento\n\n## Análise de Concorrentes\n\n';
+            const header = '| Concorrente | Faz bem | Faz mal | Copiar | Evitar |\n|---|---|---|---|---|';
+            text += header + '\n';
+            document.querySelectorAll('#concorrentes-list tr').forEach(row => {
+                const inputs = row.querySelectorAll('input');
+                if (inputs[0]?.value.trim()) {
+                    text += `| ${inputs[0].value} | ${inputs[1]?.value} | ${inputs[2]?.value} | ${inputs[3]?.value} | ${inputs[4]?.value} |\n`;
+                }
+            });
+            text += '\n## Meus Desvios\n\n';
+            text += '| Concorrente | Não quero copiar | Por quê |\n|---|---|---|\n';
+            document.querySelectorAll('#desvios-list tr').forEach(row => {
+                const inputs = row.querySelectorAll('input');
+                if (inputs[0]?.value.trim()) {
+                    text += `| ${inputs[0].value} | ${inputs[1]?.value} | ${inputs[2]?.value} |\n`;
+                }
+            });
+            text += '\n## Meu Ponto de Vista Único\n\n' + (document.getElementById('ponto-vista')?.querySelector('textarea')?.value || 'não definido');
+            text += '\n\n## Frase de Posicionamento\n\n';
+            ['versao1', 'versao2', 'versao3'].forEach((id, i) => {
+                const val = document.getElementById(id)?.querySelector('textarea')?.value;
+                if (val) text += `**Versão ${i+1}:** "${val}"\n\n`;
+            });
+            return text;
+        },
+        'narrativa': () => {
+            let text = '# 🎯 Narrativa Principal\n\n';
+            text += '## Problema Central\n\n**Superficial:** ' + (document.getElementById('narr-prob-superficial')?.value || 'não definido');
+            text += '\n\n**Real (raiz):** ' + (document.getElementById('narr-prob-real')?.value || 'não definido');
+            text += '\n\n## Minha Verdade\n\n' + (document.getElementById('narr-verdade')?.value || 'não definido');
+            text += '\n\n**Por que eu acredito nisso:** ' + (document.getElementById('narr-verdade-porque')?.value || 'não definido');
+            text += '\n\n## O Inimigo Comum\n\n' + (document.getElementById('narr-inimigo')?.value || 'não definido');
+            text += '\n\n## Frase-Mãe (Tese)\n\n> "**' + (document.getElementById('narr-tese')?.value || 'não definido') + '**"\n';
+            return text;
+        }
+    };
+    return (map[section] || (() => 'Seção não encontrada'))();
+}
+
+function exportSection(section) {
+    const text = getSectionText(section);
+    const output = document.getElementById('output-' + section);
+    output.textContent = text;
+    output.classList.add('visible');
+    navigator.clipboard.writeText(text).then(() => {
+        showNotification('📋 Texto copiado para a área de transferência!');
+    }).catch(() => {
+        // Fallback
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+        showNotification('📋 Texto copiado!');
+    });
+    updateProgress();
+}
+
+function generateAndCopy(section) {
+    const text = `% ${section.toUpperCase()} COMPLETO PARA AGENTE DE CONSUMO
+    Copie tudo abaixo e cole no terminal:
+    python agents/consumo/main.py "<conteúdo abaixo>" completo "${section}"
+
+    ${getSectionText(section)}`;
+    navigator.clipboard.writeText(text).then(() => {
+        showNotification('🤖 Comando para Agente copiado!');
+    });
+    updateProgress();
+}
+
+function gerarCarrossel(section) {
+    const temas = {
+        'habilidades': 'Minhas habilidades como empreendedor',
+        'historias': 'Minhas histórias que moldaram minha jornada',
+        'cosmovisao': 'Minhas crenças sobre trabalho e vida',
+        'publico': 'Como encontrar seu público-alvo ideal',
+        'posicionamento': 'Meu posicionamento no mercado',
+        'narrativa': 'A verdade que guia meu negócio'
+    };
+    const text = `% CARROSSEL - ${section.toUpperCase()}
+    Copie e cole no terminal:
+    python agents/carrossel/main.py "${temas[section]}"
+    
+    Para mais opções:
+    python agents/carrossel/main.py "${temas[section]}" [tipo] [num_slides]
+    
+    Tipos: educational, inspirational, promotional, engagement`;
+    navigator.clipboard.writeText(text).then(() => {
+        showNotification('🎠 Comando de carrossel copiado!');
+    });
+    updateProgress();
+}
+
+function exportAllSections() {
+    let fullText = '# 🧠 PERFIL DO EMPREENDEDOR SOLO — COMPLETO\n\n> Exportado em ' + new Date().toLocaleDateString('pt-BR') + '\n\n---\n\n';
+    ['habilidades', 'historias', 'cosmovisao', 'publico', 'posicionamento', 'narrativa'].forEach(s => {
+        fullText += getSectionText(s) + '\n\n---\n\n';
+    });
+    fullText += '\n_Gerado pelo Perfil Visual do OPB Sistema_';
+    navigator.clipboard.writeText(fullText).then(() => {
+        showNotification('📦 Exportação completa copiada!');
+    });
+}
+
+// ==============================
+// SAVE / LOAD PROGRESS
+// ==============================
+
+function saveAll() {
+    const data = {};
+    // Save all input values
+    document.querySelectorAll('#tab-habilidades input, #tab-habilidades textarea, #tab-habilidades select').forEach(el => {
+        data[el.placeholder || 'hab_' + Math.random()] = el.value;
+    });
+    // Save dynamic rows
+    ['habilidades-tecnicas', 'habilidades-humanas', 'habilidades-conhecimentos', 'habilidades-experiencias',
+     'historias-trabalho', 'historias-estudos', 'historias-familia', 'historias-superacoes', 'historias-essenciais',
+     'concorrentes-list', 'desvios-list', 'perfis-list'].forEach(id => {
+        const rows = document.querySelectorAll('#' + id + ' tr');
+        data[id] = [];
+        rows.forEach(row => {
+            const vals = [];
+            row.querySelectorAll('input, textarea, select').forEach(el => vals.push(el.value));
+            data[id].push(vals);
+        });
+    });
+    localStorage.setItem('opb-perfil', JSON.stringify(data));
+    showNotification('💾 Progresso salvo!');
+    updateProgress();
+}
+
+function loadAll() {
+    const data = JSON.parse(localStorage.getItem('opb-perfil'));
+    if (!data) { showNotification('⚠️ Nenhum progresso salvo'); return; }
+
+    // Clear existing rows
+    ['habilidades-tecnicas', 'habilidades-humanas', 'habilidades-conhecimentos', 'habilidades-experiencias',
+     'historias-trabalho', 'historias-estudos', 'historias-familia', 'historias-superacoes', 'historias-essenciais',
+     'concorrentes-list', 'desvios-list', 'perfis-list'].forEach(id => {
+        document.getElementById(id).innerHTML = '';
+    });
+
+    // Restore dynamic rows
+    ['habilidades-tecnicas', 'habilidades-humanas', 'habilidades-conhecimentos', 'habilidades-experiencias',
+     'historias-trabalho', 'historias-estudos', 'historias-familia', 'historias-superacoes', 'historias-essenciais',
+     'concorrentes-list', 'desvios-list', 'perfis-list'].forEach(id => {
+        const rows = data[id] || [];
+        rows.forEach(vals => {
+            addRow(id);
+            const lastRow = document.getElementById(id).lastElementChild;
+            lastRow.querySelectorAll('input, textarea, select').forEach((el, i) => {
+                el.value = vals[i] || '';
+            });
+        });
+    });
+
+    // Update static textareas
+    document.querySelectorAll('textarea[id^="hab-resumo"], textarea[id^="lema-"], textarea[id^="visao-"]').forEach(el => {
+        const key = Object.keys(data).find(k => k.includes(el.placeholder?.toLowerCase()));
+        if (key && data[key]) el.value = data[key];
+    });
+
+    showNotification('📂 Progresso carregado!');
+    updateProgress();
+}
+
+// ==============================
+// INIT
+// ==============================
+
+window.addEventListener('DOMContentLoaded', () => {
+    initRows();
+    buildNarrativaFields();
+    updateProgress();
+});
+</script>
+
+</body>
+</html>

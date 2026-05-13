@@ -9,6 +9,7 @@
 
 | # | Arquivo | O que define | Status |
 |---|---------|-------------|--------|
+| 0 | `formulario.html` | Página web interativa para preencher todos os templates | ✅ Novo! |
 | 1 | `HABILIDADES.md` | Mapeamento de habilidades técnicas, humanas e conhecimentos | Preenchível |
 | 2 | `HISTORIAS.md` | Mapeamento de histórias marcantes da sua vida | Preenchível |
 | 3 | `COSMOVISAO.md` | Visão de mundo, crenças e valores inegociáveis | Preenchível |
@@ -18,15 +19,31 @@
 
 ---
 
-## 🔄 Fluxo de Uso
+## 🔄 Fluxo de Uso (Web)
 
+### Opção 1: Página Web (recomendado)
 ```
-1. Abra o template correspondente
+1. Abra o arquivo formulario.html no navegador (duplo clique)
+2. Preencha cada seção nos formulários
+3. Use os botões "🤖 Texto para Agente Consumo" para copiar o comando
+4. Cole no terminal: python agents/consumo/main.py "<texto>" completo "<nome>"
+```
+
+### Opção 2: Templates Markdown
+```
+1. Abra o template .md correspondente
 2. Preencha com suas informações
-3. Copie o conteúdo preenchido
+3. Copie o conteúdo
 4. Execute: python agents/consumo/main.py "<conteúdo>" completo "<Nome do exercício>"
-5. O cérebro será alimentado automaticamente
 ```
+
+### Onde as coisas vão parar
+
+| Destino | Caminho |
+|---------|---------|
+| Acervo | `acervo/conhecimento/[nome]_[data].md` |
+| Cérebro | `context-brain/conhecimento_[data].md` |
+| Índice | `acervo/conhecimento/index.md` (atualizado automaticamente) |
 
 ---
 
