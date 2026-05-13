@@ -23,6 +23,8 @@ cerebro/
 │   ├── infra/                      Sistemas internos
 │   └── projetos/                   Iniciativas com início/fim
 │
+├── perfil-empreendedor-solo/       Template de perfil do empreendedor (alimenta o cérebro)
+│
 ├── pessoal/                        Vida pessoal (ACL nativa)
 │
 ├── agentes/                        Configuração de cada agente IA
