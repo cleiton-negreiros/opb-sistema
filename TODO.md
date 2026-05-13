@@ -25,6 +25,7 @@
 - [x] **Agente Transcrição** ✓ (transcreve vídeos do YouTube)
 - [x] **Agente Capa de Vídeo** ✓ (gera ideias de thumbnail)
 - [x] **Agente Carrossel** - Transforma texto em estrutura de carrossel
+- [x] **Agente de Consumo** - Processa textos, PDFs e URLs em conhecimento estruturado
 - [ ] **Agente Email** - Gera e envia emails automáticos
 - [ ] **Agente Analytics** - Dashboard de métricas e insights
 

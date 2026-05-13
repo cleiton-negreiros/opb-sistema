@@ -37,6 +37,7 @@
 opb-sistema/
 ├── MAPA.md                    # Mapa raiz do cérebro
 ├── agents/                    # Agentes Python (código executável)
+│   ├── consumo/               # Processa textos, PDFs, URLs em conhecimento
 │   ├── capa_video/            # Gera ideias de thumbnail YouTube
 │   ├── carrossel/             # Gera estruturas de carrossel Instagram
 │   ├── coordinator/          # Agente coordenador

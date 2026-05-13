@@ -13,6 +13,7 @@ updated_at: 2026-05-12
 
 | Agente | Pasta | Função |
 |--------|-------|--------|
+| Consumo | `agents/consumo/` | Processa textos, PDFs, URLs em conhecimento |
 | Designer | `agents/designer/` | Design gráfico, diagramas, briefings |
 | Capa de Vídeo | `agents/capa_video/` | Thumbnails YouTube |
 | **Carrossel** | `agents/carrossel/` | Estruturas de carrossel para Instagram |
