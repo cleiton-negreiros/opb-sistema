@@ -37,8 +37,13 @@
 opb-sistema/
 ├── MAPA.md                    # Mapa raiz do cérebro
 ├── agents/                    # Agentes Python (código executável)
+│   ├── capa_video/            # Gera ideias de thumbnail YouTube
+│   ├── carrossel/             # Gera estruturas de carrossel Instagram
 │   ├── coordinator/          # Agente coordenador
-│   └── text_generator/      # Gerador de posts
+│   ├── designer/             # Gera diagramas, briefings, paletas
+│   ├── posicionamento/       # Pesquisa de mercado
+│   ├── telegram_bot/         # Interface Telegram
+│   └── text_generator/      # Geração de posts Instagram
 ├── cerebro/                  # CÉREBRO - contexto vivo (MARKDOWN)
 │   ├── MAPA.md              # Índice raiz
 │   ├── negocio/             # Tudo do trabalho

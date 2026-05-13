@@ -15,6 +15,7 @@ updated_at: 2026-05-12
 |--------|-------|--------|
 | Designer | `agents/designer/` | Design gráfico, diagramas, briefings |
 | Capa de Vídeo | `agents/capa_video/` | Thumbnails YouTube |
+| **Carrossel** | `agents/carrossel/` | Estruturas de carrossel para Instagram |
 | Posicionamento | `agents/posicionamento/` | Pesquisa de mercado |
 | Telegram Bot | `agents/telegram_bot/` | Interface com Telegram |
 | Transcrição | `agents/transcricao/` | Transcrição de áudio/vídeo |
@@ -22,4 +23,4 @@ updated_at: 2026-05-12
 
 ---
 
-_Last updated: 2026-05-12_
+_Last updated: 2026-05-14_
