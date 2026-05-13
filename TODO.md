@@ -18,6 +18,12 @@
 - [x] Atualizar AGENTS.md para usar cérebro ✓
 - [ ] Configurar install.sh para Windows (opcional)
 
+### Scripts de Inicialização
+- [x] **bot-telegram.bat** - Atalho Windows para iniciar o bot (área de trabalho)
+- [x] **bot-telegram-termux.sh** - Script Termux (celular)
+- [x] **SETUP-TERMUX.md** - Guia de configuração no celular
+- [x] **alimentar-cerebro.bat** - Atalho para alimentar o cérebro
+
 ### Agentes a Desenvolver
 - [x] **Agente Coordenador** ✓ (atualizado para usar cérebro)
 - [x] **Agente Telegram Bot** ✓ (captura ideias via Telegram)
