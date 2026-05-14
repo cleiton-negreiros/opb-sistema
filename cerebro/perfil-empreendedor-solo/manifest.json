@@ -1,0 +1,16 @@
+{
+    "name": "OPB Sistema",
+    "short_name": "OPB",
+    "description": "Sistema Multi-Agentes IA para Solopreneurs",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#0B0F1A",
+    "theme_color": "#6366F1",
+    "icons": [
+        {
+            "src": "favicon.ico",
+            "sizes": "32x32",
+            "type": "image/x-icon"
+        }
+    ]
+}

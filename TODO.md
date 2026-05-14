@@ -1,114 +1,54 @@
-# TODO.md - Quadro de Tarefas do OPB Sistema
+# TODO.md - OPB Sistema
 
-> Para agentes: leia este quadro antes de qualquer trabalho!
+> Quadro de tarefas atualizado em 2026-05-13
 
----
+## ✅ Concluído
 
-## 📋 Backlog
+- [x] Agente Carrossel (`agents/carrossel/`) — 4 tipos, integrado ao cérebro
+- [x] Agente de Consumo (`agents/consumo/`) — 5 tipos de análise, fallbacks
+- [x] 6 Templates de Perfil (`cerebro/perfil-empreendedor-solo/`)
+- [x] Formulário Web (`formulario.html`) — SPA com tabs, localStorage, export
+- [x] Integração Formulário ↔ API (`sendSectionToApi()`)
+- [x] Plataforma Web (`plataforma.html`) — Dashboard completo
+- [x] `saveConfig()` melhorado — persiste API URL + envia token do Telegram
+- [x] Scripts de alimentação (`alimentar.py`, `alimentar_com_input.py`)
+- [x] Scripts de inicialização do Telegram Bot (Windows + Termux)
+- [x] API Server Flask (`api_server.py`) — 14+ endpoints REST
+- [x] Endpoint `/api/bot/start` — inicia bot via POST
+- [x] Rota catch-all corrigida — aceita apenas GET
+- [x] Encoding corrigido — UTF-8 em todos os outputs
+- [x] Favicon e manifest.json criados
+- [x] `llm_provider.py` — modelo configurável via env var, fallback para tinyllama
+- [x] `index.html` — redireciona para `/plataforma.html`
+- [x] Pipeline completo testado (formulário → API → agente → cérebro → carrossel)
+- [x] Modelo `tinyllama` baixado no Ollama
+- [x] `OLLAMA_MODEL` configurado como variável de ambiente
+- [x] `beautifulsoup4` instalado
+- [x] Token do Telegram configurado (`setx TELEGRAM_BOT_TOKEN`)
+- [x] **Bot do Telegram rodando e conectado** (@NegreirosBot)
+- [x] **API Flask rodando na porta 5000**
+- [x] **Todos os endpoints testados** (health, stats, consumo, agentes, cerebro/arvore)
 
-### Deploy & Infraestrutura
-- [x] **Configurar GH CLI e autenticar** ✓
-- [x] Criar repositório Git no GitHub ✓
-- [x] Deploy inicial no Vercel ✓
-- [x] Configurar CI/CD automático (GitHub Actions) ✓
+## 🔄 Em Progresso
 
-### Cérebro (OPB School Template)
-- [x] Integrar template cerebro-template ✓
-- [x] Converter context-brain JSON para markdown ✓
-- [x] Atualizar AGENTS.md para usar cérebro ✓
-- [ ] Configurar install.sh para Windows (opcional)
+- [ ] Preencher formulário web / templates markdown com conteúdo real
+- [ ] Testar fluxo completo: formulário → API → consumo → cérebro → carrossel
+- [ ] Gerar primeiros carrosséis e posts via plataforma
+- [ ] Configurar token real do Telegram via `setx TELEGRAM_BOT_TOKEN`
+  - ✅ Feito: `8789174206:AAEFbU9kz0PQQLFlCw4vMVzIYiXSnmVRjxQ`
+- [ ] Instalar modelo leve no Ollama
+  - ✅ Feito: `tinyllama:latest` puxado
+- [ ] Instalar `beautifulsoup4`
+  - ✅ Feito: já estava instalado
 
-### Scripts de Inicialização
-- [x] **bot-telegram.bat** - Atalho Windows para iniciar o bot (área de trabalho)
-- [x] **bot-telegram-termux.sh** - Script Termux (celular)
-- [x] **SETUP-TERMUX.md** - Guia de configuração no celular
-- [x] **alimentar-cerebro.bat** - Atalho para alimentar o cérebro
+## 📋 Pendente (Próximos)
 
-### Agentes a Desenvolver
-- [x] **Agente Coordenador** ✓ (atualizado para usar cérebro)
-- [x] **Agente Telegram Bot** ✓ (captura ideias via Telegram)
-- [x] **Agente Posicionamento** ✓ (pesquisa perfis no YouTube, Instagram, Threads)
-- [x] **Agente Transcrição** ✓ (transcreve vídeos do YouTube)
-- [x] **Agente Capa de Vídeo** ✓ (gera ideias de thumbnail)
-- [x] **Agente Carrossel** - Transforma texto em estrutura de carrossel
-- [x] **Agente de Consumo** - Processa textos, PDFs e URLs em conhecimento estruturado
-- [ ] **Agente Email** - Gera e envia emails automáticos
-- [ ] **Agente Analytics** - Dashboard de métricas e insights
+1. Testar fluxo completo end-to-end com Ollama ativo
+2. Preencher perfil do empreendedor (Habilidades, Histórias, etc.)
+3. Alimentar cérebro com conteúdo real via plataforma
+4. Gerar primeiros carrosséis e posts
+5. Configurar domínio / deploy (Vercel ou similar)
+6. Documentar decisões e lições no cérebro
 
-### Melhorias no Hub
-- [ ] Adicionar gráficos de finanças (chart.js)
-- [ ] Exportar dados para JSON/CSV
-- [x] Sincronizar com cérebro para personalização ✓
-- [ ] Adicionar modo offline (PWA)
-- [ ] Temas claro/escuro
-
-### Conteúdo & Marketing
-- [ ] Template de posts para cada tipo
-- [ ] Calendário editorial
-- [ ] Banco de hashtags
-- [ ] Análise de concorrentes (placeholder)
-
----
-
-## 🚧 Em Andamento
-
-_(Nenhuma tarefa em progresso)_
-
----
-
-## ✅ Concluídos
-
-| Data | Tarefa | Agente |
-|------|--------|--------|
-| 2026-05-08 | Setup inicial do projeto | opencode |
-| 2026-05-08 | Agente de texto (Instagram) | opencode |
-| 2026-05-08 | Hub de produtividade | opencode |
-| 2026-05-08 | Página de configuração de perfil | opencode |
-| 2026-05-08 | Agente coordenador | opencode |
-| 2026-05-08 | Configuração Vercel e GitHub Actions | opencode |
-| 2026-05-12 | GH CLI autenticado | opencode |
-| 2026-05-12 | Repositório GitHub criado | opencode |
-| 2026-05-12 | CI/CD configurado | opencode |
-| 2026-05-12 | Deploy Vercel (via Vercel CLI) | opencode |
-| 2026-05-12 | Template Cerebro integrado | opencode |
-| 2026-05-12 | Agente Telegram Bot | opencode |
-| 2026-05-12 | Agente Posicionamento | opencode |
-| 2026-05-12 | Agente Transcricao (YouTube) | opencode |
-
----
-
-## 📝 Estrutura do Cérebro
-
-```
-cérebro/
-├── MAPA.md                           ← LEIA PRIMEIRO
-├── negocio/governanca/
-│   ├── regras/
-│   │   ├── quem-sou.md              ← IDENTIDADE
-│   │   ├── linguagem-escrita.md
-│   │   └── cerebro-manutencao.md
-│   └── projetos/
-│       └── ativos.md                 ← METAS ATUAIS
-├── agentes/
-├── playbooks/
-└── acervo/
-```
-
----
-
-## 🔄 Fluxo de Trabalho
-
-```
-Novo Agente → Leia AGENTS.md → Leia MAPA → Execute → Atualize cérebro → Commit → Deploy
-```
-
----
-
-## 📌 URLs
-
-- **Vercel**: https://opb-sistema.vercel.app
-- **GitHub**: https://github.com/cleiton-negreiros/opb-sistema
-
----
-
-_Last updated: 2026-05-12_
+## 🚧 Blocked
+- (none)

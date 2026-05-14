@@ -7,9 +7,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
-        /* ============================================
-           CSS VARIABLES - DARK MODE DEFAULT
-           ============================================ */
         :root {
             --bg-primary: #0B0F1A;
             --bg-secondary: #111827;
@@ -45,990 +42,170 @@
             --shadow-glow: 0 0 20px rgba(99, 102, 241, 0.1);
             --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
-
         * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        body {
-            font-family: 'Inter', -apple-system, sans-serif;
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            line-height: 1.6;
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
-
-        /* Scrollbar */
+        body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg-primary); color: var(--text-primary); line-height: 1.6; min-height: 100vh; overflow-x: hidden; }
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: var(--bg-secondary); }
         ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
-        ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
-
-        /* ============================================
-           LAYOUT
-           ============================================ */
-        .app {
-            display: flex;
-            min-height: 100vh;
-        }
-
-        /* SIDEBAR */
-        .sidebar {
-            width: 270px;
-            background: var(--bg-secondary);
-            border-right: 1px solid var(--border);
-            display: flex;
-            flex-direction: column;
-            position: fixed;
-            top: 0;
-            left: 0;
-            bottom: 0;
-            z-index: 100;
-            transition: var(--transition);
-        }
-
-        .sidebar-header {
-            padding: 24px 20px;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .sidebar-logo {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .sidebar-logo .logo-icon {
-            width: 40px;
-            height: 40px;
-            background: var(--gradient-1);
-            border-radius: var(--radius-sm);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.2rem;
-        }
-
-        .sidebar-logo .logo-text {
-            font-family: 'Inter', sans-serif;
-            font-weight: 800;
-            font-size: 1.2rem;
-            background: var(--gradient-1);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .sidebar-logo .logo-badge {
-            font-size: 0.6rem;
-            background: var(--accent);
-            color: white;
-            padding: 2px 6px;
-            border-radius: 10px;
-            margin-left: auto;
-            font-weight: 600;
-        }
-
-        .sidebar-nav {
-            flex: 1;
-            padding: 16px 12px;
-            overflow-y: auto;
-        }
-
-        .nav-section {
-            margin-bottom: 24px;
-        }
-
-        .nav-section-title {
-            font-size: 0.7rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1.2px;
-            color: var(--text-muted);
-            padding: 0 12px;
-            margin-bottom: 8px;
-        }
-
-        .nav-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 10px 14px;
-            border-radius: var(--radius-sm);
-            cursor: pointer;
-            transition: var(--transition);
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            font-weight: 500;
-            margin-bottom: 2px;
-            position: relative;
-        }
-
-        .nav-item:hover {
-            background: var(--bg-card);
-            color: var(--text-primary);
-        }
-
-        .nav-item.active {
-            background: var(--accent-glow);
-            color: var(--accent-light);
-            border-left: 3px solid var(--accent);
-        }
-
-        .nav-item i {
-            width: 20px;
-            text-align: center;
-            font-size: 1rem;
-        }
-
-        .nav-item .badge {
-            margin-left: auto;
-            background: var(--accent);
-            color: white;
-            font-size: 0.65rem;
-            padding: 2px 7px;
-            border-radius: 10px;
-            font-weight: 700;
-        }
-
-        .sidebar-footer {
-            padding: 16px 20px;
-            border-top: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .sidebar-footer .avatar {
-            width: 36px;
-            height: 36px;
-            background: var(--gradient-4);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            font-size: 0.85rem;
-        }
-
-        .sidebar-footer .user-info {
-            flex: 1;
-        }
-
-        .sidebar-footer .user-name {
-            font-weight: 600;
-            font-size: 0.85rem;
-        }
-
-        .sidebar-footer .user-role {
-            font-size: 0.7rem;
-            color: var(--text-muted);
-        }
-
-        /* MAIN CONTENT */
-        .main-content {
-            flex: 1;
-            margin-left: 270px;
-            min-height: 100vh;
-            background: var(--bg-primary);
-        }
-
-        /* TOP BAR */
-        .topbar {
-            padding: 16px 32px;
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background: rgba(11, 15, 26, 0.8);
-            backdrop-filter: blur(20px);
-            position: sticky;
-            top: 0;
-            z-index: 50;
-        }
-
-        .topbar-left {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-        }
-
-        .mobile-menu-btn {
-            display: none;
-            background: none;
-            border: none;
-            color: var(--text-primary);
-            font-size: 1.3rem;
-            cursor: pointer;
-            padding: 8px;
-        }
-
-        .page-title {
-            font-size: 1.4rem;
-            font-weight: 700;
-        }
-
-        .page-breadcrumb {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-        }
-
-        .topbar-right {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .status-indicator {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 500;
-        }
-
-        .status-indicator.online {
-            background: var(--success-glow);
-            color: var(--success);
-        }
-
-        .status-indicator.offline {
-            background: var(--danger-glow);
-            color: var(--danger);
-        }
-
-        .status-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: currentColor;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
-
-        .topbar-btn {
-            width: 38px;
-            height: 38px;
-            border-radius: var(--radius-xs);
-            border: 1px solid var(--border);
-            background: var(--bg-card);
-            color: var(--text-secondary);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: var(--transition);
-        }
-
-        .topbar-btn:hover {
-            background: var(--bg-card-hover);
-            color: var(--text-primary);
-        }
-
-        /* PAGE CONTENT */
-        .page-content {
-            padding: 32px;
-        }
-
+        .app { display: flex; min-height: 100vh; }
+        .sidebar { width: 270px; background: var(--bg-secondary); border-right: 1px solid var(--border); display: flex; flex-direction: column; position: fixed; top: 0; left: 0; bottom: 0; z-index: 100; transition: var(--transition); }
+        .sidebar-header { padding: 24px 20px; border-bottom: 1px solid var(--border); }
+        .sidebar-logo { display: flex; align-items: center; gap: 12px; }
+        .sidebar-logo .logo-icon { width: 40px; height: 40px; background: var(--gradient-1); border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
+        .sidebar-logo .logo-text { font-family: 'Inter', sans-serif; font-weight: 800; font-size: 1.2rem; background: var(--gradient-1); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .sidebar-logo .logo-badge { font-size: 0.6rem; background: var(--accent); color: white; padding: 2px 6px; border-radius: 10px; margin-left: auto; font-weight: 600; }
+        .sidebar-nav { flex: 1; padding: 16px 12px; overflow-y: auto; }
+        .nav-section { margin-bottom: 24px; }
+        .nav-section-title { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.2px; color: var(--text-muted); padding: 0 12px; margin-bottom: 8px; }
+        .nav-item { display: flex; align-items: center; gap: 12px; padding: 10px 14px; border-radius: var(--radius-sm); cursor: pointer; transition: var(--transition); color: var(--text-secondary); font-size: 0.9rem; font-weight: 500; margin-bottom: 2px; }
+        .nav-item:hover { background: var(--bg-card); color: var(--text-primary); }
+        .nav-item.active { background: var(--accent-glow); color: var(--accent-light); border-left: 3px solid var(--accent); }
+        .nav-item i { width: 20px; text-align: center; font-size: 1rem; }
+        .nav-item .badge { margin-left: auto; background: var(--accent); color: white; font-size: 0.65rem; padding: 2px 7px; border-radius: 10px; font-weight: 700; }
+        .sidebar-footer { padding: 16px 20px; border-top: 1px solid var(--border); display: flex; align-items: center; gap: 10px; }
+        .sidebar-footer .avatar { width: 36px; height: 36px; background: var(--gradient-4); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85rem; }
+        .sidebar-footer .user-name { font-weight: 600; font-size: 0.85rem; }
+        .sidebar-footer .user-role { font-size: 0.7rem; color: var(--text-muted); }
+        .main-content { flex: 1; margin-left: 270px; min-height: 100vh; background: var(--bg-primary); }
+        .topbar { padding: 16px 32px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; background: rgba(11, 15, 26, 0.8); backdrop-filter: blur(20px); position: sticky; top: 0; z-index: 50; }
+        .topbar-left { display: flex; align-items: center; gap: 16px; }
+        .mobile-menu-btn { display: none; background: none; border: none; color: var(--text-primary); font-size: 1.3rem; cursor: pointer; padding: 8px; }
+        .page-title { font-size: 1.4rem; font-weight: 700; }
+        .page-breadcrumb { font-size: 0.8rem; color: var(--text-muted); }
+        .topbar-right { display: flex; align-items: center; gap: 12px; }
+        .status-indicator { display: flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 500; }
+        .status-indicator.online { background: var(--success-glow); color: var(--success); }
+        .status-indicator.offline { background: var(--danger-glow); color: var(--danger); }
+        .status-dot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; animation: pulse 2s infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+        .topbar-btn { width: 38px; height: 38px; border-radius: var(--radius-xs); border: 1px solid var(--border); background: var(--bg-card); color: var(--text-secondary); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: var(--transition); }
+        .topbar-btn:hover { background: var(--bg-card-hover); color: var(--text-primary); }
+        .page-content { padding: 32px; }
         .page { display: none; }
         .page.active { display: block; animation: fadeIn 0.3s ease; }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* ============================================
-           COMPONENTS
-           ============================================ */
-
-        /* Stats Grid */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 16px;
-            margin-bottom: 28px;
-        }
-
-        .stat-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 20px;
-            transition: var(--transition);
-        }
-
-        .stat-card:hover {
-            border-color: var(--border-light);
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-lg);
-        }
-
-        .stat-card .stat-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 12px;
-        }
-
-        .stat-card .stat-icon {
-            width: 42px;
-            height: 42px;
-            border-radius: var(--radius-sm);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.1rem;
-        }
-
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-bottom: 28px; }
+        .stat-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; transition: var(--transition); }
+        .stat-card:hover { border-color: var(--border-light); transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+        .stat-card .stat-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+        .stat-card .stat-icon { width: 42px; height: 42px; border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; font-size: 1.1rem; }
         .stat-card .stat-icon.purple { background: var(--accent-glow); color: var(--accent-light); }
         .stat-card .stat-icon.green { background: var(--success-glow); color: var(--success); }
         .stat-card .stat-icon.amber { background: var(--warning-glow); color: var(--warning); }
         .stat-card .stat-icon.blue { background: var(--info-glow); color: var(--info); }
         .stat-card .stat-icon.red { background: var(--danger-glow); color: var(--danger); }
-
-        .stat-card .stat-trend {
-            font-size: 0.75rem;
-            font-weight: 600;
-            padding: 2px 8px;
-            border-radius: 12px;
-        }
-
+        .stat-card .stat-trend { font-size: 0.75rem; font-weight: 600; padding: 2px 8px; border-radius: 12px; }
         .stat-card .stat-trend.up { background: var(--success-glow); color: var(--success); }
         .stat-card .stat-trend.down { background: var(--danger-glow); color: var(--danger); }
-
-        .stat-card .stat-value {
-            font-size: 2rem;
-            font-weight: 800;
-            margin-bottom: 4px;
-        }
-
-        .stat-card .stat-label {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-        }
-
-        /* Cards */
-        .card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 24px;
-            margin-bottom: 20px;
-            transition: var(--transition);
-        }
-
-        .card:hover {
-            border-color: var(--border-light);
-        }
-
-        .card-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 20px;
-        }
-
-        .card-title {
-            font-size: 1.1rem;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .card-title i {
-            color: var(--accent);
-        }
-
-        /* Buttons */
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 10px 20px;
-            border-radius: var(--radius-sm);
-            font-size: 0.875rem;
-            font-weight: 600;
-            cursor: pointer;
-            border: none;
-            transition: var(--transition);
-            font-family: 'Inter', sans-serif;
-        }
-
-        .btn-primary {
-            background: var(--gradient-1);
-            color: white;
-            box-shadow: 0 4px 14px rgba(99, 102, 241, 0.3);
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
-        }
-
-        .btn-success {
-            background: var(--gradient-2);
-            color: white;
-        }
-
-        .btn-warning {
-            background: var(--gradient-3);
-            color: white;
-        }
-
-        .btn-info {
-            background: var(--gradient-4);
-            color: white;
-        }
-
-        .btn-outline {
-            background: transparent;
-            border: 1.5px solid var(--border);
-            color: var(--text-secondary);
-        }
-
-        .btn-outline:hover {
-            border-color: var(--accent);
-            color: var(--accent-light);
-        }
-
-        .btn-sm {
-            padding: 6px 14px;
-            font-size: 0.8rem;
-        }
-
-        .btn-lg {
-            padding: 14px 28px;
-            font-size: 1rem;
-        }
-
-        .btn-block {
-            width: 100%;
-            justify-content: center;
-        }
-
-        /* Tables */
-        .table-container {
-            overflow-x: auto;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        th {
-            text-align: left;
-            padding: 12px 16px;
-            font-size: 0.75rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            color: var(--text-muted);
-            border-bottom: 1px solid var(--border);
-        }
-
-        td {
-            padding: 14px 16px;
-            font-size: 0.875rem;
-            border-bottom: 1px solid var(--border);
-            color: var(--text-secondary);
-        }
-
-        tr:hover td {
-            background: var(--bg-card-hover);
-            color: var(--text-primary);
-        }
-
-        /* Tags / Badges */
-        .tag {
-            display: inline-flex;
-            align-items: center;
-            padding: 4px 10px;
-            border-radius: 6px;
-            font-size: 0.72rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.3px;
-        }
-
+        .stat-card .stat-value { font-size: 2rem; font-weight: 800; margin-bottom: 4px; }
+        .stat-card .stat-label { font-size: 0.85rem; color: var(--text-muted); }
+        .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; margin-bottom: 20px; transition: var(--transition); }
+        .card:hover { border-color: var(--border-light); }
+        .card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+        .card-title { font-size: 1.1rem; font-weight: 700; display: flex; align-items: center; gap: 10px; }
+        .card-title i { color: var(--accent); }
+        .btn { display: inline-flex; align-items: center; gap: 8px; padding: 10px 20px; border-radius: var(--radius-sm); font-size: 0.875rem; font-weight: 600; cursor: pointer; border: none; transition: var(--transition); font-family: 'Inter', sans-serif; }
+        .btn-primary { background: var(--gradient-1); color: white; box-shadow: 0 4px 14px rgba(99, 102, 241, 0.3); }
+        .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4); }
+        .btn-success { background: var(--gradient-2); color: white; }
+        .btn-warning { background: var(--gradient-3); color: white; }
+        .btn-info { background: var(--gradient-4); color: white; }
+        .btn-outline { background: transparent; border: 1.5px solid var(--border); color: var(--text-secondary); }
+        .btn-outline:hover { border-color: var(--accent); color: var(--accent-light); }
+        .btn-sm { padding: 6px 14px; font-size: 0.8rem; }
+        .btn-lg { padding: 14px 28px; font-size: 1rem; }
+        .btn-block { width: 100%; justify-content: center; }
+        .table-container { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; }
+        th { text-align: left; padding: 12px 16px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); border-bottom: 1px solid var(--border); }
+        td { padding: 14px 16px; font-size: 0.875rem; border-bottom: 1px solid var(--border); color: var(--text-secondary); }
+        tr:hover td { background: var(--bg-card-hover); color: var(--text-primary); }
+        .tag { display: inline-flex; align-items: center; padding: 4px 10px; border-radius: 6px; font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.3px; }
         .tag-purple { background: var(--accent-glow); color: var(--accent-light); }
         .tag-green { background: var(--success-glow); color: var(--success); }
         .tag-amber { background: var(--warning-glow); color: var(--warning); }
         .tag-red { background: var(--danger-glow); color: var(--danger); }
         .tag-blue { background: var(--info-glow); color: var(--info); }
-
-        /* Form Elements */
-        .form-group {
-            margin-bottom: 16px;
-        }
-
-        .form-label {
-            display: block;
-            font-size: 0.85rem;
-            font-weight: 600;
-            margin-bottom: 6px;
-            color: var(--text-secondary);
-        }
-
-        .form-input, .form-textarea, .form-select {
-            width: 100%;
-            padding: 10px 14px;
-            background: var(--bg-input);
-            border: 1.5px solid var(--border);
-            border-radius: var(--radius-xs);
-            color: var(--text-primary);
-            font-family: 'Inter', sans-serif;
-            font-size: 0.9rem;
-            transition: var(--transition);
-        }
-
-        .form-input:focus, .form-textarea:focus, .form-select:focus {
-            outline: none;
-            border-color: var(--accent);
-            box-shadow: 0 0 0 3px var(--accent-glow);
-        }
-
-        .form-textarea {
-            min-height: 100px;
-            resize: vertical;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.85rem;
-            line-height: 1.7;
-        }
-
-        .form-select {
-            appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2364748B' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 12px center;
-            padding-right: 36px;
-        }
-
-        /* Grid layouts */
-        .grid-2 {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-        }
-
-        .grid-3 {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 20px;
-        }
-
-        /* Agent Card */
-        .agent-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 24px;
-            transition: var(--transition);
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .agent-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: var(--gradient-1);
-            opacity: 0;
-            transition: var(--transition);
-        }
-
-        .agent-card:hover {
-            border-color: var(--accent);
-            transform: translateY(-3px);
-            box-shadow: var(--shadow-glow);
-        }
-
-        .agent-card:hover::before {
-            opacity: 1;
-        }
-
-        .agent-card .agent-icon {
-            width: 48px;
-            height: 48px;
-            border-radius: var(--radius-sm);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.4rem;
-            margin-bottom: 14px;
-        }
-
-        .agent-card .agent-name {
-            font-size: 1.05rem;
-            font-weight: 700;
-            margin-bottom: 6px;
-        }
-
-        .agent-card .agent-desc {
-            font-size: 0.82rem;
-            color: var(--text-muted);
-            line-height: 1.5;
-        }
-
-        .agent-card .agent-status {
-            margin-top: 14px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 0.78rem;
-        }
-
-        .agent-card .agent-status .dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-        }
-
+        .form-group { margin-bottom: 16px; }
+        .form-label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 6px; color: var(--text-secondary); }
+        .form-input, .form-textarea, .form-select { width: 100%; padding: 10px 14px; background: var(--bg-input); border: 1.5px solid var(--border); border-radius: var(--radius-xs); color: var(--text-primary); font-family: 'Inter', sans-serif; font-size: 0.9rem; transition: var(--transition); }
+        .form-input:focus, .form-textarea:focus, .form-select:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); }
+        .form-textarea { min-height: 100px; resize: vertical; font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; line-height: 1.7; }
+        .form-select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2364748B' d='M6 8L1 3h10z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 36px; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+        .agent-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; transition: var(--transition); cursor: pointer; position: relative; overflow: hidden; }
+        .agent-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--gradient-1); opacity: 0; transition: var(--transition); }
+        .agent-card:hover { border-color: var(--accent); transform: translateY(-3px); box-shadow: var(--shadow-glow); }
+        .agent-card:hover::before { opacity: 1; }
+        .agent-card .agent-icon { width: 48px; height: 48px; border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; font-size: 1.4rem; margin-bottom: 14px; }
+        .agent-card .agent-name { font-size: 1.05rem; font-weight: 700; margin-bottom: 6px; }
+        .agent-card .agent-desc { font-size: 0.82rem; color: var(--text-muted); line-height: 1.5; }
+        .agent-card .agent-status { margin-top: 14px; display: flex; align-items: center; gap: 6px; font-size: 0.78rem; }
         .agent-status.active .dot { background: var(--success); }
         .agent-status.beta .dot { background: var(--warning); }
-        .agent-status.new .dot { background: var(--info); }
-
-        /* Progress Ring */
-        .progress-ring {
-            width: 120px;
-            height: 120px;
-            position: relative;
-            margin: 0 auto;
-        }
-
-        .progress-ring svg {
-            transform: rotate(-90deg);
-        }
-
-        .progress-ring .bg {
-            fill: none;
-            stroke: var(--border);
-            stroke-width: 8;
-        }
-
-        .progress-ring .progress {
-            fill: none;
-            stroke: var(--gradient-1);
-            stroke-width: 8;
-            stroke-linecap: round;
-            transition: stroke-dashoffset 1s ease;
-        }
-
-        .progress-ring .percentage {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 1.5rem;
-            font-weight: 800;
-            color: var(--accent-light);
-        }
-
-        /* Output Console */
-        .console-output {
-            background: #0D1117;
-            border: 1px solid var(--border);
-            border-radius: var(--radius-sm);
-            padding: 16px;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.82rem;
-            line-height: 1.8;
-            color: #8B949E;
-            max-height: 300px;
-            overflow-y: auto;
-            white-space: pre-wrap;
-        }
-
+        .console-output { background: #0D1117; border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 16px; font-family: 'JetBrains Mono', monospace; font-size: 0.82rem; line-height: 1.8; color: #8B949E; max-height: 300px; overflow-y: auto; white-space: pre-wrap; }
         .console-output .line-green { color: #3FB950; }
         .console-output .line-blue { color: #58A6FF; }
         .console-output .line-yellow { color: #D29922; }
         .console-output .line-red { color: #F85149; }
         .console-output .line-purple { color: #BC8CFF; }
-
-        /* Modal */
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.6);
-            backdrop-filter: blur(4px);
-            z-index: 200;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .modal-overlay.active {
-            display: flex;
-        }
-
-        .modal {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 28px;
-            max-width: 560px;
-            width: 90%;
-            max-height: 80vh;
-            overflow-y: auto;
-            animation: modalIn 0.3s ease;
-        }
-
-        @keyframes modalIn {
-            from { opacity: 0; transform: scale(0.95); }
-            to { opacity: 1; transform: scale(1); }
-        }
-
-        /* Tabs */
-        .tabs-inline {
-            display: flex;
-            gap: 2px;
-            background: var(--bg-primary);
-            padding: 3px;
-            border-radius: var(--radius-sm);
-            margin-bottom: 20px;
-        }
-
-        .tab-inline {
-            flex: 1;
-            padding: 8px 16px;
-            text-align: center;
-            border-radius: 6px;
-            font-size: 0.82rem;
-            font-weight: 600;
-            cursor: pointer;
-            color: var(--text-muted);
-            transition: var(--transition);
-        }
-
-        .tab-inline.active {
-            background: var(--accent);
-            color: white;
-        }
-
-        .tab-inline:hover:not(.active) {
-            color: var(--text-primary);
-        }
-
-        /* Toggle */
-        .toggle-container {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .toggle {
-            width: 44px;
-            height: 24px;
-            background: var(--border);
-            border-radius: 12px;
-            position: relative;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-
-        .toggle.active {
-            background: var(--accent);
-        }
-
-        .toggle::after {
-            content: '';
-            position: absolute;
-            width: 18px;
-            height: 18px;
-            background: white;
-            border-radius: 50%;
-            top: 3px;
-            left: 3px;
-            transition: var(--transition);
-        }
-
-        .toggle.active::after {
-            left: 23px;
-        }
-
-        /* Alert/Toast */
-        .toast-container {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 999;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .toast {
-            padding: 12px 20px;
-            border-radius: var(--radius-sm);
-            font-size: 0.85rem;
-            font-weight: 500;
-            color: white;
-            animation: slideIn 0.3s ease, fadeOut 0.3s ease 2.7s;
-            box-shadow: var(--shadow-lg);
-        }
-
+        .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); z-index: 200; align-items: center; justify-content: center; }
+        .modal-overlay.active { display: flex; }
+        .modal { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; max-width: 560px; width: 90%; max-height: 80vh; overflow-y: auto; animation: modalIn 0.3s ease; }
+        @keyframes modalIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+        .tabs-inline { display: flex; gap: 2px; background: var(--bg-primary); padding: 3px; border-radius: var(--radius-sm); margin-bottom: 20px; }
+        .tab-inline { flex: 1; padding: 8px 16px; text-align: center; border-radius: 6px; font-size: 0.82rem; font-weight: 600; cursor: pointer; color: var(--text-muted); transition: var(--transition); }
+        .tab-inline.active { background: var(--accent); color: white; }
+        .tab-inline:hover:not(.active) { color: var(--text-primary); }
+        .toggle-container { display: flex; align-items: center; gap: 10px; }
+        .toggle { width: 44px; height: 24px; background: var(--border); border-radius: 12px; position: relative; cursor: pointer; transition: var(--transition); }
+        .toggle.active { background: var(--accent); }
+        .toggle::after { content: ''; position: absolute; width: 18px; height: 18px; background: white; border-radius: 50%; top: 3px; left: 3px; transition: var(--transition); }
+        .toggle.active::after { left: 23px; }
+        .toast-container { position: fixed; top: 20px; right: 20px; z-index: 999; display: flex; flex-direction: column; gap: 8px; }
+        .toast { padding: 12px 20px; border-radius: var(--radius-sm); font-size: 0.85rem; font-weight: 500; color: white; animation: slideIn 0.3s ease, fadeOut 0.3s ease 2.7s; box-shadow: var(--shadow-lg); }
         .toast.success { background: var(--success); }
         .toast.error { background: var(--danger); }
         .toast.info { background: var(--info); }
-
-        @keyframes slideIn {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
-
-        /* Empty State */
-        .empty-state {
-            text-align: center;
-            padding: 60px 20px;
-            color: var(--text-muted);
-        }
-
-        .empty-state i {
-            font-size: 3rem;
-            margin-bottom: 16px;
-            opacity: 0.3;
-        }
-
-        .empty-state h3 {
-            font-size: 1.1rem;
-            margin-bottom: 8px;
-            color: var(--text-secondary);
-        }
-
-        /* Responsive */
+        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        @keyframes fadeOut { to { opacity: 0; } }
+        .empty-state { text-align: center; padding: 60px 20px; color: var(--text-muted); }
+        .empty-state i { font-size: 3rem; margin-bottom: 16px; opacity: 0.3; }
+        .empty-state h3 { font-size: 1.1rem; margin-bottom: 8px; color: var(--text-secondary); }
         @media (max-width: 768px) {
-            .sidebar {
-                transform: translateX(-100%);
-            }
-
-            .sidebar.open {
-                transform: translateX(0);
-            }
-
-            .main-content {
-                margin-left: 0;
-            }
-
-            .mobile-menu-btn {
-                display: block;
-            }
-
-            .stats-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .grid-2, .grid-3 {
-                grid-template-columns: 1fr;
-            }
-
-            .page-content {
-                padding: 20px 16px;
-            }
-
-            .topbar {
-                padding: 12px 16px;
-            }
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.open { transform: translateX(0); }
+            .main-content { margin-left: 0; }
+            .mobile-menu-btn { display: block; }
+            .stats-grid { grid-template-columns: 1fr; }
+            .grid-2, .grid-3 { grid-template-columns: 1fr; }
+            .page-content { padding: 20px 16px; }
+            .topbar { padding: 12px 16px; }
         }
-
-        /* Sidebar overlay mobile */
-        .sidebar-overlay {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.5);
-            z-index: 99;
-        }
-
-        .sidebar-overlay.active {
-            display: block;
-        }
-
-        /* Scrollbar webkit */
+        .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 99; }
+        .sidebar-overlay.active { display: block; }
         .sidebar-nav::-webkit-scrollbar { width: 4px; }
         .sidebar-nav::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
-
-        /* Logo animation */
-        @keyframes logoGlow {
-            0%, 100% { filter: drop-shadow(0 0 4px rgba(99,102,241,0.3)); }
-            50% { filter: drop-shadow(0 0 12px rgba(99,102,241,0.6)); }
-        }
-
         .sidebar-logo { animation: logoGlow 3s ease-in-out infinite; }
-
-        /* Tooltip */
-        [data-tooltip] {
-            position: relative;
-        }
-
-        [data-tooltip]:hover::after {
-            content: attr(data-tooltip);
-            position: absolute;
-            left: 100%;
-            top: 50%;
-            transform: translateY(-50%);
-            margin-left: 8px;
-            padding: 6px 12px;
-            background: var(--bg-primary);
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            font-size: 0.75rem;
-            white-space: nowrap;
-            color: var(--text-primary);
-            z-index: 999;
-        }
-
-        /* Live indicator */
-        .live-dot {
-            display: inline-block;
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: var(--success);
-            margin-right: 6px;
-            animation: pulse 2s infinite;
-        }
-
-        .section-header {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 16px;
-        }
-
-        .section-header h3 {
-            font-size: 1rem;
-            font-weight: 700;
-        }
-
-        .section-line {
-            flex: 1;
-            height: 1px;
-            background: var(--border);
-        }
+        @keyframes logoGlow { 0%, 100% { filter: drop-shadow(0 0 4px rgba(99,102,241,0.3)); } 50% { filter: drop-shadow(0 0 12px rgba(99,102,241,0.6)); } }
+        [data-tooltip] { position: relative; }
+        [data-tooltip]:hover::after { content: attr(data-tooltip); position: absolute; left: 100%; top: 50%; transform: translateY(-50%); margin-left: 8px; padding: 6px 12px; background: var(--bg-primary); border: 1px solid var(--border); border-radius: 6px; font-size: 0.75rem; white-space: nowrap; color: var(--text-primary); z-index: 999; }
+        .progress-ring { width: 120px; height: 120px; position: relative; margin: 0 auto; }
+        .progress-ring svg { transform: rotate(-90deg); }
+        .progress-ring .bg { fill: none; stroke: var(--border); stroke-width: 8; }
+        .progress-ring .progress { fill: none; stroke: var(--gradient-1); stroke-width: 8; stroke-linecap: round; transition: stroke-dashoffset 1s ease; }
+        .progress-ring .percentage { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 1.5rem; font-weight: 800; color: var(--accent-light); }
+        .live-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--success); margin-right: 6px; animation: pulse 2s infinite; }
     </style>
 </head>
 <body>
 
-<!-- Toast Container -->
 <div class="toast-container" id="toastContainer"></div>
-
-<!-- Sidebar Overlay (Mobile) -->
 <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
 
 <div class="app">
-    <!-- ============================================
-         SIDEBAR
-         ============================================ -->
+    <!-- SIDEBAR -->
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">
             <div class="sidebar-logo">
@@ -1040,1257 +217,441 @@
                 <span class="logo-badge">PRO</span>
             </div>
         </div>
-
         <nav class="sidebar-nav">
-            <!-- Principal -->
             <div class="nav-section">
                 <div class="nav-section-title">Principal</div>
-                <div class="nav-item active" onclick="navigateTo('dashboard')">
-                    <i class="fas fa-th-large"></i>
-                    <span>Dashboard</span>
-                </div>
-                <div class="nav-item" onclick="navigateTo('cerebro')">
-                    <i class="fas fa-brain"></i>
-                    <span>Cérebro</span>
-                    <span class="badge">6</span>
-                </div>
-                <div class="nav-item" onclick="navigateTo('rotinas')">
-                    <i class="fas fa-clock"></i>
-                    <span>Rotinas</span>
-                </div>
+                <div class="nav-item active" onclick="navigateTo('dashboard')"><i class="fas fa-th-large"></i><span>Dashboard</span></div>
+                <div class="nav-item" onclick="navigateTo('cerebro')"><i class="fas fa-brain"></i><span>Cérebro</span><span class="badge">6</span></div>
+                <div class="nav-item" onclick="navigateTo('rotinas')"><i class="fas fa-clock"></i><span>Rotinas</span></div>
             </div>
-
-            <!-- Agentes -->
             <div class="nav-section">
                 <div class="nav-section-title">Agentes</div>
-                <div class="nav-item" onclick="navigateTo('transcricao')">
-                    <i class="fas fa-microphone-alt"></i>
-                    <span>Transcrição</span>
-                    <span class="badge">IA</span>
-                </div>
-                <div class="nav-item" onclick="navigateTo('capa-video')">
-                    <i class="fas fa-image"></i>
-                    <span>Capa Vídeo</span>
-                    <span class="badge">IA</span>
-                </div>
-                <div class="nav-item" onclick="navigateTo('carrossel')">
-                    <i class="fas fa-layer-group"></i>
-                    <span>Carrossel</span>
-                    <span class="badge">IA</span>
-                </div>
-                <div class="nav-item" onclick="navigateTo('consumo')">
-                    <i class="fas fa-book-reader"></i>
-                    <span>Consumo</span>
-                    <span class="badge">IA</span>
-                </div>
-                <div class="nav-item" onclick="navigateTo('posicionamento')">
-                    <i class="fas fa-crosshairs"></i>
-                    <span>Posicionamento</span>
-                    <span class="badge">IA</span>
-                </div>
-                <div class="nav-item" onclick="navigateTo('text-generator')">
-                    <i class="fas fa-pen-fancy"></i>
-                    <span>Text Generator</span>
-                    <span class="badge">IA</span>
-                </div>
+                <div class="nav-item" onclick="navigateTo('transcricao')"><i class="fas fa-microphone-alt"></i><span>Transcrição</span><span class="badge">IA</span></div>
+                <div class="nav-item" onclick="navigateTo('capa-video')"><i class="fas fa-image"></i><span>Capa Vídeo</span><span class="badge">IA</span></div>
+                <div class="nav-item" onclick="navigateTo('carrossel')"><i class="fas fa-layer-group"></i><span>Carrossel</span><span class="badge">IA</span></div>
+                <div class="nav-item" onclick="navigateTo('consumo')"><i class="fas fa-book-reader"></i><span>Consumo</span><span class="badge">IA</span></div>
+                <div class="nav-item" onclick="navigateTo('posicionamento')"><i class="fas fa-crosshairs"></i><span>Posicionamento</span><span class="badge">IA</span></div>
+                <div class="nav-item" onclick="navigateTo('text-generator')"><i class="fas fa-pen-fancy"></i><span>Text Generator</span><span class="badge">IA</span></div>
             </div>
-
-            <!-- Ferramentas -->
             <div class="nav-section">
                 <div class="nav-section-title">Ferramentas</div>
-                <div class="nav-item" onclick="navigateTo('perfil')">
-                    <i class="fas fa-user-edit"></i>
-                    <span>Meu Perfil</span>
-                </div>
-                <div class="nav-item" onclick="navigateTo('produtividade')">
-                    <i class="fas fa-chart-line"></i>
-                    <span>Produtividade</span>
-                </div>
-                <div class="nav-item" onclick="navigateTo('config')">
-                    <i class="fas fa-cog"></i>
-                    <span>Configurações</span>
-                </div>
+                <div class="nav-item" onclick="navigateTo('perfil')"><i class="fas fa-user-edit"></i><span>Meu Perfil</span></div>
+                <div class="nav-item" onclick="navigateTo('produtividade')"><i class="fas fa-chart-line"></i><span>Produtividade</span></div>
+                <div class="nav-item" onclick="navigateTo('config')"><i class="fas fa-cog"></i><span>Configurações</span></div>
             </div>
         </nav>
-
         <div class="sidebar-footer">
             <div class="avatar">CN</div>
             <div class="user-info">
                 <div class="user-name">Cleiton Negreiros</div>
-                <div class="user-role">Solopreneur</div>
+                <div class="user-role" id="botStatus">Bot: Iniciando...</div>
             </div>
         </div>
     </aside>
 
-    <!-- ============================================
-         MAIN CONTENT
-         ============================================ -->
     <main class="main-content">
-        <!-- Top Bar -->
         <div class="topbar">
             <div class="topbar-left">
-                <button class="mobile-menu-btn" onclick="toggleSidebar()">
-                    <i class="fas fa-bars"></i>
-                </button>
+                <button class="mobile-menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
                 <div>
                     <div class="page-title" id="pageTitle">Dashboard</div>
                     <div class="page-breadcrumb" id="pageBreadcrumb">OPB Studio > Visão Geral</div>
                 </div>
             </div>
             <div class="topbar-right">
-                <div class="status-indicator online">
-                    <span class="status-dot"></span>
-                    <span id="botStatus">Bot: Online</span>
-                </div>
-                <button class="topbar-btn" onclick="navigateTo('config')" data-tooltip="Configurações">
-                    <i class="fas fa-sliders-h"></i>
-                </button>
+                <div class="status-indicator" id="statusIndicator"><span class="status-dot"></span><span>Bot: Verificando...</span></div>
+                <button class="topbar-btn" onclick="navigateTo('config')" data-tooltip="Configurações"><i class="fas fa-sliders-h"></i></button>
             </div>
         </div>
 
-        <!-- Page Content -->
         <div class="page-content">
 
-            <!-- ============================================
-                 PAGE: DASHBOARD
-                 ============================================ -->
-            <div class="page active" id="page-dashboard">
-                <!-- Stats -->
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-header">
-                            <div class="stat-icon purple"><i class="fas fa-brain"></i></div>
-                            <span class="stat-trend up">↑ 12%</span>
-                        </div>
-                        <div class="stat-value">6</div>
-                        <div class="stat-label">Agentes Ativos</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-header">
-                            <div class="stat-icon green"><i class="fas fa-lightbulb"></i></div>
-                            <span class="stat-trend up">↑ 8</span>
-                        </div>
-                        <div class="stat-value" id="stat-ideias">0</div>
-                        <div class="stat-label">Ideias no Cérebro</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-header">
-                            <div class="stat-icon amber"><i class="fas fa-scroll"></i></div>
-                            <span class="stat-trend up">↑ 3</span>
-                        </div>
-                        <div class="stat-value">5</div>
-                        <div class="stat-label">Perfis Pendentes</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-header">
-                            <div class="stat-icon blue"><i class="fas fa-clock"></i></div>
-                            <span class="stat-trend down">↓ 2h</span>
-                        </div>
-                        <div class="stat-value">5h</div>
-                        <div class="stat-label">Economia Semanal</div>
-                    </div>
-                </div>
-
-                <div class="grid-2">
-                    <!-- Agentes Rápidos -->
-                    <div class="card">
-                        <div class="card-header">
-                            <div class="card-title"><i class="fas fa-bolt"></i> Ações Rápidas</div>
-                        </div>
-                        <div style="display:flex;flex-direction:column;gap:10px;">
-                            <button class="btn btn-primary btn-block" onclick="navigateTo('transcricao')">
-                                <i class="fas fa-microphone-alt"></i> Transcrever Vídeo
-                            </button>
-                            <button class="btn btn-success btn-block" onclick="navigateTo('capa-video')">
-                                <i class="fas fa-image"></i> Gerar Capa de Vídeo
-                            </button>
-                            <button class="btn btn-warning btn-block" onclick="navigateTo('carrossel')">
-                                <i class="fas fa-layer-group"></i> Criar Carrossel
-                            </button>
-                            <button class="btn btn-info btn-block" onclick="navigateTo('consumo')">
-                                <i class="fas fa-book-reader"></i> Processar Conteúdo
-                            </button>
-                            <button class="btn btn-outline btn-block" onclick="navigateTo('text-generator')">
-                                <i class="fas fa-pen-fancy"></i> Gerar Post
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Status dos Agentes -->
-                    <div class="card">
-                        <div class="card-header">
-                            <div class="card-title"><i class="fas fa-robot"></i> Status dos Agentes</div>
-                            <span class="tag tag-green">Online</span>
-                        </div>
-                        <div class="table-container">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>Agente</th>
-                                        <th>Status</th>
-                                        <th>Ação</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td><strong>🎠 Carrossel</strong></td>
-                                        <td><span class="tag tag-green">Ativo</span></td>
-                                        <td><button class="btn btn-sm btn-outline" onclick="navigateTo('carrossel')">Usar</button></td>
-                                    </tr>
-                                    <tr>
-                                        <td><strong>📖 Consumo</strong></td>
-                                        <td><span class="tag tag-green">Ativo</span></td>
-                                        <td><button class="btn btn-sm btn-outline" onclick="navigateTo('consumo')">Usar</button></td>
-                                    </tr>
-                                    <tr>
-                                        <td><strong>🎬 Capa Vídeo</strong></td>
-                                        <td><span class="tag tag-green">Ativo</span></td>
-                                        <td><button class="btn btn-sm btn-outline" onclick="navigateTo('capa-video')">Usar</button></td>
-                                    </tr>
-                                    <tr>
-                                        <td><strong>🔤 Transcrição</strong></td>
-                                        <td><span class="tag tag-green">Ativo</span></td>
-                                        <td><button class="btn btn-sm btn-outline" onclick="navigateTo('transcricao')">Usar</button></td>
-                                    </tr>
-                                    <tr>
-                                        <td><strong>✍️ Text Generator</strong></td>
-                                        <td><span class="tag tag-green">Ativo</span></td>
-                                        <td><button class="btn btn-sm btn-outline" onclick="navigateTo('text-generator')">Usar</button></td>
-                                    </tr>
-                                    <tr>
-                                        <td><strong>🎯 Posicionamento</strong></td>
-                                        <td><span class="tag tag-green">Ativo</span></td>
-                                        <td><button class="btn btn-sm btn-outline" onclick="navigateTo('posicionamento')">Usar</button></td>
-                                    </tr>
-                                    <tr>
-                                        <td><strong>🤖 Coordenador</strong></td>
-                                        <td><span class="tag tag-amber">Beta</span></td>
-                                        <td><span class="tag tag-amber">Em dev</span></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Recent Activity -->
-                <div class="card">
-                    <div class="card-header">
-                        <div class="card-title"><i class="fas fa-history"></i> Atividade Recente</div>
-                    </div>
-                    <div id="recent-activity">
-                        <!-- Populated by JS -->
-                    </div>
-                </div>
-            </div>
-
-            <!-- ============================================
-                 PAGE: CÉREBRO
-                 ============================================ -->
-            <div class="page" id="page-cerebro">
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-header">
-                            <div class="stat-icon purple"><i class="fas fa-database"></i></div>
-                        </div>
-                        <div class="stat-value">7</div>
-                        <div class="stat-label">Agentes Registrados</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-header">
-                            <div class="stat-icon green"><i class="fas fa-folder-open"></i></div>
-                        </div>
-                        <div class="stat-value" id="stat-pastas">5</div>
-                        <div class="stat-label">Pastas do Cérebro</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-header">
-                            <div class="stat-icon amber"><i class="fas fa-file-alt"></i></div>
-                        </div>
-                        <div class="stat-value" id="stat-arquivos">0</div>
-                        <div class="stat-label">Arquivos no Cérebro</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-header">
-                            <div class="stat-icon blue"><i class="fas fa-sitemap"></i></div>
-                        </div>
-                        <div class="stat-value">9</div>
-                        <div class="stat-label">MAPAs Registrados</div>
-                    </div>
-                </div>
-
-                <div class="grid-2">
-                    <!-- Estrutura do Cérebro -->
-                    <div class="card">
-                        <div class="card-header">
-                            <div class="card-title"><i class="fas fa-project-diagram"></i> Estrutura</div>
-                        </div>
-                        <div class="console-output" id="cerebro-tree">
-<span class="line-purple">cerebro/</span>
-<span class="line-blue">├── MAPA.md</span>
-<span class="line-blue">├── README.md</span>
-<span class="line-blue">├── negocio/</span>
-<span class="line-blue">│   ├── governanca/</span>
-<span class="line-blue">│   │   ├── regras/</span>
-<span class="line-green">│   │   │   ├── quem-sou.md ✅</span>
-<span class="line-green">│   │   │   ├── ritmo-sessao.md ✅</span>
-<span class="line-green">│   │   │   ├── linguagem-escrita.md ✅</span>
-<span class="line-green">│   │   │   ├── cerebro-manutencao.md ✅</span>
-<span class="line-green">│   │   │   └── integridade-dados.md ✅</span>
-<span class="line-blue">│   │   └── projetos/</span>
-<span class="line-green">│   │       └── ativos.md ✅</span>
-<span class="line-blue">│   ├── areas/</span>
-<span class="line-blue">│   ├── produtos/</span>
-<span class="line-blue">│   ├── infra/</span>
-<span class="line-blue">│   └── projetos/</span>
-<span class="line-blue">├── perfil-empreendedor-solo/</span>
-<span class="line-green">│   ├── MAPA.md ✅</span>
-<span class="line-green">│   ├── HABILIDADES.md ✅</span>
-<span class="line-green">│   ├── HISTORIAS.md ✅</span>
-<span class="line-green">│   ├── COSMOVISAO.md ✅</span>
-<span class="line-green">│   ├── PUBLICO-ALVO.md ✅</span>
-<span class="line-green">│   ├── POSICIONAMENTO.md ✅</span>
-<span class="line-green">│   ├── NARRATIVA.md ✅</span>
-<span class="line-green">│   └── formulario.html ✅</span>
-<span class="line-blue">├── agentes/</span>
-<span class="line-blue">├── playbooks/</span>
-<span class="line-blue">├── acervo/</span>
-<span class="line-blue">└── seguranca/</span>
-                        </div>
-                    </div>
-
-                    <!-- Integridade -->
-                    <div class="card">
-                        <div class="card-header">
-                            <div class="card-title"><i class="fas fa-check-double"></i> Integridade do Cérebro</div>
-                        </div>
-                        <div id="integridade-checklist">
-                            <!-- Populated by JS -->
-                        </div>
-                        <div style="margin-top:20px">
-                            <button class="btn btn-primary btn-block" onclick="checkIntegrity()">
-                                <i class="fas fa-sync-alt"></i> Verificar Integridade
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Mapas de Navegação -->
-                <div class="card">
-                    <div class="card-header">
-                        <div class="card-title"><i class="fas fa-map-signs"></i> MAPAs Navegáveis</div>
-                    </div>
-                    <div class="table-container">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Arquivo</th>
-                                    <th>Tipo</th>
-                                    <th>Última Atualização</th>
-                                    <th>Ação</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td><i class="fas fa-map" style="color:var(--accent);margin-right:6px"></i> MAPA.md</td>
-                                    <td><span class="tag tag-purple">Raiz</span></td>
-                                    <td>2026-05-14</td>
-                                    <td><button class="btn btn-sm btn-outline" onclick="readMap('MAPA.md')">Ler</button></td>
-                                </tr>
-                                <tr>
-                                    <td><i class="fas fa-map" style="color:var(--accent);margin-right:6px"></i> negocio/MAPA.md</td>
-                                    <td><span class="tag tag-purple">Navegação</span></td>
-                                    <td>2026-05-12</td>
-                                    <td><button class="btn btn-sm btn-outline" onclick="readMap('negocio/MAPA.md')">Ler</button></td>
-                                </tr>
-                                <tr>
-                                    <td><i class="fas fa-map" style="color:var(--accent);margin-right:6px"></i> cerebro/agentes/MAPA.md</td>
-                                    <td><span class="tag tag-purple">Agentes</span></td>
-                                    <td>2026-05-14</td>
-                                    <td><button class="btn btn-sm btn-outline" onclick="readMap('cerebro/agentes/MAPA.md')">Ler</button></td>
-                                </tr>
-                                <tr>
-                                    <td><i class="fas fa-map" style="color:var(--accent);margin-right:6px"></i> cerebro/perfil-empreendedor-solo/MAPA.md</td>
-                                    <td><span class="tag tag-purple">Perfil</span></td>
-                                    <td>2026-05-14</td>
-                                    <td><button class="btn btn-sm btn-outline" onclick="readMap('perfil-empreendedor-solo/MAPA.md')">Ler</button></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-            <!-- ============================================
-                 PAGE: ROTINAS
-                 ============================================ -->
-            <div class="page" id="page-rotinas">
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-header">
-                            <div class="stat-icon green"><i class="fas fa-play"></i></div>
-                        </div>
-                        <div class="stat-value" id="rotinas-ativas">0</div>
-                        <div class="stat-label">Rotinas Ativas</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-header">
-                            <div class="stat-icon blue"><i class="fas fa-calendar-check"></i></div>
-                        </div>
-                        <div class="stat-value">3</div>
-                        <div class="stat-label">Tipos de Rotina</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-header">
-                            <div class="stat-icon amber"><i class="fas fa-fire"></i></div>
-                        </div>
-                        <div class="stat-value">7</div>
-                        <div class="stat-label">Streak Consecutivo</div>
-                    </div>
-                </div>
-
-                <div class="grid-2">
-                    <!-- Rotina Matinal -->
-                    <div class="card">
-                        <div class="card-header">
-                            <div class="card-title"><i class="fas fa-sun" style="color:var(--warning)"></i> Rotina Matinal</div>
-                            <span class="tag tag-green">Automática</span>
-                        </div>
-                        <p style="margin-bottom:16px;color:var(--text-secondary)">Inicie todas as manhãs com foco e clareza.</p>
-                        <div id="morning-routine">
-                            <div class="todo-item" style="display:flex;align-items:center;gap:10px;padding:10px;border-radius:8px;margin-bottom:6px;background:var(--bg-input);">
-                                <input type="checkbox" id="mr1" onchange="updateRoutine()">
-                                <label for="mr1">📖 Ler MAPA.md do cérebro</label>
-                            </div>
-                            <div class="todo-item" style="display:flex;align-items:center;gap:10px;padding:10px;border-radius:8px;margin-bottom:6px;background:var(--bg-input);">
-                                <input type="checkbox" id="mr2" onchange="updateRoutine()">
-                                <label for="mr2">🎯 Ver projetos ativos</label>
-                            </div>
-                            <div class="todo-item" style="display:flex;align-items:center;gap:10px;padding:10px;border-radius:8px;margin-bottom:6px;background:var(--bg-input);">
-                                <input type="checkbox" id="mr3" onchange="updateRoutine()">
-                                <label for="mr3">🧠 Atualizar contexto dos agentes</label>
-                            </div>
-                            <div class="todo-item" style="display:flex;align-items:center;gap:10px;padding:10px;border-radius:8px;margin-bottom:6px;background:var(--bg-input);">
-                                <input type="checkbox" id="mr4" onchange="updateRoutine()">
-                                <label for="mr4">📝 Definir 3 prioridades do dia</label>
-                            </div>
-                            <div class="todo-item" style="display:flex;align-items:center;gap:10px;padding:10px;border-radius:8px;margin-bottom:6px;background:var(--bg-input);">
-                                <input type="checkbox" id="mr5" onchange="updateRoutine()">
-                                <label for="mr5">⚡ Verificar ideias capturadas</label>
-                            </div>
-                        </div>
-                        <button class="btn btn-warning btn-sm" onclick="startRoutine('morning')" style="margin-top:12px;">
-                            <i class="fas fa-play"></i> Iniciar Rotina Matinal
-                        </button>
-                    </div>
-
-                    <!-- Rotina Noturna -->
-                    <div class="card">
-                        <div class="card-header">
-                            <div class="card-title"><i class="fas fa-moon" style="color:var(--accent-light)"></i> Rotina Noturna</div>
-                            <span class="tag tag-blue">Planejamento</span>
-                        </div>
-                        <p style="margin-bottom:16px;color:var(--text-secondary)">Revise o dia e prepare o dia seguinte.</p>
-                        <div id="night-routine">
-                            <div class="todo-item" style="display:flex;align-items:center;gap:10px;padding:10px;border-radius:8px;margin-bottom:6px;background:var(--bg-input);">
-                                <input type="checkbox" id="nr1" onchange="updateRoutine()">
-                                <label for="nr1">📊 Revisar métricas do dia</label>
-                            </div>
-                            <div class="todo-item" style="display:flex;align-items:center;gap:10px;padding:10px;border-radius:8px;margin-bottom:6px;background:var(--bg-input);">
-                                <input type="checkbox" id="nr2" onchange="updateRoutine()">
-                                <label for="nr2">🧠 Processar conteúdo consumido</label>
-                            </div>
-                            <div class="todo-item" style="display:flex;align-items:center;gap:10px;padding:10px;border-radius:8px;margin-bottom:6px;background:var(--bg-input);">
-                                <input type="checkbox" id="nr3" onchange="updateRoutine()">
-                                <label for="nr3">💡 Registrar aprendizados</label>
-                            </div>
-                            <div class="todo-item" style="display:flex;align-items:center;gap:10px;padding:10px;border-radius:8px;margin-bottom:6px;background:var(--bg-input);">
-                                <input type="checkbox" id="nr4" onchange="updateRoutine()">
-                                <label for="nr4">📋 Preparar tarefas de amanhã</label>
-                            </div>
-                            <div class="todo-item" style="display:flex;align-items:center;gap:10px;padding:10px;border-radius:8px;margin-bottom:6px;background:var(--bg-input);">
-                                <input type="checkbox" id="nr5" onchange="updateRoutine()">
-                                <label for="nr5">✍️ Escrever no diário</label>
-                            </div>
-                        </div>
-                        <button class="btn btn-info btn-sm" onclick="startRoutine('night')" style="margin-top:12px;">
-                            <i class="fas fa-play"></i> Iniciar Rotina Noturna
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Pomodoro -->
-                <div class="card">
-                    <div class="card-header">
-                        <div class="card-title"><i class="fas fa-clock" style="color:var(--success)"></i> Pomodoro Timer</div>
-                        <button class="btn btn-sm btn-outline" onclick="resetPomodoro()">
-                            <i class="fas fa-redo"></i> Resetar
-                        </button>
-                    </div>
-                    <div style="text-align:center;padding:30px 0;">
-                        <div style="font-size:5rem;font-weight:800;color:var(--text-primary);font-variant-numeric:tabular-nums;" id="pomodoro-timer">25:00</div>
-                        <div style="margin:16px 0;">
-                            <span class="tag tag-green" id="pomodoro-phase">Foco</span>
-                            <span class="tag tag-muted" id="pomodoro-round" style="margin-left:8px;">Rodada 1/4</span>
-                        </div>
-                        <div class="btn-row" style="justify-content:center;margin-top:20px;">
-                            <button class="btn btn-success btn-lg" id="pomodoro-btn" onclick="togglePomodoro()">
-                                <i class="fas fa-play"></i> Iniciar
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- ============================================
-                 PAGE: TRANSCRIÇÃO
-                 ============================================ -->
-            <div class="page" id="page-transcricao">
-                <div class="grid-2">
-                    <div class="card">
-                        <div class="card-header">
-                            <div class="card-title"><i class="fas fa-microphone-alt" style="color:var(--accent-light)"></i> Transcrever Vídeo</div>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">URL do Vídeo do YouTube</label>
-                            <input type="text" class="form-input" id="transcricao-url" placeholder="https://www.youtube.com/watch?v=...">
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Idioma</label>
-                            <select class="form-select" id="transcricao-idioma">
-                                <option value="pt">Português (BR)</option>
-                                <option value="en">Inglês</option>
-                                <option value="es">Espanhol</option>
-                            </select>
-                        </div>
-                        <button class="btn btn-primary btn-block" onclick="runTranscricao()">
-                            <i class="fas fa-microphone-alt"></i> Transcrever
-                        </button>
-                        <div class="console-output" id="transcricao-output" style="margin-top:16px;display:none;">
-                        </div>
-                    </div>
-
-                    <div class="card">
-                        <div class="card-header">
-                            <div class="card-title"><i class="fas fa-file-alt" style="color:var(--success)"></i> Transcrições Recentes</div>
-                        </div>
-                        <div id="transcricoes-lista">
-                            <div class="empty-state">
-                                <i class="fas fa-microphone-slash"></i>
-                                <h3>Nenhuma transcrição ainda</h3>
-                                <p>Transcreva vídeos do YouTube para alimentar seu cérebro</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- ============================================
-                 PAGE: CAPA DE VÍDEO
-                 ============================================ -->
-            <div class="page" id="page-capa-video">
-                <div class="grid-2">
-                    <div class="card">
-                        <div class="card-header">
-                            <div class="card-title"><i class="fas fa-image" style="color:var(--warning)"></i> Gerar Ideias de Capa</div>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Tema do Vídeo</label>
-                            <input type="text" class="form-input" id="capa-tema" placeholder="Ex: IA para empreendedores">
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Quantidade de Ideias</label>
-                            <select class="form-select" id="capa-qtd">
-                                <option value="3">3 ideias</option>
-                                <option value="5" selected>5 ideias</option>
-                                <option value="6">6 ideias</option>
-                                <option value="8">8 ideias</option>
-                            </select>
-                        </div>
-                        <button class="btn btn-warning btn-block" onclick="runCapaVideo()">
-                            <i class="fas fa-magic"></i> Gerar Ideias
-                        </button>
-                        <div class="console-output" id="capa-output" style="margin-top:16px;display:none;">
-                        </div>
-                    </div>
-
-                    <div class="card">
-                        <div class="card-header">
-                            <div class="card-title"><i class="fas fa-images" style="color:var(--success)"></i> Capas Geradas</div>
-                        </div>
-                        <div id="capas-lista">
-                            <div class="empty-state">
-                                <i class="fas fa-image"></i>
-                                <h3>Nenhuma capa gerada</h3>
-                                <p>Gere ideias de thumbnails para seus vídeos</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- ============================================
-                 PAGE: CARROSSEL
-                 ============================================ -->
-            <div class="page" id="page-carrossel">
-                <div class="grid-2">
-                    <div class="card">
-                        <div class="card-header">
-                            <div class="card-title"><i class="fas fa-layer-group" style="color:var(--accent-light)"></i> Gerar Carrossel</div>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Tema do Carrossel</label>
-                            <input type="text" class="form-input" id="carrossel-tema" placeholder="Ex: IA para solopreneurs">
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Tipo de Carrossel</label>
-                            <select class="form-select" id="carrossel-tipo">
-                                <option value="educational">📚 Educational (9 slides — passo a passo)</option>
-                                <option value="inspirational">✨ Inspirational (7 slides — história)</option>
-                                <option value="promotional">🚀 Promotional (8 slides — produto/serviço)</option>
-                                <option value="engagement">💬 Engagement (6 slides — interação)</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Número de Slides</label>
-                            <input type="number" class="form-input" id="carrossel-slides" value="9" min="4" max="12">
-                        </div>
-                        <button class="btn btn-primary btn-block" onclick="runCarrossel()">
-                            <i class="fas fa-layer-group"></i> Gerar Carrossel
-                        </button>
-                        <div class="console-output" id="carrossel-output" style="margin-top:16px;display:none;">
-                        </div>
-                    </div>
-
-                    <div class="card">
-                        <div class="card-header">
-                            <div class="card-title"><i class="fas fa-newspaper" style="color:var(--success)"></i> Carrosséis Gerados</div>
-                        </div>
-                        <div id="carrossel-lista">
-                            <div class="empty-state">
-                                <i class="fas fa-layer-group"></i>
-                                <h3>Nenhum carrossel gerado</h3>
-                                <p>Crie carrosséis para engajar seu público</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Modelo Rápido -->
-                <div class="card" style="margin-top:20px">
-                    <div class="card-header">
-                        <div class="card-title"><i class="fas fa-bolt" style="color:var(--warning)"></i> Modelos Rápidos</div>
-                    </div>
-                    <div style="display:flex;flex-wrap:wrap;gap:10px;">
-                        <button class="btn btn-outline btn-sm" onclick="quickCarrossel('IA para solopreneurs')">🤖 IA para Solopreneurs</button>
-                        <button class="btn btn-outline btn-sm" onclick="quickCarrossel('Produtividade no trabalho remoto')">📊 Produtividade Remota</button>
-                        <button class="btn btn-outline btn-sm" onclick="quickCarrossel('Ferramentas de IA gratuitas')">🛠️ Ferramentas IA Gratuitas</button>
-                        <button class="btn btn-outline btn-sm" onclick="quickCarrossel('Como criar conteúdo consistente')">📝 Conteúdo Consistente</button>
-                        <button class="btn btn-outline btn-sm" onclick="quickCarrossel('Erros que empreendedores iniciantes cometem')">⚠️ Erros Comuns</button>
-                        <button class="btn btn-outline btn-sm" onclick="quickCarrossel('Minha rotina como solopreneur')">⏰ Minha Rotina</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- ============================================
-                 PAGE: CONSUMO
-                 ============================================ -->
-            <div class="page" id="page-consumo">
-                <div class="grid-2">
-                    <div class="card">
-                        <div class="card-header">
-                            <div class="card-title"><i class="fas fa-book-reader" style="color:var(--success)"></i> Processar Conteúdo</div>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Texto, URL ou Caminho do Arquivo</label>
-                            <textarea class="form-textarea" id="consumo-input" rows="6" placeholder="Cole um texto, uma URL, ou caminho de arquivo (PDF, TXT, MD)..."></textarea>
-                        </div>
-                        <div class="grid-2" style="margin-bottom:16px;">
-                            <div class="form-group">
-                                <label class="form-label">Tipo de Análise</label>
-                                <select class="form-select" id="consumo-tipo">
-                                    <option value="completo">📦 Completo (tudo)</option>
-                                    <option value="resumo">📝 Resumo</option>
-                                    <option value="conceitos">💡 Conceitos</option>
-                                    <option value="citacoes">🗣️ Citações</option>
-                                    <option value="aplicacao">🎯 Aplicação</option>
-                                    <option value="tema">🎠 Temas para Carrossel</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">Título (opcional)</label>
-                                <input type="text" class="form-input" id="consumo-titulo" placeholder="Nome para o conhecimento">
-                            </div>
-                        </div>
-                        <div class="toggle-container" style="margin-bottom:16px;">
-                            <div class="toggle" id="consumo-llm-toggle" onclick="toggleLLM()"></div>
-                            <span style="font-size:0.85rem;">Usar LLM (Ollama)</span>
-                        </div>
-                        <button class="btn btn-success btn-block" onclick="runConsumo()">
-                            <i class="fas fa-book-reader"></i> Processar Conteúdo
-                        </button>
-                        <div class="console-output" id="consumo-output" style="margin-top:16px;display:none;">
-                        </div>
-                    </div>
-
-                    <div class="card">
-                        <div class="card-header">
-                            <div class="card-title"><i class="fas fa-database" style="color:var(--accent-light)"></i> Conhecimento Salvo</div>
-                        </div>
-                        <div class="tabs-inline">
-                            <div class="tab-inline active" onclick="filterConhecimento('todos')">Todos</div>
-                            <div class="tab-inline" onclick="filterConhecimento('recente')">Recentes</div>
-                            <div class="tab-inline" onclick="filterConhecimento('carrossel')">Carrossel</div>
-                        </div>
-                        <div id="conhecimento-lista">
-                            <div class="empty-state">
-                                <i class="fas fa-book-open"></i>
-                                <h3>Nenhum conhecimento salvo</h3>
-                                <p>Processe textos, PDFs e URLs para alimentar o cérebro</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Atalho para Alimentar Cérebro -->
-                <div class="card" style="margin-top:20px;">
-                    <div class="card-header">
-                        <div class="card-title"><i class="fas fa-link" style="color:var(--warning)"></i> Alimentar Cérebro (Perfil)</div>
-                    </div>
-                    <p style="color:var(--text-secondary);margin-bottom:12px;">
-                        Preencheu o formulário web e quer alimentar o cérebro? Copie o conteúdo e clique abaixo:
-                    </p>
-                    <button class="btn btn-warning btn-block" onclick="runAlimentar()">
-                        <i class="fas fa-brain"></i> Alimentar Cérebro (via alimentar.py)
-                    </button>
-                </div>
-            </div>
-
-            <!-- ============================================
-                 PAGE: POSICIONAMENTO
-                 ============================================ -->
-            <div class="page" id="page-posicionamento">
-                <div class="card">
-                    <div class="card-header">
-                        <div class="card-title"><i class="fas fa-crosshairs" style="color:var(--info)"></i> Análise de Concorrentes</div>
-                        <button class="btn btn-sm btn-outline" onclick="analyzeCompetitors()">
-                            <i class="fas fa-play"></i> Analisar
-                        </button>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Nicho / Mercado</label>
-                        <input type="text" class="form-input" id="posicionamento-nicho" placeholder="Ex: Produtividade para solopreneurs">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">5 Concorrentes (um por linha)</label>
-                        <textarea class="form-textarea" id="posicionamento-concorrentes" rows="6" placeholder="@concorrente1&#10;@concorrente2&#10;@concorrente3&#10;@concorrente4&#10;@concorrente5"></textarea>
-                    </div>
-                    <div id="posicionamento-output" class="console-output" style="display:none;"></div>
-                </div>
-
-                <div class="grid-2">
-                    <div class="card">
-                        <div class="card-header">
-                            <div class="card-title"><i class="fas fa-bullseye" style="color:var(--warning)"></i> Meu Posicionamento</div>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Minha Verdade (crença central)</label>
-                            <textarea class="form-textarea" id="minha-verdade" rows="3" placeholder="Ex: Negócio cresce de dentro pra fora..."></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Inimigo Comum</label>
-                            <input type="text" class="form-input" id="inimigo-comum" placeholder="Ex: FOMO, fórmulas mágicas, pressa">
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Frase de Posicionamento</label>
-                            <textarea class="form-textarea" id="frase-posicionamento" rows="3" placeholder="Eu ensino [QUEM] a [O QUÊ], mesmo que [OBSTÁCULO]"></textarea>
-                        </div>
-                        <button class="btn btn-info btn-block" onclick="savePosicionamento()">
-                            <i class="fas fa-save"></i> Salvar Posicionamento
-                        </button>
-                    </div>
-
-                    <div class="card">
-                        <div class="card-header">
-                            <div class="card-title"><i class="fas fa-check-circle" style="color:var(--success)"></i> Checklist</div>
-                        </div>
-                        <div id="posicionamento-checklist">
-                            <div class="todo-item" style="display:flex;align-items:center;gap:10px;padding:10px;border-radius:8px;margin-bottom:6px;background:var(--bg-input);">
-                                <input type="checkbox"><label>Analisei 5 concorrentes</label>
-                            </div>
-                            <div class="todo-item" style="display:flex;align-items:center;gap:10px;padding:10px;border-radius:8px;margin-bottom:6px;background:var(--bg-input);">
-                                <input type="checkbox"><label>Listei meus desvios</label>
-                            </div>
-                            <div class="todo-item" style="display:flex;align-items:center;gap:10px;padding:10px;border-radius:8px;margin-bottom:6px;background:var(--bg-input);">
-                                <input type="checkbox"><label>Defini meu ponto de vista único</label>
-                            </div>
-                            <div class="todo-item" style="display:flex;align-items:center;gap:10px;padding:10px;border-radius:8px;margin-bottom:6px;background:var(--bg-input);">
-                                <input type="checkbox"><label>Criei minha frase de posicionamento</label>
-                            </div>
-                            <div class="todo-item" style="display:flex;align-items:center;gap:10px;padding:10px;border-radius:8px;margin-bottom:6px;background:var(--bg-input);">
-                                <input type="checkbox"><label>Testei com pessoas de confiança</label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- ============================================
-                 PAGE: TEXT GENERATOR
-                 ============================================ -->
-            <div class="page" id="page-text-generator">
-                <div class="grid-2">
-                    <div class="card">
-                        <div class="card-header">
-                            <div class="card-title"><i class="fas fa-pen-fancy" style="color:var(--accent-light)"></i> Gerador de Posts Instagram</div>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Objetivo do Post</label>
-                            <textarea class="form-textarea" id="text-gen-objetivo" rows="3" placeholder="Ex: Educar sobre organização de tarefas"></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Tipo de Post</label>
-                            <select class="form-select" id="text-gen-tipo">
-                                <option value="educational">📚 Educational — Ensinar algo</option>
-                                <option value="inspirational">✨ Inspirational — Motivar</option>
-                                <option value="promotional">🚀 Promotional — Divulgar</option>
-                                <option value="engagement">💬 Engagement — Gerar interação</option>
-                            </select>
-                        </div>
-                        <button class="btn btn-primary btn-block" onclick="runTextGenerator()">
-                            <i class="fas fa-pen-fancy"></i> Gerar Post
-                        </button>
-                        <div class="console-output" id="text-gen-output" style="margin-top:16px;display:none;"></div>
-                    </div>
-
-                    <div class="card">
-                        <div class="card-header">
-                            <div class="card-title"><i class="fas fa-history" style="color:var(--success)"></i> Posts Gerados</div>
-                        </div>
-                        <div id="posts-lista">
-                            <div class="empty-state">
-                                <i class="fas fa-pen-fancy"></i>
-                                <h3>Nenhum post gerado</h3>
-                                <p>Gere posts para Instagram com IA</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Templates Rápidos -->
-                <div class="card" style="margin-top:20px;">
-                    <div class="card-header">
-                        <div class="card-title"><i class="fas fa-bolt" style="color:var(--warning)"></i> Templates Rápidos</div>
-                    </div>
-                    <div style="display:flex;flex-wrap:wrap;gap:10px;">
-                        <button class="btn btn-outline btn-sm" onclick="quickPost('Dica de produtividade', 'educational')">💡 Dica Rápida</button>
-                        <button class="btn btn-outline btn-sm" onclick="quickPost('Motivação para empreendedores', 'inspirational')">✨ Motivação</button>
-                        <button class="btn btn-outline btn-sm" onclick="quickPost('Novo serviço/produto', 'promotional')">🚀 Promoção</button>
-                        <button class="btn btn-outline btn-sm" onclick="quickPost('Pergunta para engajar audiência', 'engagement')">💬 Engajar</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- ============================================
-                 PAGE: PERFIL
-                 ============================================ -->
-            <div class="page" id="page-perfil">
-                <div class="grid-2">
-                    <div class="card">
-                        <div class="card-header">
-                            <div class="card-title"><i class="fas fa-user-edit" style="color:var(--accent-light)"></i> Perfil do Empreendedor</div>
-                        </div>
-                        <div id="perfil-form">
-                            <div class="form-group">
-                                <label class="form-label">Nome completo</label>
-                                <input type="text" class="form-input" id="perfil-nome" placeholder="Seu nome completo">
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">Nome público / Apelido</label>
-                                <input type="text" class="form-input" id="perfil-nome-publico" placeholder="Como quer ser chamado">
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">Nicho / Mercado</label>
-                                <input type="text" class="form-input" id="perfil-nicho" placeholder="Ex: Produtividade, IA, Marketing">
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">Público-alvo</label>
-                                <input type="text" class="form-input" id="perfil-publico" placeholder="Ex: Solopreneurs iniciantes">
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">Problema que resolve</label>
-                                <textarea class="form-textarea" id="perfil-problema" rows="3" placeholder="Ex: Ajudo pessoas a organizar rotinas..."></textarea>
-                            </div>
-                            <button class="btn btn-primary btn-block" onclick="savePerfil()">
-                                <i class="fas fa-save"></i> Salvar Perfil
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="card">
-                        <div class="card-header">
-                            <div class="card-title"><i class="fas fa-palette" style="color:var(--success)"></i> Identidade Visual</div>
-                        </div>
-                        <div id="identidade-form">
-                            <div class="form-group">
-                                <label class="form-label">Cor Primária</label>
-                                <input type="color" class="form-input" id="perfil-cor1" value="#FF6B6B" style="height:42px;padding:4px;">
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">Cor Secundária</label>
-                                <input type="color" class="form-input" id="perfil-cor2" value="#4ECDC4" style="height:42px;padding:4px;">
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">Cor de Destaque</label>
-                                <input type="color" class="form-input" id="perfil-cor3" value="#45B7D1" style="height:42px;padding:4px;">
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">Fonte Título</label>
-                                <select class="form-select" id="perfil-fonte-titulo">
-                                    <option value="Montserrat">Montserrat</option>
-                                    <option value="Inter">Inter</option>
-                                    <option value="Poppins">Poppins</option>
-                                </select>
-                            </div>
-                            <div class="preview-colors" style="display:flex;gap:12px;margin-top:16px;">
-                                <div style="width:60px;height:60px;border-radius:12px;background:#FF6B6B;" id="preview-c1"></div>
-                                <div style="width:60px;height:60px;border-radius:12px;background:#4ECDC4;" id="preview-c2"></div>
-                                <div style="width:60px;height:60px;border-radius:12px;background:#45B7D1;" id="preview-c3"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Módulos do Perfil -->
-                <div style="margin-top:20px;">
-                    <div class="card">
-                        <div class="card-header">
-                            <div class="card-title"><i class="fas fa-puzzle-piece" style="color:var(--warning)"></i> Módulos do Perfil</div>
-                        </div>
-                        <div class="grid-3" style="margin-top:12px;">
-                            <div class="agent-card" onclick="navigateTo('consumo'); setTimeout(()=>document.getElementById('consumo-input').focus(),100);">
-                                <div class="agent-icon" style="background:var(--success-glow);color:var(--success);">
-                                    <i class="fas fa-file-alt"></i>
-                                </div>
-                                <div class="agent-name">Habilidades</div>
-                                <div class="agent-desc">Mapeie suas competências</div>
-                                <div class="agent-status active"><span class="dot"></span> Disponível</div>
-                            </div>
-                            <div class="agent-card" onclick="navigateTo('consumo')">
-                                <div class="agent-icon" style="background:var(--info-glow);color:var(--info);">
-                                    <i class="fas fa-book"></i>
-                                </div>
-                                <div class="agent-name">Histórias</div>
-                                <div class="agent-desc">Conte suas histórias marcantes</div>
-                                <div class="agent-status active"><span class="dot"></span> Disponível</div>
-                            </div>
-                            <div class="agent-card" onclick="navigateTo('consumo')">
-                                <div class="agent-icon" style="background:var(--accent-glow);color:var(--accent-light);">
-                                    <i class="fas fa-globe"></i>
-                                </div>
-                                <div class="agent-name">Cosmovisão</div>
-                                <div class="agent-desc">Defina seus valores</div>
-                                <div class="agent-status active"><span class="dot"></span> Disponível</div>
-                            </div>
-                            <div class="agent-card" onclick="navigateTo('consumo')">
-                                <div class="agent-icon" style="background:var(--warning-glow);color:var(--warning);">
-                                    <i class="fas fa-users"></i>
-                                </div>
-                                <div class="agent-name">Público-Alvo</div>
-                                <div class="agent-desc">Defina quem você serve</div>
-                                <div class="agent-status active"><span class="dot"></span> Disponível</div>
-                            </div>
-                            <div class="agent-card" onclick="navigateTo('posicionamento')">
-                                <div class="agent-icon" style="background:var(--danger-glow);color:var(--danger);">
-                                    <i class="fas fa-crosshairs"></i>
-                                </div>
-                                <div class="agent-name">Posicionamento</div>
-                                <div class="agent-desc">Seu diferencial no mercado</div>
-                                <div class="agent-status active"><span class="dot"></span> Disponível</div>
-                            </div>
-                            <div class="agent-card" onclick="navigateTo('consumo')">
-                                <div class="agent-icon" style="background:var(--success-glow);color:var(--success);">
-                                    <i class="fas fa-bullhorn"></i>
-                                </div>
-                                <div class="agent-name">Narrativa</div>
-                                <div class="agent-desc">Sua grande tese</div>
-                                <div class="agent-status active"><span class="dot"></span> Disponível</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- ============================================
-                 PAGE: PRODUTIVIDADE
-                 ============================================ -->
-            <div class="page" id="page-produtividade">
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-header">
-                            <div class="stat-icon green"><i class="fas fa-check-circle"></i></div>
-                        </div>
-                        <div class="stat-value" id="pomo-done">0</div>
-                        <div class="stat-label">Pomodoros Hoje</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-header">
-                            <div class="stat-icon purple"><i class="fas fa-hourglass-half"></i></div>
-                        </div>
-                        <div class="stat-value" id="pomo-focus">0</div>
-                        <div class="stat-label">Minutos em Foco</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-header">
-                            <div class="stat-icon blue"><i class="fas fa-tasks"></i></div>
-                        </div>
-                        <div class="stat-value" id="tasks-today">0</div>
-                        <div class="stat-label">Tarefas Hoje</div>
-                    </div>
-                </div>
-
-                <div class="grid-2">
-                    <!-- Pomodoro -->
-                    <div class="card">
-                        <div class="card-header">
-                            <div class="card-title"><i class="fas fa-clock" style="color:var(--success)"></i> Pomodoro Timer</div>
-                        </div>
-                        <div style="text-align:center;padding:20px 0;">
-                            <div style="font-size:4rem;font-weight:800;color:var(--text-primary);font-variant-numeric:tabular-nums;" id="pomodoro-timer2">25:00</div>
-                            <div style="margin:12px 0;">
-                                <span class="tag tag-success" id="pomo-phase2">Foco</span>
-                                <span class="tag tag-muted" id="pomo-round2" style="margin-left:8px;">#1/4</span>
-                            </div>
-                            <div style="display:flex;gap:10px;justify-content:center;margin-top:16px;">
-                                <button class="btn btn-success btn-lg" id="pomo-btn2" onclick="togglePomodoro2()">
-                                    <i class="fas fa-play"></i>
-                                </button>
-                                <button class="btn btn-outline btn-lg" onclick="resetPomodoro2()">
-                                    <i class="fas fa-redo"></i>
-                                </button>
-                                <button class="btn btn-outline btn-lg" onclick="skipPomodoro()">
-                                    <i class="fas fa-forward"></i>
-                                </button>
-                            </div>
-                        </div>
-                        <div class="progress-ring" style="display:none;" id="pomo-ring">
-                            <svg width="120" height="120">
-                                <circle class="bg" cx="60" cy="60" r="52"/>
-                                <circle class="progress" id="pomo-circle" cx="60" cy="60" r="52"
-                                    stroke-dasharray="326.73" stroke-dashoffset="0"/>
-                            </svg>
-                            <div class="percentage" id="pomo-pct">100%</div>
-                        </div>
-                    </div>
-
-                    <!-- Tasks -->
-                    <div class="card">
-                        <div class="card-header">
-                            <div class="card-title"><i class="fas fa-tasks" style="color:var(--info)"></i> Tarefas do Dia</div>
-                            <button class="btn btn-sm btn-outline" onclick="addTask()">
-                                <i class="fas fa-plus"></i> Nova
-                            </button>
-                        </div>
-                        <div id="tasks-list">
-                            <div class="empty-state">
-                                <i class="fas fa-tasks"></i>
-                                <h3>Nenhuma tarefa hoje</h3>
-                                <p>Adicione tarefas para organizar seu dia</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Notas Rápidas -->
-                <div class="card" style="margin-top:20px;">
-                    <div class="card-header">
-                        <div class="card-title"><i class="fas fa-sticky-note" style="color:var(--warning)"></i> Notas Rápidas</div>
-                        <button class="btn btn-sm btn-outline" onclick="saveNotes()">
-                            <i class="fas fa-save"></i> Salvar
-                        </button>
-                    </div>
-                    <textarea class="form-textarea" id="daily-notes" rows="6" placeholder="Anotações rápidas do dia..."></textarea>
-                </div>
-            </div>
-
-            <!-- ============================================
-                 PAGE: CONFIGURAÇÕES
-                 ============================================ -->
-            <div class="page" id="page-config">
-                <div class="grid-2">
-                    <div class="card">
-                        <div class="card-header">
-                            <div class="card-title"><i class="fas fa-cog" style="color:var(--text-secondary)"></i> Geral</div>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Nome do Projeto</label>
-                            <input type="text" class="form-input" value="OPB Sistema" id="cfg-project-name">
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Caminho do Projeto</label>
-                            <input type="text" class="form-input" value="C:\Users\cleit\Desktop\opb-sistema" id="cfg-project-path">
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Token do Telegram</label>
-                            <input type="password" class="form-input" value="8789174206:AAEFbU9kz0PQQLFlCw4vMVzIYiXSnmVRjxQ" id="cfg-telegram-token" placeholder="Token do BotFather">
-                        </div>
-                        <button class="btn btn-primary" onclick="saveConfig()">
-                            <i class="fas fa-save"></i> Salvar Configurações
-                        </button>
-                    </div>
-
-                    <div class="card">
-                        <div class="card-header">
-                            <div class="card-title"><i class="fas fa-toolbox" style="color:var(--success)"></i> Ferramentas</div>
-                        </div>
-                        <div style="display:flex;flex-direction:column;gap:12px;">
-                            <div style="display:flex;align-items:center;justify-content:space-between;padding:12px;background:var(--bg-input);border-radius:8px;">
-                                <div>
-                                    <strong style="font-size:0.9rem;">Iniciar Telegram Bot</strong>
-                                    <p style="font-size:0.8rem;color:var(--text-muted);margin-top:2px;">Rodar python agents/telegram_bot/main.py</p>
-                                </div>
-                                <button class="btn btn-success btn-sm" onclick="startBot()">
-                                    <i class="fas fa-play"></i> Iniciar
-                                </button>
-                            </div>
-                            <div style="display:flex;align-items:center;justify-content:space-between;padding:12px;background:var(--bg-input);border-radius:8px;">
-                                <div>
-                                    <strong style="font-size:0.9rem;">Verificar Dependências</strong>
-                                    <p style="font-size:0.8rem;color:var(--text-muted);margin-top:2px;">Instalar requirements.txt</p>
-                                </div>
-                                <button class="btn btn-outline btn-sm" onclick="checkDeps()">
-                                    <i class="fas fa-check"></i> Verificar
-                                </button>
-                            </div>
-                            <div style="display:flex;align-items:center;justify-content:space-between;padding:12px;background:var(--bg-input);border-radius:8px;">
-                                <div>
-                                    <strong style="font-size:0.9rem;">Exportar Log</strong>
-                                    <p style="font-size:0.8rem;color:var(--text-muted);margin-top:2px;">Baixar log completo do sistema</p>
-                                </div>
-                                <button class="btn btn-outline btn-sm" onclick="exportLog()">
-                                    <i class="fas fa-download"></i> Exportar
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card" style="margin-top:20px;">
-                    <div class="card-header">
-                        <div class="card-title"><i class="fas fa-info-circle" style="color:var(--accent-light)"></i> Sobre</div>
-                    </div>
-                    <div style="display:flex;align-items:center;gap:20px;">
-                        <div style="width:60px;height:60px;background:var(--gradient-1);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;">🧠</div>
-                        <div>
-                            <h3 style="margin-bottom:4px;">OPB Sistema v2.0</h3>
-                            <p style="color:var(--text-muted);font-size:0.85rem;">Sistema Multi-Agentes IA para Solopreneurs</p>
-                            <p style="color:var(--text-muted);font-size:0.8rem;margin-top:4px;">Build: 2026-05-14 | Commit: cdff82a</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-        </div><!-- /page-content -->
-    </main>
+<!-- ==============================================
+     DASHBOARD
+     ============================================== -->
+<div class="page active" id="page-dashboard">
+<div class="stats-grid">
+<div class="stat-card"><div class="stat-header"><div class="stat-icon purple"><i class="fas fa-brain"></i></div><span class="stat-trend up" id="stat-trend-agents">↑ ?</span></div><div class="stat-value" id="stat-agents">-</div><div class="stat-label">Agentes Ativos</div></div>
+<div class="stat-card"><div class="stat-header"><div class="stat-icon green"><i class="fas fa-lightbulb"></i></div><span class="stat-trend up" id="stat-trend-ideas">↑ ?</span></div><div class="stat-value" id="stat-ideas">-</div><div class="stat-label">Ideias no Cérebro</div></div>
+<div class="stat-card"><div class="stat-header"><div class="stat-icon amber"><i class="fas fa-scroll"></i></div></div><div class="stat-value" id="stat-conhecimento">-</div><div class="stat-label">Conhecimentos</div></div>
+<div class="stat-card"><div class="stat-header"><div class="stat-icon blue"><i class="fas fa-file-alt"></i></div></div><div class="stat-value" id="stat-arquivos">-</div><div class="stat-label">Arquivos no Cérebro</div></div>
+</div>
+<div class="grid-2">
+<div class="card"><div class="card-header"><div class="card-title"><i class="fas fa-bolt"></i> Ações Rápidas</div></div>
+<div style="display:flex;flex-direction:column;gap:10px;">
+<button class="btn btn-primary btn-block" onclick="navigateTo('transcricao')"><i class="fas fa-microphone-alt"></i> Transcrever Vídeo</button>
+<button class="btn btn-success btn-block" onclick="navigateTo('capa-video')"><i class="fas fa-image"></i> Gerar Capa de Vídeo</button>
+<button class="btn btn-warning btn-block" onclick="navigateTo('carrossel')"><i class="fas fa-layer-group"></i> Criar Carrossel</button>
+<button class="btn btn-info btn-block" onclick="navigateTo('consumo')"><i class="fas fa-book-reader"></i> Processar Conteúdo</button>
+<button class="btn btn-outline btn-block" onclick="navigateTo('text-generator')"><i class="fas fa-pen-fancy"></i> Gerar Post</button>
+<button class="btn btn-outline btn-block" onclick="navigateTo('perfil')"><i class="fas fa-user-edit"></i> Meu Perfil</button>
+</div>
+</div>
+<div class="card"><div class="card-header"><div class="card-title"><i class="fas fa-robot"></i> Status dos Agentes</div><span class="tag tag-green" id="api-status-tag">Conectando...</span></div>
+<div class="table-container"><table><thead><tr><th>Agente</th><th>Status</th><th>Ação</th></tr></thead>
+<tbody>
+<tr><td><strong>🎠 Carrossel</strong></td><td><span class="tag tag-green" id="st-carrossel">--</span></td><td><button class="btn btn-sm btn-outline" onclick="navigateTo('carrossel')">Usar</button></td></tr>
+<tr><td><strong>📖 Consumo</strong></td><td><span class="tag tag-green" id="st-consumo">--</span></td><td><button class="btn btn-sm btn-outline" onclick="navigateTo('consumo')">Usar</button></td></tr>
+<tr><td><strong>🎬 Capa Vídeo</strong></td><td><span class="tag tag-green" id="st-capavideo">--</span></td><td><button class="btn btn-sm btn-outline" onclick="navigateTo('capa-video')">Usar</button></td></tr>
+<tr><td><strong>🔤 Transcrição</strong></td><td><span class="tag tag-green" id="st-transcricao">--</span></td><td><button class="btn btn-sm btn-outline" onclick="navigateTo('transcricao')">Usar</button></td></tr>
+<tr><td><strong>✍️ Text Generator</strong></td><td><span class="tag tag-green" id="st-textgen">--</span></td><td><button class="btn btn-sm btn-outline" onclick="navigateTo('text-generator')">Usar</button></td></tr>
+<tr><td><strong>🎯 Posicionamento</strong></td><td><span class="tag tag-green" id="st-posicionamento">--</span></td><td><button class="btn btn-sm btn-outline" onclick="navigateTo('posicionamento')">Usar</button></td></tr>
+</tbody></table></div></div>
+</div>
+<div class="card"><div class="card-header"><div class="card-title"><i class="fas fa-history"></i> Atividade Recente</div></div>
+<div id="recent-activity"><div style="text-align:center;padding:20px;color:var(--text-muted);"><i class="fas fa-spinner fa-spin"></i> Carregando...</div></div>
+</div>
 </div>
 
-<!-- ============================================
-     MODAL: Read Map
-     ============================================ -->
-<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
-    <div class="modal" id="modalContent">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
-            <h2 style="font-size:1.1rem;"><i class="fas fa-map" style="color:var(--accent);margin-right:8px"></i> <span id="modalTitle">MAPA</span></h2>
-            <button onclick="closeModal()" style="background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:1.2rem;">&times;</button>
-        </div>
-        <div class="console-output" id="modalBody" style="max-height:50vh;"></div>
-    </div>
+<!-- ==============================================
+     CERÉBRO
+     ============================================== -->
+<div class="page" id="page-cerebro">
+<div class="stats-grid">
+<div class="stat-card"><div class="stat-header"><div class="stat-icon purple"><i class="fas fa-database"></i></div></div><div class="stat-value" id="stat-pastas-c">-</div><div class="stat-label">Pastas</div></div>
+<div class="stat-card"><div class="stat-header"><div class="stat-icon green"><i class="fas fa-file-alt"></i></div></div><div class="stat-value" id="stat-arquivos-c">-</div><div class="stat-label">Arquivos</div></div>
+<div class="stat-card"><div class="stat-header"><div class="stat-icon amber"><i class="fas fa-map"></i></div></div><div class="stat-value" id="stat-mapas">-</div><div class="stat-label">MAPAs</div></div>
+<div class="stat-card"><div class="stat-header"><div class="stat-icon blue"><i class="fas fa-project-diagram"></i></div></div><div class="stat-value">7</div><div class="stat-label">Agentes</div></div>
+</div>
+<div class="grid-2">
+<div class="card"><div class="card-header"><div class="card-title"><i class="fas fa-project-diagram"></i> Estrutura do Cérebro</div><button class="btn btn-sm btn-outline" onclick="loadCerebroTree()" style="margin-left:auto;"><i class="fas fa-refresh"></i></button></div>
+<div class="console-output" id="cerebro-tree"><span class="line-purple">carregando...</span></div>
+</div>
+<div class="card"><div class="card-header"><div class="card-title"><i class="fas fa-check-double"></i> Integridade</div></div>
+<div id="integridade-checklist" style="margin-bottom:16px;"></div>
+<div class="btn-row"><button class="btn btn-primary btn-block" onclick="checkIntegrity()"><i class="fas fa-sync-alt"></i> Verificar</button></div>
+</div>
+</div>
+<div class="card"><div class="card-header"><div class="card-title"><i class="fas fa-map-signs"></i> MAPAs Navegáveis</div></div>
+<div class="table-container"><table><thead><tr><th>Arquivo</th><th>Pasta</th><th>Ação</th></tr></thead>
+<tbody id="mapas-tbody"><tr><td colspan="3" style="text-align:center;color:var(--text-muted);">Carregando...</td></tr></tbody>
+</table></div></div>
 </div>
 
-<!-- ============================================
-     MODAL: Alimentar Cérebro
-     ============================================ -->
+<!-- ==============================================
+     ROTINAS
+     ============================================== -->
+<div class="page" id="page-rotinas">
+<div class="stats-grid">
+<div class="stat-card"><div class="stat-header"><div class="stat-icon green"><i class="fas fa-play"></i></div></div><div class="stat-value">3</div><div class="stat-label">Rotinas</div></div>
+<div class="stat-card"><div class="stat-header"><div class="stat-icon blue"><i class="fas fa-fire"></i></div></div><div class="stat-value" id="streak">7</div><div class="stat-label">Streak</div></div>
+<div class="stat-card"><div class="stat-header"><div class="stat-icon amber"><i class="fas fa-check-circle"></i></div></div><div class="stat-value" id="pomo-count">0</div><div class="stat-label">Pomodoros Hoje</div></div>
+</div>
+<div class="grid-2">
+<div class="card"><div class="card-header"><div class="card-title"><i class="fas fa-sun" style="color:var(--warning)"></i> Rotina Matinal</div><span class="tag tag-green">Automática</span></div><div id="morning-routine">
+<div class="todo-item" style="display:flex;align-items:center;gap:10px;padding:10px;border-radius:8px;margin-bottom:6px;background:var(--bg-input);"><input type="checkbox" id="mr1"><label for="mr1">📖 Ler MAPA.md do cérebro</label></div>
+<div class="todo-item" style="display:flex;align-items:center;gap:10px;padding:10px;border-radius:8px;margin-bottom:6px;background:var(--bg-input);"><input type="checkbox" id="mr2"><label for="mr2">🎯 Ver projetos ativos</label></div>
+<div class="todo-item" style="display:flex;align-items:center;gap:10px;padding:10px;border-radius:8px;margin-bottom:6px;background:var(--bg-input);"><input type="checkbox" id="mr3"><label for="mr3">🧠 Atualizar contexto dos agentes</label></div>
+<div class="todo-item" style="display:flex;align-items:center;gap:10px;padding:10px;border-radius:8px;margin-bottom:6px;background:var(--bg-input);"><input type="checkbox" id="mr4"><label for="mr4">📝 Definir 3 prioridades do dia</label></div>
+<div class="todo-item" style="display:flex;align-items:center;gap:10px;padding:10px;border-radius:8px;margin-bottom:6px;background:var(--bg-input);"><input type="checkbox" id="mr5"><label for="mr5">⚡ Verificar ideias capturadas</label></div>
+</div>
+<button class="btn btn-warning btn-sm" onclick="startRoutine('morning')" style="margin-top:12px;"><i class="fas fa-play"></i> Iniciar</button>
+</div>
+<div class="card"><div class="card-header"><div class="card-title"><i class="fas fa-moon" style="color:var(--accent-light)"></i> Rotina Noturna</div><span class="tag tag-blue">Planejamento</span></div><div id="night-routine">
+<div class="todo-item" style="display:flex;align-items:center;gap:10px;padding:10px;border-radius:8px;margin-bottom:6px;background:var(--bg-input);"><input type="checkbox" id="nr1"><label for="nr1">📊 Revisar métricas do dia</label></div>
+<div class="todo-item" style="display:flex;align-items:center;gap:10px;padding:10px;border-radius:8px;margin-bottom:6px;background:var(--bg-input);"><input type="checkbox" id="nr2"><label for="nr2">🧠 Processar conteúdo consumido</label></div>
+<div class="todo-item" style="display:flex;align-items:center;gap:10px;padding:10px;border-radius:8px;margin-bottom:6px;background:var(--bg-input);"><input type="checkbox" id="nr3"><label for="nr3">💡 Registrar aprendizados</label></div>
+<div class="todo-item" style="display:flex;align-items:center;gap:10px;padding:10px;border-radius:8px;margin-bottom:6px;background:var(--bg-input);"><input type="checkbox" id="nr4"><label for="nr4">📋 Preparar tarefas de amanhã</label></div>
+<div class="todo-item" style="display:flex;align-items:center;gap:10px;padding:10px;border-radius:8px;margin-bottom:6px;background:var(--bg-input);"><input type="checkbox" id="nr5"><label for="nr5">✍️ Escrever no diário</label></div>
+</div>
+<button class="btn btn-info btn-sm" onclick="startRoutine('night')" style="margin-top:12px;"><i class="fas fa-play"></i> Iniciar</button>
+</div>
+</div>
+<div class="card"><div class="card-header"><div class="card-title"><i class="fas fa-clock" style="color:var(--success)"></i> Pomodoro Timer</div>
+<button class="btn btn-sm btn-outline" onclick="resetPomodoro()"><i class="fas fa-redo"></i> Resetar</button></div>
+<div style="text-align:center;padding:30px 0;">
+<div style="font-size:5rem;font-weight:800;color:var(--text-primary);font-variant-numeric:tabular-nums;" id="pomodoro-timer">25:00</div>
+<div style="margin:16px 0;"><span class="tag tag-green" id="pomodoro-phase">Foco</span><span class="tag tag-muted" id="pomodoro-round" style="margin-left:8px;">Rodada 1/4</span></div>
+<div class="btn-row" style="justify-content:center;margin-top:20px;"><button class="btn btn-success btn-lg" id="pomodoro-btn" onclick="togglePomodoro()"><i class="fas fa-play"></i> Iniciar</button></div>
+</div></div></div>
+
+<!-- ==============================================
+     TRANSCRIÇÃO
+     ============================================== -->
+<div class="page" id="page-transcricao">
+<div class="grid-2">
+<div class="card"><div class="card-header"><div class="card-title"><i class="fas fa-microphone-alt" style="color:var(--accent-light)"></i> Transcrever Vídeo</div></div>
+<div class="form-group"><label class="form-label">URL do Vídeo do YouTube</label><input type="text" class="form-input" id="transcricao-url" placeholder="https://www.youtube.com/watch?v=..."></div>
+<div class="form-group"><label class="form-label">Idioma</label><select class="form-select" id="transcricao-idioma"><option value="pt">Português (BR)</option><option value="en">Inglês</option><option value="es">Espanhol</option></select></div>
+<button class="btn btn-primary btn-block" onclick="runTranscricao()"><i class="fas fa-microphone-alt"></i> Transcrever</button>
+<div class="console-output" id="transcricao-output" style="margin-top:16px;display:none;"></div>
+</div>
+<div class="card"><div class="card-header"><div class="card-title"><i class="fas fa-file-alt" style="color:var(--success)"></i> Transcrições Recentes</div></div>
+<div id="transcricoes-lista"><div class="empty-state"><i class="fas fa-microphone-slash"></i><h3>Nenhuma transcrição</h3><p>Transcreva vídeos do YouTube</p></div></div>
+</div>
+</div>
+</div>
+
+<!-- ==============================================
+     CAPA DE VÍDEO
+     ============================================== -->
+<div class="page" id="page-capa-video">
+<div class="grid-2">
+<div class="card"><div class="card-header"><div class="card-title"><i class="fas fa-image" style="color:var(--warning)"></i> Gerar Ideias de Capa</div></div>
+<div class="form-group"><label class="form-label">Tema do Vídeo</label><input type="text" class="form-input" id="capa-tema" placeholder="Ex: IA para empreendedores"></div>
+<div class="form-group"><label class="form-label">Quantidade de Ideias</label><select class="form-select" id="capa-qtd"><option value="3">3 ideias</option><option value="5" selected>5 ideias</option><option value="6">6 ideias</option><option value="8">8 ideias</option></select></div>
+<button class="btn btn-warning btn-block" onclick="runCapaVideo()"><i class="fas fa-magic"></i> Gerar Ideias</button>
+<div class="console-output" id="capa-output" style="margin-top:16px;display:none;"></div>
+</div>
+<div class="card"><div class="card-header"><div class="card-title"><i class="fas fa-images" style="color:var(--success)"></i> Capas Geradas</div></div>
+<div id="capas-lista"><div class="empty-state"><i class="fas fa-image"></i><h3>Nenhuma capa gerada</h3><p>Gere ideias para thumbnails</p></div></div>
+</div>
+</div>
+</div>
+
+<!-- ==============================================
+     CARROSSEL
+     ============================================== -->
+<div class="page" id="page-carrossel">
+<div class="grid-2">
+<div class="card"><div class="card-header"><div class="card-title"><i class="fas fa-layer-group" style="color:var(--accent-light)"></i> Gerar Carrossel</div></div>
+<div class="form-group"><label class="form-label">Tema do Carrossel</label><input type="text" class="form-input" id="carrossel-tema" placeholder="Ex: IA para solopreneurs"></div>
+<div class="form-group"><label class="form-label">Tipo de Carrossel</label><select class="form-select" id="carrossel-tipo"><option value="educational">📚 Educational (9 slides)</option><option value="inspirational">✨ Inspirational (7 slides)</option><option value="promotional">🚀 Promotional (8 slides)</option><option value="engagement">💬 Engagement (6 slides)</option></select></div>
+<div class="form-group"><label class="form-label">Número de Slides</label><input type="number" class="form-input" id="carrossel-slides" value="9" min="4" max="12"></div>
+<button class="btn btn-primary btn-block" onclick="runCarrossel()"><i class="fas fa-layer-group"></i> Gerar Carrossel</button>
+<div class="console-output" id="carrossel-output" style="margin-top:16px;display:none;"></div>
+</div>
+<div class="card"><div class="card-header"><div class="card-title"><i class="fas fa-newspaper" style="color:var(--success)"></i> Carrosséis Gerados</div></div>
+<div id="carrossel-lista"><div class="empty-state"><i class="fas fa-layer-group"></i><h3>Nenhum carrossel gerado</h3><p>Crie carrosséis para engajar</p></div></div>
+</div>
+</div>
+<div class="card" style="margin-top:20px"><div class="card-header"><div class="card-title"><i class="fas fa-bolt" style="color:var(--warning)"></i> Modelos Rápidos</div></div>
+<div style="display:flex;flex-wrap:wrap;gap:10px;">
+<button class="btn btn-outline btn-sm" onclick="quickCarrossel('IA para solopreneurs')">🤖 IA para Solopreneurs</button>
+<button class="btn btn-outline btn-sm" onclick="quickCarrossel('Produtividade no trabalho remoto')">📊 Produtividade Remota</button>
+<button class="btn btn-outline btn-sm" onclick="quickCarrossel('Ferramentas de IA gratuitas')">🛠️ Ferramentas IA</button>
+<button class="btn btn-outline btn-sm" onclick="quickCarrossel('Como criar conteúdo consistente')">📝 Conteúdo Consistente</button>
+<button class="btn btn-outline btn-sm" onclick="quickCarrossel('Erros que empreendedores iniciantes cometem')">⚠️ Erros Comuns</button>
+<button class="btn btn-outline btn-sm" onclick="quickCarrossel('Minha rotina como solopreneur')">⏰ Minha Rotina</button>
+</div>
+</div>
+</div>
+
+<!-- ==============================================
+     CONSUMO
+     ============================================== -->
+<div class="page" id="page-consumo">
+<div class="grid-2">
+<div class="card"><div class="card-header"><div class="card-title"><i class="fas fa-book-reader" style="color:var(--success)"></i> Processar Conteúdo</div></div>
+<div class="form-group"><label class="form-label">Texto, URL ou Caminho do Arquivo</label><textarea class="form-textarea" id="consumo-input" rows="6" placeholder="Cole texto, URL, ou caminho de arquivo..."></textarea></div>
+<div class="grid-2" style="margin-bottom:16px"><div class="form-group"><label class="form-label">Tipo de Análise</label><select class="form-select" id="consumo-tipo"><option value="completo">📦 Completo</option><option value="resumo">📝 Resumo</option><option value="conceitos">💡 Conceitos</option><option value="citacoes">🗣️ Citações</option><option value="aplicacao">🎯 Aplicação</option><option value="tema">🎠 Temas para Carrossel</option></select></div>
+<div class="form-group"><label class="form-label">Título (opcional)</label><input type="text" class="form-input" id="consumo-titulo" placeholder="Nome para o conhecimento"></div>
+</div>
+<button class="btn btn-success btn-block" onclick="runConsumo()"><i class="fas fa-book-reader"></i> Processar Conteúdo</button>
+<div class="console-output" id="consumo-output" style="margin-top:16px;display:none;"></div>
+</div>
+<div class="card"><div class="card-header"><div class="card-title"><i class="fas fa-database" style="color:var(--accent-light)"></i> Conhecimento Salvo</div></div>
+<div class="tabs-inline"><div class="tab-inline active" onclick="filterConhecimento('todos',this)">Todos</div><div class="tab-inline" onclick="filterConhecimento('recente',this)">Recentes</div><div class="tab-inline" onclick="filterConhecimento('carrossel',this)">Carrossel</div></div>
+<div id="conhecimento-lista"><div class="empty-state"><i class="fas fa-book-open"></i><h3>Nenhum conhecimento salvo</h3><p>Processe textos para alimentar o cérebro</p></div></div>
+</div>
+</div>
+<div class="card" style="margin-top:20px"><div class="card-header"><div class="card-title"><i class="fas fa-link" style="color:var(--warning)"></i> Alimentar Cérebro (Perfil)</div></div>
+<p style="color:var(--text-secondary);margin-bottom:12px">Preencheu o formulário web? Copie o conteúdo e clique abaixo:</p>
+<button class="btn btn-warning btn-block" onclick="showAlimentarModal()"><i class="fas fa-brain"></i> Alimentar Cérebro</button>
+</div>
+</div>
+
+<!-- ==============================================
+     POSICIONAMENTO
+     ============================================== -->
+<div class="page" id="page-posicionamento">
+<div class="card"><div class="card-header"><div class="card-title"><i class="fas fa-crosshairs" style="color:var(--info)"></i> Análise de Concorrentes</div><button class="btn btn-sm btn-outline" onclick="analyzeCompetitors()"><i class="fas fa-play"></i> Analisar</button></div>
+<div class="form-group"><label class="form-label">Nicho / Mercado</label><input type="text" class="form-input" id="posicionamento-nicho" placeholder="Ex: Produtividade para solopreneurs"></div>
+<div class="form-group"><label class="form-label">5 Concorrentes (um por linha)</label><textarea class="form-textarea" id="posicionamento-concorrentes" rows="6" placeholder="@concorrente1&#10;@concorrente2&#10;@concorrente3&#10;@concorrente4&#10;@concorrente5"></textarea></div>
+<div id="posicionamento-output" class="console-output" style="display:none"></div>
+</div>
+<div class="grid-2">
+<div class="card"><div class="card-header"><div class="card-title"><i class="fas fa-bullseye" style="color:var(--warning)"></i> Meu Posicionamento</div></div>
+<div class="form-group"><label class="form-label">Minha Verdade</label><textarea class="form-textarea" id="minha-verdade" rows="3" placeholder="Ex: Negócio cresce de dentro pra fora..."></textarea></div>
+<div class="form-group"><label class="form-label">Inimigo Comum</label><input type="text" class="form-input" id="inimigo-comum" placeholder="Ex: FOMO, fórmulas mágicas"></div>
+<div class="form-group"><label class="form-label">Frase de Posicionamento</label><textarea class="form-textarea" id="frase-posicionamento" rows="3" placeholder="Eu ensino [QUEM] a [O QUÊ], mesmo que [OBSTÁCULO]"></textarea></div>
+<button class="btn btn-info btn-block" onclick="savePosicionamento()"><i class="fas fa-save"></i> Salvar</button>
+</div>
+<div class="card"><div class="card-header"><div class="card-title"><i class="fas fa-check-circle" style="color:var(--success)"></i> Checklist</div></div>
+<div id="posicionamento-checklist">
+<div class="todo-item" style="display:flex;align-items:center;gap:10px;padding:10px;border-radius:8px;margin-bottom:6px;background:var(--bg-input)"><input type="checkbox"><label>Analisei 5 concorrentes</label></div>
+<div class="todo-item" style="display:flex;align-items:center;gap:10px;padding:10px;border-radius:8px;margin-bottom:6px;background:var(--bg-input)"><input type="checkbox"><label>Listei meus desvios</label></div>
+<div class="todo-item" style="display:flex;align-items:center;gap:10px;padding:10px;border-radius:8px;margin-bottom:6px;background:var(--bg-input)"><input type="checkbox"><label>Defini meu ponto de vista único</label></div>
+<div class="todo-item" style="display:flex;align-items:center;gap:10px;padding:10px;border-radius:8px;margin-bottom:6px;background:var(--bg-input)"><input type="checkbox"><label>Criei minha frase de posicionamento</label></div>
+<div class="todo-item" style="display:flex;align-items:center;gap:10px;padding:10px;border-radius:8px;margin-bottom:6px;background:var(--bg-input)"><input type="checkbox"><label>Testei com pessoas de confiança</label></div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- ==============================================
+     TEXT GENERATOR
+     ============================================== -->
+<div class="page" id="page-text-generator">
+<div class="grid-2">
+<div class="card"><div class="card-header"><div class="card-title"><i class="fas fa-pen-fancy" style="color:var(--accent-light)"></i> Gerar Posts Instagram</div></div>
+<div class="form-group"><label class="form-label">Objetivo do Post</label><textarea class="form-textarea" id="text-gen-objetivo" rows="3" placeholder="Ex: Educar sobre organização"></textarea></div>
+<div class="form-group"><label class="form-label">Tipo de Post</label><select class="form-select" id="text-gen-tipo"><option value="educational">📚 Educational</option><option value="inspirational">✨ Inspirational</option><option value="promotional">🚀 Promotional</option><option value="engagement">💬 Engagement</option></select></div>
+<button class="btn btn-primary btn-block" onclick="runTextGenerator()"><i class="fas fa-pen-fancy"></i> Gerar Post</button>
+<div class="console-output" id="text-gen-output" style="margin-top:16px;display:none"></div>
+</div>
+<div class="card"><div class="card-header"><div class="card-title"><i class="fas fa-history" style="color:var(--success)"></i> Posts Gerados</div></div>
+<div id="posts-lista"><div class="empty-state"><i class="fas fa-pen-fancy"></i><h3>Nenhum post gerado</h3><p>Gere posts para Instagram</p></div></div>
+</div>
+</div>
+<div class="card" style="margin-top:20px"><div class="card-header"><div class="card-title"><i class="fas fa-bolt" style="color:var(--warning)"></i> Templates Rápidos</div></div>
+<div style="display:flex;flex-wrap:wrap;gap:10px">
+<button class="btn btn-outline btn-sm" onclick="quickPost('Dica de produtividade','educational')">💡 Dica Rápida</button>
+<button class="btn btn-outline btn-sm" onclick="quickPost('Motivação para empreendedores','inspirational')">✨ Motivação</button>
+<button class="btn btn-outline btn-sm" onclick="quickPost('Novo serviço/produto','promotional')">🚀 Promoção</button>
+<button class="btn btn-outline btn-sm" onclick="quickPost('Pergunta para engajar audiência','engagement')">💬 Engajar</button>
+</div>
+</div>
+</div>
+
+<!-- ==============================================
+     PERFIL
+     ============================================== -->
+<div class="page" id="page-perfil">
+<div class="grid-2">
+<div class="card"><div class="card-header"><div class="card-title"><i class="fas fa-user-edit" style="color:var(--accent-light)"></i> Perfil do Empreendedor</div></div>
+<div id="perfil-form">
+<div class="form-group"><label class="form-label">Nome completo</label><input type="text" class="form-input" id="perfil-nome" placeholder="Seu nome completo"></div>
+<div class="form-group"><label class="form-label">Nome público / Apelido</label><input type="text" class="form-input" id="perfil-nome-publico" placeholder="Como quer ser chamado"></div>
+<div class="form-group"><label class="form-label">Nicho / Mercado</label><input type="text" class="form-input" id="perfil-nicho" placeholder="Ex: Produtividade, IA, Marketing"></div>
+<div class="form-group"><label class="form-label">Público-alvo</label><input type="text" class="form-input" id="perfil-publico" placeholder="Ex: Solopreneurs iniciantes"></div>
+<div class="form-group"><label class="form-label">Problema que resolve</label><textarea class="form-textarea" id="perfil-problema" rows="3" placeholder="Ex: Ajudo pessoas a organizar rotinas..."></textarea></div>
+<button class="btn btn-primary btn-block" onclick="savePerfil()"><i class="fas fa-save"></i> Salvar Perfil</button>
+</div>
+</div>
+<div class="card"><div class="card-header"><div class="card-title"><i class="fas fa-palette" style="color:var(--success)"></i> Identidade Visual</div></div>
+<div id="identidade-form">
+<div class="form-group"><label class="form-label">Cor Primária</label><input type="color" class="form-input" id="perfil-cor1" value="#FF6B6B" style="height:42px;padding:4px"></div>
+<div class="form-group"><label class="form-label">Cor Secundária</label><input type="color" class="form-input" id="perfil-cor2" value="#4ECDC4" style="height:42px;padding:4px"></div>
+<div class="form-group"><label class="form-label">Cor de Destaque</label><input type="color" class="form-input" id="perfil-cor3" value="#45B7D1" style="height:42px;padding:4px"></div>
+<div class="form-group"><label class="form-label">Fonte Título</label><select class="form-select" id="perfil-fonte-titulo"><option value="Montserrat">Montserrat</option><option value="Inter">Inter</option><option value="Poppins">Poppins</option></select></div>
+<div class="preview-colors" style="display:flex;gap:12px;margin-top:16px"><div style="width:60px;height:60px;border-radius:12px;background:#FF6B6B" id="preview-c1"></div><div style="width:60px;height:60px;border-radius:12px;background:#4ECDC4" id="preview-c2"></div><div style="width:60px;height:60px;border-radius:12px;background:#45B7D1" id="preview-c3"></div></div>
+</div>
+</div>
+</div>
+<div style="margin-top:20px">
+<div class="card"><div class="card-header"><div class="card-title"><i class="fas fa-puzzle-piece" style="color:var(--warning)"></i> Módulos do Perfil</div></div>
+<div class="grid-3" style="margin-top:12px">
+<div class="agent-card" onclick="navigateTo('consumo')"><div class="agent-icon" style="background:var(--success-glow);color:var(--success)"><i class="fas fa-file-alt"></i></div><div class="agent-name">Habilidades</div><div class="agent-desc">Mapeie suas competências</div><div class="agent-status active"><span class="dot"></span> Disponível</div></div>
+<div class="agent-card" onclick="navigateTo('consumo')"><div class="agent-icon" style="background:var(--info-glow);color:var(--info)"><i class="fas fa-book"></i></div><div class="agent-name">Histórias</div><div class="agent-desc">Conte suas histórias</div><div class="agent-status active"><span class="dot"></span> Disponível</div></div>
+<div class="agent-card" onclick="navigateTo('consumo')"><div class="agent-icon" style="background:var(--accent-glow);color:var(--accent-light)"><i class="fas fa-globe"></i></div><div class="agent-name">Cosmovisão</div><div class="agent-desc">Defina seus valores</div><div class="agent-status active"><span class="dot"></span> Disponível</div></div>
+<div class="agent-card" onclick="navigateTo('consumo')"><div class="agent-icon" style="background:var(--warning-glow);color:var(--warning)"><i class="fas fa-users"></i></div><div class="agent-name">Público-Alvo</div><div class="agent-desc">Defina quem você serve</div><div class="agent-status active"><span class="dot"></span> Disponível</div></div>
+<div class="agent-card" onclick="navigateTo('posicionamento')"><div class="agent-icon" style="background:var(--danger-glow);color:var(--danger)"><i class="fas fa-crosshairs"></i></div><div class="agent-name">Posicionamento</div><div class="agent-desc">Seu diferencial</div><div class="agent-status active"><span class="dot"></span> Disponível</div></div>
+<div class="agent-card" onclick="navigateTo('consumo')"><div class="agent-icon" style="background:var(--success-glow);color:var(--success)"><i class="fas fa-bullhorn"></i></div><div class="agent-name">Narrativa</div><div class="agent-desc">Sua grande tese</div><div class="agent-status active"><span class="dot"></span> Disponível</div></div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- ==============================================
+     PRODUTIVIDADE
+     ============================================== -->
+<div class="page" id="page-produtividade">
+<div class="stats-grid">
+<div class="stat-card"><div class="stat-header"><div class="stat-icon green"><i class="fas fa-check-circle"></i></div></div><div class="stat-value" id="pomo-done">0</div><div class="stat-label">Pomodoros Hoje</div></div>
+<div class="stat-card"><div class="stat-header"><div class="stat-icon purple"><i class="fas fa-hourglass-half"></i></div></div><div class="stat-value" id="pomo-focus">0</div><div class="stat-label">Minutos em Foco</div></div>
+<div class="stat-card"><div class="stat-header"><div class="stat-icon blue"><i class="fas fa-tasks"></i></div></div><div class="stat-value" id="tasks-today">0</div><div class="stat-label">Tarefas Hoje</div></div>
+</div>
+<div class="grid-2">
+<div class="card"><div class="card-header"><div class="card-title"><i class="fas fa-clock" style="color:var(--success)"></i> Pomodoro Timer</div><button class="btn btn-sm btn-outline" onclick="resetPomodoro()"><i class="fas fa-redo"></i> Resetar</button></div>
+<div style="text-align:center;padding:30px 0">
+<div style="font-size:5rem;font-weight:800;color:var(--text-primary);font-variant-numeric:tabular-nums" id="pomodoro-timer2">25:00</div>
+<div style="margin:12px 0"><span class="tag tag-success" id="pomo-phase2">Foco</span><span class="tag tag-muted" id="pomo-round2" style="margin-left:8px">#1/4</span></div>
+<div style="display:flex;gap:10px;justify-content:center;margin-top:16px">
+<button class="btn btn-success btn-lg" id="pomo-btn2" onclick="togglePomodoro2()"><i class="fas fa-play"></i></button>
+<button class="btn btn-outline btn-lg" onclick="resetPomodoro2()"><i class="fas fa-redo"></i></button>
+<button class="btn btn-outline btn-lg" onclick="skipPomodoro()"><i class="fas fa-forward"></i></button>
+</div>
+</div>
+<div class="progress-ring" style="display:none" id="pomo-ring2"><svg width="120" height="120"><circle class="bg" cx="60" cy="60" r="52"/><circle class="progress" id="pomo-circle2" cx="60" cy="60" r="52" stroke-dasharray="326.73" stroke-dashoffset="0"/></svg><div class="percentage" id="pomo-pct2">100%</div></div>
+</div>
+<div class="card"><div class="card-header"><div class="card-title"><i class="fas fa-tasks" style="color:var(--info)"></i> Tarefas do Dia</div><button class="btn btn-sm btn-outline" onclick="addTask()"><i class="fas fa-plus"></i> Nova</button></div>
+<div id="tasks-list"><div class="empty-state"><i class="fas fa-tasks"></i><h3>Nenhuma tarefa hoje</h3><p>Adicione tarefas para organizar seu dia</p></div></div>
+</div>
+</div>
+<div class="card" style="margin-top:20px"><div class="card-header"><div class="card-title"><i class="fas fa-sticky-note" style="color:var(--warning)"></i> Notas Rápidas</div><button class="btn btn-sm btn-outline" onclick="saveNotes()"><i class="fas fa-save"></i> Salvar</button></div>
+<textarea class="form-textarea" id="daily-notes" rows="6" placeholder="Anotações rápidas do dia..."></textarea>
+</div>
+</div>
+
+<!-- ==============================================
+     CONFIGURAÇÕES
+     ============================================== -->
+<div class="page" id="page-config">
+<div class="grid-2">
+<div class="card"><div class="card-header"><div class="card-title"><i class="fas fa-cog" style="color:var(--text-secondary)"></i> Geral</div></div>
+<div class="form-group"><label class="form-label">URL da API</label><input type="text" class="form-input" id="cfg-api-url" value="http://localhost:5000"></div>
+<div class="form-group"><label class="form-label">Caminho do Projeto</label><input type="text" class="form-input" id="cfg-project-path" value="C:\Users\cleit\Desktop\opb-sistema"></div>
+<div class="form-group"><label class="form-label">Token do Telegram</label><input type="password" class="form-input" value="8789174206:AAEFbU9kz0PQQLFlCw4vMVzIYiXSnmVRjxQ" id="cfg-telegram-token" placeholder="Token do BotFather"></div>
+<button class="btn btn-primary" onclick="saveConfig()"><i class="fas fa-save"></i> Salvar Configurações</button>
+</div>
+<div class="card"><div class="card-header"><div class="card-title"><i class="fas fa-toolbox" style="color:var(--success)"></i> Ferramentas</div></div>
+<div style="display:flex;flex-direction:column;gap:12px">
+<div style="display:flex;align-items:center;justify-content:space-between;padding:12px;background:var(--bg-input);border-radius:8px"><div><strong style="font-size:0.9rem">Iniciar Telegram Bot</strong><p style="font-size:0.8rem;color:var(--text-muted);margin-top:2px">Rodar python agents/telegram_bot/main.py</p></div><button class="btn btn-success btn-sm" onclick="startBot()"><i class="fas fa-play"></i> Iniciar</button></div>
+<div style="display:flex;align-items:center;justify-content:space-between;padding:12px;background:var(--bg-input);border-radius:8px"><div><strong style="font-size:0.9rem">Verificar Dependências</strong><p style="font-size:0.8rem;color:var(--text-muted);margin-top:2px">Instalar requirements.txt</p></div><button class="btn btn-outline btn-sm" onclick="checkDeps()"><i class="fas fa-check"></i> Verificar</button></div>
+<div style="display:flex;align-items:center;justify-content:space-between;padding:12px;background:var(--bg-input);border-radius:8px"><div><strong style="font-size:0.9rem">Exportar Log</strong><p style="font-size:0.8rem;color:var(--text-muted);margin-top:2px">Baixar log completo</p></div><button class="btn btn-outline btn-sm" onclick="exportLog()"><i class="fas fa-download"></i> Exportar</button></div>
+</div>
+</div>
+</div>
+<div class="card" style="margin-top:20px"><div class="card-header"><div class="card-title"><i class="fas fa-info-circle" style="color:var(--accent-light)"></i> Sobre</div></div>
+<div style="display:flex;align-items:center;gap:20px">
+<div style="width:60px;height:60px;background:var(--gradient-1);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.5rem">🧠</div>
+<div><h3 style="margin-bottom:4px">OPB Sistema v2.1</h3><p style="color:var(--text-muted);font-size:0.85rem">Sistema Multi-Agentes IA para Solopreneurs</p><p style="color:var(--text-muted);font-size:0.8rem;margin-top:4px">Build: 2026-05-14 | API: v2</p></div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- MODAL: Alimentar Cérebro -->
 <div class="modal-overlay" id="alimentarModal" onclick="closeAlimentarModal(event)">
-    <div class="modal" id="alimentarContent">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
-            <h2 style="font-size:1.1rem;"><i class="fas fa-brain" style="color:var(--success);margin-right:8px"></i> Alimentar Cérebro</h2>
-            <button onclick="closeAlimentarModal()" style="background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:1.2rem;">&times;</button>
-        </div>
-        <div class="form-group">
-            <label class="form-label">Cole o conteúdo do formulário web aqui:</label>
-            <textarea class="form-textarea" id="alimentar-input" rows="12" placeholder="Cole aqui o conteúdo exportado do formulario.html..."></textarea>
-        </div>
-        <div class="form-group">
-            <label class="form-label">Tipo de Conteúdo</label>
-            <select class="form-select" id="alimentar-tipo">
-                <option value="completo">Completo (tudo)</option>
-                <option value="habilidades">Habilidades</option>
-                <option value="historias">Histórias</option>
-                <option value="cosmovisao">Cosmovisão</option>
-                <option value="publico">Público-Alvo</option>
-                <option value="posicionamento">Posicionamento</option>
-                <option value="narrativa">Narrativa</option>
-            </select>
-        </div>
-        <button class="btn btn-success btn-block btn-lg" onclick="runAlimentarFromModal()">
-            <i class="fas fa-brain"></i> Processar e Alimentar Cérebro
-        </button>
-        <div class="console-output" id="alimentar-output" style="margin-top:16px;display:none;"></div>
-    </div>
+<div class="modal" id="alimentarContent">
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px"><h2 style="font-size:1.1rem"><i class="fas fa-brain" style="color:var(--success);margin-right:8px"></i> Alimentar Cérebro</h2><button onclick="closeAlimentarModal()" style="background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:1.2rem">&times;</button></div>
+<div class="form-group"><label class="form-label">Cole o conteúdo do formulário aqui:</label><textarea class="form-textarea" id="alimentar-input" rows="12" placeholder="Cole o conteúdo exportado do formulario.html..."></textarea></div>
+<div class="form-group"><label class="form-label">Tipo de Conteúdo</label><select class="form-select" id="alimentar-tipo"><option value="completo">Completo</option><option value="habilidades">Habilidades</option><option value="historias">Histórias</option><option value="cosmovisao">Cosmovisão</option><option value="publico">Público-Alvo</option><option value="posicionamento">Posicionamento</option><option value="narrativa">Narrativa</option></select></div>
+<button class="btn btn-success btn-block btn-lg" onclick="runAlimentarFromModal()"><i class="fas fa-brain"></i> Processar e Alimentar</button>
+<div class="console-output" id="alimentar-output" style="margin-top:16px;display:none"></div>
+</div>
 </div>
 
-<!-- Toast Container -->
 <div class="toast-container" id="toastContainer"></div>
 
 <script>
 // ============================================
+// API HELPER
+// ============================================
+async function apiCall(endpoint, method, body) {
+    const baseUrl = document.getElementById('cfg-api-url')?.value || 'http://localhost:5000';
+    const url = baseUrl + endpoint;
+    const options = { method: method || 'GET', headers: { 'Content-Type': 'application/json' } };
+    if (body) options.body = JSON.stringify(body);
+    try {
+        const res = await fetch(url, options);
+        const data = await res.json();
+        return data;
+    } catch (err) {
+        showToast('Erro na API: ' + err.message, 'error');
+        return { error: err.message };
+    }
+}
+
+function escapeHtml(t) { const d = document.createElement('div'); d.textContent = t; return d.innerHTML; }
+
+// ============================================
 // NAVIGATION
 // ============================================
-
-const PAGES = {
-    'dashboard': { title: 'Dashboard', breadcrumb: 'OPB Studio > Visão Geral' },
-    'cerebro': { title: 'Cérebro', breadcrumb: 'OPB Studio > Cérebro' },
-    'rotinas': { title: 'Rotinas', breadcrumb: 'OPB Studio > Rotinas' },
-    'transcricao': { title: 'Transcrição', breadcrumb: 'OPB Studio > Agentes > Transcrição' },
-    'capa-video': { title: 'Capa de Vídeo', breadcrumb: 'OPB Studio > Agentes > Capa de Vídeo' },
-    'carrossel': { title: 'Carrossel', breadcrumb: 'OPB Studio > Agentes > Carrossel' },
-    'consumo': { title: 'Consumo', breadcrumb: 'OPB Studio > Agentes > Consumo' },
-    'posicionamento': { title: 'Posicionamento', breadcrumb: 'OPB Studio > Agentes > Posicionamento' },
-    'text-generator': { title: 'Text Generator', breadcrumb: 'OPB Studio > Agentes > Text Generator' },
-    'perfil': { title: 'Meu Perfil', breadcrumb: 'OPB Studio > Perfil' },
-    'produtividade': { title: 'Produtividade', breadcrumb: 'OPB Studio > Produtividade' },
-    'config': { title: 'Configurações', breadcrumb: 'OPB Studio > Configurações' },
-};
+const PAGES = { dashboard:'Dashboard', cerebro:'Cérebro', rotinas:'Rotinas', transcricao:'Transcrição', 'capa-video':'Capa Vídeo', carrossel:'Carrossel', consumo:'Consumo', posicionamento:'Posicionamento', 'text-generator':'Text Generator', perfil:'Meu Perfil', produtividade:'Produtividade', config:'Configurações' };
 
 function navigateTo(page) {
-    // Hide all pages
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-
-    // Show target page
     const target = document.getElementById('page-' + page);
-    if (target) {
-        target.classList.add('active');
-    }
-
-    // Update nav
+    if (target) target.classList.add('active');
     document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
     document.querySelectorAll('.nav-item').forEach(item => {
-        if (item.getAttribute('onclick') === `navigateTo('${page}')`) {
-            item.classList.add('active');
-        }
+        if (item.getAttribute('onclick') === `navigateTo('${page}')`) item.classList.add('active');
     });
-
-    // Update topbar
     const info = PAGES[page];
-    if (info) {
-        document.getElementById('pageTitle').textContent = info.title;
-        document.getElementById('pageBreadcrumb').textContent = info.breadcrumb;
-    }
-
-    // Close sidebar on mobile
+    if (info) { document.getElementById('pageTitle').textContent = info; document.getElementById('pageBreadcrumb').textContent = 'OPB Studio > ' + info; }
     closeSidebar();
-
-    // Load page data
     loadPageData(page);
 }
 
@@ -2298,544 +659,338 @@ function toggleSidebar() {
     document.getElementById('sidebar').classList.toggle('open');
     document.getElementById('sidebarOverlay').classList.toggle('active');
 }
-
 function closeSidebar() {
     document.getElementById('sidebar').classList.remove('open');
     document.getElementById('sidebarOverlay').classList.remove('active');
 }
 
 // ============================================
-// MODALS
+// TOAST
 // ============================================
+function showToast(msg, type='info') {
+    const c = document.getElementById('toastContainer');
+    const t = document.createElement('div');
+    t.className = 'toast ' + type;
+    t.innerHTML = msg;
+    c.appendChild(t);
+    setTimeout(() => t.remove(), 3000);
+}
+
+// ============================================
+// PAGE DATA
+// ============================================
+async function loadPageData(page) {
+    if (page === 'dashboard') {
+        const stats = await apiCall('/api/stats');
+        if (stats && !stats.error) {
+            document.getElementById('stat-ideas').textContent = stats.ideias_salvas || 0;
+            document.getElementById('stat-agents').textContent = stats.agentes_ativos || 0;
+            document.getElementById('stat-conhecimento').textContent = stats.conhecimento_salvo || 0;
+            document.getElementById('stat-arquivos').textContent = stats.agentes_total || 0;
+        }
+        const ideas = await apiCall('/api/ideias');
+        const el = document.getElementById('recent-activity');
+        if (ideas && ideas.ideias && ideas.ideias.length) {
+            document.getElementById('stat-ideas').textContent = ideas.ideias.length;
+            el.innerHTML = ideas.ideias.slice(0,5).map(a => `
+                <div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border)">
+                    <i class="fas fa-lightbulb" style="color:var(--warning);width:20px;text-align:center"></i>
+                    <span style="flex:1;font-size:0.85rem">${escapeHtml(a.titulo)}</span>
+                    <span style="font-size:0.75rem;color:var(--text-muted)">${a.data}</span>
+                </div>`).join('');
+        } else {
+            el.innerHTML = '<div style="text-align:center;padding:20px;color:var(--text-muted)">Nenhuma atividade recente</div>';
+        }
+        // Check API status
+        const health = await apiCall('/api/health');
+        const si = document.getElementById('statusIndicator');
+        const tag = document.getElementById('api-status-tag');
+        if (health && health.status === 'online') {
+            si.innerHTML = '<span class="status-dot"></span><span>API: Online</span>';
+            si.className = 'status-indicator online';
+            tag.className = 'tag tag-green';
+            tag.textContent = 'API Online';
+        } else {
+            si.innerHTML = '<span class="status-dot"></span><span>API: Offline</span>';
+            si.className = 'status-indicator offline';
+            tag.className = 'tag tag-red';
+            tag.textContent = 'API Offline';
+        }
+        // Update agent status
+        await checkAgentsApi();
+    }
+    if (page === 'consumo') await loadKnowledge();
+    if (page === 'cerebro') {
+        loadCerebroTree();
+        loadMapas();
+    }
+}
+
+async function checkAgentsApi() {
+    const agents = await apiCall('/api/agentes');
+    if (agents) {
+        const st = { carrossel:'st-carrossel', consumo:'st-consumo', 'capa-video':'st-capavideo', transcricao:'st-transcricao', 'text-generator':'st-textgen', posicionamento:'st-posicionamento' };
+        agents.forEach(a => {
+            const el = document.getElementById(st[a.pasta]);
+            if (el) {
+                el.className = a.status === 'ativo' ? 'tag tag-green' : 'tag tag-amber';
+                el.textContent = a.status === 'ativo' ? '✅ Ativo' : '🔧 Desenvolvimento';
+            }
+        });
+    }
+}
+
+// ============================================
+// CERÉBRO
+// ============================================
+async function loadCerebroTree() {
+    const result = await apiCall('/api/cerebro/arvore');
+    const el = document.getElementById('cerebro-tree');
+    if (result && result.length) {
+        document.getElementById('stat-arquivos-c').textContent = result.filter(f=>f.tipo==='arquivo').length;
+        document.getElementById('stat-pastas-c').textContent = result.filter(f=>f.tipo==='pasta').length;
+        el.innerHTML = result.map(f => {
+            const icon = f.tipo === 'pasta' ? '📁' : '📄';
+            const color = f.tipo === 'pasta' ? 'line-blue' : 'line-green';
+            return `<span class="${color}">${icon} ${escapeHtml(f.caminho)}</span>`;
+        }).join('<br>');
+    }
+}
+
+async function loadMapas() {
+    const result = await apiCall('/api/cerebro/mapas');
+    const tbody = document.getElementById('mapas-tbody');
+    if (result && result.length) {
+        tbody.innerHTML = result.map(m => `
+            <tr><td><i class="fas fa-map" style="color:var(--accent);margin-right:6px"></i> ${escapeHtml(m.caminho)}</td><td><span class="tag tag-purple">${escapeHtml(m.pasta)}</span></td><td><button class="btn btn-sm btn-outline" onclick="readMap('${escapeHtml(m.caminho)}')">Ler</button></td></tr>
+        `).join('');
+    } else {
+        tbody.innerHTML = '<tr><td colspan="3" style="text-align:center;color:var(--text-muted)">Nenhum MAPA encontrado</td></tr>';
+    }
+}
+
+async function checkIntegrity() {
+    const result = await apiCall('/api/cerebro/arvore');
+    if (result) {
+        const files = result.filter(f=>f.tipo==='arquivo');
+        const maps = files.filter(f=>f.nome==='MAPA.md');
+        document.getElementById('stat-mapas').textContent = maps.length;
+        showToast(`✅ Integridade OK: ${files.length} arquivos, ${maps.length} MAPAs`, 'success');
+    }
+}
 
 function readMap(filename) {
     document.getElementById('modalTitle').textContent = filename;
     document.getElementById('modalBody').textContent = 'Carregando...';
     document.getElementById('modalOverlay').classList.add('active');
-
-    // In a real implementation, fetch the file content
-    const maps = {
-        'MAPA.md': `# MAPA — Cérebro
-> Fonte única de memória viva do ecossistema
-
-## Estrutura
-cerebro/
-├── MAPA.md         ← Este arquivo
-├── README.md
-├── negocio/
-│   ├── governanca/  → Regras, decisões, lições
-│   ├── areas/        → Operações
-│   ├── produtos/     → Catálogo
-│   ├── infra/        → Sistemas
-│   └── projetos/     → Iniciativas
-├── pessoal/        → Vida pessoal
-├── agentes/        → Config dos agentes
-├── playbooks/      → Manuais executáveis
-├── acervo/         → Conteúdo produzido
-└── seguranca/      → Permissões
-
-## Ordem de Leitura
-1. MAPA.md
-2. negocio/governanca/regras/MAPA.md
-3. negocio/projetos/ativos.md
-4. agentes/MAPA.md`,
-        'negocio/MAPA.md': `# Negócio — MAPA
-> Tudo sobre o negócio
-
-## Governança
-- Regras de operação
-- Decisões estratégicas
-- Lições aprendidas
-
-## Áreas Operacionais
-- Conteúdo
-- Marketing
-- Suporte
-- Comunidade`,
-    };
-
-    document.getElementById('modalBody').textContent = maps[filename] || `Conteúdo de ${filename}`;
+    apiCall('/api/cerebro/ler?caminho='+encodeURIComponent(filename)).then(r => {
+        document.getElementById('modalBody').textContent = r.conteudo || r.error || 'Conteúdo não disponível';
+    });
 }
-
-function closeModal(e) {
-    if (e && e.target !== e.currentTarget) return;
-    document.getElementById('modalOverlay').classList.remove('active');
-}
-
-function closeAlimentarModal(e) {
-    if (e && e.target !== e.currentTarget) return;
-    document.getElementById('alimentarModal').classList.remove('active');
-}
-
-function showAlimentarModal() {
-    document.getElementById('alimentarModal').classList.add('active');
-}
+function closeModal(e) { if (e && e.target !== e.currentTarget) return; document.getElementById('modalOverlay').classList.remove('active'); }
 
 // ============================================
-// TOAST NOTIFICATIONS
+// AGENT API CALLS
 // ============================================
-
-function showToast(message, type = 'info') {
-    const container = document.getElementById('toastContainer');
-    const toast = document.createElement('div');
-    toast.className = `toast ${type}`;
-    toast.innerHTML = message;
-    container.appendChild(toast);
-    setTimeout(() => toast.remove(), 3000);
-}
-
-// ============================================
-// PAGE DATA LOADING (Simulação)
-// ============================================
-
-let pomoRunning = false;
-let pomoSeconds = 25 * 60;
-let pomoInterval = null;
-let pomoRound = 1;
-
-function loadPageData(page) {
-    if (page === 'dashboard') {
-        // Load recent activity
-        const activities = [
-            { icon: 'fa-lightbulb', text: 'Ideia salva: "Automação com Python"', time: '2 min atrás', color: 'var(--warning)' },
-            { icon: 'fa-check', text: 'Carrossel gerado: "IA para Solopreneurs"', time: '15 min atrás', color: 'var(--success)' },
-            { icon: 'fa-microphone', text: 'Transcrição salva: Entrevista #12', time: '1h atrás', color: 'var(--info)' },
-            { icon: 'fa-image', text: 'Capa de vídeo criada: "Produtividade"', time: '2h atrás', color: 'var(--accent-light)' },
-            { icon: 'fa-book', text: 'Conteúdo processado: Artigo sobre IA', time: '3h atrás', color: 'var(--success)' },
-        ];
-
-        const el = document.getElementById('recent-activity');
-        el.innerHTML = activities.map(a => `
-            <div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);">
-                <i class="fas ${a.icon}" style="color:${a.color};width:20px;text-align:center;"></i>
-                <span style="flex:1;font-size:0.85rem;">${a.text}</span>
-                <span style="font-size:0.75rem;color:var(--text-muted);">${a.time}</span>
-            </div>
-        `).join('');
-
-        // Load ideas count
-        fetchIdeaCount();
-    }
-
-    if (page === 'consumo') {
-        // Load saved knowledge
-        loadKnowledge();
-    }
-}
-
-function fetchIdeaCount() {
-    // Simulated - in real app, would call Python script
-    document.getElementById('stat-ideias').textContent = '42';
-}
-
-// ============================================
-// AGENT SIMULATION
-// ============================================
-
-function showOutput(containerId, content) {
-    const el = document.getElementById(containerId);
-    el.style.display = 'block';
-    el.textContent = content;
-}
-
-function runTranscricao() {
+async function runTranscricao() {
     const url = document.getElementById('transcricao-url').value;
     if (!url) { showToast('Cole a URL do vídeo', 'error'); return; }
-
-    const output = document.getElementById('transcricao-output');
-    output.style.display = 'block';
-    output.innerHTML = `
-        <div class="line-yellow">🔄 Buscando transcrição...</div>
-        <div class="line-blue">URL: ${url}</div>
-        <div class="line-green">✅ Transcrição concluída!</div>
-        <div class="line-purple">📁 Salvo em: acervo/transcricoes/</div>
-    `;
-    showToast('Transcrição processada!', 'success');
+    const out = document.getElementById('transcricao-output');
+    out.style.display = 'block';
+    out.innerHTML = `<span class="line-yellow">🔄 Buscando transcrição...</span>\n<span class="line-blue">URL: ${escapeHtml(url)}</span>`;
+    const r = await apiCall('/api/transcricao','POST',{url});
+    if (r.sucesso) out.innerHTML += `\n<span class="line-green">✅ ${escapeHtml(r.mensagem)}</span>\n<span class="line-purple">${escapeHtml(r.saida||'')}</span>`;
+    else out.innerHTML += `\n<span class="line-red">❌ ${escapeHtml(r.erro||r.mensagem||'Erro desconhecido')}</span>`;
+    showToast(r.sucesso?'Transcrição concluída!':'Erro na transcrição', r.sucesso?'success':'error');
 }
 
-function runCapaVideo() {
+async function runCapaVideo() {
     const tema = document.getElementById('capa-tema').value;
-    if (!tema) { showToast('Informe o tema do vídeo', 'error'); return; }
-
-    const output = document.getElementById('capa-output');
-    output.style.display = 'block';
-    output.innerHTML = `🖼️ Ideias de capa para: "${tema}"\n\n1. Close + Título grande + Cores vibrantes\n2. Before/After visual + Texto impactante\n3. Minimalista + Icone central + Fundo escuro\n`;
-    showToast('Ideias geradas!', 'success');
+    if (!tema) { showToast('Informe o tema', 'error'); return; }
+    const out = document.getElementById('capa-output');
+    out.style.display = 'block';
+    out.innerHTML = `🖼️ Generando...`;
+    const r = await apiCall('/api/capa-video','POST',{tema, quantidade:parseInt(document.getElementById('capa-qtd').value)});
+    out.innerHTML = r.sucesso ? `🖼️ Capas para: "${escapeHtml(tema)}"\n\n${escapeHtml(r.saida||r.mensagem)}` : `❌ ${escapeHtml(r.erro||r.mensagem)}`;
+    showToast(r.sucesso?'Capas geradas!':'Erro', r.sucesso?'success':'error');
 }
 
-function runCarrossel() {
+async function runCarrossel() {
     const tema = document.getElementById('carrossel-tema').value;
-    if (!tema) { showToast('Informe o tema do carrossel', 'error'); return; }
-
-    const tipo = document.getElementById('carrossel-tipo').value;
-    const slides = document.getElementById('carrossel-slides').value;
-
-    const output = document.getElementById('carrossel-output');
-    output.style.display = 'block';
-    output.innerHTML = `🎠 Gerando carrossel...\n\n✅ "${tema}" — ${slides} slides\nTipo: ${tipo}\n📁 Salvo em: acervo/carrossel/\n\nUse como quiser! 🚀`;
-    showToast('Carrossel gerado!', 'success');
+    if (!tema) { showToast('Informe o tema', 'error'); return; }
+    const out = document.getElementById('carrossel-output');
+    out.style.display = 'block';
+    out.innerHTML = `🎠 Gerando carrossel...`;
+    const r = await apiCall('/api/carrossel','POST',{tema, tipo:document.getElementById('carrossel-tipo').value, slides:parseInt(document.getElementById('carrossel-slides').value)});
+    out.innerHTML = r.sucesso ? `🎠 ${escapeHtml(r.mensagem)}\n\n${escapeHtml(r.saida||'✅ Carrossel gerado com sucesso!')}` : `❌ ${escapeHtml(r.erro||r.mensagem)}`;
+    showToast(r.sucesso?'Carrossel gerado!':'Erro', r.sucesso?'success':'error');
 }
 
-function runConsumo() {
+async function runConsumo() {
     const input = document.getElementById('consumo-input').value;
     if (!input.trim()) { showToast('Cole um texto ou URL', 'error'); return; }
-
-    const tipo = document.getElementById('consumo-tipo').value;
-    const titulo = document.getElementById('consumo-titulo').value || 'Conteúdo processado';
-
-    const output = document.getElementById('consumo-output');
-    output.style.display = 'block';
-    output.innerHTML = `📖 Processando "${titulo}"...\nTipo: ${tipo}\n✅ Salvo em: acervo/conhecimento/\n🧠 Alimentado ao cérebro!`;
-    showToast('Conteúdo processado!', 'success');
+    const out = document.getElementById('consumo-output');
+    out.style.display = 'block';
+    const titulo = document.getElementById('consumo-titulo').value || 'Conteúdo';
+    out.innerHTML = `📖 Processando "${escapeHtml(titulo)}"...`;
+    const r = await apiCall('/api/consumo','POST',{input:input.slice(0,3000), tipo:document.getElementById('consumo-tipo').value, titulo});
+    if (r.sucesso) out.innerHTML = `📖 ${escapeHtml(r.mensagem)}\n\n${escapeHtml(r.saida||'')}`;
+    else out.innerHTML = `❌ ${escapeHtml(r.erro||r.mensagem)}`;
+    showToast(r.sucesso?'Conteúdo processado!':'Erro', r.sucesso?'success':'error');
 }
 
-function runTextGenerator() {
-    const objetivo = document.getElementById('text-gen-objetivo').value;
-    if (!objetivo.trim()) { showToast('Informe o objetivo do post', 'error'); return; }
-
-    const tipo = document.getElementById('text-gen-tipo').value;
-    const output = document.getElementById('text-gen-output');
-    output.style.display = 'block';
-
-    const templates = {
-        educational: `💡 DICA: ${objetivo}\n\nTrês coisas que aprendi:\n1. Comece pequeno, mas comece\n2. Foque no que realmente importa\n3. Consistência > Perfeição\n\n📌 Salve este post! 👆`,
-        inspirational: `✨ LEMBRE-SE:\n\nVocê já tem tudo que precisa para começar.\nNão espere pelo momento "perfeito".\n\nCada grande jornada começa com um passo.\nO importante é dar esse passo HOJE. 💪`,
-        promotional: `🚀 NOVIDADE!\n\nTransforme seu negócio com estratégias práticas.\n\n✅ Economize tempo\n✅ Aumente resultados\n✅ Trabalhe com propósito\n\n👆 Link na bio!`,
-        engagement: `💬 Pergunta para você:\n\n"${objetivo}"\n\nResponda nos comentários! 👇\nQuem mais vai comentar ganha um bônus! 🎁\n\n#comunidade #troca #crescimento`
-    };
-
-    output.innerHTML = templates[tipo] || templates.educational;
-    showToast('Post gerado com sucesso!', 'success');
+async function runTextGenerator() {
+    const obj = document.getElementById('text-gen-objetivo').value;
+    if (!obj.trim()) { showToast('Informe o objetivo', 'error'); return; }
+    const out = document.getElementById('text-gen-output');
+    out.style.display = 'block';
+    out.innerHTML = `✍️ Gerando...`;
+    const r = await apiCall('/api/text-generator','POST',{objetivo:obj, tipo:document.getElementById('text-gen-tipo').value});
+    if (r.sucesso) out.innerHTML = escapeHtml(r.saida||r.mensagem);
+    else out.innerHTML = `❌ ${escapeHtml(r.erro||r.mensagem)}`;
+    showToast(r.sucesso?'Post gerado!':'Erro', r.sucesso?'success':'error');
 }
 
-function quickCarrossel(tema) {
-    document.getElementById('carrossel-tema').value = tema;
-    runCarrossel();
+async function analyzeCompetitors() {
+    const nicho = document.getElementById('posicionamento-nicho').value;
+    const conc = document.getElementById('posicionamento-concorrentes').value;
+    const out = document.getElementById('posicionamento-output');
+    if (!nicho || !conc.trim()) { showToast('Preencha nicho e concorrentes', 'error'); return; }
+    out.style.display = 'block';
+    out.innerHTML = `📊 Analisando...`;
+    const r = await apiCall('/api/posicionamento','POST',{nicho, concorrentes:conc.split('\n').filter(l=>l.trim()).join(' ')});
+    out.innerHTML = escapeHtml((r&&r.analise)||(r&&r.mensagem)||conc.split('\n').filter(l=>l.trim()).map((c,i)=>`${i+1}. @${c.trim()}`).join('\n'));
+    showToast('Análise concluída!', 'info');
 }
 
-function quickPost(objetivo, tipo) {
-    document.getElementById('text-gen-objetivo').value = objetivo;
-    document.getElementById('text-gen-tipo').value = tipo;
-    runTextGenerator();
+async function savePosicionamento() {
+    const v = document.getElementById('minha-verdade').value;
+    const f = document.getElementById('frase-posicionamento').value;
+    if (!v||!f) { showToast('Preencha os campos', 'error'); return; }
+    showToast('Posicionamento salvo!', 'success');
 }
 
-// ============================================
-// POMODORO TIMER
-// ============================================
-
-let pomoRunning1 = false, pomoRunning2 = false;
-let pomoSec1 = 25 * 60, pomoSec2 = 25 * 60;
-let pomoRound1 = 1, pomoRound2 = 1;
-let pomoInt1 = null, pomoInt2 = null;
-
-function togglePomodoro() {
-    pomoRunning1 = !pomoRunning1;
-    const btn = document.getElementById('pomodoro-btn');
-
-    if (pomoRunning1) {
-        btn.innerHTML = '<i class="fas fa-pause"></i> Pausar';
-        btn.className = 'btn btn-warning btn-lg';
-        pomoInt1 = setInterval(() => {
-            pomoSec1--;
-            updateTimer('pomodoro-timer', pomoSec1);
-            if (pomoSec1 <= 0) {
-                clearInterval(pomoInt1);
-                pomoRound1++;
-                if (pomoRound1 <= 4) {
-                    pomoSec1 = 5 * 60; // Break
-                    showToast('⏸️ Hora do descanso! (5 min)', 'info');
-                } else {
-                    pomoSec1 = 25 * 60;
-                    pomoRound1 = 1;
-                    showToast('✅ Ciclo completo! Parabéns! 🎉', 'success');
-                }
-                pomoRunning1 = false;
-                btn.innerHTML = '<i class="fas fa-play"></i> Iniciar';
-                btn.className = 'btn btn-success btn-lg';
-            }
-        }, 1000);
-    } else {
-        clearInterval(pomoInt1);
-        btn.innerHTML = '<i class="fas fa-play"></i> Continuar';
-        btn.className = 'btn btn-success btn-lg';
-    }
-
-    updatePomodoroUI();
+async function runAlimentarFromModal() {
+    const input = document.getElementById('alimentar-input').value;
+    if (!input.trim()) { showToast('Cole o conteúdo', 'error'); return; }
+    const out = document.getElementById('alimentar-output');
+    out.style.display = 'block';
+    out.innerHTML = `🧠 Processando...`;
+    const r = await apiCall('/api/alimentar','POST',{input:input.slice(0,3000), tipo:document.getElementById('alimentar-tipo').value, titulo:'Perfil Empreendedor'});
+    out.innerHTML = r.sucesso ? `✅ ${escapeHtml(r.mensagem)}\n\n${escapeHtml(r.saida||r.arquivo||'')}` : `❌ ${escapeHtml(r.erro||r.mensagem)}`;
+    showToast(r.sucesso?'🧠 Cérebro alimentado!':'Erro', r.sucesso?'success':'error');
 }
 
-function togglePomodoro2() {
-    pomoRunning2 = !pomoRunning2;
-    const btn = document.getElementById('pomo-btn2');
-
-    if (pomoRunning2) {
-        btn.innerHTML = '<i class="fas fa-pause"></i> Pausar';
-        btn.className = 'btn btn-warning btn-lg';
-        pomoInt2 = setInterval(() => {
-            pomoSec2--;
-            updateTimer('pomodoro-timer2', pomoSec2);
-            if (pomoSec2 <= 0) {
-                clearInterval(pomoInt2);
-                pomoRound2++;
-                if (pomoRound2 <= 4) {
-                    pomoSec2 = 5 * 60;
-                } else {
-                    pomoSec2 = 25 * 60;
-                    pomoRound2 = 1;
-                }
-                pomoRunning2 = false;
-                btn.innerHTML = '<i class="fas fa-play"></i> Iniciar';
-                btn.className = 'btn btn-success btn-lg';
-            }
-        }, 1000);
-    } else {
-        clearInterval(pomoInt2);
-        btn.innerHTML = '<i class="fas fa-play"></i> Continuar';
-        btn.className = 'btn btn-success btn-lg';
-    }
-
-    updatePomodoroUI2();
-}
-
-function updateTimer(id, seconds) {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    document.getElementById(id).textContent =
-        String(mins).padStart(2, '0') + ':' + String(secs).padStart(2, '0');
-}
-
-function updatePomodoroUI() {
-    if (pomoRound1 <= 4) {
-        document.getElementById('pomodoro-phase').textContent = pomoRunning1 ? '🔴 Foco' : '🟢 Descanso';
-        document.getElementById('pomodoro-phase').className = pomoRunning1 ? 'tag tag-danger' : 'tag tag-green';
-        document.getElementById('pomodoro-round').textContent = `Rodada ${pomoRound1}/4`;
-    }
-}
-
-function updatePomodoroUI2() {
-    document.getElementById('pomo-pct').textContent = Math.round((pomoSec2 / (25 * 60)) * 100) + '%';
-    if (pomoRound2 <= 4) {
-        document.getElementById('pomo-phase2').textContent = pomoRunning2 ? '🔴 Foco' : '🟢 Descanso';
-        document.getElementById('pomo-phase2').className = pomoRunning2 ? 'tag tag-danger' : 'tag tag-green';
-        document.getElementById('pomo-round2').textContent = `#${pomoRound2}/4`;
-    }
-}
-
-function resetPomodoro() {
-    clearInterval(pomoInt1);
-    pomoRunning1 = false;
-    pomoSec1 = 25 * 60;
-    pomoRound1 = 1;
-    updateTimer('pomodoro-timer', pomoSec1);
-    const btn = document.getElementById('pomodoro-btn');
-    btn.innerHTML = '<i class="fas fa-play"></i> Iniciar';
-    btn.className = 'btn btn-success btn-lg';
-    document.getElementById('pomodoro-phase').textContent = 'Foco';
-    document.getElementById('pomodoro-phase').className = 'tag tag-green';
-    document.getElementById('pomodoro-round').textContent = 'Rodada 1/4';
-}
-
-function resetPomodoro2() {
-    clearInterval(pomoInt2);
-    pomoRunning2 = false;
-    pomoSec2 = 25 * 60;
-    pomoRound2 = 1;
-    updateTimer('pomodoro-timer2', pomoSec2);
-    const btn = document.getElementById('pomo-btn2');
-    btn.innerHTML = '<i class="fas fa-play"></i>';
-    btn.className = 'btn btn-success btn-lg';
-    document.getElementById('pomo-phase2').textContent = 'Foco';
-    document.getElementById('pomo-phase2').className = 'tag tag-green';
-    document.getElementById('pomo-round2').textContent = '#1/4';
-}
-
-function skipPomodoro() {
-    pomoSec2 = 1;
-    updateTimer('pomodoro-timer2', 0);
-}
-
-// ============================================
-// TASKS
-// ============================================
-
-function addTask() {
-    const lista = document.getElementById('tasks-list');
-    if (lista.querySelector('.empty-state')) {
-        lista.innerHTML = '';
-    }
-
-    const div = document.createElement('div');
-    div.className = 'todo-item';
-    div.style.cssText = 'display:flex;align-items:center;gap:10px;padding:12px;border-radius:8px;margin-bottom:6px;background:var(--bg-input);';
-    div.innerHTML = `
-        <input type="checkbox" onchange="updateTaskCount(this)" style="accent-color:var(--accent);width:18px;height:18px;">
-        <input type="text" placeholder="Nova tarefa..." style="background:transparent;border:none;color:var(--text-primary);flex:1;font-family:'Inter',sans-serif;font-size:0.9rem;" onkeypress="if(event.key==='Enter')this.blur()">
-        <button onclick="this.closest('.todo-item').remove();updateTaskCount()" style="background:none;border:none;color:var(--text-muted);cursor:pointer;padding:4px;"><i class="fas fa-trash"></i></button>
-    `;
-    lista.appendChild(div);
-    updateTaskCount();
-}
-
-function updateTaskCount() {
-    const items = document.querySelectorAll('#tasks-list .todo-item');
-    const checked = document.querySelectorAll('#tasks-list input[type="checkbox"]:checked');
-    document.getElementById('tasks-today').textContent = items.length;
-    document.getElementById('pomo-done').textContent = checked.length;
-}
+function showAlimentarModal() { document.getElementById('alimentarModal').classList.add('active'); }
+function closeAlimentarModal(e) { if (e && e.target !== e.currentTarget) return; document.getElementById('alimentarModal').classList.remove('active'); }
 
 // ============================================
 // CONHECIMENTO
 // ============================================
-
-function loadKnowledge() {
+async function loadKnowledge() {
     const lista = document.getElementById('conhecimento-lista');
-    const items = [
-        { name: 'IA para Solopreneurs', date: '13/05/2026', type: 'Carrossel' },
-        { name: 'Habilidades do Empreendedor', date: '13/05/2026', type: 'Perfil' },
-        { name: 'Narrativa Principal', date: '13/05/2026', type: 'Perfil' },
-        { name: 'Público-Alvo Ideal', date: '13/05/2026', type: 'Perfil' },
-    ];
-
-    lista.innerHTML = items.map(i => `
-        <div style="display:flex;align-items:center;justify-content:space-between;padding:10px;border-bottom:1px solid var(--border);">
-            <div>
-                <strong style="font-size:0.9rem;">${i.name}</strong>
-                <div style="font-size:0.75rem;color:var(--text-muted);">${i.date}</div>
-            </div>
-            <div style="display:flex;gap:8px;align-items:center;">
-                <span class="tag tag-purple">${i.type}</span>
-                <button class="btn btn-sm btn-outline" onclick="showToast('Carregando...','info');"><i class="fas fa-eye"></i></button>
-            </div>
-        </div>
-    `).join('');
+    const r = await apiCall('/api/ideias');
+    if (r && r.ideias && r.ideias.length) {
+        lista.innerHTML = r.ideias.map(i => `
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:10px;border-bottom:1px solid var(--border)">
+                <div><strong style="font-size:0.9rem">${escapeHtml(i.titulo)}</strong><div style="font-size:0.75rem;color:var(--text-muted)">${i.data}</div></div>
+                <div style="display:flex;gap:8px;align-items:center"><span class="tag tag-purple">${escapeHtml(i.tipo||'ideia')}</span></div>
+            </div>`).join('');
+    } else {
+        lista.innerHTML = '<div class="empty-state"><i class="fas fa-book-open"></i><h3>Nenhum conhecimento salvo</h3><p>Processe textos para alimentar</p></div>';
+    }
 }
-
-function filterConhecimento(tipo) {
-    document.querySelectorAll('.tab-inline').forEach(t => t.classList.remove('active'));
-    event.target.classList.add('active');
+function filterConhecimento(tipo, el) {
+    document.querySelectorAll('#consumo .tab-inline').forEach(t=>t.classList.remove('active'));
+    if (el) el.classList.add('active');
     loadKnowledge();
 }
 
 // ============================================
-// ALIMENTAR CEREBRO
+// POMODORO
 // ============================================
+let pR1=false, pS1=25*60, pI1=null;
+let pR2=false, pS2=25*60, pI2=null;
 
-function runAlimentar() {
-    showAlimentarModal();
+function togglePomodoro() {
+    pR1=!pR1;
+    const b=document.getElementById('pomodoro-btn');
+    if(pR1){b.innerHTML='<i class="fas fa-pause"></i> Pausar';b.className='btn btn-warning btn-lg';pI1=setInterval(()=>{pS1--;updateTimer('pomodoro-timer',pS1);if(pS1<=0){clearInterval(pI1);pS1=25*60;pR1=false;b.innerHTML='<i class="fas fa-play"></i> Iniciar';b.className='btn btn-success btn-lg';showToast('✅ Ciclo completo!','success')}},1000)}
+    else{clearInterval(pI1);b.innerHTML='<i class="fas fa-play"></i> Iniciar';b.className='btn btn-success btn-lg'}
 }
-
-function runAlimentarFromModal() {
-    const input = document.getElementById('alimentar-input').value;
-    if (!input.trim()) { showToast('Cole o conteúdo do formulário', 'error'); return; }
-
-    const tipo = document.getElementById('alimentar-tipo').value;
-    const output = document.getElementById('alimentar-output');
-    output.style.display = 'block';
-    output.textContent = `🧠 Processando...\nTipo: ${tipo}\nTamanho: ${input.length} caracteres\n✅ Cérebro alimentado!`;
-    showToast('Cérebro alimentado com sucesso!', 'success');
+function togglePomodoro2() {
+    pR2=!pR2;
+    const b=document.getElementById('pomo-btn2');
+    if(pR2){b.innerHTML='<i class="fas fa-pause"></i>';b.className='btn btn-warning btn-lg';pI2=setInterval(()=>{pS2--;updateTimer('pomodoro-timer2',pS2);if(pS2<=0){clearInterval(pI2);pS2=25*60;pR2=false;b.innerHTML='<i class="fas fa-play"></i>';b.className='btn btn-success btn-lg'}},1000)}
+    else{clearInterval(pI2);b.innerHTML='<i class="fas fa-play"></i>';b.className='btn btn-success btn-lg'}
 }
+function updateTimer(id,s){const m=Math.floor(s/60),ss=s%60;document.getElementById(id).textContent=String(m).padStart(2,'0')+':'+String(ss).padStart(2,'0')}
+function resetPomodoro(){clearInterval(pI1);pR1=false;pS1=25*60;updateTimer('pomodoro-timer',pS1);document.getElementById('pomodoro-btn').innerHTML='<i class="fas fa-play"></i> Iniciar';document.getElementById('pomodoro-btn').className='btn btn-success btn-lg'}
+function resetPomodoro2(){clearInterval(pI2);pR2=false;pS2=25*60;updateTimer('pomodoro-timer2',pS2);document.getElementById('pomo-btn2').innerHTML='<i class="fas fa-play"></i>';document.getElementById('pomo-btn2').className='btn btn-success btn-lg'}
+function skipPomodoro(){pS2=1}
 
 // ============================================
-// POSICIONAMENTO
+// TASKS
 // ============================================
-
-function analyzeCompetitors() {
-    const nicho = document.getElementById('posicionamento-nicho').value;
-    const concorrentes = document.getElementById('posicionamento-concorrentes').value;
-    const output = document.getElementById('posicionamento-output');
-
-    if (!nicho || !concorrentes.trim()) {
-        showToast('Preencha nicho e concorrentes', 'error');
-        return;
-    }
-
-    output.style.display = 'block';
-    output.textContent = `📊 Analisando ${nicho}...\n\nConcorrentes identificados:\n${concorrentes.split('\n').filter(l=>l.trim()).map((c,i)=>`${i+1}. @${c.trim()}`).join('\n')}\n\n✅ Análise completa!`;
-    showToast('Análise concluída!', 'success');
-}
-
-function savePosicionamento() {
-    const verdade = document.getElementById('minha-verdade').value;
-    const inimigo = document.getElementById('inimigo-comum').value;
-    const frase = document.getElementById('frase-posicionamento').value;
-
-    if (!verdade || !frase) {
-        showToast('Preencha sua verdade e frase', 'error');
-        return;
-    }
-
-    showToast('Posicionamento salvo!', 'success');
-}
+function addTask(){const l=document.getElementById('tasks-list');if(l.querySelector('.empty-state'))l.innerHTML='';const d=document.createElement('div');d.className='todo-item';d.style.cssText='display:flex;align-items:center;gap:10px;padding:12px;border-radius:8px;margin-bottom:6px;background:var(--bg-input)';d.innerHTML='<input type="checkbox" onchange="updateTaskCount(this)" style="accent-color:var(--accent);width:18px;height:18px"><input type="text" placeholder="Nova tarefa..." style="background:transparent;border:none;color:var(--text-primary);flex:1;font-size:0.9rem" onkeypress="if(event.key===\'Enter\')this.blur()"><button onclick="this.closest(\'.todo-item\').remove();updateTaskCount()" style="background:none;border:none;color:var(--text-muted);cursor:pointer;padding:4px"><i class="fas fa-trash"></i></button>';l.appendChild(d);updateTaskCount()}
+function updateTaskCount(){const items=document.querySelectorAll('#tasks-list .todo-item'),checked=document.querySelectorAll('#tasks-list input[type="checkbox"]:checked');document.getElementById('tasks-today').textContent=items.length;document.getElementById('pomo-done').textContent=checked.length;document.getElementById('pomo-focus').textContent=checked.length*25}
+function saveNotes(){showToast('Notas salvas!','success')}
 
 // ============================================
 // PROFILE
 // ============================================
-
-function savePerfil() {
-    const nome = document.getElementById('perfil-nome').value;
-    if (!nome) { showToast('Preencha seu nome', 'error'); return; }
-    showToast(`Perfil "${nome}" salvo!`, 'success');
-}
-
-// Color Preview
-document.querySelectorAll('#perfil-cor1, #perfil-cor2, #perfil-cor3').forEach(input => {
-    input.addEventListener('input', function() {
-        const num = this.id.replace('perfil-cor', 'preview-c');
-        document.getElementById(num).style.background = this.value;
-    });
-});
+function savePerfil(){const n=document.getElementById('perfil-nome').value;if(!n){showToast('Preencha seu nome','error');return}showToast('Perfil "'+n+'" salvo!','success')}
+document.querySelectorAll('#perfil-cor1,#perfil-cor2,#perfil-cor3').forEach(function(inp){inp.addEventListener('input',function(){const num=this.id.replace('perfil-cor','preview-c');document.getElementById(num).style.background=this.value})});
 
 // ============================================
 // CONFIG
 // ============================================
-
-function saveConfig() {
-    showToast('Configurações salvas!', 'success');
+function saveConfig(){
+     const apiUrl = document.getElementById('cfg-api-url')?.value;
+     const token = document.getElementById('cfg-telegram-token')?.value;
+     localStorage.setItem('opb-api-url', apiUrl || 'http://localhost:5000');
+     if (token) {
+         fetch(apiUrl + '/api/config/telegram', {
+             method: 'POST',
+             headers: { 'Content-Type': 'application/json' },
+             body: JSON.stringify({ token })
+         }).then(r => r.json()).then(d => {
+             showToast(d.sucesso ? 'Token salvo!' : 'Erro: ' + (d.erro || 'desconhecido'));
+         }).catch(e => showToast('Erro ao salvar token: ' + e.message));
+     }
+     showToast('Configuracoes salvas!','success');
+ }
+async function startBot(){
+    showToast('Iniciando Telegram Bot...','info');
+    const r=await apiCall('/api/bot/start','POST',{});
+    if(r&&r.sucesso){showToast('🤖 Bot iniciado!','success');document.getElementById('botStatus').textContent='Bot: Online'}
+    else{showToast('Erro: '+(r?.erro||''),'error');document.getElementById('botStatus').textContent='Bot: Offline'}
 }
-
-function startBot() {
-    showToast('Iniciando Telegram Bot... (simulado)', 'info');
-}
-
-function checkDeps() {
-    showToast('Verificando dependências... (simulado)', 'info');
-}
-
-function exportLog() {
-    const logContent = `OPB Sistema - Log Exportado\nData: ${new Date().toLocaleString('pt-BR')}\n\nAgentes ativos: 6\nIdeias: 42\nTranscrições: 8\nCarrosséis: 15\n`;
-    const blob = new Blob([logContent], { type: 'text/plain' });
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = `opb-log-${new Date().toISOString().split('T')[0]}.txt`;
-    a.click();
-    showToast('Log exportado!', 'success');
-}
+function checkDeps(){showToast('Verificando dependências... (verifique no terminal)','info')}
+function exportLog(){const c='OPB Sistema - Log Exportado\nData: '+new Date().toLocaleString('pt-BR')+'\nAgentes: '+document.getElementById('stat-agents').textContent+'\nIdeias: '+document.getElementById('stat-ideas').textContent+'\n';const blob=new Blob([c],{type:'text/plain'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='opb-log-'+new Date().toISOString().split('T')[0]+'.txt';a.click();showToast('Log exportado!','success')}
 
 // ============================================
-// KEYBOARD SHORTCUTS
+// QUICK ACTIONS
 // ============================================
+function quickCarrossel(t){document.getElementById('carrossel-tema').value=t;runCarrossel()}
+function quickPost(o,t){document.getElementById('text-gen-objetivo').value=o;document.getElementById('text-gen-tipo').value=t;runTextGenerator()}
 
-document.addEventListener('keydown', (e) => {
-    if (e.ctrlKey && e.key === 'k') {
-        e.preventDefault();
-        const activePage = document.querySelector('.page.active');
-        if (activePage) {
-            const firstInput = activePage.querySelector('input, textarea, select');
-            if (firstInput) firstInput.focus();
-        }
+// ============================================
+// AUTO-REFRESH IDEAS
+// ============================================
+let ideasInterval = setInterval(async () => {
+    const r = await apiCall('/api/ideias');
+    if (r && r.ideias) {
+        document.getElementById('stat-ideas').textContent = r.ideias.length;
     }
-});
+}, 30000); // Atualiza a cada 30 segundos
 
 // ============================================
 // INIT
 // ============================================
-
 document.addEventListener('DOMContentLoaded', () => {
     loadPageData('dashboard');
-
-    // Update footer year
-    document.getElementById('pomodoro-timer').textContent = '25:00';
 });
 </script>
-
 </body>
 </html>

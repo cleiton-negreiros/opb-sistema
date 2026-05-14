@@ -1,3 +1,4 @@
+import os
 import json
 import requests
 from typing import Dict, Any, Optional
@@ -21,9 +22,10 @@ class LLMProvider:
 class OllamaProvider(LLMProvider):
     """Ollama local LLM provider."""
     
-    def __init__(self, base_url: str = "http://localhost:11434", model: str = "llama3"):
+    def __init__(self, base_url: str = "http://localhost:11434", model: str = None):
         self.base_url = base_url
-        self.model = model
+        # Try to use provided model, then check env, then fallback
+        self.model = model or os.environ.get("OLLAMA_MODEL", "tinyllama")
         self.api_url = f"{base_url}/api/generate"
     
     def generate(self, prompt: str, context: Optional[Dict[str, Any]] = None) -> str:

@@ -152,17 +152,22 @@ python agents/coordinator/main.py
 
 ### ✅ Implementado
 - Hub de produtividade (Pomodoro, Planner, Finanças, Ideias)
-- Página de configuração de perfil
+- Página de configuração de perfil (formulario.html + plataforma.html)
 - Agente coordenador
+- Agente Carrossel (4 tipos: educational, inspirational, promotional, engagement)
+- Agente de Consumo de Conteúdo (5 tipos de análise, fallback robusto)
+- API Server Flask (14+ endpoints REST)
+- Integração Telegram Bot (captura de ideias + comandos)
+- Pipeline completo: formulário → API → agente → cérebro → carrossel
 - Configuração Vercel e CI/CD
 - Cérebro (template OPB School integrado)
 - Deploy automático
 
 ### 🔜 Backlog
-- Agente Carrossel
-- Agente Transcrição
-- Agente Email
+- Preencher perfil do empreendedor com conteúdo real
+- Gerar primeiros carrosséis e posts via plataforma
 - Agente Analytics
+- Configurar domínio personalizado
 
 ---
 
@@ -176,4 +181,4 @@ Ou executar:
 
 ---
 
-_Last updated: 2026-05-12_
+_Last updated: 2026-05-13_
