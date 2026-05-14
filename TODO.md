@@ -4,51 +4,86 @@
 
 ## ✅ Concluído
 
-- [x] Agente Carrossel (`agents/carrossel/`) — 4 tipos, integrado ao cérebro
-- [x] Agente de Consumo (`agents/consumo/`) — 5 tipos de análise, fallbacks
-- [x] 6 Templates de Perfil (`cerebro/perfil-empreendedor-solo/`)
-- [x] Formulário Web (`formulario.html`) — SPA com tabs, localStorage, export
-- [x] Integração Formulário ↔ API (`sendSectionToApi()`)
-- [x] Plataforma Web (`plataforma.html`) — Dashboard completo
-- [x] `saveConfig()` melhorado — persiste API URL + envia token do Telegram
-- [x] Scripts de alimentação (`alimentar.py`, `alimentar_com_input.py`)
-- [x] Scripts de inicialização do Telegram Bot (Windows + Termux)
-- [x] API Server Flask (`api_server.py`) — 14+ endpoints REST
-- [x] Endpoint `/api/bot/start` — inicia bot via POST
-- [x] Rota catch-all corrigida — aceita apenas GET
-- [x] Encoding corrigido — UTF-8 em todos os outputs
-- [x] Favicon e manifest.json criados
-- [x] `llm_provider.py` — modelo configurável via env var, fallback para tinyllama
-- [x] `index.html` — redireciona para `/plataforma.html`
-- [x] Pipeline completo testado (formulário → API → agente → cérebro → carrossel)
-- [x] Modelo `tinyllama` baixado no Ollama
-- [x] `OLLAMA_MODEL` configurado como variável de ambiente
-- [x] `beautifulsoup4` instalado
-- [x] Token do Telegram configurado (`setx TELEGRAM_BOT_TOKEN`)
-- [x] **Bot do Telegram rodando e conectado** (@NegreirosBot)
-- [x] **API Flask rodando na porta 5000**
-- [x] **Todos os endpoints testados** (health, stats, consumo, agentes, cerebro/arvore)
+### Infraestrutura
+- [x] Servidor Flask API (`api_server.py`) - 14+ endpoints REST
+- [x] Telegram Bot integrado (NegreirosBot @NegreirosBot)
+- [x] Ollama com tinyllama configurado
+- [x] Deploy no Vercel (frontend estático): https://opb-sistema.vercel.app
+
+### PWA Mobile
+- [x] manifest.json com icons, shortcuts, orientação portrait
+- [x] Service Worker (`sw.js`) para offline
+- [x] Meta tags para Apple/Android
+- [x] Plataforma responsiva (mobile-first)
+
+### Setup para Outro Computador
+- [x] setup.bat - Script de instalação
+- [x] iniciar.bat - Script para iniciar sistema
+- [x] requirements.txt - Dependências completas
+- [x] INSTALL.md - Guia de instalação
+
+### Agentes
+- [x] Agente Carrossel (`agents/carrossel/`) - 4 tipos
+- [x] Agente de Consumo (`agents/consumo/`) - 5 tipos de análise
+- [x] Agente Text Generator
+- [x] Agente Transcrição
+- [x] Agente Posicionamento
+
+### Frontend
+- [x] Plataforma Web (`plataforma.html`) - Dashboard completo
+- [x] Formulário de Perfil (`formulario.html`) - 6 seções
+- [x] Templates de Perfil (HABILIDADES, HISTORIAS, COSMOVISAO, PUBLICO-ALVO, POSICIONAMENTO, NARRATIVA)
 
 ## 🔄 Em Progresso
 
-- [ ] Preencher formulário web / templates markdown com conteúdo real
-- [ ] Testar fluxo completo: formulário → API → consumo → cérebro → carrossel
-- [ ] Gerar primeiros carrosséis e posts via plataforma
-- [ ] Configurar token real do Telegram via `setx TELEGRAM_BOT_TOKEN`
-  - ✅ Feito: `8789174206:AAEFbU9kz0PQQLFlCw4vMVzIYiXSnmVRjxQ`
-- [ ] Instalar modelo leve no Ollama
-  - ✅ Feito: `tinyllama:latest` puxado
-- [ ] Instalar `beautifulsoup4`
-  - ✅ Feito: já estava instalado
+- [ ] Testar pipeline completo com Ollama (timeout ainda é issue)
+- [ ] Preencher perfil do empreendedor com conteúdo real
 
-## 📋 Pendente (Próximos)
+## 📋 Próximos Passos
 
-1. Testar fluxo completo end-to-end com Ollama ativo
-2. Preencher perfil do empreendedor (Habilidades, Histórias, etc.)
-3. Alimentar cérebro com conteúdo real via plataforma
-4. Gerar primeiros carrosséis e posts
-5. Configurar domínio / deploy (Vercel ou similar)
-6. Documentar decisões e lições no cérebro
+1. **Em outro computador:**
+   ```bash
+   git clone https://github.com/cleiton-negreiros/opb-sistema.git
+   cd opb-sistema
+   setup.bat
+   iniciar.bat
+   ```
+
+2. **Usar no celular:**
+   - Acesse https://opb-sistema.vercel.app
+   - No iOS: Compartilhar > "Adicionar à Tela de Início"
+   - No Android: Menu > "Instalar App" ou "Adicionar à tela inicial"
+
+3. **Para ter API funcionando (localmente):**
+   - O Flask server precisa rodar localmente
+   - O Vercel serve apenas frontend estático
 
 ## 🚧 Blocked
 - (none)
+
+---
+
+## 📁 Estrutura do Projeto
+
+```
+opb-sistema/
+├── api_server.py          # Servidor Flask (rode localmente)
+├── setup.bat              # Install dependencias
+├── iniciar.bat            # Inicia sistema
+├── requirements.txt       # Dependências Python
+├── INSTALL.md            # Guia de instalação
+├── vercel.json           # Config deploy
+├── agents/               # Agentes Python
+├── cerebro/perfil-empreendedor-solo/
+│   ├── plataforma.html   # Dashboard PWA
+│   ├── formulario.html   # Formulario PWA
+│   ├── manifest.json     # PWA manifest
+│   └── sw.js            # Service Worker
+└── utils/                # Utilitários (llm_provider.py)
+```
+
+## 🔗 Links Úteis
+
+- **Vercel:** https://opb-sistema.vercel.app
+- **GitHub:** https://github.com/cleiton-negreiros/opb-sistema
+- **API Local:** http://localhost:5000 (quando rodar api_server.py)
