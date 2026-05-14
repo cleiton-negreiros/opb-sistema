@@ -1,9 +1,11 @@
 {
   "buildCommand": null,
-  "outputDirectory": ".",
+  "outputDirectory": "cerebro/perfil-empreendedor-solo",
   "framework": null,
-  "redirects": [
-    { "source": "/", "destination": "/hub.html" },
-    { "source": "/index", "destination": "/index.html" }
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/plataforma.html" }
+  ],
+  "headers": [
+    { "source": "/(.*)", "headers": [{ "key": "Access-Control-Allow-Origin", "value": "*" }] }
   ]
 }
