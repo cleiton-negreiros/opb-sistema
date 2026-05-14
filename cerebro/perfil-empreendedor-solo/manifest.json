@@ -1,16 +1,81 @@
 {
     "name": "OPB Sistema",
     "short_name": "OPB",
-    "description": "Sistema Multi-Agentes IA para Solopreneurs",
+    "description": "Plataforma de Agentes IA para Solopreneurs",
     "start_url": "/",
+    "scope": "/",
     "display": "standalone",
+    "orientation": "portrait",
     "background_color": "#0B0F1A",
-    "theme_color": "#6366F1",
+    "theme_color": "#FF6B6B",
+    "categories": ["productivity", "business"],
     "icons": [
         {
             "src": "favicon.ico",
-            "sizes": "32x32",
+            "sizes": "48x48",
+            "type": "image/x-icon",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "favicon.ico",
+            "sizes": "72x72",
             "type": "image/x-icon"
+        },
+        {
+            "src": "favicon.ico",
+            "sizes": "96x96",
+            "type": "image/x-icon"
+        },
+        {
+            "src": "favicon.ico",
+            "sizes": "128x128",
+            "type": "image/x-icon"
+        },
+        {
+            "src": "favicon.ico",
+            "sizes": "144x144",
+            "type": "image/x-icon"
+        },
+        {
+            "src": "favicon.ico",
+            "sizes": "152x152",
+            "type": "image/x-icon"
+        },
+        {
+            "src": "favicon.ico",
+            "sizes": "192x192",
+            "type": "image/x-icon"
+        },
+        {
+            "src": "favicon.ico",
+            "sizes": "384x384",
+            "type": "image/x-icon"
+        },
+        {
+            "src": "favicon.ico",
+            "sizes": "512x512",
+            "type": "image/x-icon"
+        }
+    ],
+    "screenshots": [],
+    "shortcuts": [
+        {
+            "name": "Dashboard",
+            "short_name": "Dashboard",
+            "description": "Acesse o dashboard principal",
+            "url": "/?section=dashboard"
+        },
+        {
+            "name": "Agentes",
+            "short_name": "Agentes",
+            "description": "Veja os agentes disponiveis",
+            "url": "/?section=agentes"
+        },
+        {
+            "name": "Configuracoes",
+            "short_name": "Config",
+            "description": "Configure o sistema",
+            "url": "/?section=config"
         }
     ]
 }

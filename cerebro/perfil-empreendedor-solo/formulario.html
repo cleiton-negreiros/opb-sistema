@@ -372,6 +372,13 @@
             .tab-btn { min-width: 100px; font-size: 0.75rem; padding: 0.6rem; }
         }
     </style>
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#FF6B6B">
+    <link rel="apple-touch-icon" href="favicon.ico">
 </head>
 <body>
 
@@ -1205,6 +1212,13 @@ window.addEventListener('DOMContentLoaded', () => {
     initRows();
     buildNarrativaFields();
     updateProgress();
+    
+    // Register Service Worker for PWA
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('sw.js')
+            .then(reg => console.log('Service Worker registered:', reg))
+            .catch(err => console.log('Service Worker error:', err));
+    }
 });
 </script>
 
