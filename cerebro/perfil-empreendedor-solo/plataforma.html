@@ -8,39 +8,62 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
         :root {
-            --bg-primary: #0B0F1A;
-            --bg-secondary: #111827;
-            --bg-card: #1A1F2E;
-            --bg-card-hover: #1F2639;
-            --bg-input: #161B2A;
-            --border: #2A3145;
-            --border-light: #334155;
-            --text-primary: #F1F5F9;
-            --text-secondary: #94A3B8;
-            --text-muted: #64748B;
-            --accent: #6366F1;
-            --accent-light: #818CF8;
-            --accent-glow: rgba(99, 102, 241, 0.15);
-            --success: #10B981;
-            --success-glow: rgba(16, 185, 129, 0.15);
-            --warning: #F59E0B;
-            --warning-glow: rgba(245, 158, 11, 0.15);
-            --danger: #EF4444;
-            --danger-glow: rgba(239, 68, 68, 0.15);
-            --info: #3B82F6;
-            --info-glow: rgba(59, 130, 246, 0.15);
-            --gradient-1: linear-gradient(135deg, #6366F1, #8B5CF6);
-            --gradient-2: linear-gradient(135deg, #10B981, #059669);
-            --gradient-3: linear-gradient(135deg, #F59E0B, #D97706);
-            --gradient-4: linear-gradient(135deg, #3B82F6, #6366F1);
-            --gradient-5: linear-gradient(135deg, #EF4444, #DC2626);
-            --radius: 16px;
-            --radius-sm: 10px;
-            --radius-xs: 6px;
-            --shadow: 0 4px 6px -1px rgba(0,0,0,0.3);
-            --shadow-lg: 0 10px 25px -3px rgba(0,0,0,0.4);
-            --shadow-glow: 0 0 20px rgba(99, 102, 241, 0.1);
-            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #12121a;
+            --bg-card: rgba(22, 22, 32, 0.8);
+            --bg-card-hover: rgba(30, 30, 45, 0.9);
+            --bg-input: rgba(18, 18, 26, 0.6);
+            --border: rgba(255, 255, 255, 0.06);
+            --border-light: rgba(255, 255, 255, 0.1);
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.7);
+            --text-muted: rgba(255, 255, 255, 0.4);
+            --accent: #a78bfa;
+            --accent-light: #c4b5fd;
+            --accent-glow: rgba(167, 139, 250, 0.15);
+            --success: #34d399;
+            --success-glow: rgba(52, 211, 153, 0.15);
+            --warning: #fbbf24;
+            --warning-glow: rgba(251, 191, 36, 0.15);
+            --danger: #f87171;
+            --danger-glow: rgba(248, 113, 113, 0.15);
+            --info: #60a5fa;
+            --info-glow: rgba(96, 165, 250, 0.15);
+            --gradient-1: linear-gradient(135deg, #a78bfa 0%, #7c3aed 50%, #c084fc 100%);
+            --gradient-2: linear-gradient(135deg, #34d399 0%, #059669 100%);
+            --gradient-3: linear-gradient(135deg, #fbbf24 0%, #d97706 100%);
+            --gradient-4: linear-gradient(135deg, #60a5fa 0%, #a78bfa 100%);
+            --gradient-5: linear-gradient(135deg, #f87171 0%, #dc2626 100%);
+            --gradient-bg: linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 50%, #0f0f1a 100%);
+            --gradient-sidebar: linear-gradient(180deg, #12121a 0%, #0a0a0f 100%);
+            --radius: 20px;
+            --radius-sm: 14px;
+            --radius-xs: 10px;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            --shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.4);
+            --shadow-glow: 0 0 40px rgba(167, 139, 250, 0.15);
+            --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255,255,255,0.05);
+            --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        body {
+            background: var(--gradient-bg);
+            background-attachment: fixed;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(ellipse at 20% 20%, rgba(167, 139, 250, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(96, 165, 250, 0.06) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 50%, rgba(52, 211, 153, 0.04) 0%, transparent 40%);
+            pointer-events: none;
+            z-index: -1;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg-primary); color: var(--text-primary); line-height: 1.6; min-height: 100vh; overflow-x: hidden; }
@@ -48,8 +71,34 @@
         ::-webkit-scrollbar-track { background: var(--bg-secondary); }
         ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
         .app { display: flex; min-height: 100vh; }
-        .sidebar { width: 270px; background: var(--bg-secondary); border-right: 1px solid var(--border); display: flex; flex-direction: column; position: fixed; top: 0; left: 0; bottom: 0; z-index: 100; transition: var(--transition); }
-        .sidebar-header { padding: 24px 20px; border-bottom: 1px solid var(--border); }
+        .sidebar { 
+            width: 280px; 
+            background: var(--gradient-sidebar); 
+            border-right: 1px solid var(--border); 
+            display: flex; 
+            flex-direction: column; 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            bottom: 0; 
+            z-index: 100; 
+            transition: var(--transition);
+            backdrop-filter: blur(20px);
+        }
+        .sidebar::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 1px;
+            height: 100%;
+            background: linear-gradient(180deg, transparent 0%, rgba(167, 139, 250, 0.2) 50%, transparent 100%);
+        }
+        .sidebar-header { 
+            padding: 28px 24px; 
+            border-bottom: 1px solid var(--border);
+            background: linear-gradient(180deg, rgba(167, 139, 250, 0.03) 0%, transparent 100%);
+        }
         .sidebar-logo { display: flex; align-items: center; gap: 12px; }
         .sidebar-logo .logo-icon { width: 40px; height: 40px; background: var(--gradient-1); border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
         .sidebar-logo .logo-text { font-family: 'Inter', sans-serif; font-weight: 800; font-size: 1.2rem; background: var(--gradient-1); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
@@ -57,17 +106,80 @@
         .sidebar-nav { flex: 1; padding: 16px 12px; overflow-y: auto; }
         .nav-section { margin-bottom: 24px; }
         .nav-section-title { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.2px; color: var(--text-muted); padding: 0 12px; margin-bottom: 8px; }
-        .nav-item { display: flex; align-items: center; gap: 12px; padding: 10px 14px; border-radius: var(--radius-sm); cursor: pointer; transition: var(--transition); color: var(--text-secondary); font-size: 0.9rem; font-weight: 500; margin-bottom: 2px; }
-        .nav-item:hover { background: var(--bg-card); color: var(--text-primary); }
-        .nav-item.active { background: var(--accent-glow); color: var(--accent-light); border-left: 3px solid var(--accent); }
+        .nav-item { 
+            display: flex; 
+            align-items: center; 
+            gap: 14px; 
+            padding: 12px 16px; 
+            border-radius: 12px; 
+            cursor: pointer; 
+            transition: var(--transition); 
+            color: var(--text-secondary); 
+            font-size: 0.9rem; 
+            font-weight: 500; 
+            margin-bottom: 4px;
+            position: relative;
+            overflow: hidden;
+        }
+        .nav-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 3px;
+            height: 0;
+            background: var(--gradient-1);
+            border-radius: 0 4px 4px 0;
+            transition: var(--transition);
+        }
+        .nav-item:hover { 
+            background: rgba(167, 139, 250, 0.08); 
+            color: var(--text-primary);
+            transform: translateX(4px);
+        }
+        .nav-item.active { 
+            background: rgba(167, 139, 250, 0.12); 
+            color: var(--accent-light);
+        }
+        .nav-item.active::before {
+            height: 24px;
+        }
         .nav-item i { width: 20px; text-align: center; font-size: 1rem; }
         .nav-item .badge { margin-left: auto; background: var(--accent); color: white; font-size: 0.65rem; padding: 2px 7px; border-radius: 10px; font-weight: 700; }
         .sidebar-footer { padding: 16px 20px; border-top: 1px solid var(--border); display: flex; align-items: center; gap: 10px; }
         .sidebar-footer .avatar { width: 36px; height: 36px; background: var(--gradient-4); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85rem; }
         .sidebar-footer .user-name { font-weight: 600; font-size: 0.85rem; }
         .sidebar-footer .user-role { font-size: 0.7rem; color: var(--text-muted); }
-        .main-content { flex: 1; margin-left: 270px; min-height: 100vh; background: var(--bg-primary); }
-        .topbar { padding: 16px 32px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; background: rgba(11, 15, 26, 0.8); backdrop-filter: blur(20px); position: sticky; top: 0; z-index: 50; }
+        .main-content { 
+            flex: 1; 
+            margin-left: 280px; 
+            min-height: 100vh; 
+            background: transparent;
+            position: relative;
+        }
+        .topbar { 
+            padding: 20px 36px; 
+            border-bottom: 1px solid var(--border); 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between; 
+            background: rgba(10, 10, 15, 0.7); 
+            backdrop-filter: blur(24px); 
+            position: sticky; 
+            top: 0; 
+            z-index: 50; 
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+        }
+        .topbar::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent 0%, rgba(167, 139, 250, 0.3) 50%, transparent 100%);
+        }
         .topbar-left { display: flex; align-items: center; gap: 16px; }
         .mobile-menu-btn { display: none; background: none; border: none; color: var(--text-primary); font-size: 1.3rem; cursor: pointer; padding: 8px; }
         .page-title { font-size: 1.4rem; font-weight: 700; }
@@ -85,28 +197,139 @@
         .page.active { display: block; animation: fadeIn 0.3s ease; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-bottom: 28px; }
-        .stat-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; transition: var(--transition); }
-        .stat-card:hover { border-color: var(--border-light); transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+        .stat-card { 
+            background: var(--bg-card); 
+            border: 1px solid var(--border); 
+            border-radius: var(--radius); 
+            padding: 24px; 
+            transition: var(--transition);
+            backdrop-filter: blur(10px);
+            box-shadow: var(--shadow-card);
+            position: relative;
+            overflow: hidden;
+        }
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+        }
+        .stat-card:hover { 
+            border-color: var(--border-light); 
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-glow), var(--shadow-lg);
+        }
         .stat-card .stat-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
-        .stat-card .stat-icon { width: 42px; height: 42px; border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; font-size: 1.1rem; }
-        .stat-card .stat-icon.purple { background: var(--accent-glow); color: var(--accent-light); }
-        .stat-card .stat-icon.green { background: var(--success-glow); color: var(--success); }
-        .stat-card .stat-icon.amber { background: var(--warning-glow); color: var(--warning); }
-        .stat-card .stat-icon.blue { background: var(--info-glow); color: var(--info); }
-        .stat-card .stat-icon.red { background: var(--danger-glow); color: var(--danger); }
+        .stat-card .stat-icon { 
+            width: 52px; 
+            height: 52px; 
+            border-radius: 16px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-size: 1.3rem;
+            position: relative;
+        }
+        .stat-card .stat-icon::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 16px;
+            padding: 1px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.2), transparent);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+        }
+        .stat-card .stat-icon.purple { 
+            background: linear-gradient(135deg, rgba(167, 139, 250, 0.2), rgba(124, 58, 237, 0.2)); 
+            color: #c4b5fd;
+            box-shadow: 0 4px 20px rgba(167, 139, 250, 0.2);
+        }
+        .stat-card .stat-icon.green { 
+            background: linear-gradient(135deg, rgba(52, 211, 153, 0.2), rgba(5, 150, 105, 0.2)); 
+            color: #34d399;
+            box-shadow: 0 4px 20px rgba(52, 211, 153, 0.2);
+        }
+        .stat-card .stat-icon.amber { 
+            background: linear-gradient(135deg, rgba(251, 191, 36, 0.2), rgba(217, 119, 6, 0.2)); 
+            color: #fbbf24;
+            box-shadow: 0 4px 20px rgba(251, 191, 36, 0.2);
+        }
+        .stat-card .stat-icon.blue { 
+            background: linear-gradient(135deg, rgba(96, 165, 250, 0.2), rgba(59, 130, 246, 0.2)); 
+            color: #60a5fa;
+            box-shadow: 0 4px 20px rgba(96, 165, 250, 0.2);
+        }
+        .stat-card .stat-icon.red { 
+            background: linear-gradient(135deg, rgba(248, 113, 113, 0.2), rgba(220, 38, 38, 0.2)); 
+            color: #f87171;
+            box-shadow: 0 4px 20px rgba(248, 113, 113, 0.2);
+        }
         .stat-card .stat-trend { font-size: 0.75rem; font-weight: 600; padding: 2px 8px; border-radius: 12px; }
         .stat-card .stat-trend.up { background: var(--success-glow); color: var(--success); }
         .stat-card .stat-trend.down { background: var(--danger-glow); color: var(--danger); }
-        .stat-card .stat-value { font-size: 2rem; font-weight: 800; margin-bottom: 4px; }
-        .stat-card .stat-label { font-size: 0.85rem; color: var(--text-muted); }
-        .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; margin-bottom: 20px; transition: var(--transition); }
-        .card:hover { border-color: var(--border-light); }
+        .stat-card .stat-value { 
+            font-size: 2.4rem; 
+            font-weight: 800; 
+            margin-bottom: 4px; 
+            background: linear-gradient(135deg, #ffffff 0%, rgba(255,255,255,0.7) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -1px;
+        }
+        .stat-card .stat-label { 
+            font-size: 0.85rem; 
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+        .card { 
+            background: var(--bg-card); 
+            border: 1px solid var(--border); 
+            border-radius: var(--radius); 
+            padding: 28px; 
+            margin-bottom: 24px; 
+            transition: var(--transition);
+            backdrop-filter: blur(10px);
+            box-shadow: var(--shadow-card);
+        }
+        .card:hover { 
+            border-color: var(--border-light); 
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-glow), var(--shadow-card);
+        }
         .card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
         .card-title { font-size: 1.1rem; font-weight: 700; display: flex; align-items: center; gap: 10px; }
         .card-title i { color: var(--accent); }
         .btn { display: inline-flex; align-items: center; gap: 8px; padding: 10px 20px; border-radius: var(--radius-sm); font-size: 0.875rem; font-weight: 600; cursor: pointer; border: none; transition: var(--transition); font-family: 'Inter', sans-serif; }
-        .btn-primary { background: var(--gradient-1); color: white; box-shadow: 0 4px 14px rgba(99, 102, 241, 0.3); }
-        .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4); }
+        .btn-primary { 
+            background: var(--gradient-1); 
+            color: white; 
+            box-shadow: 0 4px 20px rgba(167, 139, 250, 0.4), inset 0 1px 0 rgba(255,255,255,0.2);
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: 0.5s;
+        }
+        .btn-primary:hover { 
+            transform: translateY(-2px); 
+            box-shadow: 0 8px 30px rgba(167, 139, 250, 0.5), inset 0 1px 0 rgba(255,255,255,0.2);
+        }
+        .btn-primary:hover::before {
+            left: 100%;
+        }
         .btn-success { background: var(--gradient-2); color: white; }
         .btn-warning { background: var(--gradient-3); color: white; }
         .btn-info { background: var(--gradient-4); color: white; }
@@ -128,17 +351,82 @@
         .tag-blue { background: var(--info-glow); color: var(--info); }
         .form-group { margin-bottom: 16px; }
         .form-label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 6px; color: var(--text-secondary); }
-        .form-input, .form-textarea, .form-select { width: 100%; padding: 10px 14px; background: var(--bg-input); border: 1.5px solid var(--border); border-radius: var(--radius-xs); color: var(--text-primary); font-family: 'Inter', sans-serif; font-size: 0.9rem; transition: var(--transition); }
-        .form-input:focus, .form-textarea:focus, .form-select:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); }
+        .form-input, .form-textarea, .form-select { 
+            width: 100%; 
+            padding: 14px 18px; 
+            background: var(--bg-input); 
+            border: 1px solid var(--border); 
+            border-radius: var(--radius-xs); 
+            color: var(--text-primary); 
+            font-family: 'Inter', sans-serif; 
+            font-size: 0.95rem; 
+            transition: var(--transition);
+            backdrop-filter: blur(10px);
+        }
+        .form-input:focus, .form-textarea:focus, .form-select:focus { 
+            outline: none; 
+            border-color: rgba(167, 139, 250, 0.5); 
+            box-shadow: 0 0 0 4px rgba(167, 139, 250, 0.15), 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+        .form-input::placeholder { color: var(--text-muted); }
         .form-textarea { min-height: 100px; resize: vertical; font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; line-height: 1.7; }
         .form-select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2364748B' d='M6 8L1 3h10z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 36px; }
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
         .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
-        .agent-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; transition: var(--transition); cursor: pointer; position: relative; overflow: hidden; }
-        .agent-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--gradient-1); opacity: 0; transition: var(--transition); }
-        .agent-card:hover { border-color: var(--accent); transform: translateY(-3px); box-shadow: var(--shadow-glow); }
+        .agent-card { 
+            background: var(--bg-card); 
+            border: 1px solid var(--border); 
+            border-radius: var(--radius); 
+            padding: 28px; 
+            transition: var(--transition); 
+            cursor: pointer; 
+            position: relative; 
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            box-shadow: var(--shadow-card);
+        }
+        .agent-card::before { 
+            content: ''; 
+            position: absolute; 
+            top: 0; 
+            left: 0; 
+            right: 0; 
+            height: 3px; 
+            background: var(--gradient-1); 
+            opacity: 0; 
+            transition: var(--transition); 
+        }
+        .agent-card::after {
+            content: '';
+            position: absolute;
+            bottom: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(167, 139, 250, 0.05) 0%, transparent 50%);
+            opacity: 0;
+            transition: var(--transition);
+        }
+        .agent-card:hover { 
+            border-color: rgba(167, 139, 250, 0.4); 
+            transform: translateY(-6px); 
+            box-shadow: var(--shadow-glow), var(--shadow-lg);
+        }
         .agent-card:hover::before { opacity: 1; }
-        .agent-card .agent-icon { width: 48px; height: 48px; border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; font-size: 1.4rem; margin-bottom: 14px; }
+        .agent-card:hover::after { opacity: 1; }
+        .agent-card .agent-icon { 
+            width: 56px; 
+            height: 56px; 
+            border-radius: 16px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-size: 1.5rem; 
+            margin-bottom: 18px;
+            background: linear-gradient(135deg, rgba(167, 139, 250, 0.15), rgba(124, 58, 237, 0.15));
+            color: #c4b5fd;
+            box-shadow: 0 4px 20px rgba(167, 139, 250, 0.15);
+        }
         .agent-card .agent-name { font-size: 1.05rem; font-weight: 700; margin-bottom: 6px; }
         .agent-card .agent-desc { font-size: 0.82rem; color: var(--text-muted); line-height: 1.5; }
         .agent-card .agent-status { margin-top: 14px; display: flex; align-items: center; gap: 6px; font-size: 0.78rem; }
@@ -163,11 +451,40 @@
         .toggle.active { background: var(--accent); }
         .toggle::after { content: ''; position: absolute; width: 18px; height: 18px; background: white; border-radius: 50%; top: 3px; left: 3px; transition: var(--transition); }
         .toggle.active::after { left: 23px; }
-        .toast-container { position: fixed; top: 20px; right: 20px; z-index: 999; display: flex; flex-direction: column; gap: 8px; }
-        .toast { padding: 12px 20px; border-radius: var(--radius-sm); font-size: 0.85rem; font-weight: 500; color: white; animation: slideIn 0.3s ease, fadeOut 0.3s ease 2.7s; box-shadow: var(--shadow-lg); }
-        .toast.success { background: var(--success); }
-        .toast.error { background: var(--danger); }
-        .toast.info { background: var(--info); }
+        .toast-container { position: fixed; top: 24px; right: 24px; z-index: 999; display: flex; flex-direction: column; gap: 12px; }
+        .toast { 
+            padding: 16px 24px; 
+            border-radius: 16px; 
+            font-size: 0.9rem; 
+            font-weight: 600; 
+            color: white; 
+            animation: slideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1), fadeOut 0.3s ease 2.7s; 
+            box-shadow: var(--shadow-lg);
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+        .toast::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+        }
+        .toast.success { 
+            background: linear-gradient(135deg, #34d399 0%, #059669 100%);
+            box-shadow: 0 8px 30px rgba(52, 211, 153, 0.3);
+        }
+        .toast.error { 
+            background: linear-gradient(135deg, #f87171 0%, #dc2626 100%);
+            box-shadow: 0 8px 30px rgba(248, 113, 113, 0.3);
+        }
+        .toast.info { 
+            background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%);
+            box-shadow: 0 8px 30px rgba(96, 165, 250, 0.3);
+        }
         @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
         @keyframes fadeOut { to { opacity: 0; } }
         .empty-state { text-align: center; padding: 60px 20px; color: var(--text-muted); }
@@ -240,6 +557,8 @@
                 <div class="nav-item" onclick="navigateTo('consumo')"><i class="fas fa-book-reader"></i><span>Consumo</span><span class="badge">IA</span></div>
                 <div class="nav-item" onclick="navigateTo('posicionamento')"><i class="fas fa-crosshairs"></i><span>Posicionamento</span><span class="badge">IA</span></div>
                 <div class="nav-item" onclick="navigateTo('text-generator')"><i class="fas fa-pen-fancy"></i><span>Text Generator</span><span class="badge">IA</span></div>
+                <div class="nav-item" onclick="navigateTo('narvi')"><i class="fas fa-video"></i><span>Narvi</span><span class="badge">IA</span></div>
+                <div class="nav-item" onclick="navigateTo('radagast')"><i class="fas fa-rss"></i><span>Radagast</span><span class="badge">IA</span></div>
             </div>
             <div class="nav-section">
                 <div class="nav-section-title">Ferramentas</div>
@@ -304,6 +623,8 @@
 <tr><td><strong>🔤 Transcrição</strong></td><td><span class="tag tag-green" id="st-transcricao">--</span></td><td><button class="btn btn-sm btn-outline" onclick="navigateTo('transcricao')">Usar</button></td></tr>
 <tr><td><strong>✍️ Text Generator</strong></td><td><span class="tag tag-green" id="st-textgen">--</span></td><td><button class="btn btn-sm btn-outline" onclick="navigateTo('text-generator')">Usar</button></td></tr>
 <tr><td><strong>🎯 Posicionamento</strong></td><td><span class="tag tag-green" id="st-posicionamento">--</span></td><td><button class="btn btn-sm btn-outline" onclick="navigateTo('posicionamento')">Usar</button></td></tr>
+<tr><td><strong>🎬 Narvi</strong></td><td><span class="tag tag-green" id="st-narvi">--</span></td><td><button class="btn btn-sm btn-outline" onclick="navigateTo('narvi')">Usar</button></td></tr>
+<tr><td><strong>📡 Radagast</strong></td><td><span class="tag tag-green" id="st-radagast">--</span></td><td><button class="btn btn-sm btn-outline" onclick="navigateTo('radagast')">Usar</button></td></tr>
 </tbody></table></div></div>
 </div>
 <div class="card"><div class="card-header"><div class="card-title"><i class="fas fa-history"></i> Atividade Recente</div></div>
@@ -516,15 +837,27 @@
      PERFIL
      ============================================== -->
 <div class="page" id="page-perfil">
+<div class="tabs-inline" style="margin-bottom:20px">
+<div class="tab-inline active" onclick="showPerfilTab('basico',this)">Dados Básicos</div>
+<div class="tab-inline" onclick="showPerfilTab('habilidades',this)">Habilidades</div>
+<div class="tab-inline" onclick="showPerfilTab('historias',this)">Histórias</div>
+<div class="tab-inline" onclick="showPerfilTab('cosmovisao',this)">Cosmovisão</div>
+<div class="tab-inline" onclick="showPerfilTab('publico',this)">Público-Alvo</div>
+<div class="tab-inline" onclick="showPerfilTab('posicionamento',this)">Posicionamento</div>
+<div class="tab-inline" onclick="showPerfilTab('narrativa',this)">Narrativa</div>
+</div>
+
+<!-- Dados Básicos -->
+<div id="perfil-tab-basico">
 <div class="grid-2">
-<div class="card"><div class="card-header"><div class="card-title"><i class="fas fa-user-edit" style="color:var(--accent-light)"></i> Perfil do Empreendedor</div></div>
+<div class="card"><div class="card-header"><div class="card-title"><i class="fas fa-user-edit" style="color:var(--accent-light)"></i> Dados Pessoais</div></div>
 <div id="perfil-form">
 <div class="form-group"><label class="form-label">Nome completo</label><input type="text" class="form-input" id="perfil-nome" placeholder="Seu nome completo"></div>
 <div class="form-group"><label class="form-label">Nome público / Apelido</label><input type="text" class="form-input" id="perfil-nome-publico" placeholder="Como quer ser chamado"></div>
 <div class="form-group"><label class="form-label">Nicho / Mercado</label><input type="text" class="form-input" id="perfil-nicho" placeholder="Ex: Produtividade, IA, Marketing"></div>
 <div class="form-group"><label class="form-label">Público-alvo</label><input type="text" class="form-input" id="perfil-publico" placeholder="Ex: Solopreneurs iniciantes"></div>
 <div class="form-group"><label class="form-label">Problema que resolve</label><textarea class="form-textarea" id="perfil-problema" rows="3" placeholder="Ex: Ajudo pessoas a organizar rotinas..."></textarea></div>
-<button class="btn btn-primary btn-block" onclick="savePerfil()"><i class="fas fa-save"></i> Salvar Perfil</button>
+<button class="btn btn-primary btn-block" onclick="savePerfil()"><i class="fas fa-save"></i> Salvar</button>
 </div>
 </div>
 <div class="card"><div class="card-header"><div class="card-title"><i class="fas fa-palette" style="color:var(--success)"></i> Identidade Visual</div></div>
@@ -537,17 +870,104 @@
 </div>
 </div>
 </div>
+</div>
+</div>
+
+<!-- Seção de Módulos do Perfil Expandida -->
+<div id="perfil-modulos" style="display:none;margin-top:20px">
+<div class="card" style="margin-bottom:16px"><div class="card-header"><div class="card-title"><i class="fas fa-brain" style="color:var(--success)"></i> 🤝 Habilidades</div><button class="btn btn-sm btn-primary" onclick="savePerfilModulo('habilidades')"><i class="fas fa-save"></i> Salvar</button></div>
+<div class="form-group"><label class="form-label">Liste suas principais habilidades (uma por linha):</label><textarea class="form-textarea" id="perfil-habilidades" rows="8" placeholder="Ex:\n- Programação Python\n- Diseño Gráfico\n- Gestão de projetos\n- Comunicação"></textarea></div>
+<div class="form-group"><label class="form-label">Resumo das suas competências:</label><textarea class="form-textarea" id="perfil-habilidades-resumo" rows="4" placeholder="Descreva como suas habilidades te diferenciam..."></textarea></div>
+</div>
+
+<div class="card" style="margin-bottom:16px"><div class="card-header"><div class="card-title"><i class="fas fa-book" style="color:var(--info)"></i> 📖 Histórias</div><button class="btn btn-sm btn-primary" onclick="savePerfilModulo('historias')"><i class="fas fa-save"></i> Salvar</button></div>
+<div class="form-group"><label class="form-label">Sua história profissional:</label><textarea class="form-textarea" id="perfil-historia" rows="6" placeholder="Conte sua jornada profissional..."></textarea></div>
+<div class="form-group"><label class="form-label">Experiências marcantes:</label><textarea class="form-textarea" id="perfil-experiencias" rows="4" placeholder="Que experiências te trouxeram até aqui?"></textarea></div>
+</div>
+
+<div class="card" style="margin-bottom:16px"><div class="card-header"><div class="card-title"><i class="fas fa-globe" style="color:var(--accent-light)"></i> 🌎 Cosmovisão</div><button class="btn btn-sm btn-primary" onclick="savePerfilModulo('cosmovisao')"><i class="fas fa-save"></i> Salvar</button></div>
+<div class="form-group"><label class="form-label">Seus valores fundamentais:</label><textarea class="form-textarea" id="perfil-valores" rows="4" placeholder="O que é mais importante para você?"></textarea></div>
+<div class="form-group"><label class="form-label">Suas crenças sobre negócios:</label><textarea class="form-textarea" id="perfil-crencas" rows="4" placeholder="Em que você acredita no universo do empreendedorismo?"></textarea></div>
+</div>
+
+<div class="card" style="margin-bottom:16px"><div class="card-header"><div class="card-title"><i class="fas fa-users" style="color:var(--warning)"></i> 👥 Público-Alvo</div><button class="btn btn-sm btn-primary" onclick="savePerfilModulo('publico')"><i class="fas fa-save"></i> Salvar</button></div>
+<div class="form-group"><label class="form-label">Quem é seu cliente ideal?</label><textarea class="form-textarea" id="perfil-cliente" rows="4" placeholder="Descreva seu público-alvo..."></textarea></div>
+<div class="form-group"><label class="form-label">Problemas que você resolve:</label><textarea class="form-textarea" id="perfil-problemas" rows="4" placeholder="Liste os problemas que seu público enfrenta..."></textarea></div>
+</div>
+
+<div class="card" style="margin-bottom:16px"><div class="card-header"><div class="card-title"><i class="fas fa-crosshairs" style="color:var(--danger)"></i> 🎯 Posicionamento</div><button class="btn btn-sm btn-primary" onclick="savePerfilModulo('posicionamento')"><i class="fas fa-save"></i> Salvar</button></div>
+<div class="form-group"><label class="form-label">Seu diferencial competitivo:</label><textarea class="form-textarea" id="perfil-diferencial" rows="4" placeholder="O que te torna único no mercado?"></textarea></div>
+<div class="form-group"><label class="form-label">Sua proposta de valor:</label><textarea class="form-textarea" id="perfil-proposta" rows="4" placeholder="Como você entrega valor único?"></textarea></div>
+</div>
+
+<div class="card" style="margin-bottom:16px"><div class="card-header"><div class="card-title"><i class="fas fa-bullhorn" style="color:var(--success)"></i> 📣 Narrativa</div><button class="btn btn-sm btn-primary" onclick="savePerfilModulo('narrativa')"><i class="fas fa-save"></i> Salvar</button></div>
+<div class="form-group"><label class="form-label">Sua missão / tese:</label><textarea class="form-textarea" id="perfil-missao" rows="4" placeholder="Por que você faz o que faz?"></textarea></div>
+<div class="form-group"><label class="form-label">Sua história de origem:</label><textarea class="form-textarea" id="perfil-origem" rows="4" placeholder="Como surgiu sua trajetória empreendedora?"></textarea></div>
+</div>
+</div>
+
 <div style="margin-top:20px">
-<div class="card"><div class="card-header"><div class="card-title"><i class="fas fa-puzzle-piece" style="color:var(--warning)"></i> Módulos do Perfil</div></div>
+<div class="card"><div class="card-header"><div class="card-title"><i class="fas fa-puzzle-piece" style="color:var(--warning)"></i> Módulos do Perfil</div><button class="btn btn-sm btn-outline" onclick="togglePerfilModulos()"><i class="fas fa-edit"></i> Editar</button></div>
 <div class="grid-3" style="margin-top:12px">
-<div class="agent-card" onclick="navigateTo('consumo')"><div class="agent-icon" style="background:var(--success-glow);color:var(--success)"><i class="fas fa-file-alt"></i></div><div class="agent-name">Habilidades</div><div class="agent-desc">Mapeie suas competências</div><div class="agent-status active"><span class="dot"></span> Disponível</div></div>
-<div class="agent-card" onclick="navigateTo('consumo')"><div class="agent-icon" style="background:var(--info-glow);color:var(--info)"><i class="fas fa-book"></i></div><div class="agent-name">Histórias</div><div class="agent-desc">Conte suas histórias</div><div class="agent-status active"><span class="dot"></span> Disponível</div></div>
-<div class="agent-card" onclick="navigateTo('consumo')"><div class="agent-icon" style="background:var(--accent-glow);color:var(--accent-light)"><i class="fas fa-globe"></i></div><div class="agent-name">Cosmovisão</div><div class="agent-desc">Defina seus valores</div><div class="agent-status active"><span class="dot"></span> Disponível</div></div>
-<div class="agent-card" onclick="navigateTo('consumo')"><div class="agent-icon" style="background:var(--warning-glow);color:var(--warning)"><i class="fas fa-users"></i></div><div class="agent-name">Público-Alvo</div><div class="agent-desc">Defina quem você serve</div><div class="agent-status active"><span class="dot"></span> Disponível</div></div>
-<div class="agent-card" onclick="navigateTo('posicionamento')"><div class="agent-icon" style="background:var(--danger-glow);color:var(--danger)"><i class="fas fa-crosshairs"></i></div><div class="agent-name">Posicionamento</div><div class="agent-desc">Seu diferencial</div><div class="agent-status active"><span class="dot"></span> Disponível</div></div>
-<div class="agent-card" onclick="navigateTo('consumo')"><div class="agent-icon" style="background:var(--success-glow);color:var(--success)"><i class="fas fa-bullhorn"></i></div><div class="agent-name">Narrativa</div><div class="agent-desc">Sua grande tese</div><div class="agent-status active"><span class="dot"></span> Disponível</div></div>
+<div class="agent-card" onclick="navigateTo('perfil')"><div class="agent-icon" style="background:var(--success-glow);color:var(--success)"><i class="fas fa-file-alt"></i></div><div class="agent-name">Habilidades</div><div class="agent-desc">Mapeie suas competências</div><div class="agent-status active"><span class="dot"></span> Editável</div></div>
+<div class="agent-card" onclick="navigateTo('perfil')"><div class="agent-icon" style="background:var(--info-glow);color:var(--info)"><i class="fas fa-book"></i></div><div class="agent-name">Histórias</div><div class="agent-desc">Conte suas histórias</div><div class="agent-status active"><span class="dot"></span> Editável</div></div>
+<div class="agent-card" onclick="navigateTo('perfil')"><div class="agent-icon" style="background:var(--accent-glow);color:var(--accent-light)"><i class="fas fa-globe"></i></div><div class="agent-name">Cosmovisão</div><div class="agent-desc">Defina seus valores</div><div class="agent-status active"><span class="dot"></span> Editável</div></div>
+<div class="agent-card" onclick="navigateTo('perfil')"><div class="agent-icon" style="background:var(--warning-glow);color:var(--warning)"><i class="fas fa-users"></i></div><div class="agent-name">Público-Alvo</div><div class="agent-desc">Defina quem você serve</div><div class="agent-status active"><span class="dot"></span> Editável</div></div>
+<div class="agent-card" onclick="navigateTo('perfil')"><div class="agent-icon" style="background:var(--danger-glow);color:var(--danger)"><i class="fas fa-crosshairs"></i></div><div class="agent-name">Posicionamento</div><div class="agent-desc">Seu diferencial</div><div class="agent-status active"><span class="dot"></span> Editável</div></div>
+<div class="agent-card" onclick="navigateTo('perfil')"><div class="agent-icon" style="background:var(--success-glow);color:var(--success)"><i class="fas fa-bullhorn"></i></div><div class="agent-name">Narrativa</div><div class="agent-desc">Sua grande tese</div><div class="agent-status active"><span class="dot"></span> Editável</div></div>
 </div>
 </div>
+</div>
+</div>
+
+<!-- ==============================================
+     NARVI - Editor de Vídeo
+     ============================================== -->
+<div class="page" id="page-narvi">
+<div class="grid-2">
+<div class="card"><div class="card-header"><div class="card-title"><i class="fas fa-video" style="color:var(--warning)"></i> Narvi - Editor de Vídeo</div></div>
+<p style="color:var(--text-muted);margin-bottom:16px">Editor de vídeo automático. Corte silências, gere legendas e exporte para Reels e YouTube.</p>
+<div class="form-group"><label class="form-label">Arquivo de Vídeo</label><input type="file" class="form-input" id="narvi-video" accept="video/*"></div>
+<div class="form-group"><label class="form-label">Tipo de Corte</label><select class="form-select" id="narvi-corte"><option value="medio">Médio (150ms lead, 300ms tail)</option><option value="brando">Brando (300ms lead, 500ms tail)</option><option value="agressivo">Agressivo (80ms lead, 150ms tail)</option></select></div>
+<div class="form-group"><label class="form-label">Formato de Saída</label><select class="form-select" id="narvi-ratio"><option value="both">Ambos (9x16 + 16x9)</option><option value="9x16">Apenas Vertical (9x16)</option><option value="16x9">Apenas Horizontal (16x9)</option></select></div>
+<button class="btn btn-warning btn-block" onclick="runNarvi()"><i class="fas fa-play"></i> Processar Vídeo</button>
+<div style="margin-top:12px"><span class="tag tag-muted">FFmpeg requerido</span> <span class="tag tag-muted">faster-whisper</span></div>
+</div>
+<div class="card"><div class="card-header"><div class="card-title"><i class="fas fa-info-circle"></i> Como Usar</div></div>
+<div style="display:flex;flex-direction:column;gap:12px">
+<div style="padding:12px;background:var(--bg-input);border-radius:8px"><strong>1. Selecione o vídeo</strong><p style="font-size:0.85rem;color:var(--text-muted);margin-top:4px">Escolha um arquivo .mp4 ou .mov do seu computador</p></div>
+<div style="padding:12px;background:var(--bg-input);border-radius:8px"><strong>2. Configure o corte</strong><p style="font-size:0.85rem;color:var(--text-muted);margin-top:4px">O Narvi remove silências do início e fim automaticamente</p></div>
+<div style="padding:12px;background:var(--bg-input);border-radius:8px"><strong>3. Escolha os formatos</strong><p style="font-size:0.85rem;color:var(--text-muted);margin-top:4px">Gere versão para Reels (9x16) e YouTube (16x9)</p></div>
+<div style="padding:12px;background:var(--bg-input);border-radius:8px"><strong>4. Saída</strong><p style="font-size:0.85rem;color:var(--text-muted);margin-top:4px">Vídeos salvos em: <code>~/Desktop/narvi-saida/</code></p></div>
+</div>
+</div>
+</div>
+<div class="card" style="margin-top:20px"><div class="card-header"><div class="card-title"><i class="fas fa-terminal"></i> Log de Processamento</div></div>
+<div class="console-output" id="narvi-output" style="max-height:300px;display:none;"></div>
+</div>
+</div>
+
+<!-- ==============================================
+     RADAGAST - Curadoria de Conteúdo
+     ============================================== -->
+<div class="page" id="page-radagast">
+<div class="grid-2">
+<div class="card"><div class="card-header"><div class="card-title"><i class="fas fa-rss" style="color:var(--success)"></i> Radagast - Curadoria DIária</div></div>
+<p style="color:var(--text-muted);margin-bottom:16px">Agente de curadoria que varre YouTube, Instagram, X e LinkedIn em inglês e gera ideias de Reels.</p>
+<div class="form-group"><label class="form-label">Buscar Novos Conteúdos</label><button class="btn btn-success btn-block" onclick="runRadagast()"><i class="fas fa-search"></i> Executar Curadoria Agora</button></div>
+<div style="margin-top:16px"><span class="tag tag-muted">Requer: API Apify</span> <span class="tag tag-muted">Claude API</span> <span class="tag tag-muted">Telegram Bot</span></div>
+</div>
+<div class="card"><div class="card-header"><div class="card-title"><i class="fas fa-cog"></i> Configuração</div></div>
+<p style="color:var(--text-muted);margin-bottom:12px">Edite os arquivos de configuração:</p>
+<div style="display:flex;flex-direction:column;gap:8px">
+<div style="padding:10px;background:var(--bg-input);border-radius:6px;font-size:0.85rem"><code>agents/radagast/config/keywords.json</code><br><span style="color:var(--text-muted)">Termos de busca EN</span></div>
+<div style="padding:10px;background:var(--bg-input);border-radius:6px;font-size:0.85rem"><code>agents/radagast/config/inspiracoes.json</code><br><span style="color:var(--text-muted)">Perfis para monitorar</span></div>
+<div style="padding:10px;background:var(--bg-input);border-radius:6px;font-size:0.85rem"><code>agents/radagast/.env</code><br><span style="color:var(--text-muted)">APIFY, Anthropic, Telegram</span></div>
+</div>
+</div>
+</div>
+<div class="card" style="margin-top:20px"><div class="card-header"><div class="card-title"><i class="fas fa-history"></i> Histórico de Execuções</div></div>
+<div id="radagast-history"><div class="empty-state"><i class="fas fa-rss"></i><h3>Nenhuma curadoria executada</h3><p>Execute a curadoria para ver os resultados aqui</p></div></div>
 </div>
 </div>
 
@@ -604,7 +1024,7 @@
 <div class="card" style="margin-top:20px"><div class="card-header"><div class="card-title"><i class="fas fa-info-circle" style="color:var(--accent-light)"></i> Sobre</div></div>
 <div style="display:flex;align-items:center;gap:20px">
 <div style="width:60px;height:60px;background:var(--gradient-1);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.5rem">🧠</div>
-<div><h3 style="margin-bottom:4px">OPB Sistema v2.1</h3><p style="color:var(--text-muted);font-size:0.85rem">Sistema Multi-Agentes IA para Solopreneurs</p><p style="color:var(--text-muted);font-size:0.8rem;margin-top:4px">Build: 2026-05-14 | API: v2</p></div>
+<div><h3 style="margin-bottom:4px">OPB Sistema v2.2</h3><p style="color:var(--text-muted);font-size:0.85rem">Sistema Multi-Agentes IA para Solopreneurs</p><p style="color:var(--text-muted);font-size:0.8rem;margin-top:4px">Build: 2026-05-15 | Agentes: 9 | API: v2</p></div>
 </div>
 </div>
 </div>
@@ -647,7 +1067,7 @@ function escapeHtml(t) { const d = document.createElement('div'); d.textContent 
 // ============================================
 // NAVIGATION
 // ============================================
-const PAGES = { dashboard:'Dashboard', cerebro:'Cérebro', rotinas:'Rotinas', transcricao:'Transcrição', 'capa-video':'Capa Vídeo', carrossel:'Carrossel', consumo:'Consumo', posicionamento:'Posicionamento', 'text-generator':'Text Generator', perfil:'Meu Perfil', produtividade:'Produtividade', config:'Configurações' };
+const PAGES = { dashboard:'Dashboard', cerebro:'Cérebro', rotinas:'Rotinas', transcricao:'Transcrição', 'capa-video':'Capa Vídeo', carrossel:'Carrossel', consumo:'Consumo', posicionamento:'Posicionamento', 'text-generator':'Text Generator', narvi:'Narvi', radagast:'Radagast', perfil:'Meu Perfil', produtividade:'Produtividade', config:'Configurações' };
 
 function navigateTo(page) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
@@ -737,7 +1157,7 @@ async function loadPageData(page) {
 async function checkAgentsApi() {
     const agents = await apiCall('/api/agentes');
     if (agents) {
-        const st = { carrossel:'st-carrossel', consumo:'st-consumo', 'capa-video':'st-capavideo', transcricao:'st-transcricao', 'text-generator':'st-textgen', posicionamento:'st-posicionamento' };
+        const st = { carrossel:'st-carrossel', consumo:'st-consumo', 'capa-video':'st-capavideo', transcricao:'st-transcricao', 'text-generator':'st-textgen', posicionamento:'st-posicionamento', narvi:'st-narvi', radagast:'st-radagast' };
         agents.forEach(a => {
             const el = document.getElementById(st[a.pasta]);
             if (el) {
@@ -859,6 +1279,22 @@ async function runTextGenerator() {
     showToast(r.sucesso?'Post gerado!':'Erro', r.sucesso?'success':'error');
 }
 
+async function runNarvi() {
+    const videoInput = document.getElementById('narvi-video');
+    if (!videoInput.files[0]) { showToast('Selecione um vídeo', 'error'); return; }
+    const out = document.getElementById('narvi-output');
+    out.style.display = 'block';
+    out.innerHTML = `🎬 Processando vídeo...\n\nEste agente roda localmente. Execute no terminal:\n\npython agents/narvi/narvi.py "${videoInput.files[0].name}" --corte=${document.getElementById('narvi-corte').value} --ratio=${document.getElementById('narvi-ratio').value}\n\nSaída: ~/Desktop/narvi-saida/`;
+    showToast('Verifique o terminal para executar', 'info');
+}
+
+async function runRadagast() {
+    const out = document.getElementById('radagast-history');
+    out.innerHTML = `<div style="padding:20px;text-align:center"><i class="fas fa-spinner fa-spin" style="font-size:2rem;color:var(--warning)"></i><p style="margin-top:10px">Executando curadoria...</p></div>`;
+    showToast('Verifique o terminal para executar', 'info');
+    out.innerHTML = `<div style="padding:20px;background:var(--bg-input);border-radius:8px"><strong>Radagast requer configuração</strong><p style="color:var(--text-muted);margin-top:8px">1. Preencha <code>agents/radagast/.env</code> com suas chaves API</p><p style="color:var(--text-muted)">2. Configure <code>agents/radagast/config/keywords.json</code></p><p style="color:var(--text-muted)">3. Configure <code>agents/radagast/config/inspiracoes.json</code></p><p style="margin-top:12px">Execute no terminal:</p><code style="display:block;padding:10px;background:var(--bg-dark);border-radius:4px;margin-top:8px">python agents/radagast/radagast.py</code></div>`;
+}
+
 async function analyzeCompetitors() {
     const nicho = document.getElementById('posicionamento-nicho').value;
     const conc = document.getElementById('posicionamento-concorrentes').value;
@@ -947,7 +1383,11 @@ function saveNotes(){showToast('Notas salvas!','success')}
 // ============================================
 // PROFILE
 // ============================================
-function savePerfil(){const n=document.getElementById('perfil-nome').value;if(!n){showToast('Preencha seu nome','error');return}showToast('Perfil "'+n+'" salvo!','success')}
+function savePerfil(){const n=document.getElementById('perfil-nome').value;if(!n){showToast('Preencha seu nome','error');return}showToast('Perfil salvo!','success')}
+
+function togglePerfilModulos(){const m=document.getElementById('perfil-modulos');m.style.display=m.style.display==='none'?'block':'none';if(m.style.display==='block'){showToast('Edite seus módulos abaixo','info')}}
+
+async function savePerfilModulo(modulo){const mapping={'habilidades':{'fields':{'perfil-habilidades':'habilidades','perfil-habilidades-resumo':'resumo'},'file':'HABILIDADES.md'},'historias':{'fields':{'perfil-historia':'historia','perfil-experiencias':'experiencias'},'file':'HISTORIAS.md'},'cosmovisao':{'fields':{'perfil-valores':'valores','perfil-crencas':'crencas'},'file':'COSMOVISAO.md'},'publico':{'fields':{'perfil-cliente':'cliente','perfil-problemas':'problemas'},'file':'PUBLICO-ALVO.md'},'posicionamento':{'fields':{'perfil-diferencial':'diferencial','perfil-proposta':'proposta'},'file':'POSICIONAMENTO.md'},'narrativa':{'fields':{'perfil-missao':'missao','perfil-origem':'origem'},'file':'NARRATIVA.md'}};const cfg=mapping[modulo];if(!cfg){showToast('Módulo não encontrado','error');return}let content='---\nname: "'+modulo.charAt(0).toUpperCase()+modulo.slice(1)+'"\nupdated_at: '+new Date().toISOString().split('T')[0]+'\n---\n\n';for(const[f,key]of Object.entries(cfg.fields)){const v=document.getElementById(f).value;if(v){content+='## '+key.charAt(0).toUpperCase()+key.slice(1)+'\n\n'+v+'\n\n'}}showToast('Salvando...','info');try{const r=await apiCall('/api/save-profile','POST',{modulo:modulo,content:content,filename:cfg.file});if(r.success||r.sucesso){showToast(modulo.charAt(0).toUpperCase()+modulo.slice(1)+' salvo!','success')}else{showToast('Erro: '+(r.error||r.erro||'Unknown'),'error')}}catch(e){showToast('Erro ao salvar: '+e.message,'error')}}
 document.querySelectorAll('#perfil-cor1,#perfil-cor2,#perfil-cor3').forEach(function(inp){inp.addEventListener('input',function(){const num=this.id.replace('perfil-cor','preview-c');document.getElementById(num).style.background=this.value})});
 
 // ============================================
