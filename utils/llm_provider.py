@@ -19,22 +19,29 @@ class LLMProvider:
         """
         raise NotImplementedError
 
+VISION_MODELS = ["llama3.2-vision", "llama3.2-vision:latest", "llama3.2", "llava", "llava:latest", "bakllava"]
+
 class OllamaProvider(LLMProvider):
     """Ollama local LLM provider."""
     
     def __init__(self, base_url: str = "http://localhost:11434", model: str = None):
         self.base_url = base_url
         # Try to use provided model, then check env, then fallback
-        self.model = model or os.environ.get("OLLAMA_MODEL", "tinyllama")
+        self.model = model or os.environ.get("OLLAMA_MODEL", "phi3:mini")
         self.api_url = f"{base_url}/api/generate"
     
-    def generate(self, prompt: str, context: Optional[Dict[str, Any]] = None) -> str:
+    def supports_vision(self) -> bool:
+        """Check if current model supports image input."""
+        return any(vision in self.model.lower() for vision in VISION_MODELS)
+    
+    def generate(self, prompt: str, context: Optional[Dict[str, Any]] = None, images: Optional[list] = None) -> str:
         """
         Generate text using Ollama API.
         
         Args:
             prompt: The prompt to send to Ollama
             context: Optional context (not used directly in Ollama call but kept for interface consistency)
+            images: Optional list of base64 encoded images (only works with vision models)
             
         Returns:
             Generated text string
@@ -46,8 +53,14 @@ class OllamaProvider(LLMProvider):
             "stream": False
         }
         
+        # Add images only if model supports vision
+        if images and self.supports_vision():
+            payload["images"] = images
+        elif images and not self.supports_vision():
+            return f"[ERRO] Modelo {self.model} não suporta imagens. Use llama3.2-vision."
+        
         try:
-            response = requests.post(self.api_url, json=payload, timeout=30)
+            response = requests.post(self.api_url, json=payload, timeout=180)
             response.raise_for_status()
             
             result = response.json()

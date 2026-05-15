@@ -1,6 +1,6 @@
 # TODO.md - OPB Sistema
 
-> Quadro de tarefas atualizado em 2026-05-13
+> Quadro de tarefas atualizado em 2026-05-15
 
 ## ✅ Concluído
 
@@ -28,6 +28,8 @@
 - [x] Agente Text Generator
 - [x] Agente Transcrição
 - [x] Agente Posicionamento
+- [x] Agente Narvi (`agents/narvi/`) - Editor de vídeo (requer FFmpeg)
+- [x] Agente Radagast (`agents/radagast/`) - Curadoria de conteúdo EN
 
 ### Frontend
 - [x] Plataforma Web (`plataforma.html`) - Dashboard completo
@@ -36,8 +38,30 @@
 
 ## 🔄 Em Progresso
 
-- [ ] Testar pipeline completo com Ollama (timeout ainda é issue)
 - [ ] Preencher perfil do empreendedor com conteúdo real
+
+## 🔧 Notas Técnicas
+- Timeout Ollama: 180s (phi3:mini mais rápido que tinyllama)
+- Modelo padrão: **phi3:mini** (2.2GB - funciona com ~3.4GB RAM)
+- Modelos que NÃO funcionam: llama3 (~4.7GB), llama3.2-vision (~7.8GB)
+- Scoop instalado: use `scoop install ffmpeg` para Narvi
+
+## ⚙️ Agentes Integrados
+
+### Narvi - Editor de Vídeo
+- **Uso:** `python agents/narvi/narvi.py <video.mp4> [flags]`
+- **Flags:** `--corte={brando|medio|agressivo}`, `--ratio={9x16|16x9|both}`, `--sample`
+- **Dependência:** FFmpeg (`scoop install ffmpeg`)
+- **Saída:** `~/Desktop/narvi-saida/<nome-video>/`
+
+### Radagast - Curadoria de Conteúdo
+- **Uso:** `python agents/radagast/radagast.py`
+- **Configuração Obrigatória:**
+  - `agents/radagast/.env` - API keys (Apify, Anthropic, Telegram)
+  - `agents/radagast/config/keywords.json` - Termos de busca
+  - `agents/radagast/config/inspiracoes.json` - Perfis para monitorar
+- **Dependências:** API Apify, Anthropic API, Bot Telegram
+- **Agendamento:** Executar diariamente (criar task manualmente)
 
 ## 📋 Próximos Passos
 
@@ -86,4 +110,19 @@ opb-sistema/
 
 - **Vercel:** https://opb-sistema.vercel.app
 - **GitHub:** https://github.com/cleiton-negreiros/opb-sistema
-- **API Local:** http://localhost:5000 (quando rodar api_server.py)
+- **API Local:** http://localhost:5000 (rode api_server.py)
+- **Frontend:** http://localhost:8088 (rode server.py)
+
+## 🚀 Como Usar
+
+```bash
+# Terminal 1 - API (porta 5000)
+python api_server.py
+
+# Terminal 2 - Frontend (porta 8088)
+python server.py
+```
+
+Acesse:
+- http://localhost:5000 → API + frontend completo
+- http://localhost:8088/plataforma.html → apenas frontend (sem API)

@@ -26,7 +26,7 @@ except Exception as e:
 print("\nTestando tinyllama (cold start)...")
 try:
     r = requests.post("http://localhost:11434/api/generate", json={
-        "model": "tinyllama",
+        "model": "phi3:mini",
         "prompt": "What is marketing?",
         "stream": False
     }, timeout=120)

@@ -4,6 +4,8 @@ import os
 
 PORT = 8088
 
+FRONTEND_PATH = r'C:\Users\cleit\Desktop\opb-sistema\cerebro\perfil-empreendedor-solo'
+
 class MyHandler(http.server.SimpleHTTPRequestHandler):
     def do_PUT(self):
         path = self.translate_path(self.path)
@@ -22,11 +24,9 @@ class MyHandler(http.server.SimpleHTTPRequestHandler):
     def translate_path(self, path):
         path = path.split('?')[0]
         path = path.lstrip('/')
-        if not path.startswith('context-brain'):
-            path = os.path.join('context-brain', path)
-        return os.path.join(os.getcwd(), path)
+        return os.path.join(FRONTEND_PATH, path)
 
-os.chdir(r'C:\Users\cleit\Desktop\opb-sistema')
+os.chdir(FRONTEND_PATH)
 with socketserver.TCPServer(("", PORT), MyHandler) as httpd:
     print(f"  ╔══════════════════════════════════════╗")
     print(f"  ║     OPB - Sistema de Produtividade   ║")
