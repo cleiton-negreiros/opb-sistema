@@ -35,6 +35,7 @@
 - [x] Plataforma Web (`plataforma.html`) - Dashboard completo
 - [x] Formulário de Perfil (`formulario.html`) - 6 seções
 - [x] Templates de Perfil (HABILIDADES, HISTORIAS, COSMOVISAO, PUBLICO-ALVO, POSICIONAMENTO, NARRATIVA)
+- [x] Layout moderno com gradientes e glassmorphism (15/05/2026)
 
 ## 🔄 Em Progresso
 
@@ -45,6 +46,12 @@
 - Modelo padrão: **phi3:mini** (2.2GB - funciona com ~3.4GB RAM)
 - Modelos que NÃO funcionam: llama3 (~4.7GB), llama3.2-vision (~7.8GB)
 - Scoop instalado: use `scoop install ffmpeg` para Narvi
+
+### Correções Realizadas (15/05/2026)
+- server.py: corrige path para servir plataforma.html corretamente
+- llm_provider.py: modelo padrão phi3:mini (funciona com RAM limitada)
+- Layout plataforma.html: novo visual moderno com gradientes e glassmorphism
+- Lições salvas em: `cerebro/negocio/governanca/licoes/2026-05.md`
 
 ## ⚙️ Agentes Integrados
 
