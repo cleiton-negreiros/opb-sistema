@@ -46,7 +46,7 @@ def run_agent(agent_path: str, args: list = None) -> dict:
             cmd,
             capture_output=True,
             text=True,
-            timeout=60,
+            timeout=180,
             cwd=str(PROJECT_PATH),
             encoding='utf-8',
             errors='replace'
@@ -543,6 +543,195 @@ def api_start_bot():
 
 
 # ============================================
+# API — NARVI (Editor de Vídeo)
+# ============================================
+
+@app.route('/api/narvi', methods=['POST'])
+def api_narvi():
+    """Executa o agente Narvi para edição de vídeo."""
+    data = request.get_json()
+    video = data.get('video', '')
+    corte = data.get('corte', 'medio')
+    ratio = data.get('ratio', 'both')
+
+    return jsonify({
+        "sucesso": True,
+        "mensagem": "Narvi requer FFmpeg instalado",
+        "instrucao": f"python agents/narvi/narvi.py \"{video}\" --corte={corte} --ratio={ratio}",
+        "saida": "~/Desktop/narvi-saida/"
+    })
+
+
+# ============================================
+# API — RADAGAST (Curadoria de Conteúdo)
+# ============================================
+
+@app.route('/api/radagast', methods=['POST'])
+def api_radagast():
+    """Executa o agente Radagast para curadoria de conteúdo."""
+    data = request.get_json()
+    days_back = data.get('days_back', 1)
+
+    return jsonify({
+        "sucesso": True,
+        "mensagem": "Radagast usa fontes gratuitas (yt-dlp + RSS)",
+        "instrucao": "Configure agents/radagast/.env (só Telegram) e config/keywords.json",
+        "execucao": "python agents/radagast/radagast.py --dry-run (teste) / python agents/radagast/radagast.py (executar)"
+    })
+
+
+# ============================================
+# API — LISTAR TRANSCRIÇÕES
+# ============================================
+
+@app.route('/api/transcricoes', methods=['GET'])
+def api_listar_transcricoes():
+    """Lista transcrições salvas."""
+    transc_path = PROJECT_PATH / "acervo" / "transcricoes"
+    arquivos = []
+    if transc_path.exists():
+        for f in sorted(transc_path.glob("*.md"), reverse=True):
+            if f.name == "index.md":
+                continue
+            metadata = {}
+            content = f.read_text(encoding='utf-8', errors='replace')
+            for line in content.split('\n'):
+                if line.startswith('name: "') or line.startswith("name: '"):
+                    metadata['titulo'] = line.split('"')[1] if '"' in line else line.split("'")[1]
+                if line.startswith('video_id:'):
+                    metadata['video_id'] = line.split(':')[1].strip()
+                if 'data:' in line:
+                    val = line.split(':')[1].strip().strip('"')
+                    if val.count('-') == 2 and len(val) == 10:
+                        metadata['data'] = val
+                if line.startswith('duracao:'):
+                    metadata['duracao'] = line.split(':')[1].strip()
+            arquivos.append({
+                "nome": f.stem,
+                "arquivo": f.name,
+                "metadata": metadata
+            })
+    return jsonify({"transcricoes": arquivos, "total": len(arquivos)})
+
+
+# ============================================
+# API — LER TRANSCRIÇÃO
+# ============================================
+
+@app.route('/api/transcricao/ler', methods=['POST'])
+def api_ler_transcricao():
+    """Lê uma transcrição específica."""
+    data = request.get_json()
+    nome = data.get('nome', '')
+    if not nome:
+        return jsonify({"error": "Nome não informado"}), 400
+    path = PROJECT_PATH / "acervo" / "transcricoes" / nome
+    if not path.exists():
+        arquivos = list((PROJECT_PATH / "acervo" / "transcricoes").glob(f"*{nome}*.md"))
+        if arquivos:
+            path = arquivos[0]
+        else:
+            return jsonify({"error": "Transcrição não encontrada"}), 404
+    return jsonify({
+        "sucesso": True,
+        "conteudo": path.read_text(encoding='utf-8', errors='replace'),
+        "arquivo": path.name
+    })
+
+
+# ============================================
+# API — LISTAR ARQUIVOS (navegador de arquivos)
+# ============================================
+
+@app.route('/api/arquivos', methods=['POST'])
+def api_listar_arquivos():
+    """Lista arquivos em um diretório do projeto."""
+    data = request.get_json()
+    caminho = data.get('caminho', '')
+    base = PROJECT_PATH
+    if caminho:
+        target = (base / caminho).resolve()
+        if not str(target).startswith(str(base)):
+            return jsonify({"error": "Acesso negado"}), 403
+        if not target.exists():
+            return jsonify({"error": "Diretório não encontrado"}), 404
+    else:
+        target = base
+
+    arquivos = []
+    for item in sorted(target.iterdir()):
+        if item.name.startswith('.'):
+            continue
+        if item.name == '__pycache__':
+            continue
+        if item.name.endswith('.pyc'):
+            continue
+        info = {
+            "nome": item.name,
+            "tipo": "pasta" if item.is_dir() else "arquivo",
+            "tamanho": item.stat().st_size if item.is_file() else 0,
+        }
+        if item.is_file():
+            ext = item.suffix.lower()
+            if ext in ['.md', '.txt', '.py', '.html', '.css', '.js', '.json', '.bat', '.env']:
+                info["editavel"] = True
+            else:
+                info["editavel"] = False
+        arquivos.append(info)
+
+    rel = target.relative_to(base)
+    return jsonify({
+        "arquivos": arquivos,
+        "caminho_atual": str(rel) if rel != Path(".") else "",
+        "pai": str(target.parent.relative_to(base)) if base in target.parent.parents else ""
+    })
+
+
+# ============================================
+# API — LER ARQUIVO
+# ============================================
+
+@app.route('/api/arquivo/ler', methods=['POST'])
+def api_ler_arquivo():
+    """Lê conteúdo de um arquivo."""
+    data = request.get_json()
+    caminho = data.get('caminho', '')
+    if not caminho:
+        return jsonify({"error": "Caminho não informado"}), 400
+    base = PROJECT_PATH
+    target = (base / caminho).resolve()
+    if not str(target).startswith(str(base)):
+        return jsonify({"error": "Acesso negado"}), 403
+    if not target.exists() or not target.is_file():
+        return jsonify({"error": "Arquivo não encontrado"}), 404
+    return jsonify({
+        "sucesso": True,
+        "conteudo": target.read_text(encoding='utf-8', errors='replace'),
+        "nome": target.name
+    })
+
+
+# ============================================
+# API — START (iniciar serviços remotamente)
+# ============================================
+
+@app.route('/api/start', methods=['POST'])
+def api_start():
+    """Inicia serviços do OPB (útil para celular)."""
+    resultados = []
+    try:
+        p = subprocess.Popen(
+            [sys.executable, str(PROJECT_PATH / "agents" / "telegram_bot" / "main.py")],
+            cwd=str(PROJECT_PATH),
+            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL
+        )
+        resultados.append({"servico": "telegram_bot", "status": "ok", "pid": p.pid})
+    except Exception as e:
+        resultados.append({"servico": "telegram_bot", "status": "erro", "detalhe": str(e)})
+    return jsonify({"servicos": resultados, "mensagem": "Sistema iniciado!"})
+
+
+# ============================================
 # SERVIR ARQUIVOS ESTÁTICOS
 # ============================================
 
@@ -560,6 +749,72 @@ def serve_static(path):
 # ============================================
 # INICIALIZAÇÃO
 # ============================================
+
+# ============================================
+# API — SALVAR PERFIL
+# ============================================
+
+@app.route('/api/save-profile', methods=['POST'])
+def api_save_profile():
+    """Salva conteúdo do perfil em arquivo .md"""
+    data = request.get_json()
+    modulo = data.get('modulo', '')
+    content = data.get('content', '')
+    filename = data.get('filename', '')
+
+    if not filename:
+        return jsonify({"error": "Nome do arquivo não informado"}), 400
+
+    perfil_path = PROJECT_PATH / "cerebro" / "perfil-empreendedor-solo" / filename
+
+    try:
+        perfil_path.write_text(content, encoding='utf-8')
+        return jsonify({"sucesso": True, "mensagem": f"{filename} salvo com sucesso!"})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route('/api/load-profile', methods=['GET'])
+def api_load_profile():
+    """Carrega dados do perfil salvos"""
+    perfil_dir = PROJECT_PATH / "cerebro" / "perfil-empreendedor-solo"
+    arquivos = {
+        'basico': perfil_dir / "PERFIL.md",
+        'habilidades': perfil_dir / "HABILIDADES.md",
+        'historias': perfil_dir / "HISTORIAS.md",
+        'cosmovisao': perfil_dir / "COSMOVISAO.md",
+        'publico': perfil_dir / "PUBLICO-ALVO.md",
+        'posicionamento': perfil_dir / "POSICIONAMENTO.md",
+        'narrativa': perfil_dir / "NARRATIVA.md",
+    }
+    dados = {}
+    for modulo, path in arquivos.items():
+        if path.exists():
+            content = path.read_text(encoding='utf-8')
+            section = {}
+            current_key = None
+            for line in content.split('\n'):
+                if line.startswith('## '):
+                    current_key = line[3:].strip().lower()
+                    section[current_key] = ''
+                elif current_key and line.strip():
+                    section[current_key] = (section.get(current_key, '') + line + '\n').strip()
+            dados[modulo] = section
+    return jsonify(dados)
+
+
+@app.route('/api/inspiracoes', methods=['GET'])
+def api_inspiracoes():
+    """Retorna a lista de perfis de inspiração (influenciadores)"""
+    insp_path = PROJECT_PATH / "agents" / "radagast" / "config" / "inspiracoes.json"
+    if not insp_path.exists():
+        return jsonify({"profiles": [], "erro": "Arquivo não encontrado"})
+    try:
+        data = json.loads(insp_path.read_text(encoding='utf-8'))
+        return jsonify(data)
+    except Exception as e:
+        return jsonify({"profiles": [], "erro": str(e)})
+
 
 if __name__ == '__main__':
     print("=" * 50)

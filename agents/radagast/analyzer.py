@@ -1,20 +1,8 @@
-#!/usr/bin/env python3
-"""analyzer.py — Gera ideias de Reels usando Ollama ou Claude API."""
-
 import json
 import logging
 import os
 import re
-
-try:
-    import anthropic
-except ImportError:
-    anthropic = None
-
-try:
-    import requests
-except ImportError:
-    requests = None
+import requests
 
 logger = logging.getLogger("radagast.analyzer")
 
@@ -51,16 +39,15 @@ FORMATO DE SAIDA (JSON puro, sem markdown):
     ]
 }
 
-Gere entre 10 e 15 ideias. Responda APENAS com o JSON. Sem texto antes ou depois.
+Gere entre 5 e 8 ideias. Responda APENAS com o JSON. Sem texto antes ou depois.
 """
 
 
 def generate_reel_ideas(contents: list[dict]) -> list[dict]:
-    """Envia conteudos coletados para Ollama/Claude e retorna ideias de Reels."""
-    
-    # Montar descricao dos conteudos coletados
+    """Envia conteudos coletados para Ollama e retorna ideias de Reels."""
     content_lines = []
-    for i, c in enumerate(contents[:30], 1):  # max 30 para Ollama
+    max_items = min(len(contents), 10)
+    for i, c in enumerate(contents[:max_items], 1):
         line = (
             f"{i}. [{c['source'].upper()}] {c['author']}: "
             f"{c['title'] or c['text'][:100]}"
@@ -70,61 +57,41 @@ def generate_reel_ideas(contents: list[dict]) -> list[dict]:
         content_lines.append(line)
 
     user_prompt = (
-        f"CONTEUDOS COLETADOS ({len(contents)} items):\n\n"
+        f"CONTEUDOS COLETADOS ({max_items} items):\n\n"
         + "\n".join(content_lines)
-        + "\n\nGere 10 ideias de Reels em JSON:\n"
+        + "\n\nGere 5 ideias de Reels em JSON:\n"
         + '{"ideas": [{"titulo": "...", "hook": "...", "pontos": ["..."], "fonte_url": "...", "angulo_br": "..."}]}'
     )
 
-    # Tentar Ollama primeiro
-    if requests:
-        try:
-            logger.info(f"Enviando {len(contents)} conteudos para Ollama...")
-            response = requests.post(
-                "http://localhost:11434/api/generate",
-                json={
-                    "model": "phi3:mini",
-                    "prompt": SYSTEM_PROMPT + "\n\n" + user_prompt,
-                    "stream": False,
-                    "options": {"num_gpu": 0}
-                },
-                timeout=180
-            )
-            if response.status_code == 200:
-                raw_text = response.json().get("response", "")
-                logger.info("Resposta recebida do Ollama")
-        except Exception as e:
-            logger.warning(f"Ollama falhou: {e}, tentando Claude API...")
+    OLLAMA_URL = os.environ.get("OLLAMA_URL", "http://localhost:11434/api/generate")
+    MODEL = os.environ.get("OLLAMA_MODEL", "tinyllama")
+
+    try:
+        logger.info(f"Enviando {max_items} conteudos para Ollama ({MODEL})...")
+        response = requests.post(
+            OLLAMA_URL,
+            json={
+                "model": MODEL,
+                "prompt": SYSTEM_PROMPT + "\n\n" + user_prompt,
+                "stream": False,
+                "options": {"num_gpu": 0}
+            },
+            timeout=120,
+        )
+        if response.status_code == 200:
+            raw_text = response.json().get("response", "")
+            logger.info("Resposta recebida do Ollama")
+        else:
+            logger.error(f"Ollama retornou status {response.status_code}: {response.text[:200]}")
             raw_text = None
-    else:
-        raw_text = None
-
-    # Se Ollama falhou, tenta Claude
-    if not raw_text and anthropic:
-        api_key = os.environ.get("ANTHROPIC_API_KEY", "")
-        if api_key:
-            try:
-                logger.info(f"Enviando {len(contents)} conteudos para Claude API...")
-                client = anthropic.Anthropic(api_key=api_key)
-                response = client.messages.create(
-                    model="claude-sonnet-4-20250514",
-                    max_tokens=4096,
-                    system=SYSTEM_PROMPT,
-                    messages=[{"role": "user", "content": user_prompt}],
-                )
-                raw_text = ""
-                for block in response.content:
-                    if hasattr(block, "text"):
-                        raw_text += block.text
-            except Exception as e:
-                logger.error(f"Claude API falhou: {e}")
-                return []
-
-    if not raw_text:
-        logger.error("Nenhuma API disponível")
+    except Exception as e:
+        logger.error(f"Ollama falhou: {e}")
         return []
 
-    # Limpar artefatos
+    if not raw_text:
+        logger.error("Nenhuma resposta do Ollama")
+        return []
+
     raw_text = raw_text.strip()
     raw_text = re.sub(r'^```json\s*', '', raw_text)
     raw_text = re.sub(r'\s*```$', '', raw_text)
