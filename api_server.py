@@ -19,7 +19,12 @@ from flask_cors import CORS
 
 # Configurar encoding para UTF-8
 os.environ['PYTHONIOENCODING'] = 'utf-8'
-sys.stdout.reconfigure(encoding='utf-8')
+os.environ['LANG'] = 'en_US.UTF-8'
+try:
+    sys.stdout.reconfigure(encoding='utf-8')
+    sys.stderr.reconfigure(encoding='utf-8')
+except Exception:
+    pass
 
 # === CONFIGURAÇÃO ===
 PROJECT_PATH = Path(__file__).parent.resolve()
