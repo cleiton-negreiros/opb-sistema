@@ -66,10 +66,11 @@ check_api() {
 }
 
 check_port() {
-    if command -v ss &> /dev/null; then
-        ss -tlnp | grep -q ":$1 " && echo "ok" || echo "no"
-    elif command -v netstat &> /dev/null; then
-        netstat -tlnp 2>/dev/null | grep -q ":$1 " && echo "ok" || echo "no"
+    # Termux não tem permissão para ss/netstat - usa curl como fallback
+    if command -v curl &> /dev/null; then
+        curl -s -o /dev/null --connect-timeout 1 http://localhost:$1/ 2>/dev/null && echo "ok" || echo "no"
+    elif command -v nc &> /dev/null; then
+        nc -z localhost $1 2>/dev/null && echo "ok" || echo "no"
     else
         echo "unknown"
     fi

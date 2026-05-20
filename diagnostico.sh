@@ -69,13 +69,10 @@ echo ""
 
 # 5. Verificar porta 5000
 echo "5️⃣  Porta 5000:"
-if command -v ss &>/dev/null; then
-    if ss -tlnp | grep -q ":5000 "; then
-        echo "   ⚠️  Porta 5000 em uso!"
-        ss -tlnp | grep ":5000"
-    else
-        echo "   ✅ Porta 5000 livre"
-    fi
+if curl -s -o /dev/null --connect-timeout 1 http://localhost:5000/ 2>/dev/null; then
+    echo "   ⚠️  Porta 5000 em uso (API respondendo)"
+else
+    echo "   ✅ Porta 5000 livre"
 fi
 echo ""
 
