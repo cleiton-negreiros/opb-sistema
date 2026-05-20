@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OPB Studio — Crie Conteúdo com IA | Agentes Inteligentes para Criadores</title>
+    <meta name="description" content="Plataforma de agentes IA para criadores de conteúdo. Gere carrosséis, posts, transcrições e curadoria automática. Tudo local, tudo gratuito.">
+    <meta name="keywords" content="agentes IA, criacao de conteudo, carrossel instagram, transcricao youtube, curadoria conteudo, IA solopreneur">
+    <meta name="author" content="OPB Studio">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://opb-sistema.vercel.app/">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="OPB Studio — Crie Conteúdo com IA">
+    <meta property="og:description" content="Agentes inteligentes que trabalham por você. Carrosséis, posts, transcrições e curadoria automática.">
+    <meta property="og:url" content="https://opb-sistema.vercel.app/">
+    <meta property="og:locale" content="pt_BR">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="OPB Studio — Crie Conteúdo com IA">
+    <meta name="twitter:description" content="Agentes inteligentes que trabalham por você.">
+
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='64' fill='%238b5cf6'/%3E%3Ctext x='256' y='340' font-size='280' text-anchor='middle' fill='white'%3E🧠%3C/text%3E%3C/svg%3E">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "OPB Studio",
+        "description": "Plataforma de agentes IA para criadores de conteúdo",
+        "url": "https://opb-sistema.vercel.app/",
+        "applicationCategory": "ProductivityApplication",
+        "operatingSystem": "Web",
+        "offers": [
+            {"@type": "Offer", "price": "0", "priceCurrency": "BRL", "name": "Free"},
+            {"@type": "Offer", "price": "49", "priceCurrency": "BRL", "name": "Pro"}
+        ]
+    }
+    </script>
+
+    <style>
+        :root {
+            --bg: #050507;
+            --bg-card: rgba(255,255,255,0.02);
+            --bg-card-hover: rgba(255,255,255,0.04);
+            --border: rgba(255,255,255,0.06);
+            --text: #cbd5e1;
+            --heading: #f8fafc;
+            --muted: #64748b;
+            --accent: #8b5cf6;
+            --accent-light: #a78bfa;
+            --accent-glow: rgba(139,92,246,0.15);
+            --success: #10b981;
+            --radius: 12px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ===== NAV ===== */
+        .nav {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+            padding: 16px 24px;
+            background: rgba(5,5,7,0.8);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            transition: all 0.3s;
+        }
+        .nav-inner {
+            max-width: 1200px; margin: 0 auto;
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .nav-logo {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700; font-size: 1.1rem; color: var(--heading);
+            text-decoration: none; display: flex; align-items: center; gap: 8px;
+        }
+        .nav-logo span { color: var(--accent); }
+        .nav-links { display: flex; align-items: center; gap: 32px; }
+        .nav-links a {
+            color: var(--muted); text-decoration: none; font-size: 0.85rem;
+            font-weight: 500; transition: color 0.2s;
+        }
+        .nav-links a:hover { color: var(--heading); }
+        .nav-cta {
+            background: var(--accent); color: white !important;
+            padding: 8px 20px; border-radius: 8px; font-weight: 600;
+            transition: all 0.2s;
+        }
+        .nav-cta:hover { background: var(--accent-light); transform: translateY(-1px); }
+
+        .mobile-menu-btn {
+            display: none; background: none; border: none; color: var(--heading);
+            font-size: 1.3rem; cursor: pointer; padding: 8px;
+        }
+
+        /* ===== HERO ===== */
+        .hero {
+            min-height: 100vh;
+            display: flex; align-items: center; justify-content: center;
+            text-align: center;
+            padding: 120px 24px 80px;
+            position: relative;
+        }
+        .hero::before {
+            content: '';
+            position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+            width: 600px; height: 600px;
+            background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+            pointer-events: none;
+            opacity: 0.5;
+        }
+        .hero-content { position: relative; max-width: 800px; }
+        .hero-badge {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 6px 16px; border-radius: 100px;
+            background: var(--bg-card); border: 1px solid var(--border);
+            font-size: 0.75rem; font-weight: 500; color: var(--muted);
+            margin-bottom: 32px;
+            font-family: 'JetBrains Mono', monospace;
+        }
+        .hero-badge .dot {
+            width: 6px; height: 6px; border-radius: 50%;
+            background: var(--success);
+            box-shadow: 0 0 8px rgba(16,185,129,0.4);
+        }
+        .hero h1 {
+            font-size: clamp(2.2rem, 6vw, 4rem);
+            font-weight: 800; color: var(--heading);
+            line-height: 1.1; letter-spacing: -0.03em;
+            margin-bottom: 24px;
+        }
+        .hero h1 .highlight {
+            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .hero p {
+            font-size: clamp(1rem, 2.5vw, 1.2rem);
+            color: var(--muted); max-width: 600px; margin: 0 auto 40px;
+            line-height: 1.7;
+        }
+        .hero-actions { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+        .btn {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 14px 28px; border-radius: 10px;
+            font-size: 0.95rem; font-weight: 600;
+            text-decoration: none; transition: all 0.2s;
+            cursor: pointer; border: none; font-family: 'Inter', sans-serif;
+        }
+        .btn-primary {
+            background: var(--accent); color: white;
+            box-shadow: 0 4px 24px var(--accent-glow);
+        }
+        .btn-primary:hover { background: var(--accent-light); transform: translateY(-2px); box-shadow: 0 8px 32px var(--accent-glow); }
+        .btn-secondary {
+            background: var(--bg-card); color: var(--heading);
+            border: 1px solid var(--border);
+        }
+        .btn-secondary:hover { background: var(--bg-card-hover); border-color: var(--muted); }
+
+        /* ===== SOCIAL PROOF ===== */
+        .social-proof {
+            padding: 40px 24px;
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+        }
+        .social-proof-inner {
+            max-width: 800px; margin: 0 auto;
+            display: flex; justify-content: center; gap: 48px; flex-wrap: wrap;
+        }
+        .proof-item { text-align: center; }
+        .proof-value {
+            font-size: 1.8rem; font-weight: 800; color: var(--heading);
+            font-family: 'JetBrains Mono', monospace;
+        }
+        .proof-label { font-size: 0.75rem; color: var(--muted); margin-top: 4px; }
+
+        /* ===== SECTIONS ===== */
+        .section {
+            padding: 100px 24px;
+            max-width: 1200px; margin: 0 auto;
+        }
+        .section-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem; font-weight: 600; text-transform: uppercase;
+            letter-spacing: 0.1em; color: var(--accent-light);
+            margin-bottom: 12px;
+        }
+        .section-title {
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            font-weight: 800; color: var(--heading);
+            letter-spacing: -0.02em; margin-bottom: 16px;
+        }
+        .section-desc {
+            font-size: 1.05rem; color: var(--muted);
+            max-width: 600px; margin-bottom: 60px; line-height: 1.7;
+        }
+
+        /* ===== FEATURES ===== */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 20px;
+        }
+        .feature-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 32px;
+            transition: all 0.3s;
+        }
+        .feature-card:hover {
+            background: var(--bg-card-hover);
+            border-color: rgba(255,255,255,0.1);
+            transform: translateY(-2px);
+        }
+        .feature-icon {
+            width: 48px; height: 48px;
+            border-radius: 10px;
+            background: var(--accent-glow);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.3rem; margin-bottom: 20px;
+        }
+        .feature-card h3 {
+            font-size: 1.05rem; font-weight: 700; color: var(--heading);
+            margin-bottom: 8px;
+        }
+        .feature-card p {
+            font-size: 0.88rem; color: var(--muted); line-height: 1.6;
+        }
+
+        /* ===== HOW IT WORKS ===== */
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 32px;
+            counter-reset: step;
+        }
+        .step {
+            position: relative;
+            padding: 32px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            counter-increment: step;
+        }
+        .step::before {
+            content: counter(step);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 3rem; font-weight: 800;
+            color: var(--accent);
+            opacity: 0.15;
+            position: absolute; top: 16px; right: 24px;
+        }
+        .step h3 {
+            font-size: 1.05rem; font-weight: 700; color: var(--heading);
+            margin-bottom: 8px;
+        }
+        .step p { font-size: 0.88rem; color: var(--muted); line-height: 1.6; }
+
+        /* ===== PRICING ===== */
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            max-width: 1000px;
+        }
+        .pricing-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 40px 32px;
+            position: relative;
+            transition: all 0.3s;
+        }
+        .pricing-card:hover { transform: translateY(-4px); }
+        .pricing-card.featured {
+            border-color: var(--accent);
+            background: rgba(139,92,246,0.05);
+        }
+        .pricing-badge {
+            position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+            background: var(--accent); color: white;
+            padding: 4px 16px; border-radius: 100px;
+            font-size: 0.7rem; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .pricing-name {
+            font-size: 0.85rem; font-weight: 600; color: var(--muted);
+            text-transform: uppercase; letter-spacing: 0.05em;
+            margin-bottom: 8px;
+        }
+        .pricing-price {
+            font-size: 2.5rem; font-weight: 800; color: var(--heading);
+            font-family: 'JetBrains Mono', monospace;
+            margin-bottom: 4px;
+        }
+        .pricing-price span { font-size: 0.9rem; font-weight: 400; color: var(--muted); }
+        .pricing-desc { font-size: 0.85rem; color: var(--muted); margin-bottom: 32px; }
+        .pricing-features { list-style: none; margin-bottom: 32px; }
+        .pricing-features li {
+            padding: 8px 0; font-size: 0.88rem; color: var(--text);
+            display: flex; align-items: center; gap: 10px;
+        }
+        .pricing-features li::before {
+            content: '✓'; color: var(--success); font-weight: 700;
+        }
+        .pricing-btn {
+            display: block; width: 100%; text-align: center;
+            padding: 14px; border-radius: 10px; font-weight: 600;
+            text-decoration: none; font-size: 0.95rem;
+            transition: all 0.2s;
+        }
+        .pricing-btn-primary {
+            background: var(--accent); color: white;
+        }
+        .pricing-btn-primary:hover { background: var(--accent-light); }
+        .pricing-btn-secondary {
+            background: var(--bg-card); color: var(--heading);
+            border: 1px solid var(--border);
+        }
+        .pricing-btn-secondary:hover { border-color: var(--muted); }
+
+        /* ===== FAQ ===== */
+        .faq-list { max-width: 700px; }
+        .faq-item {
+            border-bottom: 1px solid var(--border);
+        }
+        .faq-question {
+            width: 100%; background: none; border: none;
+            padding: 24px 0; text-align: left;
+            font-size: 1rem; font-weight: 600; color: var(--heading);
+            cursor: pointer; display: flex; justify-content: space-between;
+            align-items: center; font-family: 'Inter', sans-serif;
+            transition: color 0.2s;
+        }
+        .faq-question:hover { color: var(--accent-light); }
+        .faq-question::after {
+            content: '+'; font-size: 1.3rem; color: var(--muted);
+            transition: transform 0.3s;
+        }
+        .faq-item.open .faq-question::after { transform: rotate(45deg); }
+        .faq-answer {
+            max-height: 0; overflow: hidden;
+            transition: max-height 0.3s ease, padding 0.3s ease;
+        }
+        .faq-item.open .faq-answer {
+            max-height: 200px; padding-bottom: 24px;
+        }
+        .faq-answer p {
+            font-size: 0.9rem; color: var(--muted); line-height: 1.7;
+        }
+
+        /* ===== CTA ===== */
+        .cta {
+            text-align: center;
+            padding: 100px 24px;
+            position: relative;
+        }
+        .cta::before {
+            content: '';
+            position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
+            width: 600px; height: 400px;
+            background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+            pointer-events: none; opacity: 0.3;
+        }
+        .cta-content { position: relative; }
+        .cta h2 {
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            font-weight: 800; color: var(--heading);
+            margin-bottom: 16px;
+        }
+        .cta p { font-size: 1.05rem; color: var(--muted); margin-bottom: 32px; }
+
+        /* ===== FOOTER ===== */
+        .footer {
+            padding: 40px 24px;
+            border-top: 1px solid var(--border);
+            text-align: center;
+        }
+        .footer-inner {
+            max-width: 1200px; margin: 0 auto;
+            display: flex; justify-content: space-between; align-items: center;
+            flex-wrap: wrap; gap: 20px;
+        }
+        .footer-copy { font-size: 0.8rem; color: var(--muted); }
+        .footer-links { display: flex; gap: 24px; }
+        .footer-links a {
+            font-size: 0.8rem; color: var(--muted); text-decoration: none;
+            transition: color 0.2s;
+        }
+        .footer-links a:hover { color: var(--heading); }
+
+        /* ===== ANIMATIONS ===== */
+        .fade-in {
+            opacity: 0; transform: translateY(20px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+        .fade-in.visible {
+            opacity: 1; transform: translateY(0);
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .nav-links.open {
+                display: flex; flex-direction: column;
+                position: absolute; top: 100%; left: 0; right: 0;
+                background: rgba(5,5,7,0.95);
+                backdrop-filter: blur(20px);
+                padding: 24px; gap: 20px;
+                border-bottom: 1px solid var(--border);
+            }
+            .mobile-menu-btn { display: block; }
+            .hero { min-height: auto; padding: 140px 20px 80px; }
+            .hero h1 { font-size: 2rem; }
+            .section { padding: 60px 20px; }
+            .features-grid { grid-template-columns: 1fr; }
+            .pricing-grid { grid-template-columns: 1fr; }
+            .social-proof-inner { gap: 32px; }
+            .footer-inner { flex-direction: column; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav" id="nav">
+    <div class="nav-inner">
+        <a href="#" class="nav-logo">🧠 OPB <span>Studio</span></a>
+        <div class="nav-links" id="navLinks">
+            <a href="#features">Recursos</a>
+            <a href="#como-funciona">Como Funciona</a>
+            <a href="#precos">Preços</a>
+            <a href="#faq">FAQ</a>
+            <a href="/plataforma.html" class="nav-cta">Entrar na Plataforma</a>
+        </div>
+        <button class="mobile-menu-btn" onclick="document.getElementById('navLinks').classList.toggle('open')" aria-label="Menu">☰</button>
+    </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+    <div class="hero-content fade-in">
+        <div class="hero-badge">
+            <span class="dot"></span>
+            Open Source · 10 Agentes IA · 100% Local
+        </div>
+        <h1>Crie conteúdo com IA.<br><span class="highlight">Publique sem esforço.</span></h1>
+        <p>Agentes inteligentes que geram carrosséis, posts, transcrições e curadoria automática. Tudo local, sem APIs pagas, sem limites.</p>
+        <div class="hero-actions">
+            <a href="/plataforma.html" class="btn btn-primary">Começar Grátis →</a>
+            <a href="#como-funciona" class="btn btn-secondary">Ver como funciona</a>
+        </div>
+    </div>
+</section>
+
+<!-- SOCIAL PROOF -->
+<section class="social-proof">
+    <div class="social-proof-inner fade-in">
+        <div class="proof-item">
+            <div class="proof-value">10</div>
+            <div class="proof-label">Agentes IA</div>
+        </div>
+        <div class="proof-item">
+            <div class="proof-value">R$0</div>
+            <div class="proof-label">Custo mensal</div>
+        </div>
+        <div class="proof-item">
+            <div class="proof-value">100%</div>
+            <div class="proof-label">Local e privado</div>
+        </div>
+        <div class="proof-item">
+            <div class="proof-value">24/7</div>
+            <div class="proof-label">Funcionando</div>
+        </div>
+    </div>
+</section>
+
+<!-- FEATURES -->
+<section class="section" id="features">
+    <div class="fade-in">
+        <div class="section-label">Recursos</div>
+        <h2 class="section-title">Tudo que você precisa para criar conteúdo</h2>
+        <p class="section-desc">10 agentes especializados que trabalham juntos para automatizar sua produção de conteúdo.</p>
+    </div>
+    <div class="features-grid">
+        <div class="feature-card fade-in">
+            <div class="feature-icon">🎠</div>
+            <h3>Carrosséis Automáticos</h3>
+            <p>Gere carrosséis para Instagram com conteúdo educativo, inspiracional ou promocional. Pronto para copiar no Canva.</p>
+        </div>
+        <div class="feature-card fade-in">
+            <div class="feature-icon">✍️</div>
+            <h3>Posts para Instagram</h3>
+            <p>Crie legendas, CTAs e hashtags otimizadas para cada tipo de conteúdo e público.</p>
+        </div>
+        <div class="feature-card fade-in">
+            <div class="feature-icon">🎬</div>
+            <h3>Transcrição de Vídeos</h3>
+            <p>Transcreva vídeos do YouTube automaticamente com timestamps formatados.</p>
+        </div>
+        <div class="feature-card fade-in">
+            <div class="feature-icon">📡</div>
+            <h3>Curadoria Automática</h3>
+            <p>Radagast monitora fontes RSS e YouTube 24/7, encontrando tendências e gerando ideias de Reels.</p>
+        </div>
+        <div class="feature-card fade-in">
+            <div class="feature-icon">📖</div>
+            <h3>Processamento de Conteúdo</h3>
+            <p>Transforme textos, PDFs e URLs em conhecimento estruturado e pesquisável.</p>
+        </div>
+        <div class="feature-card fade-in">
+            <div class="feature-icon">🤖</div>
+            <h3>Telegram Bot</h3>
+            <p>Capture ideias e controle tudo pelo Telegram. Funciona no celular via Termux.</p>
+        </div>
+    </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="section" id="como-funciona">
+    <div class="fade-in">
+        <div class="section-label">Como Funciona</div>
+        <h2 class="section-title">3 passos para começar</h2>
+        <p class="section-desc">Sem configuração complexa. Sem cartão de crédito. Sem limite de uso.</p>
+    </div>
+    <div class="steps">
+        <div class="step fade-in">
+            <h3>1. Acesse a plataforma</h3>
+            <p>Abra no navegador ou instale como app no celular. Interface intuitiva com dashboard completo.</p>
+        </div>
+        <div class="step fade-in">
+            <h3>2. Escolha um agente</h3>
+            <p>Selecione o tipo de conteúdo: carrossel, post, transcrição, curadoria ou capa de vídeo.</p>
+        </div>
+        <div class="step fade-in">
+            <h3>3. Publique</h3>
+            <p>Receba o conteúdo pronto para copiar e colar no Canva, Instagram ou YouTube.</p>
+        </div>
+    </div>
+</section>
+
+<!-- PRICING -->
+<section class="section" id="precos">
+    <div class="fade-in">
+        <div class="section-label">Preços</div>
+        <h2 class="section-title">Comece grátis. Escale quando quiser.</h2>
+        <p class="section-desc">Sem surpresas. Sem limites ocultos. Cancele quando quiser.</p>
+    </div>
+    <div class="pricing-grid">
+        <div class="pricing-card fade-in">
+            <div class="pricing-name">Free</div>
+            <div class="pricing-price">R$0 <span>/mês</span></div>
+            <div class="pricing-desc">Para quem está começando</div>
+            <ul class="pricing-features">
+                <li>10 agentes IA</li>
+                <li>Carrosséis ilimitados</li>
+                <li>Transcrição de vídeos</li>
+                <li>Curadoria automática</li>
+                <li>Telegram Bot</li>
+                <li>100% local e privado</li>
+            </ul>
+            <a href="/plataforma.html" class="pricing-btn pricing-btn-secondary">Começar Grátis</a>
+        </div>
+        <div class="pricing-card featured fade-in">
+            <div class="pricing-badge">Em breve</div>
+            <div class="pricing-name">Pro</div>
+            <div class="pricing-price">R$49 <span>/mês</span></div>
+            <div class="pricing-desc">Para criadores sérios</div>
+            <ul class="pricing-features">
+                <li>Tudo do Free</li>
+                <li>Modelos IA premium (GPT-5, Claude)</li>
+                <li>Agendamento automático</li>
+                <li>Analytics avançado</li>
+                <li>Multi-usuário</li>
+                <li>Suporte prioritário</li>
+            </ul>
+            <a href="#" class="pricing-btn pricing-btn-primary">Lista de Espera</a>
+        </div>
+        <div class="pricing-card fade-in">
+            <div class="pricing-name">Enterprise</div>
+            <div class="pricing-price">Sob consulta</div>
+            <div class="pricing-desc">Para equipes e agências</div>
+            <ul class="pricing-features">
+                <li>Tudo do Pro</li>
+                <li>Agentes customizados</li>
+                <li>API dedicada</li>
+                <li>SLA garantido</li>
+                <li>Onboarding personalizado</li>
+                <li>Integrações sob medida</li>
+            </ul>
+            <a href="mailto:contato@opbstudio.com" class="pricing-btn pricing-btn-secondary">Falar com Vendas</a>
+        </div>
+    </div>
+</section>
+
+<!-- FAQ -->
+<section class="section" id="faq">
+    <div class="fade-in">
+        <div class="section-label">FAQ</div>
+        <h2 class="section-title">Perguntas frequentes</h2>
+        <p class="section-desc">Tudo que você precisa saber antes de começar.</p>
+    </div>
+    <div class="faq-list fade-in">
+        <div class="faq-item">
+            <button class="faq-question">Preciso pagar alguma API?</button>
+            <div class="faq-answer"><p>Não. O OPB Studio roda 100% local com modelos open-source via Ollama. Sem custos de API, sem limites de uso, sem surpresas.</p></div>
+        </div>
+        <div class="faq-item">
+            <button class="faq-question">Funciona no celular?</button>
+            <div class="faq-answer"><p>Sim! Acesse pelo navegador ou instale como PWA. No Android, funciona via Termux com todos os agentes locais.</p></div>
+        </div>
+        <div class="faq-item">
+            <button class="faq-question">Meus dados ficam seguros?</button>
+            <div class="faq-answer"><p>Sim. Tudo roda local no seu computador. Nenhum dado é enviado para servidores externos. Sua privacidade é total.</p></div>
+        </div>
+        <div class="faq-item">
+            <button class="faq-question">Posso usar com meu time?</button>
+            <div class="faq-answer"><p>A versão atual é single-user. O plano Pro (em breve) terá suporte multi-usuário com gestão de equipe.</p></div>
+        </div>
+        <div class="faq-item">
+            <button class="faq-question">Quais redes sociais são suportadas?</button>
+            <div class="faq-answer"><p>Instagram (carrosséis, posts, Reels), YouTube (transcrições, capas), e Telegram (bot de captura). Mais plataformas em desenvolvimento.</p></div>
+        </div>
+        <div class="faq-item">
+            <button class="faq-question">É open source?</button>
+            <div class="faq-answer"><p>Sim! O código é aberto e disponível no GitHub. Você pode modificar, contribuir e hospedar por conta própria.</p></div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA -->
+<section class="cta">
+    <div class="cta-content fade-in">
+        <h2>Pronto para criar conteúdo<br>com inteligência?</h2>
+        <p>Comece agora. Sem cartão de crédito. Sem limites.</p>
+        <a href="/plataforma.html" class="btn btn-primary">Começar Grátis →</a>
+    </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+    <div class="footer-inner">
+        <div class="footer-copy">© 2026 OPB Studio. Open Source sob licença MIT.</div>
+        <div class="footer-links">
+            <a href="https://github.com/cleiton-negreiros/opb-sistema" target="_blank" rel="noopener">GitHub</a>
+            <a href="/plataforma.html">Plataforma</a>
+            <a href="mailto:contato@opbstudio.com">Contato</a>
+        </div>
+    </div>
+</footer>
+
+<script>
+// Scroll animations
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+// FAQ accordion
+document.querySelectorAll('.faq-question').forEach(btn => {
+    btn.addEventListener('click', () => {
+        const item = btn.parentElement;
+        const isOpen = item.classList.contains('open');
+        document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+        if (!isOpen) item.classList.add('open');
+    });
+});
+
+// Nav scroll effect
+let lastScroll = 0;
+window.addEventListener('scroll', () => {
+    const nav = document.getElementById('nav');
+    const scroll = window.scrollY;
+    if (scroll > 100) {
+        nav.style.background = 'rgba(5,5,7,0.95)';
+    } else {
+        nav.style.background = 'rgba(5,5,7,0.8)';
+    }
+    lastScroll = scroll;
+});
+
+// Close mobile menu on link click
+document.querySelectorAll('.nav-links a').forEach(a => {
+    a.addEventListener('click', () => {
+        document.getElementById('navLinks').classList.remove('open');
+    });
+});
+</script>
+
+</body>
+</html>

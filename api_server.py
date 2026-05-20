@@ -137,10 +137,10 @@ def read_file_safe(path: Path) -> str:
 
 @app.route('/')
 def serve_frontend():
-    """Serve a plataforma HTML."""
-    index_path = FRONTEND_PATH / "plataforma.html"
+    """Serve a landing page."""
+    index_path = FRONTEND_PATH / "landing.html"
     if index_path.exists():
-        return send_from_directory(str(FRONTEND_PATH), "plataforma.html")
+        return send_from_directory(str(FRONTEND_PATH), "landing.html")
     return jsonify({"error": "Frontend não encontrado"}), 404
 
 
@@ -956,7 +956,7 @@ def api_servicos_reiniciar():
 @app.route('/<path:path>', methods=['GET'])
 def serve_static(path):
     """Serve arquivos estáticos do frontend."""
-    static_files = ['plataforma.html', 'dashboard.html', 'favicon.ico', 'manifest.json', 'sw.js']
+    static_files = ['plataforma.html', 'landing.html', 'dashboard.html', 'favicon.ico', 'manifest.json', 'sw.js']
     if path in static_files or path.endswith(('.js', '.css', '.json', '.png', '.jpg', '.svg', '.ico')):
         filepath = FRONTEND_PATH / path
         if filepath.exists():
