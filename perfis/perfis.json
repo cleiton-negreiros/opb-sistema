@@ -1,0 +1,29 @@
+{
+  "perfis": [
+    {
+      "id": "paz-na-conta",
+      "nome": "Paz na Conta",
+      "icone": "✝️",
+      "cor": "#8b5cf6",
+      "descricao": "Mentoria de Finanças Católicas",
+      "ativo": true
+    },
+    {
+      "id": "toque-de-paz",
+      "nome": "Toque de Paz",
+      "icone": "🎵",
+      "cor": "#10b981",
+      "descricao": "Música e louvor com propósito",
+      "ativo": true
+    },
+    {
+      "id": "caminho-vida",
+      "nome": "Caminho Vida",
+      "icone": "🌿",
+      "cor": "#f59e0b",
+      "descricao": "Formação e espiritualidade católica",
+      "ativo": true
+    }
+  ],
+  "padrao": "paz-na-conta"
+}

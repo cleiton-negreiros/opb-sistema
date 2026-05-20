@@ -284,3 +284,54 @@ if (origNavigateTo) {
         }
     };
 }
+
+// ============================================
+// PROFILE SWITCHER
+// ============================================
+async function loadProfiles() {
+    const select = document.getElementById('profileSwitcher');
+    if (!select) return;
+
+    try {
+        const res = await fetch('/api/perfis');
+        const data = await res.json();
+
+        select.innerHTML = data.perfis.map(p =>
+            `<option value="${p.id}" ${p.id === data.ativo ? 'selected' : ''}>${p.icone} ${p.nome}</option>`
+        ).join('');
+    } catch (e) {}
+}
+
+async function switchProfile(profileId) {
+    try {
+        const res = await fetch('/api/perfis/ativo', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ perfil_id: profileId })
+        });
+        const data = await res.json();
+
+        if (data.success) {
+            localStorage.setItem('opb_profile', profileId);
+            showToast(`Perfil trocado: ${data.config.nome}`, 'success');
+
+            // Reload page data for new profile
+            setTimeout(() => {
+                loadPageData('dashboard');
+                loadPageData('cerebro');
+                loadPageData('perfil');
+            }, 500);
+        } else {
+            showToast('Erro ao trocar perfil', 'error');
+            loadProfiles(); // Reset select
+        }
+    } catch (e) {
+        showToast('Erro ao trocar perfil', 'error');
+        loadProfiles();
+    }
+}
+
+// Load profiles on init
+if (document.getElementById('profileSwitcher')) {
+    loadProfiles();
+}

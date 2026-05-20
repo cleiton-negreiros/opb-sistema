@@ -43,4 +43,9 @@ agents/radagast/.state.json
 # User data (auth, settings, analytics)
 data/
 
+# Profile generated content (keep config files)
+perfis/*/acervo/
+perfis/*/output/
+perfis/*/cerebro/
+
 .vercel

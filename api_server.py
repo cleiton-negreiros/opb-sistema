@@ -88,6 +88,27 @@ def get_user_cerebro_dir(user_id):
 def get_user_output_dir(user_id):
     return str(PROJECT_PATH / "output")
 
+# === PROFILE MANAGER ===
+try:
+    from profile_manager import (
+        get_active_profile, set_active_profile, list_profiles,
+        get_profile_config, get_acervo_path, get_cerebro_path,
+        get_output_path, get_perfil_path
+    )
+    PROFILE_ENABLED = True
+    print(f"✅ Multi-perfil ativado (ativo: {get_active_profile()})")
+except Exception as e:
+    print(f"⚠️  Profile manager não carregado: {e}")
+    PROFILE_ENABLED = False
+    def get_active_profile(): return "paz-na-conta"
+    def set_active_profile(p): return {"success": False}
+    def list_profiles(): return []
+    def get_profile_config(p=None): return None
+    def get_acervo_path(p=None): return PROJECT_PATH / "acervo"
+    def get_cerebro_path(p=None): return PROJECT_PATH / "cerebro"
+    def get_output_path(p=None): return PROJECT_PATH / "output"
+    def get_perfil_path(p=None): return PROJECT_PATH / "cerebro" / "perfil-empreendedor-solo"
+
 def get_project_path_for_user():
     """Get project path, user-specific if authenticated"""
     if AUTH_ENABLED and hasattr(request, 'user'):
@@ -95,16 +116,20 @@ def get_project_path_for_user():
     return PROJECT_PATH
 
 def get_acervo_path_for_user():
-    """Get acervo path, user-specific if authenticated"""
-    if AUTH_ENABLED and hasattr(request, 'user'):
-        return Path(get_user_acervo_dir(request.user['id']))
-    return PROJECT_PATH / "acervo"
+    """Get acervo path - uses active profile"""
+    return get_acervo_path()
 
 def get_output_path_for_user():
-    """Get output path, user-specific if authenticated"""
-    if AUTH_ENABLED and hasattr(request, 'user'):
-        return Path(get_user_output_dir(request.user['id']))
-    return PROJECT_PATH / "output"
+    """Get output path - uses active profile"""
+    return get_output_path()
+
+def get_cerebro_path_for_user():
+    """Get cerebro path - uses active profile"""
+    return get_cerebro_path()
+
+def get_perfil_path_for_user():
+    """Get perfil path - uses active profile"""
+    return get_perfil_path()
 
 # ============================================
 # UTILIDADES
@@ -396,6 +421,63 @@ def api_auth_analytics():
     days = request.args.get('days', 30, type=int)
     stats = get_usage_stats(request.user['id'], days)
     return jsonify({"stats": stats, "days": days})
+
+
+# ============================================
+# API — PERFIS (Multi-Profile)
+# ============================================
+
+@app.route('/api/perfis', methods=['GET'])
+def api_perfis_list():
+    """Lista todos os perfis disponíveis."""
+    perfis = list_profiles()
+    ativo = get_active_profile()
+    return jsonify({
+        "perfis": perfis,
+        "ativo": ativo,
+        "total": len(perfis)
+    })
+
+
+@app.route('/api/perfis/ativo', methods=['GET'])
+def api_perfil_ativo():
+    """Retorna o perfil ativo."""
+    perfil_id = get_active_profile()
+    config = get_profile_config(perfil_id)
+    return jsonify({
+        "id": perfil_id,
+        "config": config or {}
+    })
+
+
+@app.route('/api/perfis/ativo', methods=['POST'])
+def api_perfil_switch():
+    """Troca o perfil ativo."""
+    data = request.get_json()
+    perfil_id = data.get('perfil_id', '')
+
+    if not perfil_id:
+        return jsonify({"error": "perfil_id obrigatório"}), 400
+
+    result = set_active_profile(perfil_id)
+    if result['success']:
+        config = get_profile_config(perfil_id)
+        return jsonify({
+            "success": True,
+            "message": f"Perfil trocado para {config.get('nome', perfil_id)}",
+            "perfil_id": perfil_id,
+            "config": config
+        })
+    return jsonify(result), 400
+
+
+@app.route('/api/perfis/<perfil_id>/config', methods=['GET'])
+def api_perfil_config(perfil_id):
+    """Retorna config de um perfil específico."""
+    config = get_profile_config(perfil_id)
+    if config:
+        return jsonify(config)
+    return jsonify({"error": "Perfil não encontrado"}), 404
 
 
 # ============================================
@@ -1249,7 +1331,7 @@ def api_save_profile():
     if not filename:
         return jsonify({"error": "Nome do arquivo não informado"}), 400
 
-    perfil_path = PROJECT_PATH / "cerebro" / "perfil-empreendedor-solo" / filename
+    perfil_path = get_perfil_path() / filename
 
     try:
         perfil_path.write_text(content, encoding='utf-8')
@@ -1261,7 +1343,7 @@ def api_save_profile():
 @app.route('/api/load-profile', methods=['GET'])
 def api_load_profile():
     """Carrega dados do perfil salvos"""
-    perfil_dir = PROJECT_PATH / "cerebro" / "perfil-empreendedor-solo"
+    perfil_dir = get_perfil_path()
     arquivos = {
         'basico': perfil_dir / "PERFIL.md",
         'habilidades': perfil_dir / "HABILIDADES.md",
