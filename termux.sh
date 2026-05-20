@@ -128,6 +128,7 @@ show_menu() {
     echo -e "  ${CYAN}b)${NC}  ðŸ“± Abrir plataforma web (navegador)"
     echo -e "  ${CYAN}c)${NC}  ðŸ—‘ï¸  Limpar cache"
     echo -e "  ${CYAN}0)${NC}  âŒ Sair"
+    echo -e "  ${CYAN}s)${NC}  🔄 Sincronizar com GitHub (sync.sh)"
     echo ""
 }
 
@@ -370,6 +371,7 @@ main() {
             a|A) stop_all ;;
             b|B) open_web ;;
             c|C) clear_cache ;;
+            s|S) bash sync.sh ;;
             0)
                 echo -e "\n${GREEN}ðŸ™ AtÃ© logo! Paz na Conta!${NC}"
                 exit 0
