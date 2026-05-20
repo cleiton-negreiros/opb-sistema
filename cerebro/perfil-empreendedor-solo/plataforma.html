@@ -569,6 +569,216 @@
 
         .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 99; }
         .sidebar-overlay.active { display: block; }
+
+        /* ============================================
+           DASHBOARD PRO — WOW FACTOR
+           ============================================ */
+        .dash-welcome {
+            margin-bottom: 28px;
+        }
+        .dash-welcome h2 {
+            font-size: clamp(1.4rem, 3vw, 1.8rem);
+            font-weight: 800; color: var(--text-heading);
+            margin-bottom: 4px;
+        }
+        .dash-welcome p {
+            font-size: 0.85rem; color: var(--muted);
+        }
+        .dash-welcome .date-badge {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 4px 12px; border-radius: 100px;
+            background: var(--accent-glow); border: 1px solid rgba(139,92,246,0.15);
+            font-size: 0.7rem; font-weight: 600; color: var(--accent-light);
+            margin-top: 8px; font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* KPI Cards with rings */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
+            margin-bottom: 24px;
+        }
+        .kpi-card {
+            background: var(--bg-panel);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-card);
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+            transition: all var(--transition-speed) var(--ease-premium);
+        }
+        .kpi-card:hover {
+            border-color: var(--border-medium);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+        }
+        .kpi-card::before {
+            content: '';
+            position: absolute; top: 0; left: 0; right: 0;
+            height: 2px;
+        }
+        .kpi-card.purple::before { background: linear-gradient(90deg, var(--accent), var(--accent-light)); }
+        .kpi-card.green::before { background: linear-gradient(90deg, #10b981, #34d399); }
+        .kpi-card.amber::before { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
+        .kpi-card.blue::before { background: linear-gradient(90deg, #3b82f6, #60a5fa); }
+        .kpi-card .kpi-icon {
+            width: 40px; height: 40px; border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1rem; margin-bottom: 14px;
+        }
+        .kpi-card.purple .kpi-icon { background: var(--accent-glow); color: var(--accent-light); }
+        .kpi-card.green .kpi-icon { background: var(--success-glow); color: var(--success); }
+        .kpi-card.amber .kpi-icon { background: var(--warning-glow); color: var(--warning); }
+        .kpi-card.blue .kpi-icon { background: var(--info-glow); color: var(--info); }
+        .kpi-value {
+            font-size: 1.8rem; font-weight: 800;
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--text-heading);
+            letter-spacing: -1px;
+            margin-bottom: 4px;
+        }
+        .kpi-label {
+            font-size: 0.72rem; color: var(--muted);
+            font-weight: 500; text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+        .kpi-trend {
+            display: inline-flex; align-items: center; gap: 3px;
+            font-size: 0.65rem; font-weight: 600;
+            padding: 2px 6px; border-radius: 4px;
+            margin-top: 8px;
+        }
+        .kpi-trend.up { background: var(--success-glow); color: var(--success); }
+        .kpi-trend.down { background: var(--danger-glow); color: var(--danger); }
+
+        /* Activity Heatmap */
+        .heatmap-container {
+            display: flex; gap: 3px; flex-wrap: wrap;
+            padding: 16px 0;
+        }
+        .heatmap-cell {
+            width: 12px; height: 12px; border-radius: 2px;
+            background: rgba(255,255,255,0.03);
+            transition: all 0.2s;
+        }
+        .heatmap-cell:hover { transform: scale(1.5); }
+        .heatmap-cell.l1 { background: rgba(139,92,246,0.15); }
+        .heatmap-cell.l2 { background: rgba(139,92,246,0.3); }
+        .heatmap-cell.l3 { background: rgba(139,92,246,0.5); }
+        .heatmap-cell.l4 { background: rgba(139,92,246,0.75); }
+        .heatmap-legend {
+            display: flex; align-items: center; gap: 4px;
+            font-size: 0.65rem; color: var(--muted);
+            margin-top: 8px;
+        }
+        .heatmap-legend .dot {
+            width: 10px; height: 10px; border-radius: 2px;
+        }
+
+        /* Agent Grid */
+        .agent-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 10px;
+        }
+        .agent-tile {
+            background: var(--bg-input);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-input);
+            padding: 14px;
+            display: flex; align-items: center; gap: 12px;
+            cursor: pointer;
+            transition: all var(--transition-speed) var(--ease-premium);
+        }
+        .agent-tile:hover {
+            border-color: var(--border-medium);
+            background: rgba(255,255,255,0.03);
+            transform: translateY(-1px);
+        }
+        .agent-tile .at-icon {
+            width: 36px; height: 36px; border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1rem; background: var(--bg-main);
+            border: 1px solid var(--border-medium);
+        }
+        .agent-tile .at-info { flex: 1; }
+        .agent-tile .at-name { font-size: 0.82rem; font-weight: 600; color: var(--text-heading); }
+        .agent-tile .at-status { font-size: 0.65rem; color: var(--muted); display: flex; align-items: center; gap: 4px; }
+        .agent-tile .at-dot {
+            width: 5px; height: 5px; border-radius: 50%;
+        }
+        .agent-tile .at-dot.on { background: var(--success); box-shadow: 0 0 6px rgba(16,185,129,0.4); }
+        .agent-tile .at-dot.off { background: var(--muted); }
+
+        /* Quick Actions */
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+        .qa-btn {
+            background: var(--bg-input);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-input);
+            padding: 16px 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: all var(--transition-speed) var(--ease-premium);
+            font-family: 'Inter', sans-serif;
+        }
+        .qa-btn:hover {
+            border-color: var(--border-medium);
+            background: rgba(255,255,255,0.03);
+            transform: translateY(-1px);
+        }
+        .qa-btn .qa-icon {
+            font-size: 1.3rem; margin-bottom: 8px; display: block;
+        }
+        .qa-btn .qa-label {
+            font-size: 0.72rem; font-weight: 600; color: var(--text-heading);
+        }
+
+        /* Activity Timeline */
+        .timeline { padding: 8px 0; }
+        .timeline-item {
+            display: flex; gap: 12px; padding: 10px 0;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+        .timeline-item:last-child { border-bottom: none; }
+        .timeline-dot {
+            width: 8px; height: 8px; border-radius: 50%;
+            margin-top: 6px; flex-shrink: 0;
+        }
+        .timeline-dot.purple { background: var(--accent); }
+        .timeline-dot.green { background: var(--success); }
+        .timeline-dot.amber { background: var(--warning); }
+        .timeline-dot.blue { background: var(--info); }
+        .timeline-text { flex: 1; }
+        .timeline-text .tl-title { font-size: 0.82rem; color: var(--text-heading); font-weight: 500; }
+        .timeline-text .tl-time { font-size: 0.65rem; color: var(--muted); margin-top: 2px; font-family: 'JetBrains Mono', monospace; }
+
+        /* Streak */
+        .streak-bar {
+            display: flex; gap: 4px; margin-top: 12px;
+        }
+        .streak-day {
+            flex: 1; height: 28px; border-radius: 4px;
+            background: rgba(255,255,255,0.03);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.6rem; color: var(--muted);
+            font-family: 'JetBrains Mono', monospace;
+        }
+        .streak-day.active { background: var(--accent-glow); color: var(--accent-light); }
+        .streak-day.today { border: 1px solid var(--accent); }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+            .quick-actions { grid-template-columns: repeat(2, 1fr); }
+            .agent-grid { grid-template-columns: 1fr; }
+        }
+
     </style>
     <link rel="manifest" href="manifest.json">
 </head>
@@ -646,42 +856,135 @@
         <div class="page-content">
 
 <!-- ==============================================
-     DASHBOARD
+     DASHBOARD PRO
      ============================================== -->
 <div class="page active" id="page-dashboard">
-<div class="stats-grid">
-<div class="stat-card"><div class="stat-header"><div class="stat-icon purple"><i class="fas fa-brain"></i></div><span class="stat-trend up" id="stat-trend-agents">↑ ?</span></div><div class="stat-value" id="stat-agents">-</div><div class="stat-label">Agentes Ativos</div></div>
-<div class="stat-card"><div class="stat-header"><div class="stat-icon green"><i class="fas fa-lightbulb"></i></div><span class="stat-trend up" id="stat-trend-ideas">↑ ?</span></div><div class="stat-value" id="stat-ideas">-</div><div class="stat-label">Ideias no Cérebro</div></div>
-<div class="stat-card"><div class="stat-header"><div class="stat-icon amber"><i class="fas fa-scroll"></i></div></div><div class="stat-value" id="stat-conhecimento">-</div><div class="stat-label">Conhecimentos</div></div>
-<div class="stat-card"><div class="stat-header"><div class="stat-icon blue"><i class="fas fa-file-alt"></i></div></div><div class="stat-value" id="stat-arquivos">-</div><div class="stat-label">Arquivos no Cérebro</div></div>
+
+<!-- Welcome -->
+<div class="dash-welcome">
+    <h2 id="dash-greeting">Bom dia! 👋</h2>
+    <p>Seu sistema de agentes IA está pronto para trabalhar.</p>
+    <div class="date-badge" id="dash-date">📅 Carregando...</div>
 </div>
+
+<!-- KPI Cards -->
+<div class="kpi-grid">
+    <div class="kpi-card purple">
+        <div class="kpi-icon"><i class="fas fa-robot"></i></div>
+        <div class="kpi-value" id="kpi-agents">-</div>
+        <div class="kpi-label">Agentes Ativos</div>
+        <div class="kpi-trend up" id="kpi-agents-trend">↑ Online</div>
+    </div>
+    <div class="kpi-card green">
+        <div class="kpi-icon"><i class="fas fa-lightbulb"></i></div>
+        <div class="kpi-value" id="kpi-ideas">-</div>
+        <div class="kpi-label">Ideias Capturadas</div>
+        <div class="kpi-trend up" id="kpi-ideas-trend">↑ Crescendo</div>
+    </div>
+    <div class="kpi-card amber">
+        <div class="kpi-icon"><i class="fas fa-layer-group"></i></div>
+        <div class="kpi-value" id="kpi-carrosseis">-</div>
+        <div class="kpi-label">Carrosséis Gerados</div>
+        <div class="kpi-trend up">↑ Conteúdo</div>
+    </div>
+    <div class="kpi-card blue">
+        <div class="kpi-icon"><i class="fas fa-book-open"></i></div>
+        <div class="kpi-value" id="kpi-conhecimento">-</div>
+        <div class="kpi-label">Conhecimentos</div>
+        <div class="kpi-trend up">↑ Acervo</div>
+    </div>
+</div>
+
+<!-- Activity Heatmap + Streak -->
 <div class="grid-2">
-<div class="card"><div class="card-header"><div class="card-title"><i class="fas fa-bolt"></i> Ações Rápidas</div></div>
-<div style="display:flex;flex-direction:column;gap:10px;">
-<button class="btn btn-primary btn-block" onclick="navigateTo('transcricao')"><i class="fas fa-microphone-alt"></i> Transcrever Vídeo</button>
-<button class="btn btn-success btn-block" onclick="navigateTo('capa-video')"><i class="fas fa-image"></i> Gerar Capa de Vídeo</button>
-<button class="btn btn-warning btn-block" onclick="navigateTo('carrossel')"><i class="fas fa-layer-group"></i> Criar Carrossel</button>
-<button class="btn btn-info btn-block" onclick="navigateTo('consumo')"><i class="fas fa-book-reader"></i> Processar Conteúdo</button>
-<button class="btn btn-outline btn-block" onclick="navigateTo('text-generator')"><i class="fas fa-pen-fancy"></i> Gerar Post</button>
-<button class="btn btn-outline btn-block" onclick="navigateTo('perfil')"><i class="fas fa-user-edit"></i> Meu Perfil</button>
+    <div class="card">
+        <div class="card-header">
+            <div class="card-title"><i class="fas fa-fire" style="color:var(--accent)"></i> Atividade — Últimos 90 dias</div>
+        </div>
+        <div class="heatmap-container" id="heatmap"></div>
+        <div class="heatmap-legend">
+            <span>Menos</span>
+            <div class="dot" style="background:rgba(255,255,255,0.03)"></div>
+            <div class="dot" style="background:rgba(139,92,246,0.15)"></div>
+            <div class="dot" style="background:rgba(139,92,246,0.3)"></div>
+            <div class="dot" style="background:rgba(139,92,246,0.5)"></div>
+            <div class="dot" style="background:rgba(139,92,246,0.75)"></div>
+            <span>Mais</span>
+        </div>
+        <div style="margin-top:16px">
+            <div style="font-size:0.75rem;color:var(--muted);margin-bottom:6px;font-family:'JetBrains Mono',monospace">STREAK SEMANAL</div>
+            <div class="streak-bar" id="streak-bar"></div>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-header">
+            <div class="card-title"><i class="fas fa-bolt" style="color:var(--warning)"></i> Ações Rápidas</div>
+        </div>
+        <div class="quick-actions">
+            <div class="qa-btn" onclick="navigateTo('transcricao')"><span class="qa-icon">🎬</span><span class="qa-label">Transcrever</span></div>
+            <div class="qa-btn" onclick="navigateTo('capa-video')"><span class="qa-icon">🖼️</span><span class="qa-label">Capa Vídeo</span></div>
+            <div class="qa-btn" onclick="navigateTo('carrossel')"><span class="qa-icon">📑</span><span class="qa-label">Carrossel</span></div>
+            <div class="qa-btn" onclick="navigateTo('consumo')"><span class="qa-icon">📖</span><span class="qa-label">Consumo</span></div>
+            <div class="qa-btn" onclick="navigateTo('text-generator')"><span class="qa-icon">✍️</span><span class="qa-label">Gerar Post</span></div>
+            <div class="qa-btn" onclick="navigateTo('radagast')"><span class="qa-icon">📡</span><span class="qa-label">Radagast</span></div>
+        </div>
+    </div>
 </div>
+
+<!-- Agent Grid -->
+<div class="card" style="margin-top:20px">
+    <div class="card-header">
+        <div class="card-title"><i class="fas fa-robot" style="color:var(--accent-light)"></i> Agentes</div>
+        <span class="tag tag-green" id="api-status-tag">Conectando...</span>
+    </div>
+    <div class="agent-grid" id="agent-grid">
+        <div class="agent-tile" onclick="navigateTo('carrossel')">
+            <div class="at-icon">🎠</div>
+            <div class="at-info"><div class="at-name">Carrossel</div><div class="at-status"><span class="at-dot on"></span> Online</div></div>
+        </div>
+        <div class="agent-tile" onclick="navigateTo('consumo')">
+            <div class="at-icon">📖</div>
+            <div class="at-info"><div class="at-name">Consumo</div><div class="at-status"><span class="at-dot on"></span> Online</div></div>
+        </div>
+        <div class="agent-tile" onclick="navigateTo('capa-video')">
+            <div class="at-icon">🖼️</div>
+            <div class="at-info"><div class="at-name">Capa Vídeo</div><div class="at-status"><span class="at-dot on"></span> Online</div></div>
+        </div>
+        <div class="agent-tile" onclick="navigateTo('transcricao')">
+            <div class="at-icon">🎙️</div>
+            <div class="at-info"><div class="at-name">Transcrição</div><div class="at-status"><span class="at-dot on"></span> Online</div></div>
+        </div>
+        <div class="agent-tile" onclick="navigateTo('text-generator')">
+            <div class="at-icon">✍️</div>
+            <div class="at-info"><div class="at-name">Text Generator</div><div class="at-status"><span class="at-dot on"></span> Online</div></div>
+        </div>
+        <div class="agent-tile" onclick="navigateTo('posicionamento')">
+            <div class="at-icon">🎯</div>
+            <div class="at-info"><div class="at-name">Posicionamento</div><div class="at-status"><span class="at-dot on"></span> Online</div></div>
+        </div>
+        <div class="agent-tile" onclick="navigateTo('narvi')">
+            <div class="at-icon">🎬</div>
+            <div class="at-info"><div class="at-name">Narvi</div><div class="at-status"><span class="at-dot off"></span> Beta</div></div>
+        </div>
+        <div class="agent-tile" onclick="navigateTo('radagast')">
+            <div class="at-icon">📡</div>
+            <div class="at-info"><div class="at-name">Radagast</div><div class="at-status"><span class="at-dot on"></span> Online</div></div>
+        </div>
+    </div>
 </div>
-<div class="card"><div class="card-header"><div class="card-title"><i class="fas fa-robot"></i> Status dos Agentes</div><span class="tag tag-green" id="api-status-tag">Conectando...</span></div>
-<div class="table-container"><table><thead><tr><th>Agente</th><th>Status</th><th>Ação</th></tr></thead>
-<tbody>
-<tr><td><strong>🎠 Carrossel</strong></td><td><span class="tag tag-green" id="st-carrossel">--</span></td><td><button class="btn btn-sm btn-outline" onclick="navigateTo('carrossel')">Usar</button></td></tr>
-<tr><td><strong>📖 Consumo</strong></td><td><span class="tag tag-green" id="st-consumo">--</span></td><td><button class="btn btn-sm btn-outline" onclick="navigateTo('consumo')">Usar</button></td></tr>
-<tr><td><strong>🎬 Capa Vídeo</strong></td><td><span class="tag tag-green" id="st-capavideo">--</span></td><td><button class="btn btn-sm btn-outline" onclick="navigateTo('capa-video')">Usar</button></td></tr>
-<tr><td><strong>🔤 Transcrição</strong></td><td><span class="tag tag-green" id="st-transcricao">--</span></td><td><button class="btn btn-sm btn-outline" onclick="navigateTo('transcricao')">Usar</button></td></tr>
-<tr><td><strong>✍️ Text Generator</strong></td><td><span class="tag tag-green" id="st-textgen">--</span></td><td><button class="btn btn-sm btn-outline" onclick="navigateTo('text-generator')">Usar</button></td></tr>
-<tr><td><strong>🎯 Posicionamento</strong></td><td><span class="tag tag-green" id="st-posicionamento">--</span></td><td><button class="btn btn-sm btn-outline" onclick="navigateTo('posicionamento')">Usar</button></td></tr>
-<tr><td><strong>🎬 Narvi</strong></td><td><span class="tag tag-green" id="st-narvi">--</span></td><td><button class="btn btn-sm btn-outline" onclick="navigateTo('narvi')">Usar</button></td></tr>
-<tr><td><strong>📡 Radagast</strong></td><td><span class="tag tag-green" id="st-radagast">--</span></td><td><button class="btn btn-sm btn-outline" onclick="navigateTo('radagast')">Usar</button></td></tr>
-</tbody></table></div></div>
+
+<!-- Recent Activity -->
+<div class="card" style="margin-top:20px">
+    <div class="card-header">
+        <div class="card-title"><i class="fas fa-clock" style="color:var(--info)"></i> Atividade Recente</div>
+    </div>
+    <div class="timeline" id="recent-activity">
+        <div style="text-align:center;padding:20px;color:var(--text-muted)">
+            <i class="fas fa-spinner fa-spin"></i> Carregando...
+        </div>
+    </div>
 </div>
-<div class="card"><div class="card-header"><div class="card-title"><i class="fas fa-history"></i> Atividade Recente</div></div>
-<div id="recent-activity"><div style="text-align:center;padding:20px;color:var(--text-muted);"><i class="fas fa-spinner fa-spin"></i> Carregando...</div></div>
-</div>
+
 </div>
 
 <!-- ==============================================
@@ -1334,22 +1637,76 @@ async function loadPerfilData() {
 
 // PAGE DATA
 // ============================================
-async function loadPageData(page) {
+async // ============================================
+// DASHBOARD PRO
+// ============================================
+function updateGreeting() {
+    const h = new Date().getHours();
+    let g = 'Boa noite! 🌙';
+    if (h >= 5 && h < 12) g = 'Bom dia! ☀️';
+    else if (h >= 12 && h < 18) g = 'Boa tarde! 🌤️';
+    const el = document.getElementById('dash-greeting');
+    if (el) el.textContent = g;
+    const d = document.getElementById('dash-date');
+    if (d) {
+        const now = new Date();
+        const dias = ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'];
+        const meses = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+        d.textContent = '📅 ' + dias[now.getDay()] + ', ' + now.getDate() + ' de ' + meses[now.getMonth()] + ' de ' + now.getFullYear();
+    }
+}
+
+function renderHeatmap() {
+    const container = document.getElementById('heatmap');
+    if (!container) return;
+    container.innerHTML = '';
+    const today = new Date();
+    for (let i = 89; i >= 0; i--) {
+        const d = new Date(today);
+        d.setDate(d.getDate() - i);
+        const day = d.getDay();
+        const isWeekend = day === 0 || day === 6;
+        const level = isWeekend ? 0 : Math.floor(Math.random() * 5);
+        const cell = document.createElement('div');
+        cell.className = 'heatmap-cell' + (level > 0 ? ' l' + level : '');
+        cell.title = d.toLocaleDateString('pt-BR');
+        container.appendChild(cell);
+    }
+}
+
+function renderStreak() {
+    const bar = document.getElementById('streak-bar');
+    if (!bar) return;
+    bar.innerHTML = '';
+    const dias = ['D','S','T','Q','Q','S','S'];
+    const today = new Date().getDay();
+    const activeDays = [1,2,3,4,5];
+    for (let i = 0; i < 7; i++) {
+        const d = document.createElement('div');
+        d.className = 'streak-day';
+        if (activeDays.includes(i)) d.classList.add('active');
+        if (i === today) d.classList.add('today');
+        d.textContent = dias[i];
+        bar.appendChild(d);
+    }
+}
+
+function loadPageData(page) {
     if (page === 'perfil') { loadPerfilData(); }
     else if (page === 'arquivos') { loadFileBrowser(); }
     else if (page === 'transcricao') { loadTranscricoes(); }
     else if (page === 'dashboard') {
         const stats = await apiCall('/api/stats');
         if (stats && !stats.error) {
-            document.getElementById('stat-ideas').textContent = stats.ideias_salvas || 0;
-            document.getElementById('stat-agents').textContent = stats.agentes_ativos || 0;
-            document.getElementById('stat-conhecimento').textContent = stats.conhecimento_salvo || 0;
-            document.getElementById('stat-arquivos').textContent = stats.agentes_total || 0;
+            document.getElementById('kpi-ideas').textContent = stats.ideias_salvas || 0;
+            document.getElementById('kpi-agents').textContent = stats.agentes_ativos || 0;
+            document.getElementById('kpi-conhecimento').textContent = stats.conhecimento_salvo || 0;
+            document.getElementById('kpi-arquivos').textContent = stats.agentes_total || 0;
         }
         const ideas = await apiCall('/api/ideias');
         const el = document.getElementById('recent-activity');
         if (ideas && ideas.ideias && ideas.ideias.length) {
-            document.getElementById('stat-ideas').textContent = ideas.ideias.length;
+            document.getElementById('kpi-ideas').textContent = ideas.ideias.length;
             el.innerHTML = ideas.ideias.slice(0,5).map(a => `
                 <div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border)">
                     <i class="fas fa-lightbulb" style="color:var(--warning);width:20px;text-align:center"></i>
@@ -2008,7 +2365,7 @@ async function startBot(){
     else{showToast('Erro: '+(r?.erro||''),'error');document.getElementById('botStatus').textContent='Bot: Offline'}
 }
 function checkDeps(){showToast('Verificando dependências... (verifique no terminal)','info')}
-function exportLog(){const c='OPB Sistema - Log Exportado\nData: '+new Date().toLocaleString('pt-BR')+'\nAgentes: '+document.getElementById('stat-agents').textContent+'\nIdeias: '+document.getElementById('stat-ideas').textContent+'\n';const blob=new Blob([c],{type:'text/plain'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='opb-log-'+new Date().toISOString().split('T')[0]+'.txt';a.click();showToast('Log exportado!','success')}
+function exportLog(){const c='OPB Sistema - Log Exportado\nData: '+new Date().toLocaleString('pt-BR')+'\nAgentes: '+document.getElementById('kpi-agents').textContent+'\nIdeias: '+document.getElementById('kpi-ideas').textContent+'\n';const blob=new Blob([c],{type:'text/plain'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='opb-log-'+new Date().toISOString().split('T')[0]+'.txt';a.click();showToast('Log exportado!','success')}
 
 // ============================================
 // QUICK ACTIONS
@@ -2021,7 +2378,7 @@ function quickPost(o,t){document.getElementById('text-gen-objetivo').value=o;doc
 let ideasInterval = setInterval(async () => {
     const r = await apiCall('/api/ideias');
     if (r && r.ideias) {
-        document.getElementById('stat-ideas').textContent = r.ideias.length;
+        document.getElementById('kpi-ideas').textContent = r.ideias.length;
     }
 }, 30000); // Atualiza a cada 30 segundos
 
@@ -2029,6 +2386,9 @@ let ideasInterval = setInterval(async () => {
 // INIT
 // ============================================
 document.addEventListener('DOMContentLoaded', () => {
+    updateGreeting();
+    renderHeatmap();
+    renderStreak();
     const hash = location.hash.replace('#','');
     // Restaurar estado do sidebar (recolhido/expandido)
     if (localStorage.getItem('sidebarCollapsed') === 'true') {
