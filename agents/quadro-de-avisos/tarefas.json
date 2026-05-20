@@ -1,0 +1,31 @@
+{
+  "tarefas": [
+    {
+      "id": 1,
+      "agente": "carrossel",
+      "tarefa": "Produzir 1 carrossel por semana sobre DSI",
+      "status": "pendente",
+      "prioridade": "alta",
+      "criado_em": "2026-05-20 12:19",
+      "concluido_em": null
+    },
+    {
+      "id": 2,
+      "agente": "radagast",
+      "tarefa": "Gerar ideias de conteúdo sobre finanças católicas",
+      "status": "pendente",
+      "prioridade": "alta",
+      "criado_em": "2026-05-20 12:19",
+      "concluido_em": null
+    },
+    {
+      "id": 3,
+      "agente": "consumo",
+      "tarefa": "Processar artigo do Vaticano sobre finanças",
+      "status": "pendente",
+      "prioridade": "media",
+      "criado_em": "2026-05-20 12:19",
+      "concluido_em": null
+    }
+  ]
+}

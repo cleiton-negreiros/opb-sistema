@@ -1,81 +1,26 @@
 {
-    "name": "OPB Sistema",
-    "short_name": "OPB",
-    "description": "Plataforma de Agentes IA para Solopreneurs",
-    "start_url": "/",
-    "scope": "/",
-    "display": "standalone",
-    "orientation": "portrait",
-    "background_color": "#0B0F1A",
-    "theme_color": "#FF6B6B",
-    "categories": ["productivity", "business"],
-    "icons": [
-        {
-            "src": "favicon.ico",
-            "sizes": "48x48",
-            "type": "image/x-icon",
-            "purpose": "any maskable"
-        },
-        {
-            "src": "favicon.ico",
-            "sizes": "72x72",
-            "type": "image/x-icon"
-        },
-        {
-            "src": "favicon.ico",
-            "sizes": "96x96",
-            "type": "image/x-icon"
-        },
-        {
-            "src": "favicon.ico",
-            "sizes": "128x128",
-            "type": "image/x-icon"
-        },
-        {
-            "src": "favicon.ico",
-            "sizes": "144x144",
-            "type": "image/x-icon"
-        },
-        {
-            "src": "favicon.ico",
-            "sizes": "152x152",
-            "type": "image/x-icon"
-        },
-        {
-            "src": "favicon.ico",
-            "sizes": "192x192",
-            "type": "image/x-icon"
-        },
-        {
-            "src": "favicon.ico",
-            "sizes": "384x384",
-            "type": "image/x-icon"
-        },
-        {
-            "src": "favicon.ico",
-            "sizes": "512x512",
-            "type": "image/x-icon"
-        }
-    ],
-    "screenshots": [],
-    "shortcuts": [
-        {
-            "name": "Dashboard",
-            "short_name": "Dashboard",
-            "description": "Acesse o dashboard principal",
-            "url": "/?section=dashboard"
-        },
-        {
-            "name": "Agentes",
-            "short_name": "Agentes",
-            "description": "Veja os agentes disponiveis",
-            "url": "/?section=agentes"
-        },
-        {
-            "name": "Configuracoes",
-            "short_name": "Config",
-            "description": "Configure o sistema",
-            "url": "/?section=config"
-        }
-    ]
+  "name": "Paz na Conta — OPB Studio",
+  "short_name": "OPB Studio",
+  "description": "Plataforma de agentes IA para Paz na Conta",
+  "start_url": "/dashboard.html",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#050507",
+  "theme_color": "#8b5cf6",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='64' fill='%238b5cf6'/%3E%3Ctext x='256' y='340' font-size='280' text-anchor='middle' fill='white'%3E🎯%3C/text%3E%3C/svg%3E",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' rx='24' fill='%238b5cf6'/%3E%3Ctext x='96' y='130' font-size='100' text-anchor='middle' fill='white'%3E🎯%3C/text%3E%3C/svg%3E",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["productivity", "finance"],
+  "lang": "pt-BR"
 }

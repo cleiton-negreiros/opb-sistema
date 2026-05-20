@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#8b5cf6">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='64' fill='%238b5cf6'/%3E%3Ctext x='256' y='340' font-size='280' text-anchor='middle' fill='white'%3E🎯%3C/text%3E%3C/svg%3E">
+    <title>Paz na Conta — Painel</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #050507;
+            --card: rgba(255,255,255,0.03);
+            --card-hover: rgba(255,255,255,0.06);
+            --border: rgba(255,255,255,0.06);
+            --text: #cbd5e1;
+            --heading: #f8fafc;
+            --muted: #64748b;
+            --accent: #8b5cf6;
+            --accent-glow: rgba(139,92,246,0.15);
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --radius: 12px;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 16px 16px 100px;
+            background-image: radial-gradient(rgba(255,255,255,0.015) 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            padding: 24px 0 20px;
+        }
+        .header h1 {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--heading);
+            letter-spacing: -0.3px;
+        }
+        .header h1 span { color: var(--accent); }
+        .header p {
+            font-size: 12px;
+            color: var(--muted);
+            margin-top: 4px;
+        }
+
+        /* Status Bar */
+        .status-bar {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .status-item {
+            flex: 1;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 12px;
+            text-align: center;
+        }
+        .status-item .dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 6px;
+        }
+        .status-item .dot.on { background: var(--success); box-shadow: 0 0 8px rgba(16,185,129,0.4); }
+        .status-item .dot.off { background: var(--danger); box-shadow: 0 0 8px rgba(239,68,68,0.3); }
+        .status-item .label { font-size: 11px; color: var(--muted); margin-top: 4px; }
+        .status-item .name { font-size: 13px; font-weight: 600; color: var(--heading); }
+
+        /* Section */
+        .section-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 24px 0 12px;
+        }
+
+        /* Action Grid */
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 16px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .card:active {
+            background: var(--card-hover);
+            transform: scale(0.97);
+        }
+        .card .icon { font-size: 24px; margin-bottom: 8px; display: block; }
+        .card .title { font-size: 13px; font-weight: 600; color: var(--heading); }
+        .card .desc { font-size: 11px; color: var(--muted); margin-top: 3px; }
+        .card.full { grid-column: 1 / -1; }
+
+        /* Expandable agents */
+        .agent-form {
+            display: none;
+            margin-top: 12px;
+            text-align: left;
+        }
+        .agent-form.open { display: block; }
+        .agent-form input, .agent-form textarea {
+            width: 100%;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 10px 12px;
+            color: var(--heading);
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            outline: none;
+            transition: border 0.2s;
+            margin-bottom: 8px;
+        }
+        .agent-form input:focus, .agent-form textarea:focus {
+            border-color: var(--accent);
+        }
+        .agent-form textarea { resize: vertical; min-height: 60px; }
+        .btn {
+            display: inline-block;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 8px;
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-primary {
+            background: var(--accent);
+            color: white;
+        }
+        .btn-primary:active { opacity: 0.8; }
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+        .btn-sm { padding: 6px 12px; font-size: 12px; }
+
+        /* Output */
+        .output {
+            display: none;
+            margin-top: 16px;
+            background: rgba(0,0,0,0.4);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 12px;
+            font-size: 12px;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            word-break: break-word;
+            max-height: 300px;
+            overflow-y: auto;
+            font-family: 'Inter', sans-serif;
+        }
+        .output.open { display: block; }
+        .output .out-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+            font-size: 11px;
+            color: var(--muted);
+        }
+        .output .out-header .close {
+            cursor: pointer;
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+        .output .out-header .close:hover { background: var(--card-hover); }
+        .output pre {
+            margin: 0;
+            white-space: pre-wrap;
+            font-family: inherit;
+        }
+
+        /* Loading */
+        .loading {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            border: 2px solid var(--border);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+            vertical-align: middle;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Quick Links */
+        .links {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .links a {
+            flex: 1;
+            min-width: calc(50% - 5px);
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 12px;
+            text-decoration: none;
+            color: var(--heading);
+            font-size: 13px;
+            font-weight: 500;
+            text-align: center;
+            transition: all 0.2s;
+        }
+        .links a:active {
+            background: var(--card-hover);
+            transform: scale(0.97);
+        }
+
+        /* PWA Install Banner */
+        .install-banner {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(10,10,14,0.98);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid var(--border);
+            padding: 16px 20px;
+            z-index: 100;
+        }
+        .install-banner.show { display: flex; align-items: center; gap: 12px; }
+        .install-banner .icon { font-size: 28px; }
+        .install-banner .text { flex: 1; }
+        .install-banner .text strong { display: block; color: var(--heading); font-size: 14px; }
+        .install-banner .text span { font-size: 12px; color: var(--muted); }
+        .install-banner .btn-install {
+            background: var(--accent);
+            border: none;
+            color: white;
+            padding: 8px 18px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+        }
+
+        .toast {
+            position: fixed;
+            top: 16px;
+            left: 16px;
+            right: 16px;
+            background: rgba(10,10,14,0.95);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 14px 16px;
+            z-index: 200;
+            font-size: 14px;
+            color: var(--heading);
+            display: none;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+        }
+        .toast.show { display: block; animation: slideDown 0.3s ease; }
+        @keyframes slideDown {
+            from { transform: translateY(-20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="toast" id="toast"></div>
+
+<div class="install-banner" id="installBanner">
+    <div class="icon">🎯</div>
+    <div class="text">
+        <strong>Instalar OPB Studio</strong>
+        <span>Adicione à tela inicial do seu celular</span>
+    </div>
+    <button class="btn-install" id="installBtn">Instalar</button>
+</div>
+
+<div class="header">
+    <h1>🎯 <span>Paz na Conta</span></h1>
+    <p>Painel de Controle — OPB Sistema</p>
+</div>
+
+<!-- Status -->
+<div class="status-bar" id="statusBar">
+    <div class="status-item">
+        <span class="dot" id="apiDot"></span>
+        <span class="name" id="apiName">API</span>
+        <div class="label" id="apiLabel">verificando...</div>
+    </div>
+    <div class="status-item">
+        <span class="dot" id="botDot"></span>
+        <span class="name" id="botName">Bot</span>
+        <div class="label" id="botLabel">verificando...</div>
+    </div>
+</div>
+
+<!-- Serviços -->
+<div class="section-title">⚙️ Serviços</div>
+<div class="grid">
+    <div class="card" onclick="iniciarTudo()">
+        <span class="icon">🚀</span>
+        <span class="title">Iniciar Tudo</span>
+        <span class="desc">API + Bot</span>
+    </div>
+    <div class="card" onclick="reiniciarServicos()">
+        <span class="icon">🔄</span>
+        <span class="title">Reiniciar</span>
+        <span class="desc">Recarregar serviços</span>
+    </div>
+    <div class="card" onclick="pararServicos()">
+        <span class="icon">⏹️</span>
+        <span class="title">Parar Tudo</span>
+        <span class="desc">Encerrar serviços</span>
+    </div>
+    <div class="card" onclick="abrirPlataforma()">
+        <span class="icon">🌐</span>
+        <span class="title">Plataforma</span>
+        <span class="desc">Ferramentas completas</span>
+    </div>
+</div>
+
+<!-- Agentes -->
+<div class="section-title">🧠 Agentes</div>
+<div class="grid">
+    <div class="card" onclick="toggleForm('radagast')">
+        <span class="icon">📡</span>
+        <span class="title">Radagast</span>
+        <span class="desc">Curadoria automática</span>
+        <div class="agent-form" id="form-radagast">
+            <button class="btn btn-primary" onclick="executarAgente('radagast')">▶ Executar</button>
+        </div>
+    </div>
+    <div class="card" onclick="toggleForm('carrossel')">
+        <span class="icon">🎠</span>
+        <span class="title">Carrossel</span>
+        <span class="desc">Gerar carrossel</span>
+        <div class="agent-form" id="form-carrossel">
+            <input type="text" id="input-carrossel" placeholder="Ex: Dízimo e organização" onclick="event.stopPropagation()">
+            <button class="btn btn-primary btn-sm" onclick="event.stopPropagation();executarAgente('carrossel')">▶ Gerar</button>
+        </div>
+    </div>
+    <div class="card" onclick="toggleForm('texto')">
+        <span class="icon">✍️</span>
+        <span class="title">Texto</span>
+        <span class="desc">Post para Instagram</span>
+        <div class="agent-form" id="form-texto">
+            <input type="text" id="input-texto" placeholder="Ex: Como economizar no mercado" onclick="event.stopPropagation()">
+            <button class="btn btn-primary btn-sm" onclick="event.stopPropagation();executarAgente('text_generator')">▶ Gerar</button>
+        </div>
+    </div>
+    <div class="card" onclick="toggleForm('consumo')">
+        <span class="icon">📖</span>
+        <span class="title">Consumo</span>
+        <span class="desc">Processar conteúdo</span>
+        <div class="agent-form" id="form-consumo">
+            <textarea id="input-consumo" placeholder="Cole o texto aqui..." onclick="event.stopPropagation()"></textarea>
+            <button class="btn btn-primary btn-sm" onclick="event.stopPropagation();executarAgente('consumo')">▶ Processar</button>
+        </div>
+    </div>
+</div>
+
+<!-- Quadro de Avisos -->
+<div class="section-title">📋 Quadro de Avisos</div>
+<div class="grid">
+    <div class="card full" onclick="toggleForm('tarefas')">
+        <span class="icon">📋</span>
+        <span class="title">Gerenciar Tarefas</span>
+        <span class="desc">Ver, adicionar e concluir</span>
+        <div class="agent-form" id="form-tarefas">
+            <div id="tarefas-lista" style="font-size:12px;text-align:left;margin-bottom:10px;line-height:1.8">Carregando...</div>
+            <div style="display:flex;gap:8px">
+                <input type="text" id="input-tarefa" placeholder="Nova tarefa..." style="flex:1" onclick="event.stopPropagation()">
+                <button class="btn btn-success btn-sm" onclick="event.stopPropagation();adicionarTarefa()">+</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Links Rápidos -->
+<div class="section-title">🔗 Links</div>
+<div class="links">
+    <a href="/" target="_blank">🎨 Plataforma</a>
+    <a href="/api/health" target="_blank">💚 Health Check</a>
+    <a href="https://github.com/cleiton-negreiros/opb-sistema" target="_blank">📦 GitHub</a>
+    <a href="https://opb-sistema.vercel.app/hub.html" target="_blank">🌐 Hub</a>
+</div>
+
+<!-- Output -->
+<div class="output" id="output">
+    <div class="out-header">
+        <span id="outputTitle">Resultado</span>
+        <span class="close" onclick="fecharOutput()">✕</span>
+    </div>
+    <pre id="outputContent"></pre>
+</div>
+
+<script>
+// ============================================
+// PWA Install
+// ============================================
+let deferredPrompt = null;
+window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    document.getElementById('installBanner').classList.add('show');
+});
+document.getElementById('installBtn').addEventListener('click', async () => {
+    if (deferredPrompt) {
+        deferredPrompt.prompt();
+        const result = await deferredPrompt.userChoice;
+        if (result.outcome === 'accepted') {
+            document.getElementById('installBanner').classList.remove('show');
+            toast('✅ App instalado!');
+        }
+        deferredPrompt = null;
+    }
+});
+
+// ============================================
+// Utils
+// ============================================
+const API = '';  // relative to same origin
+
+function toast(msg) {
+    const el = document.getElementById('toast');
+    el.textContent = msg;
+    el.classList.add('show');
+    setTimeout(() => el.classList.remove('show'), 3000);
+}
+
+function toggleForm(id) {
+    const form = document.getElementById('form-' + id);
+    const isOpen = form.classList.contains('open');
+    document.querySelectorAll('.agent-form.open').forEach(f => f.classList.remove('open'));
+    if (!isOpen) form.classList.add('open');
+}
+
+function mostrarOutput(title, content) {
+    const out = document.getElementById('output');
+    document.getElementById('outputTitle').textContent = title;
+    document.getElementById('outputContent').textContent = content;
+    out.classList.add('open');
+}
+
+function fecharOutput() {
+    document.getElementById('output').classList.remove('open');
+}
+
+// ============================================
+// Status
+// ============================================
+async function atualizarStatus() {
+    try {
+        const r = await fetch(API + '/api/servicos/status');
+        const data = await r.json();
+        document.getElementById('apiDot').className = 'dot ' + (data.api.rodando ? 'on' : 'off');
+        document.getElementById('apiLabel').textContent = data.api.rodando ? 'Rodando' : 'Parado';
+        document.getElementById('botDot').className = 'dot ' + (data.bot.rodando ? 'on' : 'off');
+        document.getElementById('botLabel').textContent = data.bot.rodando ? 'Rodando' : 'Parado';
+    } catch (e) {
+        document.getElementById('apiDot').className = 'dot off';
+        document.getElementById('apiLabel').textContent = 'Sem conexão';
+        document.getElementById('botDot').className = 'dot off';
+        document.getElementById('botLabel').textContent = 'Sem conexão';
+    }
+}
+
+// ============================================
+// Ações
+// ============================================
+async function chamarAPI(url, metodo, body) {
+    try {
+        const opts = { method: metodo, headers: { 'Content-Type': 'application/json' } };
+        if (body) opts.body = JSON.stringify(body);
+        const r = await fetch(API + url, opts);
+        return await r.json();
+    } catch (e) {
+        return { error: e.message, sucesso: false };
+    }
+}
+
+async function iniciarTudo() {
+    toast('🚀 Iniciando serviços...');
+    // Iniciar API (ela já está rodando se estamos vendo isso)
+    // Iniciar bot
+    const r = await chamarAPI('/api/bot/start', 'POST');
+    if (r.sucesso || r.status === 'already_running') {
+        toast('✅ ' + (r.mensagem || 'Serviços iniciados!'));
+    } else {
+        toast('❌ Erro ao iniciar: ' + (r.error || 'desconhecido'));
+    }
+    atualizarStatus();
+}
+
+async function reiniciarServicos() {
+    toast('🔄 Reiniciando...');
+    const r = await chamarAPI('/api/servicos/reiniciar', 'POST');
+    if (r.sucesso) {
+        toast('✅ ' + r.mensagem);
+    } else {
+        toast('❌ Erro: ' + (r.error || 'desconhecido'));
+    }
+    setTimeout(atualizarStatus, 2000);
+}
+
+async function pararServicos() {
+    toast('⏹️ Parando...');
+    const r = await chamarAPI('/api/servicos/parar', 'POST');
+    toast(r.mensagem || 'Parado');
+    atualizarStatus();
+}
+
+function abrirPlataforma() {
+    window.location.href = '/';
+}
+
+// ============================================
+// Agentes
+// ============================================
+async function executarAgente(nome) {
+    let args = [];
+    if (nome === 'carrossel') {
+        const tema = document.getElementById('input-carrossel').value.trim();
+        if (!tema) { toast('❌ Digite um tema'); return; }
+        args = [tema, 'educational', '5'];
+    } else if (nome === 'text_generator') {
+        const objetivo = document.getElementById('input-texto').value.trim();
+        if (!objetivo) { toast('❌ Digite um objetivo'); return; }
+        args = [objetivo, 'educational'];
+    } else if (nome === 'consumo') {
+        const texto = document.getElementById('input-consumo').value.trim();
+        if (!texto) { toast('❌ Cole um texto'); return; }
+        args = [texto.substring(0, 1500), 'resumo', 'Web'];
+    } else if (nome === 'radagast') {
+        args = [];
+    }
+
+    // Fechar form
+    document.querySelectorAll('.agent-form.open').forEach(f => f.classList.remove('open'));
+
+    toast('⏳ Executando ' + nome + '...');
+    mostrarOutput('⏳ ' + nome, 'Aguarde...\n\nProcessando...');
+
+    const r = await chamarAPI('/api/agentes/executar', 'POST', { agente: nome, args: args });
+
+    if (r.sucesso) {
+        mostrarOutput('✅ ' + nome, r.stdout || '✅ Concluído sem saída.');
+        toast('✅ ' + (r.mensagem || 'Concluído!'));
+    } else {
+        const erro = r.error || r.stderr || 'Erro desconhecido';
+        mostrarOutput('❌ ' + nome, erro);
+        toast('❌ ' + erro.substring(0, 80));
+    }
+}
+
+// ============================================
+// Quadro de Avisos
+// ============================================
+async function carregarTarefas() {
+    try {
+        const r = await fetch(API + '/api/quadro-avisos');
+        const data = await r.json();
+        const lista = document.getElementById('tarefas-lista');
+
+        if (!data.tarefas || data.tarefas.length === 0) {
+            lista.innerHTML = '<span style="color:var(--muted)">Nenhuma tarefa pendente 🎉</span>';
+            return;
+        }
+
+        let html = '';
+        data.tarefas.forEach(t => {
+            const status = t.status === 'concluida' ? '✅' : '⬜';
+            html += `<div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--border)">
+                <span>${status}</span>
+                <span style="flex:1">${t.descricao?.substring(0, 60) || t.descricao || '—'}</span>
+                ${t.status !== 'concluida' ? `<button class="btn btn-sm btn-success" onclick="concluirTarefa(${t.id})">✓</button>` : ''}
+            </div>`;
+        });
+        lista.innerHTML = html;
+    } catch (e) {
+        document.getElementById('tarefas-lista').innerHTML = '<span style="color:var(--danger)">Erro ao carregar</span>';
+    }
+}
+
+async function adicionarTarefa() {
+    const desc = document.getElementById('input-tarefa').value.trim();
+    if (!desc) { toast('❌ Digite uma descrição'); return; }
+    const r = await chamarAPI('/api/quadro-avisos', 'POST', { descricao: desc });
+    if (r.sucesso) {
+        document.getElementById('input-tarefa').value = '';
+        toast('✅ Tarefa adicionada!');
+        carregarTarefas();
+    } else {
+        toast('❌ Erro: ' + (r.error || 'desconhecido'));
+    }
+}
+
+async function concluirTarefa(id) {
+    const r = await chamarAPI('/api/quadro-avisos/' + id + '/concluir', 'POST');
+    if (r.sucesso) {
+        toast('✅ Tarefa concluída!');
+        carregarTarefas();
+    } else {
+        toast('❌ Erro: ' + (r.error || 'desconhecido'));
+    }
+}
+
+// ============================================
+// Init
+// ============================================
+atualizarStatus();
+carregarTarefas();
+setInterval(atualizarStatus, 15000);
+
+// Register service worker
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js');
+}
+</script>
+</body>
+</html>

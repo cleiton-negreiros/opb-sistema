@@ -11,11 +11,13 @@ _Estudar 5 concorrentes diretos ou indiretos no seu nicho:_
 
 | # | Concorrente | O que fazem bem | O que fazem mal | O que posso copiar | O que devo evitar |
 |---|------------|-----------------|----------------|-------------------|------------------|
-| 1 |            |                 |                |                   |                  |
-| 2 |            |                 |                |                   |                  |
-| 3 |            |                 |                |                   |                  |
-| 4 |            |                 |                |                   |                  |
-| 5 |            |                 |                |                   |                  |
+| 1 | **Mirna Borges** (@economirna) — YouTube 1.1M | Escala gigante, tom acessível, base bíblica sólida, produção profissional | Foco evangélico (não alcança católicos), conteúdo genérico demais, personalidade única (difícil replicar) | Linguagem simples para explicar finanças com fé | Virar "cópia evangélica" — manter identidade católica |
+| 2 | **João Oliveira** (@euescolhimudar_) — Finanças para Cristãos | Mentor com livro na YouVersion, conteúdo consistente, comunidade engajada | Foco masculino, abordagem mais séria, pouco visual | Formato de mentoria, presença em múltiplas plataformas | Tom pesado ou moralista |
+| 3 | **Audrey Barneche** (@audreybarneche) — Educ. Financeira Cristã | Pastora + assessora de investimentos, autoridade dupla, site profissional | Conteúdo disperso entre finanças e fé, falta nicho específico | Combinar fé + conhecimento técnico de investimentos | Ser genérica — focar num público só |
+| 4 | **GPS Financeiro** (gpsfinanceiro.com) — Ana Sofia Bessa | Conteúdo estruturado, abordagem bíblica, boa presença digital | Concorrente indireto (Portugal), menos relevância no Brasil | Estrutura de conteúdo por módulos/temas | Cópia direta de layout/formato |
+| 5 | **Thiago Mohallem** (@financasdoreino) — Finanças do Reino | Foco explícito em "Reino de Deus", conteúdo devocional financeiro | Baixo engajamento, produção irregular | Integrar teologia + finanças de forma prática | Ser devocional demais sem entregar utilidade |
+
+> **Observação:** A maioria dos concorrentes no nicho "finanças cristãs" no Brasil é evangélica. O diferencial católico com base na Doutrina Social da Igreja é um espaço vazio.
 
 ---
 
@@ -25,11 +27,11 @@ _O que eu NÃO quero fazer igual a eles:_
 
 | # | Concorrente | O que não quero copiar | Por quê |
 |---|------------|------------------------|---------|
-| 1 |            |                        |         |
-| 2 |            |                        |         |
-| 3 |            |                        |         |
-| 4 |            |                        |         |
-| 5 |            |                        |         |
+| 1 | Mirna Borges | Foco só em dinheiro como bênção individual, teologia da prosperidade disfarçada | DSI ensina que dinheiro deve servir ao bem comum, não é sinal de bênção divina |
+| 2 | João Oliveira | Tom sério e pesado, conteúdo só para homens | Paz na Conta é leve, para casais e famílias |
+| 3 | Audrey Barneche | Ser pastora + assessora — confunde autoridade espiritual com consultoria financeira | Queremos separar: fé dá os **valores**, finanças dá as **ferramentas** |
+| 4 | Concorrentes evangélicos em geral | Ignorar a Doutrina Social da Igreja, documentos do Vaticano | DSI é o grande diferencial católico — Rerum Novarum, Centesimus Annus, Oeconomicae et pecuniariae |
+| 5 | Thiago Mohallem | Conteúdo devocional sem aplicação prática | Toda dica financeira precisa ser acionável no dia seguinte |
 
 ---
 
@@ -37,15 +39,15 @@ _O que eu NÃO quero fazer igual a eles:_
 
 _O que eu acredito que ninguém mais está dizendo:_
 
-_______________
+A pobreza material não é virtude — e a riqueza também não é sinal de bênção. O dinheiro é um instrumento que Deus nos dá para servir à família, à comunidade e ao Reino. Você pode (e deve) organizar suas finanças com excelência, sem perder a alma.
 
 _Por que eu acredito nisso:_
 
-_______________
+Porque a Doutrina Social da Igreja ensina que o trabalho dignifica, a poupança é prudência, o investimento éético deve gerar bem comum — e o desperdício, a usura e a ganância são pecados sociais. A mensagem católica sobre dinheiro é mais equilibrada que a teologia da prosperidade evangélica e mais espiritual que o "seja rico" secular.
 
 _Como isso se diferencia do que já existe:_
 
-_______________
+Concorrentes evangélicos pregam "deus quer te ver rico". Concorrentes seculares pregam "independência financeira a qualquer custo". Nós pregamos: **paz nas contas para servir melhor a Deus e aos outros**. É um meio-termo que só o catolicismo com base na DSI oferece.
 
 ---
 
@@ -54,16 +56,16 @@ _______________
 > **Template:** "Eu [ação] + [público] + [resultado], mesmo que [obstáculo]."
 
 ### Versão 1:
-"Eu _______________"
+"Eu ajudo católicos endividados a organizar as finanças com base no Evangelho e na Doutrina Social da Igreja, mesmo que hoje a conta não feche."
 
 ### Versão 2:
-"Eu _______________"
+"Eu mostro que fé e dinheiro podem (e devem) andar juntos — sem culpa, sem prosperidade falsa, com organização real."
 
 ### Versão 3:
-"Eu _______________"
+"Eu ensino casais católicos a colocar paz nas contas e propósito no bolso, mesmo começando do zero."
 
 ### Versão final escolhida:
-> "**_______________**"
+> "**Ajudamos católicos a organizar as finanças com fé, sem culpa e sem prosperidade falsa — porque dinheiro bem administrado serve a Deus e ao próximo.**"
 
 ---
 
@@ -71,9 +73,9 @@ _______________
 
 | Pilar | Descrição | Como aparece no conteúdo |
 |-------|-----------|--------------------------|
-| 1     |           |                          |
-| 2     |           |                          |
-| 3     |           |                          |
+| 1. Fé nas Finanças | Toda decisão financeira tem uma dimensão moral e espiritual. A DSI é o guia. | Posts sobre usura, juros, dízimo, oferta, consumo consciente, vocação do trabalho |
+| 2. Organização Real | Métodos práticos e acionáveis para sair do vermelho, criar reserva e investir sem susto | Planilhas, desafios de 30 dias, rotinas de orçamento, dicas de corte de gastos |
+| 3. Paz é o Norte | O objetivo não é ficar rico — é ter tranquilidade para viver bem e servir melhor | Conteúdo sobre equilíbrio, propósito, testemunhos, reflexões sobre dinheiro e felicidade |
 
 ---
 
@@ -105,15 +107,15 @@ _Onde aplicar meu posicionamento:_
 
 ## ✅ Próximos Passos
 
-- [ ] Preencher análise de 5 concorrentes
-- [ ] Definir desvios e diferenciais
-- [ ] Escrever 3 versões da frase de posicionamento
-- [ ] Escolher versão final
-- [ ] Enviar para Agente de Consumo: `python main.py "<conteúdo>" completo "Meu Posicionamento"`
-- [ ] Atualizar `quem-sou.md` com posicionamento final
-- [ ] Gerar carrossel: `python ../carrossel/main.py "Meu posicionamento no mercado"`
+- [x] Preencher análise de 5 concorrentes
+- [x] Definir desvios e diferenciais
+- [x] Escrever 3 versões da frase de posicionamento
+- [x] Escolher versão final
+- [x] Enviar para Agente de Consumo: `python main.py "<conteúdo>" completo "Meu Posicionamento"`
+- [x] Atualizar `quem-sou.md` com posicionamento final
+- [x] Gerar carrossel: `python ../carrossel/main.py "Meu posicionamento no mercado"`
 
 ---
 
 _Template criado para o OPB Sistema_
-_Last updated: 2026-05-14_
+_Last updated: 2026-05-20_

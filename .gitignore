@@ -25,8 +25,19 @@ Thumbs.db
 # Logs
 *.log
 
-# Temp
+# Temp / Backup
 *.tmp
 *.bak
+* - new.*
+
+# Generated content (acervo)
+acervo/
+
+# Context brain (generated)
+context-brain/
+
+# Agent runtime state
+agents/radagast/.env
+agents/radagast/.state.json
 
 .vercel

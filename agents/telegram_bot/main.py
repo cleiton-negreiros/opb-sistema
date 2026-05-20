@@ -1,7 +1,9 @@
 import os
+import sys
 import json
 import logging
 import subprocess
+import socket
 from datetime import datetime
 from pathlib import Path
 from telegram import Update
@@ -76,45 +78,84 @@ def execute_command(cmd: str) -> str:
     except Exception as e:
         return f"Erro: {str(e)[:200]}"
 
+def run_agent(agent_path: str, args: list = None, timeout: int = 60) -> str:
+    """Executa um agente Python e retorna stdout."""
+    full_path = PROJECT_PATH / agent_path
+    if not full_path.exists():
+        return f"❌ Agente não encontrado: {agent_path}"
+    try:
+        cmd = [sys.executable, str(full_path)] + (args or [])
+        result = subprocess.run(cmd, capture_output=True, text=True, timeout=timeout, cwd=str(PROJECT_PATH))
+        if result.returncode == 0:
+            return result.stdout[:2000] if result.stdout else "✅ Concluído (sem output)"
+        else:
+            return f"❌ Erro: {(result.stderr or result.stdout or 'desconhecido')[:1000]}"
+    except subprocess.TimeoutExpired:
+        return f"⏱️ Timeout ({timeout}s). Tente manualmente."
+    except Exception as e:
+        return f"❌ Erro: {str(e)[:200]}"
+
 async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
-        "🎯 *NegreirosBot - OPB Sistema*\n\n"
-        "Olá! Sou seu assistant daily driver.\n\n"
+        "🎯 *NegreirosBot — Paz na Conta*\n\n"
+        "Olá! Seu assistente do OPB Sistema.\n\n"
         "🧠 *CÉREBRO:*\n"
-        "• /cerebro - Resumo completo\n"
-        "• /iniciar - Rotina matinal\n"
-        "• /regras - Quem sou\n"
-        "• /projetos - Projetos ativos\n\n"
+        "• /cerebro — Resumo completo\n"
+        "• /regras — Quem sou\n"
+        "• /projetos — Projetos ativos\n"
+        "• /posicionamento — Posicionamento atual\n\n"
         "💡 *IDEIAS:*\n"
-        "• Envie ideia diretamente\n"
-        "• /ideia [texto]\n"
-        "• /ideias - Ver ideias\n"
-        "• 🎤 Envie áudio (gravação) → salva nota de voz\n\n"
-        "🎬 *TRANSCRIÇÃO:*\n"
-        "• /transcrever - Como transcrever YouTube\n\n"
-        "🤖 *AGENTES:*\n"
-        "• /status - Status completo\n"
-        "• /agents - Ver agentes\n\n"
-        "🔗 *LINKS:*\n"
-        "• /hub - Hub produtividade\n"
-        "• /obsidian - Obsidian\n\n"
-        "⚠️ /executar - Executar (PC)",
+        "• /ideia [texto] — Cadastrar ideia\n"
+        "• /ideias — Ver ideias\n"
+        "• Envie texto direto → salva como ideia\n\n"
+        "🎠 *AGENTES:*\n"
+        "• /carrossel [tema] — Gerar carrossel\n"
+        "• /texto [objetivo] — Gerar post Instagram\n"
+        "• /capavideo [tema] — Ideias de capa\n"
+        "• /consumo [texto] — Processar conteúdo\n"
+        "• /radagast — Rodar curadoria\n\n"
+        "📋 *TAREFAS:*\n"
+        "• /tarefas — Ver pendências\n"
+        "• /tarefa [desc] — Nova tarefa\n"
+        "• /concluir [id] — Concluir tarefa\n\n"
+        "⚙️ /status — Status do sistema\n"
+        "🌐 /iniciar — Iniciar serviços\n"
+        "📺 /transcrever — Transcrição YouTube\n"
+        "🆔 /meuid — Seu Chat ID",
         parse_mode="Markdown"
     )
 
 async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
-        "📋 *Todos os comandos:*\n\n"
-        "*Ideias:*\n"
-        "/ideia [texto] - Cadastrar ideia\n"
-        "/listar - Ver últimas ideias\n\n"
-        "*Sistema:*\n"
-        "/status - Ver status\n"
-        "/agents - Listar agentes\n"
-        "/hub - Ver hub\n"
-        "/executar [cmd] - Executar comando\n"
-        "/projetos - Ver projetos ativos\n"
-        "/regras - Ver regras do cérebro",
+        "📖 *Ajuda — NegreirosBot*\n\n"
+        "🧠 *CÉREBRO*\n"
+        "• /cerebro — Status do diretório cérebro\n"
+        "• /regras — Exibe quem-sou.md\n"
+        "• /projetos — Lista projetos\n"
+        "• /posicionamento — Posicionamento atual\n\n"
+        "🎠 *AGENTES DE CONTEÚDO*\n"
+        "• /carrossel [tema] — Gera carrossel Instagram\n"
+        "• /texto [objetivo] — Gera post para Instagram\n"
+        "• /capavideo [tema] [qtd] — Ideias de capa\n"
+        "• /consumo [texto] — Processa conteúdo\n"
+        "• /radagast — Executa curadoria\n\n"
+        "📋 *QUADRO DE AVISOS*\n"
+        "• /tarefas — Lista pendências\n"
+        "• /tarefa [desc] — Adiciona tarefa\n"
+        "• /concluir [id] — Conclui tarefa\n\n"
+        "💡 *IDEIAS*\n"
+        "• /ideia [texto] — Nova ideia\n"
+        "• /ideias — Listar ideias\n"
+        "• Texto/áudio direto → processa automaticamente\n\n"
+        "⚙️ *SISTEMA*\n"
+        "• /status — Status completo\n"
+        "• /iniciar — Inicia API + servidor\n"
+        "• /agents — Listar agentes\n"
+        "• /meuid — Seu Chat ID\n"
+        "• /transcrever — Transcrição YouTube\n"
+        "• /hub — Hub produtividade\n"
+        "• /obsidian — Obsidian\n"
+        "• /executar [cmd] — Executa comando no PC",
         parse_mode="Markdown"
     )
 
@@ -381,59 +422,211 @@ async def obsidian_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     )
 
 async def iniciar_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    """Executa rotina matinal"""
-    await update.message.reply_text("🌅 *Carregando Rotina Matinal...*", parse_mode="Markdown")
-    
-    # Carregar contexto do cérebro
-    quem_sou = ""
-    quem_sou_path = PROJECT_PATH / "negocio" / "governanca" / "regras" / "quem-sou.md"
-    if quem_sou_path.exists():
-        lines = quem_sou_path.read_text(encoding="utf-8").split("\n")
-        for line in lines:
-            if "**Nome**:" in line:
-                quem_sou = line.split("**Nome**:")[-1].strip()
-    
-    # Projetos ativos
-    projetos = ""
-    projetos_path = PROJECT_PATH / "negocio" / "projetos" / "ativos.md"
-    if projetos_path.exists():
-        content = projetos_path.read_text(encoding="utf-8")
-        for line in content.split("\n"):
-            if line.strip().startswith("- **") and "**—" in line:
-                projetos += line.strip() + "\n"
-    
-    # Contadores
-    agentes = len([d for d in (PROJECT_PATH / "agents").iterdir() if d.is_dir()])
-    ideias = len(list((ACERVO_PATH).glob("*.md"))) if ACERVO_PATH.exists() else 0
-    transcricoes = len(list((PROJECT_PATH / "acervo" / "transcricoes").glob("*.md"))) if (PROJECT_PATH / "acervo" / "transcricoes").exists() else 0
-    
-    msg = f"""🌅 *Bom Dia! - OPB Sistema*
+    """Executa rotina matinal — sobe API + Bot + plataforma + Radagast"""
+    await update.message.reply_text("🌅 *Iniciando OPB Sistema...*", parse_mode="Markdown")
 
-🧠 *Contexto:*
-• Nome: {quem_sou or 'Nao definido'}
-• Acesse `/regras` para ver perfil completo
+    resultados = []
+    inicio = datetime.now()
 
-📋 *Projetos:*
-{projetos or 'Nenhum projeto ativo'}
+    # 1. Morning routine
+    try:
+        r = subprocess.run(
+            [sys.executable, str(PROJECT_PATH / "morning_routine.py")],
+            capture_output=True, text=True, timeout=30,
+            cwd=str(PROJECT_PATH)
+        )
+        resultados.append(f"🧠 Contexto: {'✅' if r.returncode == 0 else '❌'}")
+    except Exception as e:
+        resultados.append(f"🧠 Contexto: ❌ {str(e)[:60]}")
 
-📊 *Estatisticas:*
-• Agentes: {agentes}
-• Ideias: {ideias}
-• Transcricoes: {transcricoes}
+    # 2. API server (se não estiver rodando)
+    api_rodando = False
+    try:
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        s.settimeout(2)
+        api_rodando = s.connect_ex(("127.0.0.1", 5000)) == 0
+        s.close()
+    except:
+        pass
 
-🔗 *Links:*
+    if not api_rodando:
+        try:
+            subprocess.Popen(
+                [sys.executable, str(PROJECT_PATH / "api_server.py")],
+                cwd=str(PROJECT_PATH),
+                stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+                creationflags=subprocess.CREATE_NO_WINDOW if sys.platform == 'win32' else 0
+            )
+            resultados.append("🌐 API Server: ✅ iniciado")
+        except Exception as e:
+            resultados.append(f"🌐 API Server: ❌ {str(e)[:60]}")
+    else:
+        resultados.append("🌐 API Server: ✅ já rodando")
+
+    # 3. Telegram Bot (self-check)
+    resultados.append("🤖 Telegram Bot: ✅ ativo (você está falando comigo)")
+
+    # 4. Radagast
+    try:
+        r = subprocess.run(
+            [sys.executable, str(PROJECT_PATH / "agents" / "radagast" / "radagast.py")],
+            capture_output=True, text=True, timeout=120,
+            cwd=str(PROJECT_PATH / "agents" / "radagast")
+        )
+        if r.returncode == 0:
+            resultados.append(f"📡 Radagast: ✅ executado")
+            # Envia resumo do Radagast
+            if r.stdout:
+                lines = [l for l in r.stdout.split('\n') if l.strip()]
+                resume = '\n'.join(lines[-5:])
+                await update.message.reply_text(
+                    f"📡 *Radagast - Resumo*\n```\n{resume[:1500]}\n```",
+                    parse_mode="Markdown"
+                )
+        else:
+            resultados.append(f"📡 Radagast: ⚠️ erro (veja logs)")
+    except Exception as e:
+        resultados.append(f"📡 Radagast: ❌ {str(e)[:60]}")
+
+    tempo = (datetime.now() - inicio).total_seconds()
+
+    msg = f"""🌅 *Sistema Iniciado!* ({tempo:.0f}s)
+
+{chr(10).join(resultados)}
+
+📌 *Acesse:*
+• Plataforma: http://localhost:5000
 • Hub: https://opb-sistema.vercel.app/hub.html
-• GitHub: https://github.com/cleiton-negreiros/opb-sistema
 
-💡 *Acoes Rapidas:*
-/ideia [texto] - Nova ideia
-/transcrever - Como transcrever video
-/agents - Ver todos os agentes
+💡 *Comandos:*
 /status - Status completo
+/agents - Listar agentes
+/radagast - Rodar curadoria agora
 
-*Tenha um otimo dia!*"""
-    
+*Bom trabalho!* 🚀"""
+
     await update.message.reply_text(msg, parse_mode="Markdown")
+
+async def radagast_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Roda Radagast e envia resultado."""
+    await update.message.reply_text("📡 *Executando Radagast...* (pode levar 2-3 min)", parse_mode="Markdown")
+    try:
+        r = subprocess.run(
+            [sys.executable, str(PROJECT_PATH / "agents" / "radagast" / "radagast.py")],
+            capture_output=True, text=True, timeout=180,
+            cwd=str(PROJECT_PATH / "agents" / "radagast")
+        )
+        if r.returncode == 0:
+            out = r.stdout[-2000:] if r.stdout else "✅ Curadoria concluida (sem output)"
+            await update.message.reply_text(
+                f"📡 *Radagast - Concluido*\n```\n{out}\n```",
+                parse_mode="Markdown"
+            )
+        else:
+            err = (r.stderr or r.stdout or "Erro desconhecido")[:1500]
+            await update.message.reply_text(
+                f"📡 *Radagast - Erro*\n```\n{err}\n```",
+                parse_mode="Markdown"
+            )
+    except subprocess.TimeoutExpired:
+        await update.message.reply_text("⏱️ Radagast excedeu 3 min. Tente executar manualmente:\n`python agents/radagast/radagast.py`", parse_mode="Markdown")
+    except Exception as e:
+        await update.message.reply_text(f"❌ Erro: {str(e)[:200]}")
+
+async def meuid_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Mostra o chat_id do usuário."""
+    cid = update.effective_chat.id
+    await update.message.reply_text(
+        f"🆔 Seu Chat ID: `{cid}`\n\n"
+        f"Use este ID para configurar Radagast:\n"
+        f"1. Abra `agents/radagast/.env`\n"
+        f"2. Adicione: `RADAGAST_CHAT_ID={cid}`\n"
+        f"3. Adicione: `RADAGAST_BOT_TOKEN={TOKEN}`",
+        parse_mode="Markdown"
+    )
+
+# ============================================
+# AGENTES — Comandos
+# ============================================
+
+async def carrossel_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Gera carrossel via agente Carrossel."""
+    if not context.args:
+        await update.message.reply_text("🎠 *Carrossel*\n\nUso: `/carrossel [tema]`\nEx: `/carrossel Dízimo e organização financeira`", parse_mode="Markdown")
+        return
+    tema = " ".join(context.args)
+    await update.message.reply_text(f"🎠 Gerando carrossel: `{tema[:60]}...`", parse_mode="Markdown")
+    out = run_agent("agents/carrossel/main.py", [tema, "educational", "5"], timeout=60)
+    await update.message.reply_text(f"🎠 *Carrossel*\n```\n{out[:2000]}\n```", parse_mode="Markdown")
+
+async def consumo_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Processa conteúdo via Agente Consumo."""
+    if not context.args:
+        await update.message.reply_text("📖 *Consumo*\n\nUso: `/consumo [texto]`\nProcessa texto e salva no acervo.", parse_mode="Markdown")
+        return
+    texto = " ".join(context.args)
+    await update.message.reply_text(f"📖 Processando conteúdo... ({len(texto)} caracteres)", parse_mode="Markdown")
+    out = run_agent("agents/consumo/main.py", [f"'{texto[:1500]}'", "resumo", "Telegram"], timeout=60)
+    await update.message.reply_text(f"📖 *Consumo*\n```\n{out[:1500]}\n```", parse_mode="Markdown")
+
+async def textogen_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Gera post para Instagram via Text Generator."""
+    if not context.args:
+        await update.message.reply_text("✍️ *Text Generator*\n\nUso: `/texto [objetivo]`\nEx: `/texto Como economizar no supermercado`", parse_mode="Markdown")
+        return
+    objetivo = " ".join(context.args)
+    await update.message.reply_text(f"✍️ Gerando texto...", parse_mode="Markdown")
+    out = run_agent("agents/text_generator/main.py", [objetivo, "educational"], timeout=60)
+    await update.message.reply_text(f"✍️ *Texto Gerado*\n```\n{out[:2000]}\n```", parse_mode="Markdown")
+
+async def capavideo_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Gera ideias de capa via Capa Vídeo."""
+    if not context.args:
+        await update.message.reply_text("📸 *Capa Vídeo*\n\nUso: `/capavideo [tema] [qtd]`\nEx: `/capavideo Finanças católicas 5`", parse_mode="Markdown")
+        return
+    args = context.args
+    tema = " ".join(args[:-1]) if len(args) > 1 else args[0]
+    qtd = args[-1] if len(args) > 1 and args[-1].isdigit() else "5"
+    await update.message.reply_text(f"📸 Gerando capas para: `{tema[:60]}`...", parse_mode="Markdown")
+    out = run_agent("agents/capa_video/main.py", [tema, qtd], timeout=60)
+    await update.message.reply_text(f"📸 *Capas*\n```\n{out[:2000]}\n```", parse_mode="Markdown")
+
+async def posicionamento_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Mostra o posicionamento atual."""
+    path = PROJECT_PATH / "negocio" / "governanca" / "quem-sou.md"
+    if not path.exists():
+        await update.message.reply_text("❌ Arquivo de posicionamento não encontrado.")
+        return
+    content = path.read_text(encoding="utf-8")
+    # Extrair só seção de posicionamento
+    if "## Posicionamento" in content:
+        pos = content.split("## Posicionamento")[1].split("##")[0].strip()
+        await update.message.reply_text(f"📍 *Posicionamento*\n\n{pos[:2000]}", parse_mode="Markdown")
+    else:
+        await update.message.reply_text("Seção de posicionamento não encontrada em quem-sou.md")
+
+async def tarefas_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Lista tarefas do Quadro de Avisos."""
+    out = run_agent("agents/quadro-de-avisos/main.py", ["listar"], timeout=15)
+    await update.message.reply_text(f"📋 *Quadro de Avisos*\n```\n{out[:2000]}\n```", parse_mode="Markdown")
+
+async def tarefa_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Adiciona tarefa ao Quadro de Avisos."""
+    if not context.args:
+        await update.message.reply_text("📋 *Nova Tarefa*\n\nUso: `/tarefa [descrição]`\nEx: `/tarefa Produzir carrossel sobre dízimo`\n\nPara definir agente/prioridade:\n`/tarefa [desc] --agente carrossel --prioridade alta`", parse_mode="Markdown")
+        return
+    texto = " ".join(context.args)
+    out = run_agent("agents/quadro-de-avisos/main.py", ["adicionar", texto], timeout=15)
+    await update.message.reply_text(f"📋 {out}", parse_mode="Markdown")
+
+async def concluir_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Conclui tarefa do Quadro de Avisos."""
+    if not context.args or not context.args[0].isdigit():
+        await update.message.reply_text("📋 *Concluir Tarefa*\n\nUso: `/concluir [id]`\nVeja os IDs com /tarefas", parse_mode="Markdown")
+        return
+    tid = context.args[0]
+    out = run_agent("agents/quadro-de-avisos/main.py", ["concluir", tid], timeout=15)
+    await update.message.reply_text(f"📋 {out}", parse_mode="Markdown")
 
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     texto = update.message.text
@@ -471,10 +664,20 @@ def main():
     app.add_handler(CommandHandler("projetos", projetos_command))
     app.add_handler(CommandHandler("regras", regras_command))
     app.add_handler(CommandHandler("iniciar", iniciar_command))
+    app.add_handler(CommandHandler("radagast", radagast_command))
+    app.add_handler(CommandHandler("meuid", meuid_command))
     app.add_handler(CommandHandler("transcrever", transcrever_help_command))
     app.add_handler(CommandHandler("obsidian", obsidian_command))
     app.add_handler(CommandHandler("cerebro", cerebro_command))
     app.add_handler(CommandHandler("ideias", ideias_command))
+    app.add_handler(CommandHandler("carrossel", carrossel_command))
+    app.add_handler(CommandHandler("consumo", consumo_command))
+    app.add_handler(CommandHandler("texto", textogen_command))
+    app.add_handler(CommandHandler("capavideo", capavideo_command))
+    app.add_handler(CommandHandler("posicionamento", posicionamento_command))
+    app.add_handler(CommandHandler("tarefas", tarefas_command))
+    app.add_handler(CommandHandler("tarefa", tarefa_command))
+    app.add_handler(CommandHandler("concluir", concluir_command))
     app.add_handler(MessageHandler(filters.VOICE | filters.AUDIO, voice_command))
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
     

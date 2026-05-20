@@ -345,12 +345,16 @@ def api_capa_video():
 def api_carrossel():
      """Gera carrossel para Instagram."""
      data = request.get_json()
-     tema = data.get('tema', '')
+     tema = data.get('tema', data.get('texto', ''))
      tipo = data.get('tipo', 'educational')
      slides = data.get('slides', None)
 
      if not tema:
-         return jsonify({"error": "Tema não informado"}), 400
+         return jsonify({"error": "Tema ou texto não informado"}), 400
+
+     # Trunca texto longo para usar como tema
+     if len(tema) > 60:
+         tema = tema[:57] + '...'
 
      args = [tema, tipo]
      if slides:
@@ -358,12 +362,92 @@ def api_carrossel():
 
      result = run_agent("agents/carrossel/main.py", args)
 
+     # Pega o arquivo gerado mais recente
+     carrossel_path = PROJECT_PATH / "acervo" / "carrossel"
+     conteudo = ""
+     filename = ""
+     if result.get("success", False) and carrossel_path.exists():
+         files = sorted(carrossel_path.glob("*.md"), key=lambda f: f.stat().st_mtime, reverse=True)
+         files = [f for f in files if f.name != "index.md"]
+         if files:
+             filename = files[0].name
+             conteudo = files[0].read_text(encoding='utf-8')
+
      return jsonify({
          "sucesso": result.get("success", False),
          "saida": result.get("stdout", ""),
+         "conteudo": conteudo,
+         "filename": filename,
          "erro": result.get("stderr", result.get("error", "")),
          "mensagem": f"Carrossel gerado: {tema}" if result.get("success", False) else f"Erro ao gerar carrossel: {result.get('error', result.get('stderr', 'Erro desconhecido'))}"
      })
+
+@app.route('/api/carrossel/lista', methods=['GET'])
+def api_carrossel_lista():
+    """Lista todos os carrosséis gerados."""
+    carrossel_path = PROJECT_PATH / "acervo" / "carrossel"
+    if not carrossel_path.exists():
+        return jsonify({"carrosseis": []})
+
+    files = sorted(carrossel_path.glob("*.md"), key=lambda f: f.stat().st_mtime, reverse=True)
+    files = [f for f in files if f.name != "index.md"]
+
+    lista = []
+    for f in files:
+        content = f.read_text(encoding='utf-8')
+        titulo = f.stem.replace('-', ' ').title()
+        slides = 0
+        if content.startswith('---'):
+            parts = content.split('---', 2)
+            if len(parts) >= 3:
+                for line in parts[1].split('\n'):
+                    line = line.strip()
+                    if line.startswith('name:') or line.startswith('titulo:'):
+                        titulo = line.split(':', 1)[-1].strip().strip('"').strip("'")
+                    if line.startswith('slides:'):
+                        try: slides = int(line.split(':', 1)[-1].strip())
+                        except: pass
+
+        lista.append({
+            "filename": f.name,
+            "titulo": titulo,
+            "slides": slides,
+            "data": datetime.fromtimestamp(f.stat().st_mtime).strftime("%Y-%m-%d %H:%M"),
+            "tamanho": len(content)
+        })
+
+    return jsonify({"carrosseis": lista})
+
+@app.route('/api/carrossel/<filename>', methods=['GET'])
+def api_carrossel_get(filename):
+    """Retorna o conteúdo de um carrossel."""
+    filepath = PROJECT_PATH / "acervo" / "carrossel" / filename
+    if not filepath.exists():
+        return jsonify({"error": "Carrossel não encontrado"}), 404
+    content = filepath.read_text(encoding='utf-8')
+    return jsonify({"filename": filename, "conteudo": content})
+
+@app.route('/api/carrossel/<filename>', methods=['PUT'])
+def api_carrossel_update(filename):
+    """Atualiza um carrossel existente."""
+    filepath = PROJECT_PATH / "acervo" / "carrossel" / filename
+    if not filepath.exists():
+        return jsonify({"error": "Carrossel não encontrado"}), 404
+    data = request.get_json()
+    novo_conteudo = data.get('conteudo', '')
+    if not novo_conteudo:
+        return jsonify({"error": "Conteúdo não informado"}), 400
+    filepath.write_text(novo_conteudo, encoding='utf-8')
+    return jsonify({"sucesso": True, "mensagem": "Carrossel atualizado"})
+
+@app.route('/api/carrossel/<filename>', methods=['DELETE'])
+def api_carrossel_delete(filename):
+    """Deleta um carrossel."""
+    filepath = PROJECT_PATH / "acervo" / "carrossel" / filename
+    if not filepath.exists():
+        return jsonify({"error": "Carrossel não encontrado"}), 404
+    filepath.unlink()
+    return jsonify({"sucesso": True, "mensagem": "Carrossel deletado"})
 
 
 # ============================================
@@ -732,13 +816,147 @@ def api_start():
 
 
 # ============================================
+# API — PAINEL DE CONTROLE (PWA)
+# ============================================
+
+SERVICES = {
+    "api": {"pid": None, "name": "API Server"},
+    "bot": {"pid": None, "name": "Telegram Bot"}
+}
+
+@app.route('/api/servicos/status', methods=['GET'])
+def api_servicos_status():
+    """Status dos serviços do OPB."""
+    api_ok = True
+
+    bot_pid = None
+    try:
+        if sys.platform == 'win32':
+            r = subprocess.run(['tasklist', '/FI', 'imagename eq python.exe'],
+                               capture_output=True, text=True, encoding='utf-8', errors='replace')
+            for line in r.stdout.split('\n'):
+                if 'telegram_bot' in line.lower() or ('main.py' in line.lower() and 'telegram' in str(PROJECT_PATH)):
+                    bot_pid = line.strip()
+        else:
+            r = subprocess.run(['pgrep', '-f', 'telegram_bot/main.py'],
+                               capture_output=True, text=True)
+            bot_pid = r.stdout.strip() if r.returncode == 0 else None
+    except:
+        pass
+
+    return jsonify({
+        "api": {"rodando": api_ok, "porta": PORT},
+        "bot": {"rodando": bool(bot_pid), "pid": bot_pid or None},
+        "projeto": str(PROJECT_PATH),
+        "timestamp": datetime.now().isoformat()
+    })
+
+
+@app.route('/api/servicos/parar', methods=['POST'])
+def api_servicos_parar():
+    """Para serviços do OPB."""
+    parados = []
+
+    try:
+        if sys.platform == 'win32':
+            r = subprocess.run(['tasklist', '/FI', 'imagename eq python.exe'],
+                               capture_output=True, text=True, encoding='utf-8', errors='replace')
+            for line in r.stdout.split('\n'):
+                if 'telegram_bot' in line.lower():
+                    pid = line.split()[1].strip() if len(line.split()) > 1 else None
+                    if pid:
+                        subprocess.run(['taskkill', '/F', '/PID', pid],
+                                       capture_output=True, text=True)
+                        parados.append("bot")
+        else:
+            r = subprocess.run(['pkill', '-f', 'telegram_bot/main.py'],
+                               capture_output=True, text=True)
+            if r.returncode == 0:
+                parados.append("bot")
+    except:
+        pass
+
+    return jsonify({
+        "sucesso": True,
+        "parados": parados,
+        "mensagem": "Serviços parados!" if parados else "Nenhum serviço rodando."
+    })
+
+
+@app.route('/api/agentes/executar', methods=['POST'])
+def api_agentes_executar():
+    """Executa um agente pelo nome."""
+    data = request.get_json()
+    agente = data.get('agente', '')
+    args = data.get('args', [])
+
+    AGENTES = {
+        "radagast": "agents/radagast/radagast.py",
+        "carrossel": "agents/carrossel/main.py",
+        "text_generator": "agents/text_generator/main.py",
+        "consumo": "agents/consumo/main.py",
+        "capa_video": "agents/capa_video/main.py",
+    }
+
+    if agente not in AGENTES:
+        return jsonify({"error": f"Agente '{agente}' não encontrado. Disponíveis: {list(AGENTES.keys())}", "sucesso": False}), 400
+
+    path = AGENTES[agente]
+    result = run_agent(path, args)
+
+    if "error" in result:
+        return jsonify({"error": result["error"], "sucesso": False}), result.get("code", 500)
+
+    return jsonify({
+        "sucesso": result["success"],
+        "stdout": result["stdout"][:3000] if result["stdout"] else "",
+        "stderr": result["stderr"][:1000] if result["stderr"] else "",
+        "agente": agente,
+        "mensagem": f"✅ {agente} executado com sucesso!" if result["success"] else f"❌ {agente} falhou."
+    })
+
+
+@app.route('/api/servicos/reiniciar', methods=['POST'])
+def api_servicos_reiniciar():
+    """Reinicia serviços: para bot + inicia novamente."""
+    try:
+        if sys.platform == 'win32':
+            r = subprocess.run(['tasklist', '/FI', 'imagename eq python.exe'],
+                               capture_output=True, text=True, encoding='utf-8', errors='replace')
+            for line in r.stdout.split('\n'):
+                if 'telegram_bot' in line.lower():
+                    pid = line.split()[1].strip() if len(line.split()) > 1 else None
+                    if pid:
+                        subprocess.run(['taskkill', '/F', '/PID', pid],
+                                       capture_output=True, text=True)
+        else:
+            subprocess.run(['pkill', '-f', 'telegram_bot/main.py'],
+                           capture_output=True, text=True)
+    except:
+        pass
+
+    import time
+    time.sleep(1)
+    try:
+        p = subprocess.Popen(
+            [sys.executable, str(PROJECT_PATH / "agents" / "telegram_bot" / "main.py")],
+            cwd=str(PROJECT_PATH),
+            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+            creationflags=subprocess.CREATE_NO_WINDOW if sys.platform == 'win32' else 0
+        )
+        return jsonify({"sucesso": True, "mensagem": "🔄 Serviços reiniciados!", "bot_pid": p.pid})
+    except Exception as e:
+        return jsonify({"error": str(e), "sucesso": False}), 500
+
+
+# ============================================
 # SERVIR ARQUIVOS ESTÁTICOS
 # ============================================
 
 @app.route('/<path:path>', methods=['GET'])
 def serve_static(path):
     """Serve arquivos estáticos do frontend."""
-    static_files = ['plataforma.html', 'favicon.ico', 'manifest.json']
+    static_files = ['plataforma.html', 'dashboard.html', 'favicon.ico', 'manifest.json', 'sw.js']
     if path in static_files or path.endswith(('.js', '.css', '.json', '.png', '.jpg', '.svg', '.ico')):
         filepath = FRONTEND_PATH / path
         if filepath.exists():
@@ -814,6 +1032,68 @@ def api_inspiracoes():
         return jsonify(data)
     except Exception as e:
         return jsonify({"profiles": [], "erro": str(e)})
+
+
+# ============================================
+# API — QUADRO DE AVISOS
+# ============================================
+
+QUADRO_PATH = PROJECT_PATH / "agents" / "quadro-de-avisos"
+
+@app.route('/api/quadro-avisos', methods=['GET'])
+def api_quadro_avisos_listar():
+    """Lista tarefas do Quadro de Avisos."""
+    agente = request.args.get('agente')
+    try:
+        sys.path.insert(0, str(QUADRO_PATH))
+        from main import listar as q_listar
+        tarefas = q_listar(agente)
+        pendentes = len([t for t in tarefas if t["status"] == "pendente"])
+        return jsonify({"tarefas": tarefas, "pendentes": pendentes})
+    except Exception as e:
+        return jsonify({"error": str(e), "tarefas": []}), 500
+
+@app.route('/api/quadro-avisos', methods=['POST'])
+def api_quadro_avisos_adicionar():
+    """Adiciona tarefa ao Quadro de Avisos."""
+    data = request.get_json()
+    descricao = data.get('tarefa', data.get('descricao', ''))
+    agente = data.get('agente', 'geral')
+    prioridade = data.get('prioridade', 'media')
+    if not descricao:
+        return jsonify({"error": "Descrição da tarefa não informada"}), 400
+    try:
+        sys.path.insert(0, str(QUADRO_PATH))
+        from main import adicionar as q_adicionar
+        tarefa = q_adicionar(descricao, agente, prioridade)
+        return jsonify({"sucesso": True, "tarefa": tarefa})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/api/quadro-avisos/<int:tarefa_id>/concluir', methods=['POST'])
+def api_quadro_avisos_concluir(tarefa_id):
+    """Conclui uma tarefa."""
+    try:
+        sys.path.insert(0, str(QUADRO_PATH))
+        from main import concluir as q_concluir
+        tarefa = q_concluir(tarefa_id)
+        if tarefa:
+            return jsonify({"sucesso": True, "tarefa": tarefa})
+        return jsonify({"error": "Tarefa não encontrada"}), 404
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/api/quadro-avisos/<int:tarefa_id>', methods=['DELETE'])
+def api_quadro_avisos_excluir(tarefa_id):
+    """Exclui uma tarefa."""
+    try:
+        sys.path.insert(0, str(QUADRO_PATH))
+        from main import excluir as q_excluir
+        if q_excluir(tarefa_id):
+            return jsonify({"sucesso": True})
+        return jsonify({"error": "Tarefa não encontrada"}), 404
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 
 if __name__ == '__main__':

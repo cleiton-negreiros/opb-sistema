@@ -21,18 +21,18 @@ class LLMProvider:
 
 VISION_MODELS = ["llama3.2-vision", "llama3.2-vision:latest", "llama3.2", "llava", "llava:latest", "bakllava"]
 
+DEFAULT_MODEL = "tinyllama"
+
 class OllamaProvider(LLMProvider):
     """Ollama local LLM provider."""
     
     def __init__(self, base_url: str = "http://localhost:11434", model: str = None):
         self.base_url = base_url
-        # Try to use provided model, then check env, then fallback
-        self.model = model or os.environ.get("OLLAMA_MODEL", "phi3:mini")
+        self.model = DEFAULT_MODEL
         self.api_url = f"{base_url}/api/generate"
     
     def supports_vision(self) -> bool:
-        """Check if current model supports image input."""
-        return any(vision in self.model.lower() for vision in VISION_MODELS)
+        return False
     
     def generate(self, prompt: str, context: Optional[Dict[str, Any]] = None, images: Optional[list] = None) -> str:
         """

@@ -49,21 +49,24 @@ def load_templates():
 
 def carregar_contexto():
     """Carrega identidade e regras do cérebro"""
-    quem_sou = {}
+    sys.path.append(str(PROJECT_PATH / "utils"))
+    from profile_loader import load_profile as load_perfil
+    perfil = load_perfil()
 
-    path = PROJECT_PATH / "negocio" / "governanca" / "quem-sou.md"
-    if path.exists():
-        content = path.read_text(encoding='utf-8')
-        for line in content.split('\n'):
-            if "**Nome**:" in line:
-                quem_sou['nome'] = line.split('**Nome**:')[-1].strip()
-            if "**Cores primárias**:" in line:
-                quem_sou['cores'] = line.split('**Cores primárias**:')[-1].strip()
-            if "**Tom de Voz**:" in line:
-                tom = line.split('**Tom de Voz**:')[-1].strip()
-                quem_sou['tom'] = tom
+    ctx = {
+        "nome": perfil.get("nome", "Você"),
+        "descricao": perfil.get("descricao", ""),
+        "tom": ", ".join(perfil.get("tom_de_voz", [])),
+        "valores": perfil.get("valores", []),
+        "missao": perfil.get("missao", ""),
+        "publico": perfil.get("publico_alvo", ""),
+        "regras": perfil.get("regras_escrita", []),
+    }
 
-    return quem_sou
+    mv = perfil.get("marca_visual", {})
+    ctx["cores"] = mv.get("cores_primárias", "#FF6B6B, #4ECDC4")
+
+    return ctx
 
 
 SLIDE_TEMPLATES = {
@@ -182,45 +185,37 @@ def gerar_sugestao_visual(tipo_slide: str, tema: str, contexto: dict) -> str:
 
 
 def gerar_texto_slide(tema: str, tipo_slide: str, contexto: dict) -> str:
-    """Gera o texto de conteúdo para o slide usando LLM."""
-    try:
-        from llm_provider import generate_text
+    """Gera o texto de conteúdo para o slide usando perfil do usuário."""
+    nome = contexto.get("nome", "Eu")
+    tom = contexto.get("tom", "direto e prático")
+    publico = contexto.get("publico", "solopreneurs")
 
-        tom = contexto.get('tom', 'direto e inspirador')
-        prompt = PROMPTS_PERFIL.get(tipo_slide, PROMPTS_PERFIL["conteudo"]).format(
-            tema=tema
-        )
-        prompt += f" Tom de voz: {tom}. Público: solopreneurs."
-
-        return generate_text(prompt).strip()
-    except Exception:
-        # Fallback sem LLM
-        fallbacks = {
-            "capa": f"🔥 {tema.upper()}\n\nTransformação começa aqui",
-            "problema": "❌ Você sente dificuldade com isso?\n\nMuitos empreendedores enfrentam esse desafio...",
-            "causa": "🔍 A causa raiz é...\n\nPoucos conhecem esse detalhe importante",
-            "solucao": "✅ Aqui está a solução:\n\nUma abordagem simples e eficaz",
-            "passo1": "📌 Passo 1:\n\nComece com o mais importante primeiro",
-            "passo2": "📌 Passo 2:\n\nAgora aplique essa técnica essencial",
-            "passo3": "📌 Passo 3:\n\nConsolide e veja os resultados",
-            "resultado": "🏆 O resultado?\n\nTransformação real e mensurável",
-            "cta": "💾 Salva esse post!\n\n📢 Compartilhe com alguém que precisa ver isso",
-            "historia": "📖 Deixa eu te contar uma história...\n\nQue mudou tudo para mim",
-            "reviravolta": "⚡ Mas aí tudo mudou...\n\nQuando descobri isso, não voltei atrás",
-            "aprendizado": "💡 O que aprendi:\n\nA lição mais valiosa dessa jornada",
-            "principio": "📐 O princípio por trás disso:\n\nSimples, mas poucos aplicam",
-            "reflexao": "🤔 E você, já passou por isso?\n\nComenta aqui embaixo 👇",
-            "apresentacao": "🎯 Apresento a solução:\n\nO que vai mudar seu jogo",
-            "beneficio1": "✅ Benefício #1:\n\nO mais importante de todos",
-            "beneficio2": "⏰ Benefício #2:\n\nEconomia de tempo real",
-            "beneficio3": "🛡️ Benefício #3:\n\nResultado consistente e duradouro",
-            "prova": "⭐ O que dizem:\n\nVeja a opinião de quem já aplica",
-            "opiniao": "🔥 Na minha opinião...\n\nPosicionamento claro sobre esse tema",
-            "polemica": "⚠️ Isso que ninguém te conta:\n\nA verdade sobre o assunto",
-            "dica": "💎 A dica que mudou tudo:\n\nUm insight que poucos dominam",
-            "contexto": "📋 Antes de tudo, o contexto:\n\nEntenda o cenário completo",
-        }
-        return fallbacks.get(tipo_slide, "Conteúdo do slide")
+    fallbacks = {
+        "capa": f"🔥 {tema.upper()}\n\nO que a fé católica tem a ver com isso? Tudo.",
+        "problema": f"❌ Católico também se endivida\n\nE não é falta de fé — é falta de organização à luz do que a Igreja ensina",
+        "causa": f"🔍 A raiz do problema\n\nEsquecemos que o dinheiro deve servir, não governar (Fratelli Tutti)",
+        "solucao": f"✅ O caminho da paz nas contas\n\nOrganização + fé + DSI = tranquilidade real",
+        "passo1": f"📌 1. Encare sem culpa\n\nDeus não te cobra juros. A culpa não ajuda — a ação sim.",
+        "passo2": f"📌 2. Organize com propósito\n\nCada real tem um destino: servir a Deus, à família e ao próximo",
+        "passo3": f"📌 3. Confie na Providência\n\nFaça a sua parte e abandone o resto nas mãos d'Ele",
+        "resultado": f"🏆 O resultado não é riqueza\n\nÉ paz. É poder olhar pra conta e não desesperar. É servir melhor.",
+        "cta": f"💾 Salva pra ver depois\n\nCompartilha com alguém que precisa ouvir que fé e finanças podem (e devem) andar juntas",
+        "historia": f"📖 A gente já esteve onde você está\n\nContas no vermelho, sem saber como conciliar fé e dinheiro",
+        "reviravolta": f"⚡ O que mudou?\n\nDescobrimos que a Igreja já tinha a resposta — Doutrina Social + Segredo da Divina Providência",
+        "aprendizado": f"💡 O aprendizado\n\nPobreza não é virtude. Riqueza não é bênção. Organização é caminho de santidade.",
+        "principio": f"📐 O princípio\n\nDinheiro bem administrado serve a Deus e ao próximo. Mal administrado vira ídolo.",
+        "reflexao": f"🤔 E você, já parou pra pensar que suas contas também são lugar de encontro com Deus?",
+        "apresentacao": f"🎯 Paz na Conta apresenta:\n\nFinanças à luz da fé católica — sem culpa, sem prosperidade falsa",
+        "beneficio1": f"✅ Benefício #1:\n\nVocê aprende a cuidar do dinheiro sem perder a alma",
+        "beneficio2": f"⏰ Benefício #2:\n\nOrganização que liberta — não pra ficar rico, pra viver em paz",
+        "beneficio3": f"🛡️ Benefício #3:\n\nSuas escolhas financeiras alinhadas com o que você acredita",
+        "prova": f"⭐ O que a Igreja diz\n\n\"O dinheiro deve servir, não governar\" — Papa Francisco, Fratelli Tutti",
+        "opiniao": f"🔥 O que a gente acredita\n\nFé não é desculpa pra bagunça financeira. É motivo pra se organizar.",
+        "polemica": f"⚠️ O que ninguém conta\n\nTeologia da prosperidade não é católica. Mas também não é pecado ser organizado.",
+        "dica": f"💎 A dica de ouro\n\nAntes de qualquer investimento, invista na sua paz. O resto é consequência.",
+        "contexto": f"📋 O cenário\n\nCatólicos endividados, sem referência, ouvindo que \"Deus quer te ver rico\" ou que \"dinheiro é sujo\". Nem um, nem outro.",
+    }
+    return fallbacks.get(tipo_slide, f"{nome} fala sobre {tema} para {publico}")
 
 
 def formatar_carrossel(slides: list, tema: str) -> str:

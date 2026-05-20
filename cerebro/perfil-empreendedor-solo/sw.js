@@ -1,49 +1,32 @@
-const CACHE_NAME = 'opb-sistema-v1';
-const urlsToCache = [
-    '/',
-    '/plataforma.html',
-    '/formulario.html',
-    '/manifest.json',
-    '/favicon.ico'
+const CACHE = "opb-studio-v1";
+const ASSETS = [
+  "/dashboard.html",
+  "/plataforma.html",
+  "/manifest.json"
 ];
 
-// Install event - cache files
-self.addEventListener('install', event => {
-    event.waitUntil(
-        caches.open(CACHE_NAME)
-            .then(cache => {
-                console.log('Opened cache');
-                return cache.addAll(urlsToCache);
-            })
-    );
+self.addEventListener("install", (e) => {
+  e.waitUntil(
+    caches.open(CACHE).then((c) => c.addAll(ASSETS))
+  );
+  self.skipWaiting();
 });
 
-// Fetch event - serve from cache, fallback to network
-self.addEventListener('fetch', event => {
-    event.respondWith(
-        caches.match(event.request)
-            .then(response => {
-                // Return cached version or fetch from network
-                if (response) {
-                    return response;
-                }
-                return fetch(event.request);
-            })
-    );
+self.addEventListener("activate", (e) => {
+  e.waitUntil(
+    caches.keys().then((keys) =>
+      Promise.all(keys.filter((k) => k !== CACHE).map((k) => caches.delete(k)))
+    )
+  );
+  self.clients.claim();
 });
 
-// Activate event - clean old caches
-self.addEventListener('activate', event => {
-    const cacheWhitelist = [CACHE_NAME];
-    event.waitUntil(
-        caches.keys().then(cacheNames => {
-            return Promise.all(
-                cacheNames.map(cacheName => {
-                    if (cacheWhitelist.indexOf(cacheName) === -1) {
-                        return caches.delete(cacheName);
-                    }
-                })
-            );
-        })
-    );
+self.addEventListener("fetch", (e) => {
+  if (e.request.url.includes("/api/")) {
+    e.respondWith(fetch(e.request).catch(() => new Response(JSON.stringify({ error: "offline" }), { status: 503 })));
+    return;
+  }
+  e.respondWith(
+    caches.match(e.request).then((r) => r || fetch(e.request).catch(() => new Response("Offline", { status: 503 })))
+  );
 });

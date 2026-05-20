@@ -28,6 +28,8 @@
 |---------|-----|
 | **GitHub** | https://github.com/cleiton-negreiros/opb-sistema |
 | **Vercel** | https://opb-sistema.vercel.app |
+| **API Local** | http://localhost:5000 (rode `api_server.py`) |
+| **Frontend Local** | http://localhost:5000 (api_server serve frontend + API) |
 
 ---
 
@@ -35,40 +37,40 @@
 
 ```
 opb-sistema/
-├── MAPA.md                    # Mapa raiz do cérebro
-├── agents/                    # Agentes Python (código executável)
-│   ├── consumo/               # Processa textos, PDFs, URLs em conhecimento
-│   ├── capa_video/            # Gera ideias de thumbnail YouTube
-│   ├── carrossel/             # Gera estruturas de carrossel Instagram
-│   ├── coordinator/          # Agente coordenador
-│   ├── designer/             # Gera diagramas, briefings, paletas
+├── api_server.py             # Servidor Flask (porta 5000) — API + frontend
+├── server.py                 # Servidor local alternativo (porta 8088)
+├── utils/
+│   ├── llm_provider.py       # Conexão com Ollama (tinyllama)
+│   ├── profile_loader.py     # Leitor unificado do perfil (quem-sou.md)
+│   └── ...
+├── agents/                   # Agentes Python
+│   ├── carrossel/            # Gera carrosséis (4 tipos)
+│   ├── capa_video/           # Ideias de thumbnail YouTube
+│   ├── consumo/              # Processa textos, PDFs, URLs
+│   ├── text_generator/       # Geração de posts Instagram
 │   ├── posicionamento/       # Pesquisa de mercado
+│   ├── radagast/             # Curadoria (yt-dlp + RSS, sem APIs pagas)
+│   ├── narvi/                # Editor de vídeo (FFmpeg)
 │   ├── telegram_bot/         # Interface Telegram
-│   └── text_generator/      # Geração de posts Instagram
-├── cerebro/                  # CÉREBRO - contexto vivo (MARKDOWN)
-│   ├── MAPA.md              # Índice raiz
-│   ├── negocio/             # Tudo do trabalho
-│   │   ├── governanca/      # Regras, decisões, lições, referências
-│   │   │   ├── regras/      # Regras de operação
-│   │   │   │   ├── quem-sou.md        ← IDENTIDADE
-│   │   │   │   ├── linguagem-escrita.md
-│   │   │   │   └── cerebro-manutencao.md
-│   │   │   ├── decisoes/
-│   │   │   └── licoes/
-│   │   ├── areas/           # Marketing, conteúdo, suporte...
-│   │   ├── produtos/        # Catálogo de produtos
-│   │   ├── infra/           # Sistemas internos
-│   │   └── projetos/        # Iniciativas
-│   │       └── ativos.md   ← METAS ATUAIS
-│   ├── pessoal/             # Vida pessoal (ACL)
-│   ├── agentes/             # Config de agentes IA
-│   ├── playbooks/           # Manuais executáveis
-│   ├── acervo/              # Conteúdo produzido
-│   └── seguranca/           # Permissões
-├── hub.html                  # Hub produtividade
-├── index.html               # Configurador de perfil
-├── server.py                # Servidor local
-└── vercel.json              # Config Vercel
+│   ├── coordinator/          # Agente coordenador
+│   └── designer/             # Diagramas, briefings, paletas
+├── cerebro/perfil-empreendedor-solo/
+│   ├── plataforma.html       # Dashboard PWA principal
+│   ├── formulario.html       # Formulário de perfil (6 seções)
+│   ├── manifest.json         # PWA manifest
+│   └── sw.js                 # Service Worker
+├── negocio/governanca/
+│   ├── quem-sou.md           ← IDENTIDADE (lido por todos agentes)
+│   └── regras/
+│       ├── linguagem-escrita.md
+│       └── cerebro-manutencao.md
+├── acervo/                   # Conteúdo produzido
+│   ├── transcricoes/         # Transcrições de vídeo (.md)
+│   └── conhecimento/         # Conhecimento processado
+├── iniciar-dia.bat           # Inicia tudo (API + Telegram Bot)
+├── requirements.txt
+├── vercel.json
+└── DOC-API.md
 ```
 
 ---
@@ -107,6 +109,36 @@ updated_at: AAAA-MM-DD
 ---
 
 ## 🤖 Agentes Disponíveis
+
+### API Server (Flask — porta 5000)
+**Arquivo**: `api_server.py`
+
+Serve frontend + todos os endpoints REST. Iniciar:
+```bash
+python api_server.py
+```
+
+### Endpoints da API
+| Método | Endpoint | Descrição |
+|--------|----------|-----------|
+| GET | `/api/health` | Health check |
+| GET | `/api/stats` | Estatísticas do projeto |
+| GET | `/api/agentes` | Lista agentes disponíveis |
+| GET | `/api/ideias` | Lista ideias capturadas |
+| GET | `/api/transcricoes` | Lista transcrições salvas |
+| POST | `/api/transcricao` | Transcreve vídeo YouTube |
+| POST | `/api/transcricao/ler` | Lê conteúdo de uma transcrição |
+| POST | `/api/capa-video` | Gera ideias de capa |
+| POST | `/api/carrossel` | Gera carrossel |
+| POST | `/api/consumo` | Processa conteúdo |
+| POST | `/api/text-generator` | Gera posts |
+| POST | `/api/posicionamento` | Analisa posicionamento |
+| POST | `/api/alimentar` | Alimenta o cérebro |
+| POST | `/api/arquivos` | Lista arquivos do projeto (navegador) |
+| POST | `/api/arquivo/ler` | Lê conteúdo de arquivo |
+| POST | `/api/bot/start` | Inicia Telegram Bot |
+| POST | `/api/start` | Inicia serviços remotamente |
+| POST | `/api/save-profile` | Salva perfil do usuário |
 
 ### Agente Coordenador
 **Caminho**: `agents/coordinator/main.py`
@@ -151,21 +183,27 @@ python agents/coordinator/main.py
 ## ⚠️ Status do Projeto
 
 ### ✅ Implementado
-- Hub de produtividade (Pomodoro, Planner, Finanças, Ideias)
-- Página de configuração de perfil (formulario.html + plataforma.html)
-- Agente coordenador
-- Agente Carrossel (4 tipos: educational, inspirational, promotional, engagement)
-- Agente de Consumo de Conteúdo (5 tipos de análise, fallback robusto)
-- API Server Flask (14+ endpoints REST)
-- Integração Telegram Bot (captura de ideias + comandos)
-- Pipeline completo: formulário → API → agente → cérebro → carrossel
-- Configuração Vercel e CI/CD
-- Cérebro (template OPB School integrado)
-- Deploy automático
+- Dashboard PWA mobile-first com navegação lateral (plataforma.html)
+- Formulário de perfil (6 seções: Habilidades, Histórias, Cosmovisão, Público, Posicionamento, Narrativa)
+- Agente Carrossel (4 tipos com fallback textual sem LLM + botão copiar)
+- Agente Consumo (5 tipos de análise)
+- Agente Capa Vídeo, Text Generator, Posicionamento
+- Agente Transcrição (YouTube) com visualização formatada + botão copiar
+- Agente Radagast (reescrito sem Apify/Claude — só yt-dlp + RSS, gratuito)
+- Agente Narvi (editor de vídeo com FFmpeg)
+- Telegram Bot integrado (@NegreirosBot)
+- API Server Flask (18 endpoints REST)
+- Navegador de Arquivos na plataforma (listar/ler arquivos do projeto)
+- Perfil unificado (`utils/profile_loader.py` + `quem-sou.md`)
+- Ollama com `tinyllama` (modelo padrão, ~637MB, roda com 3.4GB RAM)
+- iniciar-dia.bat (inicia API + Telegram Bot em 6 passos)
+- Suporte PWA (manifest.json, sw.js, mobile-first)
+- Deploy Vercel + CI/CD
 
 ### 🔜 Backlog
 - Preencher perfil do empreendedor com conteúdo real
 - Gerar primeiros carrosséis e posts via plataforma
+- Pesquisar solução para acessar iniciar-dia.bat remotamente (SSH ou /api/start)
 - Agente Analytics
 - Configurar domínio personalizado
 

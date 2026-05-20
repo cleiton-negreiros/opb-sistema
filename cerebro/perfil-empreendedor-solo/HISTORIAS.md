@@ -1,118 +1,17 @@
-# 🗺️ Mapeamento de Histórias — Preenchível
-
-> Este template ajuda a mapear suas histórias de vida e transformá-las em base para conteúdo e posicionamento.
-> Preencha e envie para o Agente de Consumo processar.
-
+---
+name: "Historias"
+updated_at: 2026-05-19
 ---
 
-## 📖 Histórias Marcantes
+## Historia
 
-### Trabalho / Carreira
+Mais de 25 anos como profissional de TI, engajamento na Igreja ligado às artes, música, formação vocacional e humana.
 
-| # | História | O que aprendi | ⭐ | Tema de conteúdo |
-|---|---------|---------------|:--:|-----------------|
-| 1 |         |               |    |                 |
-| 2 |         |               |    |                 |
-| 3 |         |               |    |                 |
+## Experiencias
 
-### Estudos / Formação
+Após a pandemia, com o nascimento do meu filho em 2020 e trabalhando em home offic, comecei a rever meus valores, metas e estilo de vida.
+Depois de um tempo trabalhando de casa percebi que não era tão bom assim, me senti sobrecarregado por não conseguir dar conta das demandas de uma vida com filho pequeno, trabalho, compromissos na comunidade, cuidado com a saúde, qualidade de vida, etc., percebi que não desejava os próximos 10 noas da mesma forma, que precisava ir para uma condição melhor.
+Passei a pensar em morar numa casa maior onde pudesse ter um cômodo para para trabalhar (escritório), mas não era o suficiente.
+Após algumas 2 ou 3 viagens de férias para João Pessoa e motivado pelo clima e qualidade de vida, eu eu minha esposa começamos a sonhar em morar lá um dia.
+Para isso precisávamos dar um passo
 
-| # | História | O que aprendi | ⭐ | Tema de conteúdo |
-|---|---------|---------------|:--:|-----------------|
-| 1 |         |               |    |                 |
-| 2 |         |               |    |                 |
-| 3 |         |               |    |                 |
-
-### Família / Vida Pessoal
-
-| # | História | O que aprendi | ⭐ | Tema de conteúdo |
-|---|---------|---------------|:--:|-----------------|
-| 1 |         |               |    |                 |
-| 2 |         |               |    |                 |
-| 3 |         |               |    |                 |
-
-### Superações / Viradas de Jogo
-
-| # | História | Desafio superado | ⭐ | Tema de conteúdo |
-|---|---------|------------------|:--:|-----------------|
-| 1 |         |                  |    |                 |
-| 2 |         |                  |    |                 |
-| 3 |         |                  |    |                 |
-
-### Outras Histórias
-
-| # | História | Categoria | ⭐ | Tema de conteúdo |
-|---|---------|-----------|:--:|-----------------|
-| 1 |         |           |    |                 |
-| 2 |         |           |    |                 |
-| 3 |         |           |    |                 |
-
----
-
-## 🎯 Minhas 5 Histórias Essenciais
-
-> As histórias que mais representam quem eu sou e o que defendo:
-
-### 1. _______________
-**Categoria:** _______________
-**Aprendizado:** _______________
-**Como uso no conteúdo:** _______________
-
-### 2. _______________
-**Categoria:** _______________
-**Aprendizado:** _______________
-**Como uso no conteúdo:** _______________
-
-### 3. _______________
-**Categoria:** _______________
-**Aprendizado:** _______________
-**Como uso no conteúdo:** _______________
-
-### 4. _______________
-**Categoria:** _______________
-**Aprendizado:** _______________
-**Como uso no conteúdo:** _______________
-
-### 5. _______________
-**Categoria:** _______________
-**Aprendizado:** _______________
-**Como uso no conteúdo:** _______________
-
----
-
-## 🧩 Padrões Narrativos
-
-_Após preencher, identifique padrões entre suas histórias:_
-
-- **Tema recorrente:** _______________
-- **Valor que aparece em todas:** _______________
-- **Tipo de transformação mais comum:** _______________
-- **Tom natural das minhas histórias:** _______________
-
----
-
-## 🔗 Como usar no OPB
-
-| História | Vira Post | Vira Carrossel | Vira Vídeo | Vira Produto |
-|---------|:---------:|:--------------:|:----------:|:------------:|
-|         | [ ]       | [ ]            | [ ]        | [ ]          |
-|         | [ ]       | [ ]            | [ ]        | [ ]          |
-|         | [ ]       | [ ]            | [ ]        | [ ]          |
-|         | [ ]       | [ ]            | [ ]        | [ ]          |
-|         | [ ]       | [ ]            | [ ]        | [ ]          |
-
----
-
-## ✅ Próximos Passos
-
-- [ ] Preencher 10-15 histórias nas tabelas
-- [ ] Selecionar 5 histórias essenciais
-- [ ] Identificar padrões narrativos
-- [ ] Enviar para Agente de Consumo: `python main.py "<conteúdo>" completo "Meu Mapeamento de Histórias"`
-- [ ] Atualizar `quem-sou.md` com narrativas pessoais
-- [ ] Gerar carrossel: `python ../carrossel/main.py "Minhas histórias que transformaram minha jornada"`
-
----
-
-_Template criado para o OPB Sistema_
-_Last updated: 2026-05-14_

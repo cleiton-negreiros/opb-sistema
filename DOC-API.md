@@ -32,22 +32,40 @@
 | GET | `/api/health` | Health check |
 | GET | `/api/stats` | Estatísticas do projeto |
 | GET | `/api/agentes` | Lista agentes disponíveis |
-| GET | `/api/cerebro/arvore` | Árvore de arquivos do cérebro |
-| GET | `/api/cerebro/ler` | Lê conteúdo de um arquivo |
-| GET | `/api/cerebro/mapas` | Lista todos os MAPAs |
 | GET | `/api/ideias` | Lista ideias capturadas |
+| GET | `/api/transcricoes` | Lista transcrições salvas |
 | POST | `/api/transcricao` | Transcreve vídeo YouTube |
+| POST | `/api/transcricao/ler` | Lê conteúdo de uma transcrição específica |
 | POST | `/api/capa-video` | Gera ideias de capa |
 | POST | `/api/carrossel` | Gera carrossel |
 | POST | `/api/consumo` | Processa conteúdo |
 | POST | `/api/text-generator` | Gera posts Instagram |
 | POST | `/api/posicionamento` | Analisa posicionamento |
 | POST | `/api/alimentar` | Alimenta o cérebro |
+| POST | `/api/arquivos` | Lista arquivos/diretórios do projeto (navegador) |
+| POST | `/api/arquivo/ler` | Lê conteúdo de um arquivo do projeto |
+| POST | `/api/bot/start` | Inicia o Telegram Bot |
+| POST | `/api/start` | Inicia serviços remotamente |
+| POST | `/api/save-profile` | Salva perfil do usuário |
+
+### Detalhes de Endpoints Específicos
+
+#### POST `/api/arquivos`
+**Body:** `{ "caminho": "." }` (relativo ao diretório do projeto)
+**Resposta:** `{ "arquivos": [...], "caminho_atual": "...", "pai": "..." }`
+
+#### POST `/api/arquivo/ler`
+**Body:** `{ "caminho": "AGENTS.md" }`
+**Resposta:** `{ "sucesso": true, "conteudo": "...", "nome": "AGENTS.md" }`
+
+#### POST `/api/transcricao/ler`
+**Body:** `{ "nome": "video_id_data.md" }`
+**Resposta:** `{ "sucesso": true, "conteudo": "...", "arquivo": "..." }`
 
 ## Instalação
 
 ```bash
-pip install flask flask-cors
+pip install flask flask-cors python-dotenv yt-dlp feedparser
 ```
 
 ## Iniciar
@@ -58,6 +76,8 @@ python api_server.py
 
 Acesse: **http://localhost:5000**
 
+O servidor serve tanto a API quanto o frontend (plataforma.html).
+
 ---
 
-_Last updated: 2026-05-14_
+_Last updated: 2026-05-19_
