@@ -1,4 +1,4 @@
-#!/bin/bash
+﻿#!/bin/bash
 # ============================================
 # 🎯 PAZ NA CONTA - OPB Sistema
 # Menu Principal para Termux (Android)
@@ -126,7 +126,8 @@ show_menu() {
     echo -e "${BOLD}⚙️  SISTEMA:${NC}"
     echo -e "  ${CYAN}a)${NC}  🔄 Parar todos os serviços"
     echo -e "  ${CYAN}b)${NC}  📱 Abrir plataforma web (navegador)"
-    echo -e "  ${CYAN}c)${NC}  Limpar cache"`n    echo -e "  ${CYAN}d)${NC}  Ver log da API (debug)"
+    echo -e "  ${CYAN}c)${NC}  Limpar cache"
+    echo -e "  ${CYAN}d)${NC}  Ver log da API (debug)"
     echo -e "  ${CYAN}0)${NC}  ❌ Sair"
     echo -e "  ${CYAN}s)${NC}  ?? Sincronizar com GitHub (sync.sh)"
     echo ""
