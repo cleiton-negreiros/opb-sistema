@@ -1,3 +1,6 @@
+/* ============================================
+   THEME — DARK (default)
+   ============================================ */
 :root {
 --bg-main: #050507;
 --bg-panel: rgba(10, 10, 14, 0.45);
@@ -28,6 +31,44 @@
 --sidebar-width: 250px;
 --ease-premium: cubic-bezier(0.16, 1, 0.3, 1);
 --transition-speed: 0.28s;
+--theme-icon: "🌙";
+}
+
+/* ============================================
+   THEME — LIGHT
+   ============================================ */
+[data-theme="light"] {
+--bg-main: #f8fafc;
+--bg-panel: rgba(255, 255, 255, 0.7);
+--bg-sidebar: rgba(248, 250, 252, 0.9);
+--bg-input: rgba(241, 245, 249, 0.8);
+--bg-input-focus: rgba(226, 232, 240, 0.9);
+--border-subtle: rgba(0, 0, 0, 0.06);
+--border-medium: rgba(0, 0, 0, 0.1);
+--border-focus: rgba(139, 92, 246, 0.5);
+--text-heading: #0f172a;
+--text-body: #334155;
+--text-muted: #94a3b8;
+--text-dark-mono: #94a3b8;
+--accent: #7c3aed;
+--accent-light: #8b5cf6;
+--accent-glow: rgba(124, 58, 237, 0.1);
+--success: #059669;
+--success-glow: rgba(5, 150, 105, 0.1);
+--warning: #d97706;
+--warning-glow: rgba(217, 119, 6, 0.1);
+--danger: #dc2626;
+--danger-glow: rgba(220, 38, 38, 0.1);
+--info: #2563eb;
+--info-glow: rgba(37, 99, 235, 0.1);
+--theme-icon: "☀️";
+}
+
+/* Smooth theme transition */
+body, .sidebar, .main-content, .card, .stat-card, .kpi-card,
+.agent-card, .agent-tile, .qa-btn, .form-input, .form-textarea,
+.form-select, .modal, .topbar, .bottom-nav {
+transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
 }
 
 body {

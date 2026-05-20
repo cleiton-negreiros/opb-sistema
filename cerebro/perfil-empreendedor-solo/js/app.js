@@ -1,7 +1,44 @@
 // ============================================
+// THEME TOGGLE
+// ============================================
+function toggleTheme() {
+    const current = document.documentElement.getAttribute('data-theme');
+    const next = current === 'light' ? 'dark' : 'light';
+    document.documentElement.setAttribute('data-theme', next);
+    localStorage.setItem('opb-theme', next);
+    updateThemeIcon(next);
+}
+
+function updateThemeIcon(theme) {
+    const btn = document.getElementById('themeToggle');
+    if (!btn) return;
+    const icon = btn.querySelector('i');
+    if (theme === 'light') {
+        icon.className = 'fas fa-sun';
+    } else {
+        icon.className = 'fas fa-moon';
+    }
+}
+
+function initTheme() {
+    const saved = localStorage.getItem('opb-theme');
+    if (saved) {
+        document.documentElement.setAttribute('data-theme', saved);
+        updateThemeIcon(saved);
+    } else {
+        // Check system preference
+        const prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+        const theme = prefersLight ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', theme);
+        updateThemeIcon(theme);
+    }
+}
+
+// ============================================
 // APP INIT
 // ============================================
 document.addEventListener('DOMContentLoaded', () => {
+    initTheme();
     updateGreeting();
     renderHeatmap();
     renderStreak();
