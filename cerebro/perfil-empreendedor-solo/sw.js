@@ -1,4 +1,4 @@
-const CACHE = "opb-studio-v1";
+const CACHE = "opb-studio-v2";
 const ASSETS = [
   "/dashboard.html",
   "/plataforma.html",
