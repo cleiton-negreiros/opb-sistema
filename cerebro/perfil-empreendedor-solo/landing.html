@@ -3,62 +3,66 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OPB Studio — Crie Conteúdo com IA | Agentes Inteligentes para Criadores</title>
-    <meta name="description" content="Plataforma de agentes IA para criadores de conteúdo. Gere carrosséis, posts, transcrições e curadoria automática. Tudo local, tudo gratuito.">
-    <meta name="keywords" content="agentes IA, criacao de conteudo, carrossel instagram, transcricao youtube, curadoria conteudo, IA solopreneur">
-    <meta name="author" content="OPB Studio">
+    <title>Paz na Conta — Mentoria de Finanças à Luz da Fé Católica</title>
+    <meta name="description" content="Organize suas finanças com fé, sem culpa e sem prosperidade falsa. Mentoria católica para casais e famílias que querem paz nas contas e propósito no bolso.">
+    <meta name="keywords" content="financas catolicas, mentorias financeiras, doutrin social igreja, organizacao financeira, paz na conta, dinheiro e fe">
+    <meta name="author" content="Paz na Conta — Ingrid e Cleiton">
     <meta name="robots" content="index, follow">
-    <link rel="canonical" href="https://opb-sistema.vercel.app/">
+    <link rel="canonical" href="https://paznaconta.com/">
 
     <!-- Open Graph -->
     <meta property="og:type" content="website">
-    <meta property="og:title" content="OPB Studio — Crie Conteúdo com IA">
-    <meta property="og:description" content="Agentes inteligentes que trabalham por você. Carrosséis, posts, transcrições e curadoria automática.">
-    <meta property="og:url" content="https://opb-sistema.vercel.app/">
+    <meta property="og:title" content="Paz na Conta — Finanças à Luz da Fé Católica">
+    <meta property="og:description" content="Ajudamos católicos a organizar as finanças com fé, sem culpa e sem prosperidade falsa.">
+    <meta property="og:url" content="https://paznaconta.com/">
     <meta property="og:locale" content="pt_BR">
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="OPB Studio — Crie Conteúdo com IA">
-    <meta name="twitter:description" content="Agentes inteligentes que trabalham por você.">
+    <meta name="twitter:title" content="Paz na Conta — Finanças à Luz da Fé Católica">
+    <meta name="twitter:description" content="Mentoria de finanças para católicos. Sem culpa, sem prosperidade falsa.">
 
     <!-- Favicon -->
-    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='64' fill='%238b5cf6'/%3E%3Ctext x='256' y='340' font-size='280' text-anchor='middle' fill='white'%3E🧠%3C/text%3E%3C/svg%3E">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='64' fill='%234ECDC4'/%3E%3Ctext x='256' y='340' font-size='280' text-anchor='middle' fill='white'%3E✝%3C/text%3E%3C/svg%3E">
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Open+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
     <!-- Structured Data -->
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
-        "@type": "SoftwareApplication",
-        "name": "OPB Studio",
-        "description": "Plataforma de agentes IA para criadores de conteúdo",
-        "url": "https://opb-sistema.vercel.app/",
-        "applicationCategory": "ProductivityApplication",
-        "operatingSystem": "Web",
-        "offers": [
-            {"@type": "Offer", "price": "0", "priceCurrency": "BRL", "name": "Free"},
-            {"@type": "Offer", "price": "49", "priceCurrency": "BRL", "name": "Pro"}
-        ]
+        "@type": "EducationalOrganization",
+        "name": "Paz na Conta",
+        "description": "Mentoria de finanças à luz da fé católica",
+        "url": "https://paznaconta.com/",
+        "founders": [
+            {"@type": "Person", "name": "Ingrid"},
+            {"@type": "Person", "name": "Cleiton"}
+        ],
+        "sameAs": ["https://instagram.com/paznaconta"]
     }
     </script>
 
     <style>
         :root {
-            --bg: #050507;
+            --coral: #FF6B6B;
+            --teal: #4ECDC4;
+            --blue: #45B7D1;
+            --yellow: #FFE66D;
+            --mint: #95E1D3;
+            --bg: #0a0a0f;
             --bg-card: rgba(255,255,255,0.02);
             --bg-card-hover: rgba(255,255,255,0.04);
             --border: rgba(255,255,255,0.06);
             --text: #cbd5e1;
             --heading: #f8fafc;
             --muted: #64748b;
-            --accent: #8b5cf6;
-            --accent-light: #a78bfa;
-            --accent-glow: rgba(139,92,246,0.15);
+            --accent: var(--teal);
+            --accent-light: var(--blue);
+            --accent-glow: rgba(78,205,196,0.15);
             --success: #10b981;
             --radius: 12px;
         }
@@ -66,19 +70,22 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
         html { scroll-behavior: smooth; }
         body {
-            font-family: 'Inter', -apple-system, sans-serif;
+            font-family: 'Open Sans', -apple-system, sans-serif;
             background: var(--bg);
             color: var(--text);
-            line-height: 1.6;
+            line-height: 1.7;
             overflow-x: hidden;
             -webkit-font-smoothing: antialiased;
+        }
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Montserrat', sans-serif;
         }
 
         /* ===== NAV ===== */
         .nav {
             position: fixed; top: 0; left: 0; right: 0; z-index: 100;
             padding: 16px 24px;
-            background: rgba(5,5,7,0.8);
+            background: rgba(10,10,15,0.8);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             border-bottom: 1px solid var(--border);
@@ -89,11 +96,11 @@
             display: flex; align-items: center; justify-content: space-between;
         }
         .nav-logo {
-            font-family: 'JetBrains Mono', monospace;
-            font-weight: 700; font-size: 1.1rem; color: var(--heading);
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 800; font-size: 1.1rem; color: var(--heading);
             text-decoration: none; display: flex; align-items: center; gap: 8px;
         }
-        .nav-logo span { color: var(--accent); }
+        .nav-logo span { color: var(--teal); }
         .nav-links { display: flex; align-items: center; gap: 32px; }
         .nav-links a {
             color: var(--muted); text-decoration: none; font-size: 0.85rem;
@@ -101,11 +108,11 @@
         }
         .nav-links a:hover { color: var(--heading); }
         .nav-cta {
-            background: var(--accent); color: white !important;
-            padding: 8px 20px; border-radius: 8px; font-weight: 600;
+            background: var(--teal); color: var(--bg) !important;
+            padding: 8px 20px; border-radius: 8px; font-weight: 700;
             transition: all 0.2s;
         }
-        .nav-cta:hover { background: var(--accent-light); transform: translateY(-1px); }
+        .nav-cta:hover { background: var(--mint); transform: translateY(-1px); }
 
         .mobile-menu-btn {
             display: none; background: none; border: none; color: var(--heading);
@@ -125,52 +132,53 @@
             position: absolute; top: 0; left: 50%; transform: translateX(-50%);
             width: 600px; height: 600px;
             background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
-            pointer-events: none;
-            opacity: 0.5;
+            pointer-events: none; opacity: 0.4;
         }
         .hero-content { position: relative; max-width: 800px; }
         .hero-badge {
             display: inline-flex; align-items: center; gap: 8px;
             padding: 6px 16px; border-radius: 100px;
             background: var(--bg-card); border: 1px solid var(--border);
-            font-size: 0.75rem; font-weight: 500; color: var(--muted);
+            font-size: 0.75rem; font-weight: 600; color: var(--teal);
             margin-bottom: 32px;
-            font-family: 'JetBrains Mono', monospace;
+            font-family: 'Montserrat', sans-serif;
+            letter-spacing: 0.03em;
         }
         .hero-badge .dot {
             width: 6px; height: 6px; border-radius: 50%;
-            background: var(--success);
-            box-shadow: 0 0 8px rgba(16,185,129,0.4);
+            background: var(--teal);
+            box-shadow: 0 0 8px rgba(78,205,196,0.4);
         }
         .hero h1 {
-            font-size: clamp(2.2rem, 6vw, 4rem);
-            font-weight: 800; color: var(--heading);
+            font-size: clamp(2.2rem, 6vw, 3.8rem);
+            font-weight: 900; color: var(--heading);
             line-height: 1.1; letter-spacing: -0.03em;
             margin-bottom: 24px;
         }
         .hero h1 .highlight {
-            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            background: linear-gradient(135deg, var(--teal), var(--blue));
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
             background-clip: text;
         }
         .hero p {
             font-size: clamp(1rem, 2.5vw, 1.2rem);
             color: var(--muted); max-width: 600px; margin: 0 auto 40px;
-            line-height: 1.7;
+            line-height: 1.8;
         }
         .hero-actions { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
         .btn {
             display: inline-flex; align-items: center; gap: 8px;
             padding: 14px 28px; border-radius: 10px;
-            font-size: 0.95rem; font-weight: 600;
+            font-size: 0.95rem; font-weight: 700;
             text-decoration: none; transition: all 0.2s;
-            cursor: pointer; border: none; font-family: 'Inter', sans-serif;
+            cursor: pointer; border: none;
+            font-family: 'Montserrat', sans-serif;
         }
         .btn-primary {
-            background: var(--accent); color: white;
+            background: var(--teal); color: var(--bg);
             box-shadow: 0 4px 24px var(--accent-glow);
         }
-        .btn-primary:hover { background: var(--accent-light); transform: translateY(-2px); box-shadow: 0 8px 32px var(--accent-glow); }
+        .btn-primary:hover { background: var(--mint); transform: translateY(-2px); box-shadow: 0 8px 32px var(--accent-glow); }
         .btn-secondary {
             background: var(--bg-card); color: var(--heading);
             border: 1px solid var(--border);
@@ -190,7 +198,7 @@
         .proof-item { text-align: center; }
         .proof-value {
             font-size: 1.8rem; font-weight: 800; color: var(--heading);
-            font-family: 'JetBrains Mono', monospace;
+            font-family: 'Montserrat', sans-serif;
         }
         .proof-label { font-size: 0.75rem; color: var(--muted); margin-top: 4px; }
 
@@ -200,19 +208,19 @@
             max-width: 1200px; margin: 0 auto;
         }
         .section-label {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.7rem; font-weight: 600; text-transform: uppercase;
-            letter-spacing: 0.1em; color: var(--accent-light);
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.7rem; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 0.1em; color: var(--teal);
             margin-bottom: 12px;
         }
         .section-title {
             font-size: clamp(1.8rem, 4vw, 2.5rem);
-            font-weight: 800; color: var(--heading);
+            font-weight: 900; color: var(--heading);
             letter-spacing: -0.02em; margin-bottom: 16px;
         }
         .section-desc {
             font-size: 1.05rem; color: var(--muted);
-            max-width: 600px; margin-bottom: 60px; line-height: 1.7;
+            max-width: 600px; margin-bottom: 60px; line-height: 1.8;
         }
 
         /* ===== FEATURES ===== */
@@ -230,7 +238,7 @@
         }
         .feature-card:hover {
             background: var(--bg-card-hover);
-            border-color: rgba(255,255,255,0.1);
+            border-color: rgba(78,205,196,0.2);
             transform: translateY(-2px);
         }
         .feature-icon {
@@ -245,7 +253,7 @@
             margin-bottom: 8px;
         }
         .feature-card p {
-            font-size: 0.88rem; color: var(--muted); line-height: 1.6;
+            font-size: 0.88rem; color: var(--muted); line-height: 1.7;
         }
 
         /* ===== HOW IT WORKS ===== */
@@ -265,17 +273,73 @@
         }
         .step::before {
             content: counter(step);
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 3rem; font-weight: 800;
-            color: var(--accent);
-            opacity: 0.15;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 3rem; font-weight: 900;
+            color: var(--teal);
+            opacity: 0.12;
             position: absolute; top: 16px; right: 24px;
         }
         .step h3 {
             font-size: 1.05rem; font-weight: 700; color: var(--heading);
             margin-bottom: 8px;
         }
-        .step p { font-size: 0.88rem; color: var(--muted); line-height: 1.6; }
+        .step p { font-size: 0.88rem; color: var(--muted); line-height: 1.7; }
+
+        /* ===== PILARES ===== */
+        .pilares-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .pilar-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 40px 32px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        .pilar-card:hover {
+            border-color: rgba(78,205,196,0.2);
+            transform: translateY(-2px);
+        }
+        .pilar-number {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 3rem; font-weight: 900;
+            color: var(--teal); opacity: 0.2;
+            margin-bottom: 16px;
+        }
+        .pilar-card h3 {
+            font-size: 1.1rem; font-weight: 700; color: var(--heading);
+            margin-bottom: 12px;
+        }
+        .pilar-card p { font-size: 0.88rem; color: var(--muted); line-height: 1.7; }
+
+        /* ===== ABOUT ===== */
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+        .about-text h3 {
+            font-size: 1.3rem; font-weight: 700; color: var(--heading);
+            margin-bottom: 16px;
+        }
+        .about-text p {
+            font-size: 0.95rem; color: var(--muted); line-height: 1.8;
+            margin-bottom: 16px;
+        }
+        .about-quote {
+            background: var(--bg-card);
+            border-left: 3px solid var(--teal);
+            padding: 24px;
+            border-radius: 0 var(--radius) var(--radius) 0;
+            font-style: italic;
+            color: var(--text);
+            font-size: 0.95rem;
+            line-height: 1.8;
+        }
 
         /* ===== PRICING ===== */
         .pricing-grid {
@@ -294,24 +358,24 @@
         }
         .pricing-card:hover { transform: translateY(-4px); }
         .pricing-card.featured {
-            border-color: var(--accent);
-            background: rgba(139,92,246,0.05);
+            border-color: var(--teal);
+            background: rgba(78,205,196,0.03);
         }
         .pricing-badge {
             position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
-            background: var(--accent); color: white;
+            background: var(--teal); color: var(--bg);
             padding: 4px 16px; border-radius: 100px;
             font-size: 0.7rem; font-weight: 700; text-transform: uppercase;
-            letter-spacing: 0.05em;
+            letter-spacing: 0.05em; font-family: 'Montserrat', sans-serif;
         }
         .pricing-name {
-            font-size: 0.85rem; font-weight: 600; color: var(--muted);
+            font-size: 0.85rem; font-weight: 700; color: var(--muted);
             text-transform: uppercase; letter-spacing: 0.05em;
-            margin-bottom: 8px;
+            margin-bottom: 8px; font-family: 'Montserrat', sans-serif;
         }
         .pricing-price {
-            font-size: 2.5rem; font-weight: 800; color: var(--heading);
-            font-family: 'JetBrains Mono', monospace;
+            font-size: 2.5rem; font-weight: 900; color: var(--heading);
+            font-family: 'Montserrat', sans-serif;
             margin-bottom: 4px;
         }
         .pricing-price span { font-size: 0.9rem; font-weight: 400; color: var(--muted); }
@@ -322,18 +386,18 @@
             display: flex; align-items: center; gap: 10px;
         }
         .pricing-features li::before {
-            content: '✓'; color: var(--success); font-weight: 700;
+            content: '✓'; color: var(--teal); font-weight: 700;
         }
         .pricing-btn {
             display: block; width: 100%; text-align: center;
-            padding: 14px; border-radius: 10px; font-weight: 600;
+            padding: 14px; border-radius: 10px; font-weight: 700;
             text-decoration: none; font-size: 0.95rem;
-            transition: all 0.2s;
+            transition: all 0.2s; font-family: 'Montserrat', sans-serif;
         }
         .pricing-btn-primary {
-            background: var(--accent); color: white;
+            background: var(--teal); color: var(--bg);
         }
-        .pricing-btn-primary:hover { background: var(--accent-light); }
+        .pricing-btn-primary:hover { background: var(--mint); }
         .pricing-btn-secondary {
             background: var(--bg-card); color: var(--heading);
             border: 1px solid var(--border);
@@ -350,10 +414,10 @@
             padding: 24px 0; text-align: left;
             font-size: 1rem; font-weight: 600; color: var(--heading);
             cursor: pointer; display: flex; justify-content: space-between;
-            align-items: center; font-family: 'Inter', sans-serif;
+            align-items: center; font-family: 'Montserrat', sans-serif;
             transition: color 0.2s;
         }
-        .faq-question:hover { color: var(--accent-light); }
+        .faq-question:hover { color: var(--teal); }
         .faq-question::after {
             content: '+'; font-size: 1.3rem; color: var(--muted);
             transition: transform 0.3s;
@@ -364,10 +428,10 @@
             transition: max-height 0.3s ease, padding 0.3s ease;
         }
         .faq-item.open .faq-answer {
-            max-height: 200px; padding-bottom: 24px;
+            max-height: 300px; padding-bottom: 24px;
         }
         .faq-answer p {
-            font-size: 0.9rem; color: var(--muted); line-height: 1.7;
+            font-size: 0.9rem; color: var(--muted); line-height: 1.8;
         }
 
         /* ===== CTA ===== */
@@ -386,10 +450,10 @@
         .cta-content { position: relative; }
         .cta h2 {
             font-size: clamp(1.8rem, 4vw, 2.5rem);
-            font-weight: 800; color: var(--heading);
+            font-weight: 900; color: var(--heading);
             margin-bottom: 16px;
         }
-        .cta p { font-size: 1.05rem; color: var(--muted); margin-bottom: 32px; }
+        .cta p { font-size: 1.05rem; color: var(--muted); margin-bottom: 32px; line-height: 1.8; }
 
         /* ===== FOOTER ===== */
         .footer {
@@ -425,7 +489,7 @@
             .nav-links.open {
                 display: flex; flex-direction: column;
                 position: absolute; top: 100%; left: 0; right: 0;
-                background: rgba(5,5,7,0.95);
+                background: rgba(10,10,15,0.95);
                 backdrop-filter: blur(20px);
                 padding: 24px; gap: 20px;
                 border-bottom: 1px solid var(--border);
@@ -435,7 +499,9 @@
             .hero h1 { font-size: 2rem; }
             .section { padding: 60px 20px; }
             .features-grid { grid-template-columns: 1fr; }
+            .pilares-grid { grid-template-columns: 1fr; }
             .pricing-grid { grid-template-columns: 1fr; }
+            .about-grid { grid-template-columns: 1fr; gap: 40px; }
             .social-proof-inner { gap: 32px; }
             .footer-inner { flex-direction: column; text-align: center; }
         }
@@ -446,13 +512,14 @@
 <!-- NAV -->
 <nav class="nav" id="nav">
     <div class="nav-inner">
-        <a href="#" class="nav-logo">🧠 OPB <span>Studio</span></a>
+        <a href="#" class="nav-logo">✝ Paz na <span>Conta</span></a>
         <div class="nav-links" id="navLinks">
-            <a href="#features">Recursos</a>
-            <a href="#como-funciona">Como Funciona</a>
+            <a href="#pilares">Pilares</a>
+            <a href="#sobre">Quem Somos</a>
+            <a href="#mentoria">Mentoria</a>
             <a href="#precos">Preços</a>
             <a href="#faq">FAQ</a>
-            <a href="/plataforma.html" class="nav-cta">Entrar na Plataforma</a>
+            <a href="https://instagram.com/paznaconta" target="_blank" rel="noopener" class="nav-cta">@paznaconta</a>
         </div>
         <button class="mobile-menu-btn" onclick="document.getElementById('navLinks').classList.toggle('open')" aria-label="Menu">☰</button>
     </div>
@@ -463,13 +530,13 @@
     <div class="hero-content fade-in">
         <div class="hero-badge">
             <span class="dot"></span>
-            Open Source · 10 Agentes IA · 100% Local
+            Mentoria de Finanças Católicas
         </div>
-        <h1>Crie conteúdo com IA.<br><span class="highlight">Publique sem esforço.</span></h1>
-        <p>Agentes inteligentes que geram carrosséis, posts, transcrições e curadoria automática. Tudo local, sem APIs pagas, sem limites.</p>
+        <h1>Finanças com fé.<br><span class="highlight">Sem culpa. Sem prosperidade falsa.</span></h1>
+        <p>Ajudamos católicos a organizar as finanças com base no Evangelho e na Doutrina Social da Igreja. Porque dinheiro bem administrado serve a Deus e ao próximo.</p>
         <div class="hero-actions">
-            <a href="/plataforma.html" class="btn btn-primary">Começar Grátis →</a>
-            <a href="#como-funciona" class="btn btn-secondary">Ver como funciona</a>
+            <a href="https://instagram.com/paznaconta" target="_blank" rel="noopener" class="btn btn-primary">Começar pelo Instagram →</a>
+            <a href="#sobre" class="btn btn-secondary">Conhecer nossa história</a>
         </div>
     </div>
 </section>
@@ -478,138 +545,187 @@
 <section class="social-proof">
     <div class="social-proof-inner fade-in">
         <div class="proof-item">
-            <div class="proof-value">10</div>
-            <div class="proof-label">Agentes IA</div>
+            <div class="proof-value">3</div>
+            <div class="proof-label">Pilares fundamentais</div>
         </div>
         <div class="proof-item">
-            <div class="proof-value">R$0</div>
-            <div class="proof-label">Custo mensal</div>
+            <div class="proof-value">DSI</div>
+            <div class="proof-label">Doutrina Social da Igreja</div>
         </div>
         <div class="proof-item">
             <div class="proof-value">100%</div>
-            <div class="proof-label">Local e privado</div>
+            <div class="proof-label">Católico e autêntico</div>
         </div>
         <div class="proof-item">
-            <div class="proof-value">24/7</div>
-            <div class="proof-label">Funcionando</div>
+            <div class="proof-value">∞</div>
+            <div class="proof-label">Propósito maior que dinheiro</div>
         </div>
     </div>
 </section>
 
-<!-- FEATURES -->
-<section class="section" id="features">
+<!-- PILARES -->
+<section class="section" id="pilares">
     <div class="fade-in">
-        <div class="section-label">Recursos</div>
-        <h2 class="section-title">Tudo que você precisa para criar conteúdo</h2>
-        <p class="section-desc">10 agentes especializados que trabalham juntos para automatizar sua produção de conteúdo.</p>
+        <div class="section-label">Nossos Pilares</div>
+        <h2 class="section-title">O que nos diferencia</h2>
+        <p class="section-desc">Não somos consultoria financeira secular. Nem teologia da prosperidade. Somos católicos falando de dinheiro com a verdade da Igreja.</p>
+    </div>
+    <div class="pilares-grid">
+        <div class="pilar-card fade-in">
+            <div class="pilar-number">01</div>
+            <h3>Fé nas Finanças</h3>
+            <p>Toda decisão financeira tem uma dimensão moral e espiritual. A Doutrina Social da Igreja é nosso guia. Usura, juros abusivos, consumo desenfreado — tudo isso tem consequência moral.</p>
+        </div>
+        <div class="pilar-card fade-in">
+            <div class="pilar-number">02</div>
+            <h3>Organização Real</h3>
+            <p>Métodos práticos e acionáveis para sair do vermelho, criar reserva de emergência e investir sem susto. Planilhas, desafios de 30 dias, rotinas de orçamento.</p>
+        </div>
+        <div class="pilar-card fade-in">
+            <div class="pilar-number">03</div>
+            <h3>Paz é o Norte</h3>
+            <p>O objetivo não é ficar rico — é ter tranquilidade para viver bem e servir melhor. Paz nas contas para poder viver o que realmente importa: família, fé, comunidade.</p>
+        </div>
+    </div>
+</section>
+
+<!-- SOBRE -->
+<section class="section" id="sobre">
+    <div class="about-grid fade-in">
+        <div class="about-text">
+            <div class="section-label">Quem Somos</div>
+            <h2 class="section-title">Ingrid e Cleiton</h2>
+            <h3>Um casal católico que viveu na pele a falta de organização financeira e decidiu mudar.</h3>
+            <p>Cleiton é CLT, passa o dia num escritório, longe da família, sentindo que o tempo está escapando. Ingrid acompanha de perto essa rotina e juntos sonham com algo maior.</p>
+            <p>Queremos fazer a transição de CLT para empreendedor, trabalhar de casa, ter mais tempo para a família e morar em João Pessoa — com qualidade de vida, perto do mar, ritmo mais humano.</p>
+            <p>Esses objetivos não são só nossos. São os mesmos do nosso público. O católico endividado não quer ficar rico — quer paz nas contas para poder viver o que realmente importa.</p>
+        </div>
+        <div>
+            <div class="about-quote">
+                "A pobreza material não é virtude — e a riqueza também não é sinal de bênção. O dinheiro é um instrumento que Deus nos dá para servir à família, à comunidade e ao Reino."
+            </div>
+            <br>
+            <div class="about-quote">
+                "Providência divina é a ação de Deus de ver antes e ver adiante e tomar as medidas necessárias. Deus vê antes e já está cuidando antecipadamente daquilo que você está preocupado."
+                <br><small style="color:var(--muted)">— Pe. Antônio Furtado, Comunidade Shalom</small>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- MENTORIA (FEATURES) -->
+<section class="section" id="mentoria">
+    <div class="fade-in">
+        <div class="section-label">Mentoria</div>
+        <h2 class="section-title">O que você vai aprender</h2>
+        <p class="section-desc">Conteúdo prático, baseado na fé, aplicado ao dia a dia. Sem enrolação, sem moralismo.</p>
     </div>
     <div class="features-grid">
         <div class="feature-card fade-in">
-            <div class="feature-icon">🎠</div>
-            <h3>Carrosséis Automáticos</h3>
-            <p>Gere carrosséis para Instagram com conteúdo educativo, inspiracional ou promocional. Pronto para copiar no Canva.</p>
+            <div class="feature-icon">📊</div>
+            <h3>Orçamento com Propósito</h3>
+            <p>Aprenda a organizar suas contas de forma simples e prática. Cada gasto conectado a um "para quê" — propósito maior que dinheiro.</p>
         </div>
         <div class="feature-card fade-in">
-            <div class="feature-icon">✍️</div>
-            <h3>Posts para Instagram</h3>
-            <p>Crie legendas, CTAs e hashtags otimizadas para cada tipo de conteúdo e público.</p>
+            <div class="feature-icon">🙏</div>
+            <h3>Dízimo e Oferta com Consciência</h3>
+            <p>Entenda o sentido real da partilha na luz da Escritura e da DSI. Sem culpa, sem obrigação vazia.</p>
         </div>
         <div class="feature-card fade-in">
-            <div class="feature-icon">🎬</div>
-            <h3>Transcrição de Vídeos</h3>
-            <p>Transcreva vídeos do YouTube automaticamente com timestamps formatados.</p>
+            <div class="feature-icon">📈</div>
+            <h3>Sair do Vermelho</h3>
+            <p>Método passo a passo para quitar dívidas, criar reserva de emergência e começar a investir com segurança.</p>
         </div>
         <div class="feature-card fade-in">
-            <div class="feature-icon">📡</div>
-            <h3>Curadoria Automática</h3>
-            <p>Radagast monitora fontes RSS e YouTube 24/7, encontrando tendências e gerando ideias de Reels.</p>
+            <div class="feature-icon">⛪</div>
+            <h3>Dinheiro e Doutrina Social</h3>
+            <p>O que a Igreja ensina sobre usura, juros, trabalho digno, consumo consciente e investimento ético.</p>
         </div>
         <div class="feature-card fade-in">
-            <div class="feature-icon">📖</div>
-            <h3>Processamento de Conteúdo</h3>
-            <p>Transforme textos, PDFs e URLs em conhecimento estruturado e pesquisável.</p>
+            <div class="feature-icon">👨‍👩‍👧‍👦</div>
+            <h3>Finanças em Família</h3>
+            <p>Como conversar sobre dinheiro com seu cônjuge, ensinar filhos a lidar com dinheiro e planejar o futuro juntos.</p>
         </div>
         <div class="feature-card fade-in">
-            <div class="feature-icon">🤖</div>
-            <h3>Telegram Bot</h3>
-            <p>Capture ideias e controle tudo pelo Telegram. Funciona no celular via Termux.</p>
+            <div class="feature-icon">🕊️</div>
+            <h3>Providência e Organização</h3>
+            <p>Confiar em Deus não significa não fazer a parte humana. Faça a sua parte e abandone o resto nas mãos de Deus.</p>
         </div>
     </div>
 </section>
 
-<!-- HOW IT WORKS -->
+<!-- COMO FUNCIONA -->
 <section class="section" id="como-funciona">
     <div class="fade-in">
         <div class="section-label">Como Funciona</div>
-        <h2 class="section-title">3 passos para começar</h2>
-        <p class="section-desc">Sem configuração complexa. Sem cartão de crédito. Sem limite de uso.</p>
+        <h2 class="section-title">3 passos para ter paz nas contas</h2>
+        <p class="section-desc">Sem configuração complexa. Sem cartão de crédito. Sem promessas vazias.</p>
     </div>
     <div class="steps">
         <div class="step fade-in">
-            <h3>1. Acesse a plataforma</h3>
-            <p>Abra no navegador ou instale como app no celular. Interface intuitiva com dashboard completo.</p>
+            <h3>1. Siga no Instagram</h3>
+            <p>Acompanhe @paznaconta para receber conteúdo diário sobre finanças católicas. Carrosséis, reels e stories com dicas práticas.</p>
         </div>
         <div class="step fade-in">
-            <h3>2. Escolha um agente</h3>
-            <p>Selecione o tipo de conteúdo: carrossel, post, transcrição, curadoria ou capa de vídeo.</p>
+            <h3>2. Entre na Mentoria</h3>
+            <p>Acesse o conteúdo completo: planilhas, desafios de 30 dias, rotinas de orçamento e acompanhamento personalizado.</p>
         </div>
         <div class="step fade-in">
-            <h3>3. Publique</h3>
-            <p>Receba o conteúdo pronto para copiar e colar no Canva, Instagram ou YouTube.</p>
+            <h3>3. Viva com Paz</h3>
+            <p>Organize suas contas, quite suas dívidas, crie sua reserva. E tenha tranquilidade para viver o que realmente importa.</p>
         </div>
     </div>
 </section>
 
-<!-- PRICING -->
+<!-- PREÇOS -->
 <section class="section" id="precos">
     <div class="fade-in">
         <div class="section-label">Preços</div>
-        <h2 class="section-title">Comece grátis. Escale quando quiser.</h2>
-        <p class="section-desc">Sem surpresas. Sem limites ocultos. Cancele quando quiser.</p>
+        <h2 class="section-title">Invista na sua paz financeira</h2>
+        <p class="section-desc">Conteúdo gratuito no Instagram. Mentoria completa para quem quer ir além.</p>
     </div>
     <div class="pricing-grid">
         <div class="pricing-card fade-in">
-            <div class="pricing-name">Free</div>
+            <div class="pricing-name">Gratuito</div>
             <div class="pricing-price">R$0 <span>/mês</span></div>
             <div class="pricing-desc">Para quem está começando</div>
             <ul class="pricing-features">
-                <li>10 agentes IA</li>
-                <li>Carrosséis ilimitados</li>
-                <li>Transcrição de vídeos</li>
-                <li>Curadoria automática</li>
-                <li>Telegram Bot</li>
-                <li>100% local e privado</li>
+                <li>Conteúdo no Instagram</li>
+                <li>Carrosséis educativos</li>
+                <li>Dicas de organização</li>
+                <li>Reflexões sobre fé e dinheiro</li>
+                <li>Comunidade nos comentários</li>
             </ul>
-            <a href="/plataforma.html" class="pricing-btn pricing-btn-secondary">Começar Grátis</a>
+            <a href="https://instagram.com/paznaconta" target="_blank" rel="noopener" class="pricing-btn pricing-btn-secondary">Seguir no Instagram</a>
         </div>
         <div class="pricing-card featured fade-in">
             <div class="pricing-badge">Em breve</div>
-            <div class="pricing-name">Pro</div>
-            <div class="pricing-price">R$49 <span>/mês</span></div>
-            <div class="pricing-desc">Para criadores sérios</div>
+            <div class="pricing-name">Mentoria</div>
+            <div class="pricing-price">R$97 <span>/mês</span></div>
+            <div class="pricing-desc">Para quem quer resultados reais</div>
             <ul class="pricing-features">
-                <li>Tudo do Free</li>
-                <li>Modelos IA premium (GPT-5, Claude)</li>
-                <li>Agendamento automático</li>
-                <li>Analytics avançado</li>
-                <li>Multi-usuário</li>
-                <li>Suporte prioritário</li>
+                <li>Tudo do Gratuito</li>
+                <li>Planilhas de orçamento</li>
+                <li>Desafios de 30 dias</li>
+                <li>Acompanhamento personalizado</li>
+                <li>Grupo exclusivo</li>
+                <li>Baseado na Doutrina Social da Igreja</li>
             </ul>
-            <a href="#" class="pricing-btn pricing-btn-primary">Lista de Espera</a>
+            <a href="https://instagram.com/paznaconta" target="_blank" rel="noopener" class="pricing-btn pricing-btn-primary">Lista de Espera</a>
         </div>
         <div class="pricing-card fade-in">
-            <div class="pricing-name">Enterprise</div>
+            <div class="pricing-name">Acompanhamento</div>
             <div class="pricing-price">Sob consulta</div>
-            <div class="pricing-desc">Para equipes e agências</div>
+            <div class="pricing-desc">Para casais e famílias</div>
             <ul class="pricing-features">
-                <li>Tudo do Pro</li>
-                <li>Agentes customizados</li>
-                <li>API dedicada</li>
-                <li>SLA garantido</li>
-                <li>Onboarding personalizado</li>
-                <li>Integrações sob medida</li>
+                <li>Tudo da Mentoria</li>
+                <li>Sessões individuais</li>
+                <li>Plano financeiro personalizado</li>
+                <li>Acompanhamento de dívidas</li>
+                <li>Planejamento familiar</li>
+                <li>Suporte por 90 dias</li>
             </ul>
-            <a href="mailto:contato@opbstudio.com" class="pricing-btn pricing-btn-secondary">Falar com Vendas</a>
+            <a href="https://instagram.com/paznaconta" target="_blank" rel="noopener" class="pricing-btn pricing-btn-secondary">Falar Conosco</a>
         </div>
     </div>
 </section>
@@ -623,28 +739,28 @@
     </div>
     <div class="faq-list fade-in">
         <div class="faq-item">
-            <button class="faq-question">Preciso pagar alguma API?</button>
-            <div class="faq-answer"><p>Não. O OPB Studio roda 100% local com modelos open-source via Ollama. Sem custos de API, sem limites de uso, sem surpresas.</p></div>
+            <button class="faq-question">Vocês são consultores financeiros?</button>
+            <div class="faq-answer"><p>Não somos assessores de investimentos certificados. Somos um casal católico que viveu na pele a falta de organização financeira e quer ajudar outros católicos a encontrar paz nas contas com base no Evangelho e na Doutrina Social da Igreja.</p></div>
         </div>
         <div class="faq-item">
-            <button class="faq-question">Funciona no celular?</button>
-            <div class="faq-answer"><p>Sim! Acesse pelo navegador ou instale como PWA. No Android, funciona via Termux com todos os agentes locais.</p></div>
+            <button class="faq-question">Preciso ser católico para acompanhar?</button>
+            <div class="faq-answer"><p>Não. Nosso conteúdo é baseado na fé católica, mas os princípios de organização financeira são universais. Se você busca paz nas contas com propósito, é bem-vindo.</p></div>
         </div>
         <div class="faq-item">
-            <button class="faq-question">Meus dados ficam seguros?</button>
-            <div class="faq-answer"><p>Sim. Tudo roda local no seu computador. Nenhum dado é enviado para servidores externos. Sua privacidade é total.</p></div>
+            <button class="faq-question">Vocês ensinam a ficar rico?</button>
+            <div class="faq-answer"><p>Não. Nosso objetivo não é te deixar rico — é te dar paz nas contas para que você possa viver o que realmente importa: família, fé, comunidade. Dinheiro é meio, não fim.</p></div>
         </div>
         <div class="faq-item">
-            <button class="faq-question">Posso usar com meu time?</button>
-            <div class="faq-answer"><p>A versão atual é single-user. O plano Pro (em breve) terá suporte multi-usuário com gestão de equipe.</p></div>
+            <button class="faq-question">O que é Doutrina Social da Igreja?</button>
+            <div class="faq-answer"><p>É o conjunto de ensinamentos da Igreja Católica sobre questões sociais, incluindo economia e finanças. Documentos como Rerum Novarum, Centesimus Annus, Fratelli Tutti e Oeconomicae et pecuniariae guiam nossa visão sobre dinheiro, trabalho e justiça.</p></div>
         </div>
         <div class="faq-item">
-            <button class="faq-question">Quais redes sociais são suportadas?</button>
-            <div class="faq-answer"><p>Instagram (carrosséis, posts, Reels), YouTube (transcrições, capas), e Telegram (bot de captura). Mais plataformas em desenvolvimento.</p></div>
+            <button class="faq-question">Como funciona a mentoria?</button>
+            <div class="faq-answer"><p>A mentoria inclui planilhas de orçamento, desafios de 30 dias, rotinas de organização financeira e acompanhamento personalizado. Tudo baseado nos 3 pilares: Fé nas Finanças, Organização Real e Paz é o Norte.</p></div>
         </div>
         <div class="faq-item">
-            <button class="faq-question">É open source?</button>
-            <div class="faq-answer"><p>Sim! O código é aberto e disponível no GitHub. Você pode modificar, contribuir e hospedar por conta própria.</p></div>
+            <button class="faq-question">Posso falar com vocês diretamente?</button>
+            <div class="faq-answer"><p>Sim! Mande uma mensagem no Instagram @paznaconta. Respondemos pessoalmente e adoramos conversar sobre finanças, fé e vida.</p></div>
         </div>
     </div>
 </section>
@@ -652,20 +768,20 @@
 <!-- CTA -->
 <section class="cta">
     <div class="cta-content fade-in">
-        <h2>Pronto para criar conteúdo<br>com inteligência?</h2>
-        <p>Comece agora. Sem cartão de crédito. Sem limites.</p>
-        <a href="/plataforma.html" class="btn btn-primary">Começar Grátis →</a>
+        <h2>"Buscai primeiro o Reino de Deus<br>e a sua justiça"<br><small style="font-size:0.6em;color:var(--muted)">— Mt 6, 33</small></h2>
+        <p>Comece hoje a organizar suas finanças com fé. Sem culpa. Sem prosperidade falsa.</p>
+        <a href="https://instagram.com/paznaconta" target="_blank" rel="noopener" class="btn btn-primary">Seguir no Instagram →</a>
     </div>
 </section>
 
 <!-- FOOTER -->
 <footer class="footer">
     <div class="footer-inner">
-        <div class="footer-copy">© 2026 OPB Studio. Open Source sob licença MIT.</div>
+        <div class="footer-copy">© 2026 Paz na Conta — Ingrid e Cleiton. Finanças à luz da fé católica.</div>
         <div class="footer-links">
-            <a href="https://github.com/cleiton-negreiros/opb-sistema" target="_blank" rel="noopener">GitHub</a>
-            <a href="/plataforma.html">Plataforma</a>
-            <a href="mailto:contato@opbstudio.com">Contato</a>
+            <a href="https://instagram.com/paznaconta" target="_blank" rel="noopener">Instagram</a>
+            <a href="#sobre">Quem Somos</a>
+            <a href="mailto:contato@paznaconta.com">Contato</a>
         </div>
     </div>
 </footer>
@@ -693,9 +809,9 @@ window.addEventListener('scroll', () => {
     const nav = document.getElementById('nav');
     const scroll = window.scrollY;
     if (scroll > 100) {
-        nav.style.background = 'rgba(5,5,7,0.95)';
+        nav.style.background = 'rgba(10,10,15,0.95)';
     } else {
-        nav.style.background = 'rgba(5,5,7,0.8)';
+        nav.style.background = 'rgba(10,10,15,0.8)';
     }
     lastScroll = scroll;
 });
