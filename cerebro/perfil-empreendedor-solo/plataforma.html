@@ -51,12 +51,6 @@
             overflow-x: hidden;
             -webkit-font-smoothing: antialiased;
         }
-            color: var(--text-primary);
-            min-height: 100vh;
-            line-height: 1.6;
-            overflow-x: hidden;
-            -webkit-font-smoothing: antialiased;
-        }
         
         * { margin: 0; padding: 0; box-sizing: border-box; letter-spacing: -0.015em; }
         
@@ -228,8 +222,8 @@
         
         .topbar-left { display: flex; align-items: center; gap: 12px; }
         .mobile-menu-btn { display: none; background: none; border: none; color: var(--text-heading); font-size: 1.1rem; cursor: pointer; }
-        .page-title { font-size: 0.95rem; font-weight: 600; color: var(--text-heading); }
-        .page-breadcrumb { font-size: 0.75rem; color: var(--text-muted); font-family: 'JetBrains Mono', monospace; }
+        .page-title { font-size: clamp(0.9rem, 2.5vw, 0.95rem); font-weight: 600; color: var(--text-heading); }
+        .page-breadcrumb { font-size: clamp(0.65rem, 2vw, 0.75rem); color: var(--text-muted); font-family: 'JetBrains Mono', monospace; }
         .topbar-right { display: flex; align-items: center; gap: 12px; }
         
         .status-indicator { 
@@ -460,14 +454,119 @@
 
         .todo-item { display: flex; align-items: center; gap: 10px; padding: 8px 10px; background: rgba(255,255,255,0.01); border: 1px solid var(--border-subtle); border-radius: var(--radius-input); margin-bottom: 6px; }
 
+        /* ============================================
+           RESPONSIVE — MOBILE FIRST
+           ============================================ */
         @media (max-width: 768px) {
-            .sidebar { transform: translateX(-100%); }
-            .sidebar.open { transform: translateX(0); }
-            .main-content { margin-left: 0; }
-            .mobile-menu-btn { display: block; }
-            .grid-2, .grid-3 { grid-template-columns: 1fr; }
-            .page-content { padding: 16px; }
+            /* Sidebar hidden, replaced by bottom nav */
+            .sidebar { display: none; }
+            .main-content { margin-left: 0; padding-bottom: 64px; }
+            .mobile-menu-btn { display: none; }
+            .sidebar-overlay { display: none !important; }
+
+            /* Bottom Navigation Bar */
+            .bottom-nav {
+                display: flex !important;
+                position: fixed;
+                bottom: 0; left: 0; right: 0;
+                height: 64px;
+                background: rgba(8, 8, 10, 0.95);
+                backdrop-filter: blur(20px);
+                -webkit-backdrop-filter: blur(20px);
+                border-top: 1px solid var(--border-subtle);
+                z-index: 200;
+                padding: 0;
+                gap: 0;
+            }
+            .bottom-nav-item {
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                gap: 3px;
+                padding: 8px 4px;
+                color: var(--text-muted);
+                font-size: 0.6rem;
+                font-weight: 500;
+                text-decoration: none;
+                cursor: pointer;
+                transition: color 0.2s;
+                min-height: 44px;
+                -webkit-tap-highlight-color: transparent;
+                border: none;
+                background: none;
+                font-family: 'Inter', sans-serif;
+            }
+            .bottom-nav-item i { font-size: 1.1rem; }
+            .bottom-nav-item.active, .bottom-nav-item:active {
+                color: var(--accent-light);
+            }
+
+            /* Responsive fonts with clamp */
+            .page-title { font-size: clamp(0.85rem, 4vw, 0.95rem); }
+            .page-breadcrumb { font-size: clamp(0.6rem, 2.5vw, 0.75rem); }
+            .card { padding: 16px; margin-bottom: 14px; }
+            .card-title { font-size: clamp(0.72rem, 3vw, 0.85rem); }
+            .stat-value { font-size: clamp(1.2rem, 5vw, 1.6rem); }
+            .stat-label { font-size: clamp(0.65rem, 2.5vw, 0.75rem); }
+            .stat-card { padding: 14px; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+            .grid-2, .grid-3 { grid-template-columns: 1fr; gap: 12px; }
+            .page-content { padding: 12px; }
+            .topbar { padding: 10px 14px; }
+            .topbar-btn { width: 44px; height: 44px; }
+            .status-indicator { display: none; }
+
+            /* Touch targets >= 44px */
+            .btn { min-height: 44px; padding: 10px 16px; font-size: 0.85rem; }
+            .btn-sm { min-height: 36px; padding: 6px 12px; }
+            .btn-lg { min-height: 48px; padding: 12px 24px; }
+            .form-input, .form-textarea, .form-select { min-height: 44px; padding: 12px 14px; font-size: 16px; }
+            .form-textarea { min-height: 80px; }
+            .nav-item { min-height: 44px; padding: 10px 12px; }
+            .agent-card { padding: 14px; }
+            .agent-card .agent-icon { width: 44px; height: 44px; }
+            table td, table th { padding: 12px; font-size: 0.85rem; }
+            .tag { padding: 4px 8px; font-size: 0.7rem; }
+            .modal { width: 95%; padding: 16px; }
+            .carrossel-editor { font-size: 16px; min-height: 200px; }
+
+            /* Pomodoro timer responsive */
+            #pomodoro-timer { font-size: clamp(3rem, 12vw, 5rem) !important; }
+            #pomo-timer { font-size: clamp(3rem, 12vw, 5rem) !important; }
+
+            /* Hide sidebar toggle on mobile */
+            .sidebar-toggle-btn { display: none; }
+
+            /* Toast container above bottom nav */
+            .toast-container { bottom: 72px; right: 12px; left: 12px; }
+            .toast { width: 100%; }
+
+            /* Hide desktop-only elements */
+            .sidebar.collapsed .logo-text,
+            .sidebar.collapsed .nav-item span,
+            .sidebar.collapsed .nav-item .badge,
+            .sidebar.collapsed .nav-section-title {
+                opacity: 1; width: auto; overflow: visible; display: inline; pointer-events: auto;
+            }
         }
+
+        /* Tablet adjustments */
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .grid-3 { grid-template-columns: repeat(2, 1fr); }
+            .sidebar { width: 200px; }
+            .main-content { margin-left: 200px; }
+            .sidebar.collapsed ~ .main-content { margin-left: 56px; }
+        }
+
+        /* Desktop — show sidebar, hide bottom nav */
+        @media (min-width: 769px) {
+            .bottom-nav { display: none !important; }
+            .sidebar-toggle-btn { display: block; }
+        }
+
         .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 99; }
         .sidebar-overlay.active { display: block; }
     </style>
@@ -477,6 +576,17 @@
 
 <div class="toast-container" id="toastContainer"></div>
 <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleMobileMenu()"></div>
+<!-- ============================================
+     BOTTOM NAVIGATION (MOBILE)
+     ============================================ -->
+<nav class="bottom-nav" id="bottomNav">
+    <button class="bottom-nav-item active" onclick="navigateTo('dashboard')"><i class="fas fa-th-large"></i><span>Início</span></button>
+    <button class="bottom-nav-item" onclick="navigateTo('cerebro')"><i class="fas fa-brain"></i><span>Cérebro</span></button>
+    <button class="bottom-nav-item" onclick="navigateTo('carrossel')"><i class="fas fa-layer-group"></i><span>Carrossel</span></button>
+    <button class="bottom-nav-item" onclick="navigateTo('quadro-avisos')"><i class="fas fa-clipboard-list"></i><span>Tarefas</span></button>
+    <button class="bottom-nav-item" onclick="navigateTo('config')"><i class="fas fa-cog"></i><span>Mais</span></button>
+</nav>
+
 
 <div class="app">
     <aside class="sidebar" id="sidebar">
@@ -994,18 +1104,6 @@
 <div class="stat-card"><div class="stat-header"><div class="stat-icon blue"><i class="fas fa-tasks"></i></div></div><div class="stat-value" id="tasks-today">0</div><div class="stat-label">Tarefas Hoje</div></div>
 </div>
 <div class="grid-2">
-<div class="card"><div class="card-header"><div class="card-title"><i class="fas fa-clock" style="color:var(--success)"></i> Pomodoro Timer</div><button class="btn btn-sm btn-outline" onclick="resetPomodoro()"><i class="fas fa-redo"></i> Resetar</button></div>
-<div style="text-align:center;padding:30px 0">
-<div style="font-size:5rem;font-weight:800;color:var(--text-primary);font-variant-numeric:tabular-nums" id="pomodoro-timer2">25:00</div>
-<div style="margin:12px 0"><span class="tag tag-success" id="pomo-phase2">Foco</span><span class="tag tag-muted" id="pomo-round2" style="margin-left:8px">#1/4</span></div>
-<div style="display:flex;gap:10px;justify-content:center;margin-top:16px">
-<button class="btn btn-success btn-lg" id="pomo-btn2" onclick="togglePomodoro2()"><i class="fas fa-play"></i></button>
-<button class="btn btn-outline btn-lg" onclick="resetPomodoro2()"><i class="fas fa-redo"></i></button>
-<button class="btn btn-outline btn-lg" onclick="skipPomodoro()"><i class="fas fa-forward"></i></button>
-</div>
-</div>
-<div class="progress-ring" style="display:none" id="pomo-ring2"><svg width="120" height="120"><circle class="bg" cx="60" cy="60" r="52"/><circle class="progress" id="pomo-circle2" cx="60" cy="60" r="52" stroke-dasharray="326.73" stroke-dashoffset="0"/></svg><div class="percentage" id="pomo-pct2">100%</div></div>
-</div>
 <div class="card"><div class="card-header"><div class="card-title"><i class="fas fa-tasks" style="color:var(--info)"></i> Tarefas do Dia</div><button class="btn btn-sm btn-outline" onclick="addTask()"><i class="fas fa-plus"></i> Nova</button></div>
 <div id="tasks-list"><div class="empty-state"><i class="fas fa-tasks"></i><h3>Nenhuma tarefa hoje</h3><p>Adicione tarefas para organizar seu dia</p></div></div>
 </div>
@@ -1130,6 +1228,11 @@ function navigateTo(page) {
     }
     document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
     document.querySelectorAll('.nav-item').forEach(item => {
+        if (item.getAttribute('onclick') === `navigateTo('${page}')`) item.classList.add('active');
+    });
+    // Sync bottom nav
+    document.querySelectorAll('.bottom-nav-item').forEach(item => item.classList.remove('active'));
+    document.querySelectorAll('.bottom-nav-item').forEach(item => {
         if (item.getAttribute('onclick') === `navigateTo('${page}')`) item.classList.add('active');
     });
     const info = PAGES[page];
@@ -1937,7 +2040,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Desativa Service Worker (causava erros de cache)
     if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.getRegistrations().then(r => r.forEach(r => r.unregister()));
+        navigator.serviceWorker.register('/sw.js').catch(()=>{});
     }
 });
 
