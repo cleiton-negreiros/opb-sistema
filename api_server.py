@@ -1024,28 +1024,6 @@ def api_listar_transcricoes():
     return jsonify({"transcricoes": arquivos, "total": len(arquivos)})
 
 
-@app.route('/api/transcricao/ler', methods=['POST'])
-def api_ler_transcricao():
-    """Lê uma transcrição específica."""
-    data = request.get_json()
-    nome = data.get('nome', '')
-    if not nome:
-        return jsonify({"error": "Nome não informado"}), 400
-    path = get_acervo_path_for_user() / "transcricoes" / nome
-    if not path.exists():
-        arquivos = list((get_acervo_path_for_user() / "transcricoes").glob(f"*{nome}*.md"))
-        if arquivos:
-            path = arquivos[0]
-        else:
-            return jsonify({"error": "Transcrição não encontrada"}), 404
-    return jsonify({
-        "sucesso": True,
-        "conteudo": path.read_text(encoding='utf-8', errors='replace'),
-        "arquivo": path.name
-    })
-    return jsonify({"transcricoes": arquivos, "total": len(arquivos)})
-
-
 # ============================================
 # API — LER TRANSCRIÇÃO
 # ============================================
@@ -1057,9 +1035,9 @@ def api_ler_transcricao():
     nome = data.get('nome', '')
     if not nome:
         return jsonify({"error": "Nome não informado"}), 400
-    path = PROJECT_PATH / "acervo" / "transcricoes" / nome
+    path = get_acervo_path_for_user() / "transcricoes" / nome
     if not path.exists():
-        arquivos = list((PROJECT_PATH / "acervo" / "transcricoes").glob(f"*{nome}*.md"))
+        arquivos = list((get_acervo_path_for_user() / "transcricoes").glob(f"*{nome}*.md"))
         if arquivos:
             path = arquivos[0]
         else:

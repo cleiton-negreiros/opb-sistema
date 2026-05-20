@@ -25,5 +25,6 @@
       "ativo": true
     }
   ],
-  "padrao": "paz-na-conta"
+  "padrao": "paz-na-conta",
+  "ativo": "toque-de-paz"
 }
