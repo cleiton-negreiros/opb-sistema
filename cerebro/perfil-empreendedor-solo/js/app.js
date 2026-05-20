@@ -38,14 +38,14 @@ function initTheme() {
 // APP INIT
 // ============================================
 document.addEventListener('DOMContentLoaded', () => {
-    // Auth check
+    // Auth disabled for now - bypass check
+    /*
     const token = localStorage.getItem('opb_token');
     if (!token) {
         window.location.href = 'auth.html';
         return;
     }
 
-    // Validate token with server
     const API_URL = localStorage.getItem('opb_api_url') || '';
     fetch(`${API_URL}/api/auth/validate`, {
         headers: { 'Authorization': `Bearer ${token}` }
@@ -59,6 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     })
     .catch(() => {});
+    */
 
     initTheme();
     updateGreeting();

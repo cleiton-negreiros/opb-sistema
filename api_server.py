@@ -58,25 +58,30 @@ except Exception as e:
         return f
 
 # === AUTH INIT ===
+AUTH_ENABLED = False  # Disabled for now
 try:
     from auth import init_db, close_db, require_auth, optional_auth, authenticate_user, create_user, validate_token, logout_user, complete_onboarding, get_user_settings, update_user_settings, track_usage, get_usage_stats, get_user_data_dir, get_user_acervo_dir, get_user_cerebro_dir, get_user_output_dir
     init_db()
     app.teardown_appcontext(close_db)
-    AUTH_ENABLED = True
-    print("✅ Sistema de autenticação ativado")
+    # AUTH_ENABLED = True  # Disabled for now
+    print("⚠️  Sistema de autenticação desabilitado (temporariamente)")
 except Exception as e:
     print(f"⚠️  Auth não carregado: {e}")
-    AUTH_ENABLED = False
-    def require_auth(f):
-        return f
-    def optional_auth(f):
-        return f
-    def get_user_acervo_dir(user_id):
-        return str(PROJECT_PATH / "acervo")
-    def get_user_cerebro_dir(user_id):
-        return str(PROJECT_PATH / "cerebro")
-    def get_user_output_dir(user_id):
-        return str(PROJECT_PATH / "output")
+
+def require_auth(f):
+    return f
+
+def optional_auth(f):
+    return f
+
+def get_user_acervo_dir(user_id):
+    return str(PROJECT_PATH / "acervo")
+
+def get_user_cerebro_dir(user_id):
+    return str(PROJECT_PATH / "cerebro")
+
+def get_user_output_dir(user_id):
+    return str(PROJECT_PATH / "output")
 
 def get_project_path_for_user():
     """Get project path, user-specific if authenticated"""
