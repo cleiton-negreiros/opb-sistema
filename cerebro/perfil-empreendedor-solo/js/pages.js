@@ -1,6 +1,67 @@
 // ============================================
 // PAGES
 // ============================================
+async function loadPerfilData() {
+    try {
+        const data = await apiCall('/api/load-profile');
+        if (!data || data.error) return;
+
+        // Dados Básicos (PERFIL.md)
+        if (data.basico) {
+            const b = data.basico;
+            if (b.nome) document.getElementById('perfil-nome').value = b.nome;
+            if (b['nome publico'] || b['nome público']) document.getElementById('perfil-nome-publico').value = b['nome publico'] || b['nome público'];
+            if (b.nicho) document.getElementById('perfil-nicho').value = b.nicho;
+            if (b['publico alvo'] || b['público-alvo']) document.getElementById('perfil-publico').value = b['publico alvo'] || b['público-alvo'];
+            if (b.problema) document.getElementById('perfil-problema').value = b.problema;
+        }
+
+        // Habilidades
+        if (data.habilidades) {
+            const h = data.habilidades;
+            if (h.habilidades) document.getElementById('perfil-habilidades').value = h.habilidades;
+            if (h.resumo) document.getElementById('perfil-habilidades-resumo').value = h.resumo;
+        }
+
+        // Histórias
+        if (data.historias) {
+            const h = data.historias;
+            if (h['história profissional'] || h['historia profissional']) document.getElementById('perfil-historia').value = h['história profissional'] || h['historia profissional'];
+            if (h.experiências || h.experiencias) document.getElementById('perfil-experiencias').value = h.experiências || h.experiencias;
+        }
+
+        // Cosmovisão
+        if (data.cosmovisao) {
+            const c = data.cosmovisao;
+            if (c.valores) document.getElementById('perfil-valores').value = c.valores;
+            if (c.crenças || c.crencas) document.getElementById('perfil-crencas').value = c.crenças || c.crencas;
+        }
+
+        // Público-Alvo
+        if (data.publico) {
+            const p = data.publico;
+            if (p['cliente ideal'] || p.cliente) document.getElementById('perfil-cliente').value = p['cliente ideal'] || p.cliente;
+            if (p.problemas) document.getElementById('perfil-problemas').value = p.problemas;
+        }
+
+        // Posicionamento
+        if (data.posicionamento) {
+            const p = data.posicionamento;
+            if (p.diferencial) document.getElementById('perfil-diferencial').value = p.diferencial;
+            if (p['proposta de valor'] || p.proposta) document.getElementById('perfil-proposta').value = p['proposta de valor'] || p.proposta;
+        }
+
+        // Narrativa
+        if (data.narrativa) {
+            const n = data.narrativa;
+            if (n.missão || n.missao) document.getElementById('perfil-missao').value = n.missão || n.missao;
+            if (n.origem) document.getElementById('perfil-origem').value = n.origem;
+        }
+    } catch (e) {
+        console.error('Erro ao carregar perfil:', e);
+    }
+}
+
 function loadPageData(page) {
     if (page === 'perfil') { loadPerfilData(); }
     else if (page === 'arquivos') { loadFileBrowser(); }
@@ -553,7 +614,7 @@ function runAlimentarFromModal() {
 }
 
 
-function savePerfil(){
+async function savePerfil(){
     const n=document.getElementById('perfil-nome').value;
     if(!n){showToast('Preencha seu nome','error');return}
     const content='---\nname: "Basico"\nupdated_at: '+new Date().toISOString().split('T')[0]+'\n---\n\n## Nome\n\n'+n+'\n\n## Nome Publico\n\n'+document.getElementById('perfil-nome-publico').value+'\n\n## Nicho\n\n'+document.getElementById('perfil-nicho').value+'\n\n## Publico Alvo\n\n'+document.getElementById('perfil-publico').value+'\n\n## Problema\n\n'+document.getElementById('perfil-problema').value+'\n';
@@ -562,6 +623,49 @@ function savePerfil(){
         if(r.success||r.sucesso)showToast('Perfil salvo!','success');
         else showToast('Erro: '+(r.error||r.erro||''),'error');
     }catch(e){showToast('Erro ao salvar: '+e.message,'error')}
+}
+
+async function savePerfilModulo(modulo) {
+    let content = '';
+    let filename = '';
+
+    switch(modulo) {
+        case 'habilidades':
+            filename = 'HABILIDADES.md';
+            content = '## Habilidades\n\n' + (document.getElementById('perfil-habilidades').value || '') + '\n\n## Resumo\n\n' + (document.getElementById('perfil-habilidades-resumo').value || '');
+            break;
+        case 'historias':
+            filename = 'HISTORIAS.md';
+            content = '## História Profissional\n\n' + (document.getElementById('perfil-historia').value || '') + '\n\n## Experiências\n\n' + (document.getElementById('perfil-experiencias').value || '');
+            break;
+        case 'cosmovisao':
+            filename = 'COSMOVISAO.md';
+            content = '## Valores\n\n' + (document.getElementById('perfil-valores').value || '') + '\n\n## Crenças\n\n' + (document.getElementById('perfil-crencas').value || '');
+            break;
+        case 'publico':
+            filename = 'PUBLICO-ALVO.md';
+            content = '## Cliente Ideal\n\n' + (document.getElementById('perfil-cliente').value || '') + '\n\n## Problemas\n\n' + (document.getElementById('perfil-problemas').value || '');
+            break;
+        case 'posicionamento':
+            filename = 'POSICIONAMENTO.md';
+            content = '## Diferencial\n\n' + (document.getElementById('perfil-diferencial').value || '') + '\n\n## Proposta de Valor\n\n' + (document.getElementById('perfil-proposta').value || '');
+            break;
+        case 'narrativa':
+            filename = 'NARRATIVA.md';
+            content = '## Missão\n\n' + (document.getElementById('perfil-missao').value || '') + '\n\n## Origem\n\n' + (document.getElementById('perfil-origem').value || '');
+            break;
+        default:
+            showToast('Módulo desconhecido', 'error');
+            return;
+    }
+
+    try {
+        const r = await apiCall('/api/save-profile', 'POST', { modulo, content, filename });
+        if (r.success || r.sucesso) showToast(`${modulo.charAt(0).toUpperCase() + modulo.slice(1)} salvo!`, 'success');
+        else showToast('Erro: ' + (r.error || r.erro || ''), 'error');
+    } catch(e) {
+        showToast('Erro ao salvar: ' + e.message, 'error');
+    }
 }
 
 
@@ -901,6 +1005,16 @@ function renderStreak() {
         if (i === today) d.classList.add('today');
         d.textContent = dias[i];
         bar.appendChild(d);
+    }
+}
+
+function togglePerfilModulos() {
+    const modulos = document.getElementById('perfil-modulos');
+    if (modulos.style.display === 'none' || !modulos.style.display) {
+        modulos.style.display = 'block';
+        document.querySelectorAll('#perfil-modulos .card').forEach(c => c.style.display = 'block');
+    } else {
+        modulos.style.display = 'none';
     }
 }
 
