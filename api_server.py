@@ -14,7 +14,7 @@ import json
 import subprocess
 from pathlib import Path
 from datetime import datetime
-from flask import Flask, request, jsonify, send_from_directory
+from flask import Flask, request, jsonify, send_from_directory, g
 from flask_cors import CORS
 
 # Configurar encoding para UTF-8
@@ -29,6 +29,72 @@ DEBUG = True
 
 app = Flask(__name__, static_folder=str(FRONTEND_PATH), static_url_path='')
 CORS(app)
+
+# === VALIDATION INIT ===
+try:
+    from validation import required_fields, validate_field, validate_email, validate_username, max_length, rate_limit, handle_errors
+    VALIDATION_ENABLED = True
+    print("✅ Validação de inputs ativada")
+except Exception as e:
+    print(f"⚠️  Validação não carregada: {e}")
+    VALIDATION_ENABLED = False
+    def required_fields(*fields):
+        def decorator(f):
+            return f
+        return decorator
+    def validate_field(field_name, validator, error_message):
+        def decorator(f):
+            return f
+        return decorator
+    def max_length(field_name, max_len):
+        def decorator(f):
+            return f
+        return decorator
+    def rate_limit(max_requests=60, window=60):
+        def decorator(f):
+            return f
+        return decorator
+    def handle_errors(f):
+        return f
+
+# === AUTH INIT ===
+try:
+    from auth import init_db, close_db, require_auth, optional_auth, authenticate_user, create_user, validate_token, logout_user, complete_onboarding, get_user_settings, update_user_settings, track_usage, get_usage_stats, get_user_data_dir, get_user_acervo_dir, get_user_cerebro_dir, get_user_output_dir
+    init_db()
+    app.teardown_appcontext(close_db)
+    AUTH_ENABLED = True
+    print("✅ Sistema de autenticação ativado")
+except Exception as e:
+    print(f"⚠️  Auth não carregado: {e}")
+    AUTH_ENABLED = False
+    def require_auth(f):
+        return f
+    def optional_auth(f):
+        return f
+    def get_user_acervo_dir(user_id):
+        return str(PROJECT_PATH / "acervo")
+    def get_user_cerebro_dir(user_id):
+        return str(PROJECT_PATH / "cerebro")
+    def get_user_output_dir(user_id):
+        return str(PROJECT_PATH / "output")
+
+def get_project_path_for_user():
+    """Get project path, user-specific if authenticated"""
+    if AUTH_ENABLED and hasattr(request, 'user'):
+        return Path(get_user_data_dir(request.user['id']))
+    return PROJECT_PATH
+
+def get_acervo_path_for_user():
+    """Get acervo path, user-specific if authenticated"""
+    if AUTH_ENABLED and hasattr(request, 'user'):
+        return Path(get_user_acervo_dir(request.user['id']))
+    return PROJECT_PATH / "acervo"
+
+def get_output_path_for_user():
+    """Get output path, user-specific if authenticated"""
+    if AUTH_ENABLED and hasattr(request, 'user'):
+        return Path(get_user_output_dir(request.user['id']))
+    return PROJECT_PATH / "output"
 
 # ============================================
 # UTILIDADES
@@ -65,6 +131,9 @@ def run_agent(agent_path: str, args: list = None) -> dict:
 
 def get_project_stats() -> dict:
     """Coleta estatísticas do projeto."""
+    acervo_path = get_acervo_path_for_user()
+    output_path = get_output_path_for_user()
+
     stats = {
         "agentes_total": 0,
         "agentes_ativos": 0,
@@ -76,7 +145,7 @@ def get_project_stats() -> dict:
         "posts_gerados": 0,
     }
 
-    # Contar agentes
+    # Contar agentes (shared)
     agents_path = PROJECT_PATH / "agents"
     if agents_path.exists():
         for d in agents_path.iterdir():
@@ -88,32 +157,32 @@ def get_project_stats() -> dict:
                         stats["agentes_ativos"] += 1
 
     # Contar ideias
-    ideias_path = PROJECT_PATH / "acervo" / "ideias"
+    ideias_path = acervo_path / "ideias"
     if ideias_path.exists():
         stats["ideias_salvas"] = len([f for f in ideias_path.glob("*.md") if f.name != "index.md"])
 
     # Contar transcricoes
-    transc_path = PROJECT_PATH / "acervo" / "transcricoes"
+    transc_path = acervo_path / "transcricoes"
     if transc_path.exists():
         stats["transcricoes"] = len([f for f in transc_path.glob("*.md") if f.name != "index.md"])
 
     # Contar carrosséis
-    carrossel_path = PROJECT_PATH / "acervo" / "carrossel"
+    carrossel_path = acervo_path / "carrossel"
     if carrossel_path.exists():
         stats["carrossel_gerados"] = len([f for f in carrossel_path.glob("*.md") if f.name != "index.md"])
 
     # Contar conhecimento
-    conhecimento_path = PROJECT_PATH / "acervo" / "conhecimento"
+    conhecimento_path = acervo_path / "conhecimento"
     if conhecimento_path.exists():
         stats["conhecimento_salvo"] = len([f for f in conhecimento_path.glob("*.md") if f.name != "index.md"])
 
     # Contar capas
-    capas_path = PROJECT_PATH / "acervo" / "capas"
+    capas_path = acervo_path / "capas"
     if capas_path.exists():
         stats["capas_geradas"] = len([f for f in capas_path.glob("*.md") if f.name != "index.md"])
 
     # Contar posts
-    posts_path = PROJECT_PATH / "output" / "text_posts"
+    posts_path = output_path / "text_posts"
     if posts_path.exists():
         stats["posts_gerados"] = len([f for f in posts_path.glob("*.txt")])
 
@@ -150,8 +219,173 @@ def health_check():
     return jsonify({
         "status": "online",
         "project_path": str(PROJECT_PATH),
-        "timestamp": datetime.now().isoformat()
+        "timestamp": datetime.now().isoformat(),
+        "auth_enabled": AUTH_ENABLED
     })
+
+
+# ============================================
+# API — AUTENTICAÇÃO
+# ============================================
+
+@app.route('/api/auth/register', methods=['POST'])
+@rate_limit(max_requests=5, window=300)  # 5 registrations per 5 minutes
+@handle_errors
+def api_auth_register():
+    """Registrar novo usuário."""
+    if not AUTH_ENABLED:
+        return jsonify({"error": "Auth não disponível"}), 503
+
+    data = request.get_json()
+    email = data.get('email', '').strip()
+    username = data.get('username', '').strip()
+    password = data.get('password', '')
+    full_name = data.get('full_name', '').strip()
+
+    if not email or not username or not password:
+        return jsonify({"error": "Email, usuário e senha são obrigatórios"}), 400
+
+    if not validate_email(email):
+        return jsonify({"error": "Email inválido"}), 400
+
+    if not validate_username(username):
+        return jsonify({"error": "Usuário deve ter 3-30 caracteres (letras, números, underscore)"}), 400
+
+    if len(password) < 6:
+        return jsonify({"error": "Senha deve ter no mínimo 6 caracteres"}), 400
+
+    full_name = full_name[:100] if full_name else None
+
+    result = create_user(email, username, password, full_name)
+    if result['success']:
+        return jsonify({"message": result['message'], "user_id": result['user_id']}), 201
+    return jsonify({"error": result['message']}), 400
+
+
+@app.route('/api/auth/login', methods=['POST'])
+@rate_limit(max_requests=10, window=60)  # 10 logins per minute
+@handle_errors
+def api_auth_login():
+    """Login de usuário."""
+    if not AUTH_ENABLED:
+        return jsonify({"error": "Auth não disponível"}), 503
+
+    data = request.get_json()
+    email_or_username = data.get('email_or_username', '').strip()
+    password = data.get('password', '')
+
+    if not email_or_username or not password:
+        return jsonify({"error": "Usuário e senha são obrigatórios"}), 400
+
+    result = authenticate_user(email_or_username, password)
+    if result['success']:
+        response = jsonify({
+            "message": result['message'],
+            "token": result['token'],
+            "user": result['user']
+        })
+        response.set_cookie('opb_token', result['token'], httponly=True, max_age=86400, samesite='Lax')
+        return response
+    return jsonify({"error": result['message']}), 401
+
+
+@app.route('/api/auth/validate', methods=['GET'])
+def api_auth_validate():
+    """Validar token."""
+    if not AUTH_ENABLED:
+        return jsonify({"error": "Auth não disponível"}), 503
+
+    token = request.headers.get('Authorization', '').replace('Bearer ', '')
+    if not token:
+        token = request.cookies.get('opb_token')
+    if not token:
+        token = request.args.get('token')
+
+    if not token:
+        return jsonify({"success": False, "message": "Token não fornecido"}), 401
+
+    result = validate_token(token)
+    if result['success']:
+        return jsonify(result)
+    return jsonify(result), 401
+
+
+@app.route('/api/auth/logout', methods=['POST'])
+@require_auth
+def api_auth_logout():
+    """Logout de usuário."""
+    if not AUTH_ENABLED:
+        return jsonify({"error": "Auth não disponível"}), 503
+
+    result = logout_user(request.token)
+    response = jsonify(result)
+    response.delete_cookie('opb_token')
+    return response
+
+
+@app.route('/api/auth/onboarding', methods=['POST'])
+@require_auth
+def api_auth_onboarding():
+    """Completar onboarding."""
+    if not AUTH_ENABLED:
+        return jsonify({"error": "Auth não disponível"}), 503
+
+    data = request.get_json()
+    user_id = request.user['id']
+
+    # Save onboarding data to user settings
+    settings = {
+        'theme': data.get('theme', 'dark'),
+        'notifications_enabled': 1 if data.get('notifications') == 'enabled' else 0,
+    }
+    if data.get('telegram_token'):
+        settings['telegram_connected'] = 1
+        settings['telegram_chat_id'] = data.get('telegram_token')
+    if data.get('api_url'):
+        settings['api_url'] = data.get('api_url')
+
+    update_user_settings(user_id, settings)
+    complete_onboarding(user_id)
+
+    # Track onboarding completion
+    track_usage(user_id, 'onboarding_complete', details=data)
+
+    return jsonify({"success": True, "message": "Onboarding completo"})
+
+
+@app.route('/api/auth/settings', methods=['GET'])
+@require_auth
+def api_auth_settings():
+    """Obter configurações do usuário."""
+    if not AUTH_ENABLED:
+        return jsonify({"error": "Auth não disponível"}), 503
+
+    settings = get_user_settings(request.user['id'])
+    return jsonify(settings)
+
+
+@app.route('/api/auth/settings', methods=['PUT'])
+@require_auth
+def api_auth_update_settings():
+    """Atualizar configurações do usuário."""
+    if not AUTH_ENABLED:
+        return jsonify({"error": "Auth não disponível"}), 503
+
+    data = request.get_json()
+    result = update_user_settings(request.user['id'], data)
+    return jsonify(result)
+
+
+@app.route('/api/auth/analytics', methods=['GET'])
+@require_auth
+def api_auth_analytics():
+    """Obter analytics do usuário."""
+    if not AUTH_ENABLED:
+        return jsonify({"error": "Auth não disponível"}), 503
+
+    days = request.args.get('days', 30, type=int)
+    stats = get_usage_stats(request.user['id'], days)
+    return jsonify({"stats": stats, "days": days})
 
 
 # ============================================
@@ -362,8 +596,8 @@ def api_carrossel():
 
      result = run_agent("agents/carrossel/main.py", args)
 
-     # Pega o arquivo gerado mais recente
-     carrossel_path = PROJECT_PATH / "acervo" / "carrossel"
+     # Pega o arquivo gerado mais recente (user-specific)
+     carrossel_path = get_acervo_path_for_user() / "carrossel"
      conteudo = ""
      filename = ""
      if result.get("success", False) and carrossel_path.exists():
@@ -385,7 +619,7 @@ def api_carrossel():
 @app.route('/api/carrossel/lista', methods=['GET'])
 def api_carrossel_lista():
     """Lista todos os carrosséis gerados."""
-    carrossel_path = PROJECT_PATH / "acervo" / "carrossel"
+    carrossel_path = get_acervo_path_for_user() / "carrossel"
     if not carrossel_path.exists():
         return jsonify({"carrosseis": []})
 
@@ -421,7 +655,7 @@ def api_carrossel_lista():
 @app.route('/api/carrossel/<filename>', methods=['GET'])
 def api_carrossel_get(filename):
     """Retorna o conteúdo de um carrossel."""
-    filepath = PROJECT_PATH / "acervo" / "carrossel" / filename
+    filepath = get_acervo_path_for_user() / "carrossel" / filename
     if not filepath.exists():
         return jsonify({"error": "Carrossel não encontrado"}), 404
     content = filepath.read_text(encoding='utf-8')
@@ -430,7 +664,7 @@ def api_carrossel_get(filename):
 @app.route('/api/carrossel/<filename>', methods=['PUT'])
 def api_carrossel_update(filename):
     """Atualiza um carrossel existente."""
-    filepath = PROJECT_PATH / "acervo" / "carrossel" / filename
+    filepath = get_acervo_path_for_user() / "carrossel" / filename
     if not filepath.exists():
         return jsonify({"error": "Carrossel não encontrado"}), 404
     data = request.get_json()
@@ -443,7 +677,7 @@ def api_carrossel_update(filename):
 @app.route('/api/carrossel/<filename>', methods=['DELETE'])
 def api_carrossel_delete(filename):
     """Deleta um carrossel."""
-    filepath = PROJECT_PATH / "acervo" / "carrossel" / filename
+    filepath = get_acervo_path_for_user() / "carrossel" / filename
     if not filepath.exists():
         return jsonify({"error": "Carrossel não encontrado"}), 404
     filepath.unlink()
@@ -561,7 +795,7 @@ def api_alimentar():
 @app.route('/api/ideias', methods=['GET'])
 def api_ideias():
     """Lista ideias salvas."""
-    ideias_path = PROJECT_PATH / "acervo" / "ideias"
+    ideias_path = get_acervo_path_for_user() / "ideias"
     ideias = []
 
     if ideias_path.exists():
@@ -671,7 +905,7 @@ def api_radagast():
 @app.route('/api/transcricoes', methods=['GET'])
 def api_listar_transcricoes():
     """Lista transcrições salvas."""
-    transc_path = PROJECT_PATH / "acervo" / "transcricoes"
+    transc_path = get_acervo_path_for_user() / "transcricoes"
     arquivos = []
     if transc_path.exists():
         for f in sorted(transc_path.glob("*.md"), reverse=True):
@@ -695,6 +929,28 @@ def api_listar_transcricoes():
                 "arquivo": f.name,
                 "metadata": metadata
             })
+    return jsonify({"transcricoes": arquivos, "total": len(arquivos)})
+
+
+@app.route('/api/transcricao/ler', methods=['POST'])
+def api_ler_transcricao():
+    """Lê uma transcrição específica."""
+    data = request.get_json()
+    nome = data.get('nome', '')
+    if not nome:
+        return jsonify({"error": "Nome não informado"}), 400
+    path = get_acervo_path_for_user() / "transcricoes" / nome
+    if not path.exists():
+        arquivos = list((get_acervo_path_for_user() / "transcricoes").glob(f"*{nome}*.md"))
+        if arquivos:
+            path = arquivos[0]
+        else:
+            return jsonify({"error": "Transcrição não encontrada"}), 404
+    return jsonify({
+        "sucesso": True,
+        "conteudo": path.read_text(encoding='utf-8', errors='replace'),
+        "arquivo": path.name
+    })
     return jsonify({"transcricoes": arquivos, "total": len(arquivos)})
 
 
@@ -956,7 +1212,7 @@ def api_servicos_reiniciar():
 @app.route('/<path:path>', methods=['GET'])
 def serve_static(path):
     """Serve arquivos estáticos do frontend."""
-    static_files = ['plataforma.html', 'landing.html', 'dashboard.html', 'favicon.ico', 'manifest.json', 'sw.js']
+    static_files = ['plataforma.html', 'landing.html', 'dashboard.html', 'auth.html', 'onboarding.html', 'favicon.ico', 'manifest.json', 'sw.js']
     if path in static_files or path.endswith(('.js', '.css', '.json', '.png', '.jpg', '.svg', '.ico')):
         filepath = FRONTEND_PATH / path
         if filepath.exists():

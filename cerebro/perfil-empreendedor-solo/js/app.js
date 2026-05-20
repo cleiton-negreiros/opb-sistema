@@ -38,6 +38,28 @@ function initTheme() {
 // APP INIT
 // ============================================
 document.addEventListener('DOMContentLoaded', () => {
+    // Auth check
+    const token = localStorage.getItem('opb_token');
+    if (!token) {
+        window.location.href = 'auth.html';
+        return;
+    }
+
+    // Validate token with server
+    const API_URL = localStorage.getItem('opb_api_url') || '';
+    fetch(`${API_URL}/api/auth/validate`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+    })
+    .then(r => r.json())
+    .then(data => {
+        if (!data.success) {
+            localStorage.removeItem('opb_token');
+            localStorage.removeItem('opb_user');
+            window.location.href = 'auth.html';
+        }
+    })
+    .catch(() => {});
+
     initTheme();
     updateGreeting();
     renderHeatmap();
@@ -220,4 +242,44 @@ function filterInspiracoes(nicho, btn) {
     if (nicho === 'todos') return renderInspGrid(inspData);
     const filtered = inspData.filter(p => (p.nicho || '').toLowerCase().includes(nicho));
     renderInspGrid(filtered);
+}
+
+// ============================================
+// AUTH / LOGOUT
+// ============================================
+function loadUserInfo() {
+    const user = JSON.parse(localStorage.getItem('opb_user') || '{}');
+    const emailEl = document.getElementById('cfg-user-email');
+    const planEl = document.getElementById('cfg-user-plan');
+    if (emailEl) emailEl.textContent = user.email || user.username || 'Usuário';
+    if (planEl) planEl.textContent = `Plano: ${(user.plan || 'free').charAt(0).toUpperCase() + (user.plan || 'free').slice(1)}`;
+}
+
+async function logout() {
+    if (!confirm('Deseja realmente sair?')) return;
+
+    const token = localStorage.getItem('opb_token');
+    const API_URL = localStorage.getItem('opb_api_url') || '';
+
+    try {
+        await fetch(`${API_URL}/api/auth/logout`, {
+            method: 'POST',
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+    } catch (e) {}
+
+    localStorage.removeItem('opb_token');
+    localStorage.removeItem('opb_user');
+    window.location.href = 'auth.html';
+}
+
+// Load user info when config page is shown
+const origNavigateTo = window.navigateTo;
+if (origNavigateTo) {
+    window.navigateTo = function(page) {
+        origNavigateTo(page);
+        if (page === 'config') {
+            setTimeout(loadUserInfo, 100);
+        }
+    };
 }

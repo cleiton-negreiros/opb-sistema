@@ -4,12 +4,19 @@
   "framework": null,
   "rewrites": [
     { "source": "/", "destination": "/landing.html" },
+    { "source": "/plataforma", "destination": "/plataforma.html" },
     { "source": "/plataforma.html", "destination": "/plataforma.html" },
+    { "source": "/dashboard", "destination": "/dashboard.html" },
     { "source": "/dashboard.html", "destination": "/dashboard.html" },
+    { "source": "/auth", "destination": "/auth.html" },
+    { "source": "/auth.html", "destination": "/auth.html" },
+    { "source": "/onboarding", "destination": "/onboarding.html" },
+    { "source": "/onboarding.html", "destination": "/onboarding.html" },
     { "source": "/manifest.json", "destination": "/manifest.json" },
     { "source": "/sw.js", "destination": "/sw.js" }
   ],
   "headers": [
-    { "source": "/(.*)", "headers": [{ "key": "Access-Control-Allow-Origin", "value": "*" }] }
+    { "source": "/(.*)", "headers": [{ "key": "Access-Control-Allow-Origin", "value": "*" }] },
+    { "source": "/(auth|onboarding).html", "headers": [{ "key": "Cache-Control", "value": "no-cache" }] }
   ]
 }
