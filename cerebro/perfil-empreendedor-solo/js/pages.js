@@ -9,11 +9,18 @@ async function loadPerfilData() {
         // Dados Básicos (PERFIL.md)
         if (data.basico) {
             const b = data.basico;
+            // Mapeia campos do markdown para os inputs do form
             if (b.nome) document.getElementById('perfil-nome').value = b.nome;
             if (b['nome publico'] || b['nome público']) document.getElementById('perfil-nome-publico').value = b['nome publico'] || b['nome público'];
             if (b.nicho) document.getElementById('perfil-nicho').value = b.nicho;
-            if (b['publico alvo'] || b['público-alvo']) document.getElementById('perfil-publico').value = b['publico alvo'] || b['público-alvo'];
+            if (b['publico alvo'] || b['público-alvo'] || b.público) document.getElementById('perfil-publico').value = b['publico alvo'] || b['público-alvo'] || b.público;
             if (b.problema) document.getElementById('perfil-problema').value = b.problema;
+            
+            // Campos extras do perfil Paz na Conta
+            if (b.descrição || b.descricao) {
+                // Se não tem campo problema, usa descrição como fallback
+                if (!b.problema) document.getElementById('perfil-problema').value = b.descrição || b.descricao;
+            }
         }
 
         // Habilidades
