@@ -135,28 +135,57 @@ show_menu() {
 
 # ========== AÇÕES ==========
 start_api() {
-    echo -e "\n${YELLOW}?? Iniciando API Server...${NC}"
-    cd "$PROJETO"
+    echo -e "\n${YELLOW}🌐 Iniciando API Server...${NC}"
+    
+    if [ -z "$PROJETO" ]; then
+        echo -e "${RED}❌ Projeto não encontrado!${NC}"
+        echo -e "${YELLOW}Execute: termux-setup-storage${NC}"
+        return
+    fi
+    
+    cd "$PROJETO" || {
+        echo -e "${RED}❌ Falha ao acessar: $PROJETO${NC}"
+        return
+    }
 
-    # Verifica se porta 5000 est� em uso
+    # Verifica se porta 5000 está em uso
     if check_port 5000 | grep -q "ok"; then
-        echo -e "${GREEN}? API j� est� rodando na porta 5000${NC}"
+        echo -e "${GREEN}✅ API já está rodando na porta 5000${NC}"
         return
     fi
 
-    # Inicia API com log vis�vel
+    # Verifica dependências
+    if ! python -c "import flask" 2>/dev/null; then
+        echo -e "${YELLOW}⚠️  Instalando Flask...${NC}"
+        pip install flask flask-cors -q
+    fi
+
+    # Limpa log anterior
+    rm -f /tmp/opb-api.log
+
+    # Inicia API com log visível
     python api_server.py > /tmp/opb-api.log 2>&1 &
     API_PID=$!
     echo "$API_PID" > /tmp/opb-api.pid
     sleep 3
 
+    # Verifica se processo ainda está rodando
+    if ! kill -0 $API_PID 2>/dev/null; then
+        echo -e "${RED}❌ API falhou ao iniciar!${NC}"
+        echo -e "${YELLOW}📋 Log completo:${NC}"
+        cat /tmp/opb-api.log
+        echo ""
+        echo -e "${CYAN}💡 Verifique: termux-setup-storage${NC}"
+        return
+    fi
+
     HTTP_STATUS=$(check_api)
     if [ "$HTTP_STATUS" = "200" ]; then
-        echo -e "${GREEN}? API rodando em http://localhost:5000${NC}"
+        echo -e "${GREEN}✅ API rodando em http://localhost:5000${NC}"
     else
-        echo -e "${RED}? API falhou ao iniciar!${NC}"
-        echo -e "${YELLOW}?? �ltimas linhas do log:${NC}"
-        tail -10 /tmp/opb-api.log
+        echo -e "${RED}❌ API falhou ao iniciar!${NC}"
+        echo -e "${YELLOW}📋 Últimas linhas do log:${NC}"
+        tail -20 /tmp/opb-api.log
         echo ""
         echo -e "${CYAN}Para ver o erro completo: cat /tmp/opb-api.log${NC}"
     fi

@@ -241,11 +241,18 @@ def read_file_safe(path: Path) -> str:
 
 @app.route('/')
 def serve_frontend():
+    """Redirect para a plataforma."""
+    from flask import redirect
+    return redirect('/plataforma.html')
+
+
+@app.route('/landing.html')
+def serve_landing():
     """Serve a landing page."""
     index_path = FRONTEND_PATH / "landing.html"
     if index_path.exists():
         return send_from_directory(str(FRONTEND_PATH), "landing.html")
-    return jsonify({"error": "Frontend não encontrado"}), 404
+    return jsonify({"error": "Landing page não encontrada"}), 404
 
 
 @app.route('/api/health')
