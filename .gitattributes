@@ -1,0 +1,19 @@
+* text=auto
+
+# Shell scripts devem sempre usar LF
+*.sh text eol=lf
+
+# Python
+*.py text eol=lf
+
+# HTML/JS/CSS/JSON
+*.html text eol=lf
+*.js text eol=lf
+*.css text eol=lf
+*.json text eol=lf
+
+# Markdown
+*.md text eol=lf
+
+# Batch (Windows) pode manter CRLF
+*.bat text eol=crlf
