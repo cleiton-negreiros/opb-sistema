@@ -14,5 +14,6 @@ async function apiCall(endpoint, method, body) {
         showToast('Erro na API: ' + err.message, 'error');
         return { error: err.message };
     }
+}
 
 function escapeHtml(t) { const d = document.createElement('div'); d.textContent = t; return d.innerHTML; }
