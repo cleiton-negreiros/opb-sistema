@@ -1,71 +1,59 @@
-# Resumo da Sessão - 13/05/2026
+# Resumo da Sessão - 20/05/2026
 
-## O que foi construído
+## O que foi construído hoje
 
-### 1. Infraestrutura do Sistema
-- **API Server Flask** (`api_server.py`) com 14+ endpoints
-- **Telegram Bot** integrado (NegreirosBot - @NegreirosBot)
-- **Ollama** configurado com tinyllama:latest para IA local
-- **Fallback mode** para funcionar sem Ollama
+### 1. Sistema Multi-Perfil
+- **`profile_manager.py`** - Gerenciamento de perfis com dados isolados
+- **`perfis/paz-na-conta/`** - Perfil com `perfil/`, `cerebro/`, `acervo/`, `output/`
+- **`perfis/toque-de-paz/`** - Segundo perfil (música católica)
+- **`perfis/caminho-vida/`** - Terceiro perfil (mentoria de vida)
+- **`perfis/perfis.json`** - Configuração central com perfil ativo
+- **API endpoints**: `/api/perfis`, `/api/perfis/ativo` (GET/POST), `/api/perfis/<id>/config`
 
-### 2. Correções de Bugs
-- `/api/alimentar` - corregido para usar script externo em vez de código inline
-- `/api/carrossel` - corrigido KeyError para usar `.get()`
-- Encoding UTF-8 em todos os outputs
+### 2. Correções de Bugs Críticos
+- **`api_server.py`**: Endpoint duplicado `api_ler_transcricao` removido
+- **`api_server.py`**: Rota `/` agora redireciona para `/plataforma.html`
+- **`termux.sh`**: `check_port()` usa `curl` ao invés de `ss` (Termux permission denied)
+- **`termux.sh`**: `start_api()` com verificação de dependências e logs melhorados
+- **`sw.js`**: Cache atualizado para `v3` (força refresh no navegador)
 
-### 3. Deploy no Vercel
-- Frontend estático: **https://opb-sistema.vercel.app**
-- Configuração com rewrites para SPA
+### 3. Frontend - Meu Perfil
+- **`js/pages.js`**: Criada função `loadPerfilData()` para carregar dados do perfil
+- **`js/pages.js`**: Criada função `savePerfilModulo()` para salvar cada módulo
+- **`js/pages.js`**: Corrigidas todas funções com `await` (adicionado `async`)
+- **`js/pages.js`**: Removidas ~30 funções duplicadas
+- **`js/components.js`**: Adicionadas `toggleMobileMenu()` e `closeMobileMenu()`
+- **`plataforma.html`**: Corrigida ordem de carregamento dos scripts
+- **`PERFIL.md`**: Atualizado com todos os campos do formulário
 
-### 4. Setup para Outro Computador
-- `setup.bat` - Script de instalação automática
-- `iniciar.bat` - Script para iniciar o sistema
-- `requirements.txt` - Dependências completas
-- `INSTALL.md` - Guia completo de instalação
+### 4. Testes Automatizados
+- **`tests/test_multi_profile.py`**: 32 testes passando (100%)
+  - `TestGetActiveProfile` (3 testes)
+  - `TestSetActiveProfile` (3 testes)
+  - `TestListProfiles` (3 testes)
+  - `TestGetProfileConfig` (3 testes)
+  - `TestGetProfilePath` (6 testes)
+  - `TestProfileIsolation` (3 testes)
+  - `TestProfileAPIEndpoints` (7 testes)
+  - `TestEdgeCases` (4 testes)
 
-### 5. PWA Mobile
-- `manifest.json` - Icons, shortcuts, orientação portrait
-- `sw.js` - Service Worker para offline
-- Meta tags para iOS/Android
-- Layout responsivo mobile-first
-
-### 6. Documentação
-- `TODO.md` atualizado com estado atual
-- `AGENTS.md` atualizado
+### 5. Scripts de Diagnóstico
+- **`diagnostico.sh`**: Script completo para identificar problemas no Termux
 
 ---
 
-## Próximos Passos
+## Próximos Passos (Para Amanhã)
 
-### Para o Usuário (Ações do usuário):
+### Prioridade Alta
+1. **Testar no celular** - Verificar se perfil carrega corretamente após `git pull`
+2. **Cache do navegador** - Limpar service worker no celular para aplicar correções JS
+3. **Termux** - Testar opção 1 do `termux.sh` após correção do `check_port()`
 
-1. **Testar no celular:**
-   - Acesse https://opb-sistema.vercel.app
-   - Instale como app (iOS: compartilhar > adicionar à tela; Android: menu > instalar)
-
-2. **Configurar em outro PC:**
-   ```bash
-   git clone https://github.com/cleiton-negreiros/opb-sistema.git
-   cd opb-sistema
-   setup.bat
-   iniciar.bat
-   ```
-
-3. **Para ter IA real:**
-   - Instalar Ollama: https://ollama.ai
-   - Baixar modelo: `ollama pull tinyllama`
-
-4. **Preencher o perfil:**
-   - Usar o formulário para criar o perfil do empreendedor
-   - Preencher as 6 seções (Habilidades, Histórias, etc)
-
-### Para Desenvolvimento (Melhorias):
-
-1. **Resolver timeout do Ollama** - O modelo às vezes demora
-2. **Adicionar mais agentes** - Transcrição, Email, Analytics
-3. **Integrar com banco de dados** - Para persistência real
-4. **Criar API de production** - Deploy com Docker/Vercel Serverless
-5. **Adicionar autenticação** - Login para proteger dados
+### Melhorias
+1. **Cache e otimização de queries** - Implementar cache para endpoints frequentes
+2. **Sistema de backup automatizado** - Backup dos dados de perfis
+3. **Documentação técnica completa** - Atualizar docs com novo sistema multi-perfil
+4. **Monitoramento e error tracking** - Setup de logs e alertas
 
 ---
 
@@ -75,7 +63,8 @@
 |---------|-----|
 | **Frontend/Vercel** | https://opb-sistema.vercel.app |
 | **GitHub** | https://github.com/cleiton-negreiros/opb-sistema |
-| **API Local** | http://localhost:5000 (quando rodar localmente) |
+| **API Local** | http://localhost:5000 |
+| **Plataforma** | http://localhost:5000/plataforma.html |
 
 ---
 
@@ -83,15 +72,38 @@
 
 | Recurso | Status | Observação |
 |---------|--------|------------|
-| Plataforma web | ✅ | No Vercel |
-| Formulário de perfil | ✅ | No Vercel |
-| PWA (instalar) | ✅ | No Vercel |
+| Plataforma web | ✅ | Vercel + Local |
+| Multi-perfil | ✅ | 3 perfis isolados |
+| API REST | ✅ | 20+ endpoints |
+| Meu Perfil (carregar) | ✅ | Dados carregam do PERFIL.md |
+| Meu Perfil (salvar) | ✅ | Salva em .md por módulo |
+| Profile Switcher | ✅ | Troca perfil em tempo real |
+| Termux menu | ✅ | Com debug melhorado |
+| Testes automatizados | ✅ | 32 testes passando |
+| PWA (instalar) | ✅ | Cache v3 |
 | Telegram Bot | ✅ | Rodando localmente |
-| API REST | ✅ | Só localmente |
-| Agente Consumo | ✅ | Fallback funciona |
-| Agente Carrossel | ⚠️ | Lento com Ollama |
-| IA (tinyllama) | ⚠️ | Às vezes timeout |
 
 ---
 
-_Última atualização: 2026-05-13 - Commit b487549_
+## Comandos Útiles
+
+### No PC
+```bash
+# Iniciar API
+python api_server.py
+
+# Rodar testes
+python -m pytest tests/test_multi_profile.py -v
+```
+
+### No Celular (Termux)
+```bash
+cd ~/storage/downloads/opb-sistema
+git pull
+bash diagnostico.sh    # Verificar problemas
+bash termux.sh         # Menu principal
+```
+
+---
+
+_Última atualização: 2026-05-20 - Commit 0458eaf_
