@@ -1229,6 +1229,8 @@ def api_agentes_executar():
         "text_generator": "agents/text_generator/main.py",
         "consumo": "agents/consumo/main.py",
         "capa_video": "agents/capa_video/main.py",
+        "corta_silencio": "agents/corta-silencio/main.py",
+        "transcrever_audio": "agents/transcrever-audio/main.py",
     }
 
     if agente not in AGENTES:

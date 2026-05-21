@@ -1,0 +1,13 @@
+# Corta Silencio — dependencias
+#
+# Este agente usa APENAS FFmpeg. Nenhuma biblioteca Python de audio e necessaria.
+#
+# Requisitos do sistema:
+#   - Python 3.8+
+#   - FFmpeg instalado no PATH
+#
+# Instalacao do FFmpeg:
+#   PC Windows:  choco install ffmpeg
+#   Termux:       pkg install ffmpeg
+#   Ubuntu/Debian: sudo apt install ffmpeg
+#   macOS:        brew install ffmpeg

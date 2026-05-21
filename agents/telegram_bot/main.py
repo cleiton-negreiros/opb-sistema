@@ -108,6 +108,10 @@ async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "• /ideia [texto] — Cadastrar ideia\n"
         "• /ideias — Ver ideias\n"
         "• Envie texto direto → salva como ideia\n\n"
+        "🎤 *ÁUDIO:*\n"
+        "• Envie áudio de voz → transcreve automaticamente!\n\n"
+        "🎬 *VÍDEO:*\n"
+        "• /cortarsilencio [video] — Corta silêncios do vídeo\n\n"
         "🎠 *AGENTES:*\n"
         "• /carrossel [tema] — Gerar carrossel\n"
         "• /texto [objetivo] — Gerar post Instagram\n"
@@ -353,41 +357,78 @@ async def ideias_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(msg, parse_mode="Markdown")
 
 async def voice_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    """Recebe mensagem de voz e salva (precisa ser transcrita manualmente)"""
-    await update.message.reply_text(
-        "🎤 *Mensagem de voz recebida!*\n\n"
-        "Infelizmente ainda não consigo transcrever áudio automaticamente.\n\n"
-        "Por enquanto:\n"
-        "• Transcreva a ideia em texto\n"
-        "• Ou use `/transcrever` para transcrever vídeos do YouTube\n\n"
-        "💡 *Dica:* Fale o que pensou e depois mande em texto!",
-        parse_mode="Markdown"
-    )
+    """Recebe mensagem de voz e transcreve automaticamente"""
+    await update.message.reply_text("🎤 *Processando áudio...*", parse_mode="Markdown")
     
-    # Salvar como nota de voz (para futura transcrição)
-    from datetime import datetime
-    timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-    filepath = ACERVO_PATH / f"voz_{timestamp}.md"
-    
-    user = update.effective_user.name
-    content = f"""---
-name: "Nota de Voz {timestamp}"
-tipo: nota_voz
-autor: {user}
+    try:
+        # Baixar o arquivo de voz
+        file = await context.bot.get_file(update.message.voice.file_id)
+        file_path = PROJECT_PATH / "acervo" / "temp" / f"voice_{update.message.message_id}.ogg"
+        file_path.parent.mkdir(parents=True, exist_ok=True)
+        await file.download_to_drive(str(file_path))
+        
+        await update.message.reply_text("🎤 *Transcrevendo áudio...*", parse_mode="Markdown")
+        
+        # Transcrever usando o agente
+        out = run_agent("agents/transcrever-audio/main.py", [str(file_path)], timeout=120)
+        
+        if out and "❌" not in out:
+            # Salvar transcrição
+            timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+            trans_path = ACERVO_PATH.parent / "transcricoes" / f"voz_{timestamp}.md"
+            trans_path.parent.mkdir(parents=True, exist_ok=True)
+            
+            content = f"""---
+name: "Transcrição {timestamp}"
+tipo: transcricao_voz
+autor: {update.effective_user.name}
 data: {datetime.now().strftime("%Y-%m-%d")}
 ---
 
-# 🎤 Nota de Voz
+# 🎤 Transcrição de Voz
 
-**Autor:** {user}
+**Autor:** {update.effective_user.name}
 **Data:** {datetime.now().strftime("%Y-%m-%d %H:%M")}
-**Status:** ⏳ Aguardando transcrição
+**Status:** ✅ Transcrito
 
 ---
 
-*Envie a transcrição desta ideia para atualizar.*"""
+{out}
 
-    filepath.write_text(content, encoding='utf-8')
+---
+
+*Transcrito via NegreirosBot*"""
+            
+            trans_path.write_text(content, encoding='utf-8')
+            
+            # Enviar transcrição
+            if len(out) > 4000:
+                out = out[:4000] + "\n\n... (truncado)"
+            
+            await update.message.reply_text(
+                f"📝 *Transcrição:*\n\n```\n{out}\n```",
+                parse_mode="Markdown"
+            )
+            
+            # Salvar como ideia também
+            save_ideia(out[:200], update.effective_user.name)
+        else:
+            await update.message.reply_text(
+                f"⚠️ *Não foi possível transcrever.*\n\n"
+                f"Erro: {out[:200]}\n\n"
+                f"💡 *Dica:* Envie a ideia em texto!",
+                parse_mode="Markdown"
+            )
+        
+        # Limpar arquivo temporário
+        if file_path.exists():
+            file_path.unlink()
+            
+    except Exception as e:
+        await update.message.reply_text(
+            f"❌ *Erro ao processar áudio:*\n\n`{str(e)[:200]}`",
+            parse_mode="Markdown"
+        )
 
 async def transcrever_help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
@@ -668,6 +709,22 @@ async def concluir_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     out = run_agent("agents/quadro-de-avisos/main.py", ["concluir", tid], timeout=15)
     await update.message.reply_text(f"📋 {out}", parse_mode="Markdown")
 
+async def cortarsilencio_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Corta silêncios de um vídeo."""
+    await update.message.reply_text(
+        "🎬 *Cortar Silêncios*\n\n"
+        "Envie o vídeo como documento ou use:\n\n"
+        "No PC/Termux:\n"
+        "```\n"
+        "python agents/corta-silencio/main.py video.mp4\n"
+        "```\n\n"
+        "Opções:\n"
+        "• `--threshold -30` (sensibilidade dB)\n"
+        "• `--min-duration 0.5` (duração mínima silêncio)\n"
+        "• `--keep-silence 0.3` (transição natural)",
+        parse_mode="Markdown"
+    )
+
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     texto = update.message.text
     
@@ -720,7 +777,9 @@ def main():
     app.add_handler(CommandHandler("tarefas", tarefas_command))
     app.add_handler(CommandHandler("tarefa", tarefa_command))
     app.add_handler(CommandHandler("concluir", concluir_command))
+    app.add_handler(CommandHandler("cortarsilencio", cortarsilencio_command))
     app.add_handler(MessageHandler(filters.VOICE | filters.AUDIO, voice_command))
+    app.add_handler(CommandHandler("transcreveraudio", transcrever_help_command))
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
     
     print("🤖 NegreirosBot iniciado!")
