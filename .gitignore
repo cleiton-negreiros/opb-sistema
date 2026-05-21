@@ -36,6 +36,11 @@ acervo/
 # Context brain (generated)
 context-brain/
 
+# Secrets
+.env
+.env.*
+!.env.example
+
 # Agent runtime state
 agents/radagast/.env
 agents/radagast/.state.json

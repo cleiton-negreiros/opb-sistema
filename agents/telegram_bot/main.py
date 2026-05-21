@@ -9,10 +9,20 @@ from pathlib import Path
 from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
 
+# Load environment variables from .env file
+try:
+    from dotenv import load_dotenv
+    load_dotenv(Path(__file__).parent.parent.parent / ".env")
+except ImportError:
+    pass  # python-dotenv not installed, use system env vars
+
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN", "8789174206:AAEFbU9kz0PQQLFlCw4vMVzIYiXSnmVRjxQ")
+TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN")
+if not TOKEN:
+    logger.error("TELEGRAM_BOT_TOKEN not set! Create a .env file or set the environment variable.")
+    sys.exit(1)
 
 PROJECT_PATH = Path(__file__).parent.parent.parent
 ACERVO_PATH = PROJECT_PATH / "acervo" / "ideias"
