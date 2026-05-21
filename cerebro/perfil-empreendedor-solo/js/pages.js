@@ -427,8 +427,7 @@ function updateTaskCount(){const items=document.querySelectorAll('#tasks-list .t
 
 function addTask(){const l=document.getElementById('tasks-list');if(l.querySelector('.empty-state'))l.innerHTML='';const d=document.createElement('div');d.className='todo-item';d.style.cssText='display:flex;align-items:center;gap:10px;padding:12px;border-radius:8px;margin-bottom:6px;background:var(--bg-input)';d.innerHTML='<input type="checkbox" onchange="updateTaskCount(this)" style="accent-color:var(--accent);width:18px;height:18px"><input type="text" placeholder="Nova tarefa..." style="background:transparent;border:none;color:var(--text-primary);flex:1;font-size:0.9rem" onkeypress="if(event.key===\'Enter\')this.blur()"><button onclick="this.closest(\'.todo-item\').remove();updateTaskCount()" style="background:none;border:none;color:var(--text-muted);cursor:pointer;padding:4px"><i class="fas fa-trash"></i></button>';l.appendChild(d);updateTaskCount()}
 
-let inspData = [];
-let inspDocs = [];
+// inspData/inspDocs declared in app.js
 
 async function loadInspiracoes() {
     const data = await apiCall('/api/inspiracoes');
