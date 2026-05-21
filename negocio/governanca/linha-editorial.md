@@ -80,3 +80,27 @@ Finanças à luz da fé católica — organizar a vida financeira com base no Ev
 
 *Este arquivo é consultado por agentes de geração de texto.*
 *Última atualização: 2026-05-20*
+
+## Pilares de Conteúdo
+
+Para garantir que o conteúdo seja diversificado, engajador e teologicamente seguro, organizamos os temas em quatro pilares fundamentais. Esta divisão permite que o público receba tanto a formação espiritual necessária quanto as ferramentas práticas para o dia a dia.
+
+| Pilar | Foco Principal | Temas Originais | Novas Ideias Sugeridas |
+| :--- | :--- | :--- | :--- |
+| **Espiritual (A Base)** | Mentalidade, Doutrina e Espiritualidade sobre o dinheiro. | O que é e não é a Providência (CIC 302-306); Abandono à Providência; Deus ou o Dinheiro; Teologia da Prosperidade; São Francisco e a Pobreza; É errado ser rico? | A Parábola dos Talentos: O que Deus espera do seu lucro?; O Sétimo Mandamento além do "não roubar": Justiça e Salário; Avareza vs. Generosidade. |
+| **Prático (A Mão na Massa)** | Ferramentas, organização e métodos financeiros aplicados. | Dívidas; Renda extra; Investimentos. | Orçamento Familiar como ato de caridade; Como montar sua Reserva de Emergência com paz de espírito; Investimentos Éticos (onde um católico não deve investir). |
+| **Social e Cultural (O Contexto)** | Visão de mundo, política e história da Igreja na economia. | Marxismo; Doutrina Social da Igreja; Por que Paz Na Conta. | Capitalismo, Socialismo e a Terceira Via da Igreja; O Destino Universal dos Bens; A história dos Montes de Piedade (os primeiros bancos católicos). |
+| **Devocional e Comunidade (A Conexão)** | Oração, intercessão dos santos e vida comunitária. | Novena de São José. | Santa Edwiges: A protetora dos endividados; São Mateus: De cobrador de impostos a Apóstolo; Dízimo e Esmola: Quanto e como dar? |
+
+## Cronograma Sugerido (Primeiro Mês)
+
+Para iniciar as postagens com consistência, sugerimos um cronograma que intercala os pilares, garantindo que o público entenda a proposta completa do canal desde o início.
+
+| Semana | YouTube (1x por semana) | Instagram (2 Carrosséis por semana) |
+| :--- | :--- | :--- |
+| **Semana 1** | Por que "Paz Na Conta"? (Apresentação do projeto e a visão católica do dinheiro). | 1. O que é a Providência Divina? (CIC 302-306).<br>2. É errado ser rico? O que a Igreja diz. |
+| **Semana 2** | Teologia da Prosperidade: Onde está o erro? | 1. Deus ou o Dinheiro: Quem manda na sua conta?<br>2. 3 passos para sair das dívidas com fé e método. |
+| **Semana 3** | Doutrina Social da Igreja: O básico que todo católico deve saber sobre economia. | 1. São Francisco e a Pobreza: O que podemos aprender?<br>2. Como fazer Renda Extra de forma honesta. |
+| **Semana 4** | Abandono à Providência vs. Negligência Financeira. | 1. Novena de São José para o trabalho e finanças.<br>2. Onde um católico NÃO deve investir (Investimentos Éticos). |
+
+*Última atualização: 2026-05-21*

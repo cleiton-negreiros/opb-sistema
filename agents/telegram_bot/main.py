@@ -133,6 +133,9 @@ async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "• /regras — Exibe quem-sou.md\n"
         "• /projetos — Lista projetos\n"
         "• /posicionamento — Posicionamento atual\n\n"
+        "📅 *PLANEJAMENTO*\n"
+        "• /plano — Ver cronograma do mês\n"
+        "• /briefing [tema] [formato] — Gerar briefing estratégico\n\n"
         "🎠 *AGENTES DE CONTEÚDO*\n"
         "• /carrossel [tema] — Gera carrossel Instagram\n"
         "• /texto [objetivo] — Gera post para Instagram\n"
@@ -610,6 +613,43 @@ async def tarefas_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     out = run_agent("agents/quadro-de-avisos/main.py", ["listar"], timeout=15)
     await update.message.reply_text(f"📋 *Quadro de Avisos*\n```\n{out[:2000]}\n```", parse_mode="Markdown")
 
+async def plano_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Mostra o cronograma de conteúdo."""
+    await update.message.reply_text("📅 *Consultando cronograma...*", parse_mode="Markdown")
+    out = run_agent("agents/content_planner/main.py", ["load_plan"], timeout=30)
+    try:
+        plan = json.loads(out)
+        msg = "📅 *Cronograma de Conteúdo*\n\n"
+        for item in plan["cronograma"]:
+            msg += f"📍 *{item['semana']}*\n"
+            msg += f"📺 YT: {item['youtube']}\n"
+            msg += f"📸 IG: {item['instagram']}\n\n"
+        await update.message.reply_text(msg, parse_mode="Markdown")
+    except:
+        await update.message.reply_text(f"❌ Erro ao carregar plano:\n```\n{out[:500]}\n```", parse_mode="Markdown")
+
+async def briefing_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Gera briefing estratégico para um tema."""
+    if len(context.args) < 2:
+        await update.message.reply_text("📅 *Gerar Briefing*\n\nUso: `/briefing [tema] [formato]`\nEx: `/briefing Dívidas carrossel`", parse_mode="Markdown")
+        return
+    
+    formato = context.args[-1]
+    tema = " ".join(context.args[:-1])
+    
+    await update.message.reply_text(f"📅 Gerando briefing estratégico para: `{tema}`...", parse_mode="Markdown")
+    out = run_agent("agents/content_planner/main.py", [tema, formato], timeout=30)
+    
+    try:
+        brief = json.loads(out)
+        msg = f"🎯 *Briefing Estratégico*\n\n"
+        msg += f"📝 *Tema:* {brief['theme']}\n"
+        msg += f"🎨 *Formato:* {brief['format']}\n\n"
+        msg += f"🔍 *Detalhes:*\n{brief['details'][:3000]}"
+        await update.message.reply_text(msg, parse_mode="Markdown")
+    except:
+        await update.message.reply_text(f"❌ Erro ao gerar briefing:\n```\n{out[:1000]}\n```", parse_mode="Markdown")
+
 async def tarefa_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Adiciona tarefa ao Quadro de Avisos."""
     if not context.args:
@@ -675,6 +715,8 @@ def main():
     app.add_handler(CommandHandler("texto", textogen_command))
     app.add_handler(CommandHandler("capavideo", capavideo_command))
     app.add_handler(CommandHandler("posicionamento", posicionamento_command))
+    app.add_handler(CommandHandler("plano", plano_command))
+    app.add_handler(CommandHandler("briefing", briefing_command))
     app.add_handler(CommandHandler("tarefas", tarefas_command))
     app.add_handler(CommandHandler("tarefa", tarefa_command))
     app.add_handler(CommandHandler("concluir", concluir_command))
