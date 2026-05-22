@@ -32,6 +32,34 @@ DEFAULT_THRESHOLD_DB = -30
 DEFAULT_MIN_DURATION = 0.5
 DEFAULT_KEEP_SILENCE = 0.0
 
+# Presets por tipo de conteudo
+PRESETS = {
+    "reels": {
+        "threshold": -25,
+        "min_duration": 0.3,
+        "keep_silence": 0.15,
+        "descricao": "Corte agressivo para Reels/Shorts (ritmo rapido)"
+    },
+    "youtube": {
+        "threshold": -30,
+        "min_duration": 0.5,
+        "keep_silence": 0.3,
+        "descricao": "Corte medio para YouTube (ritmo natural)"
+    },
+    "live": {
+        "threshold": -35,
+        "min_duration": 1.0,
+        "keep_silence": 0.5,
+        "descricao": "Corte suave para lives/palestras (minimo corte)"
+    },
+    "podcast": {
+        "threshold": -32,
+        "min_duration": 0.8,
+        "keep_silence": 0.4,
+        "descricao": "Corte para podcasts (preserva pausas de reflexao)"
+    },
+}
+
 
 def check_ffmpeg() -> None:
     """Verifica se o FFmpeg esta disponivel."""
@@ -212,22 +240,29 @@ def main() -> int:
         help="Caminho do video de entrada",
     )
     parser.add_argument(
+        "--preset",
+        type=str,
+        choices=list(PRESETS.keys()),
+        default=None,
+        help="Preset por tipo de conteudo: reels, youtube, live, podcast"
+    )
+    parser.add_argument(
         "--threshold",
         type=float,
-        default=DEFAULT_THRESHOLD_DB,
-        help=f"Threshold de silencio em dB (padrao: {DEFAULT_THRESHOLD_DB})",
+        default=None,
+        help=f"Threshold de silencio em dB (padrao: {DEFAULT_THRESHOLD_DB} ou preset)",
     )
     parser.add_argument(
         "--min-duration",
         type=float,
-        default=DEFAULT_MIN_DURATION,
-        help=f"Duracao minima de silencio em segundos (padrao: {DEFAULT_MIN_DURATION})",
+        default=None,
+        help=f"Duracao minima de silencio em segundos (padrao: {DEFAULT_MIN_DURATION} ou preset)",
     )
     parser.add_argument(
         "--keep-silence",
         type=float,
-        default=DEFAULT_KEEP_SILENCE,
-        help="Segundos de silencio para manter nos cortes (padrao: 0)",
+        default=None,
+        help="Segundos de silencio para manter nos cortes (padrao: 0 ou preset)",
     )
     parser.add_argument(
         "--output",
@@ -235,8 +270,76 @@ def main() -> int:
         default=None,
         help="Caminho do arquivo de saida (padrao: output/corta-silencio/<nome>_sem_silencio.mp4)",
     )
+    parser.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="Mostra quais segmentos serao cortados sem processar",
+    )
+    parser.add_argument(
+        "--batch",
+        type=str,
+        default=None,
+        help="Diretorio com videos para processar em lote",
+    )
 
     args = parser.parse_args()
+
+    # Aplica preset se especificado
+    if args.preset:
+        preset = PRESETS[args.preset]
+        if args.threshold is None:
+            args.threshold = preset["threshold"]
+        if args.min_duration is None:
+            args.min_duration = preset["min_duration"]
+        if args.keep_silence is None:
+            args.keep_silence = preset["keep_silence"]
+        print(f"[PRESET] {args.preset}: {preset['descricao']}")
+        print(f"         threshold={args.threshold}dB, min_duration={args.min_duration}s, keep_silence={args.keep_silence}s")
+        print()
+
+    # Valores padrao finais
+    if args.threshold is None:
+        args.threshold = DEFAULT_THRESHOLD_DB
+    if args.min_duration is None:
+        args.min_duration = DEFAULT_MIN_DURATION
+    if args.keep_silence is None:
+        args.keep_silence = DEFAULT_KEEP_SILENCE
+
+    # Batch processing
+    if args.batch:
+        return process_batch(args)
+
+    return process_single(args)
+
+
+def process_batch(args) -> int:
+    """Processa todos os videos de um diretorio."""
+    batch_dir = Path(args.batch).expanduser().resolve()
+    if not batch_dir.is_dir():
+        print(f"[ERRO] Diretorio nao encontrado: {batch_dir}")
+        return 1
+
+    videos = list(batch_dir.glob("*.mp4")) + list(batch_dir.glob("*.mov"))
+    if not videos:
+        print(f"[ERRO] Nenhum video encontrado em {batch_dir}")
+        return 1
+
+    print(f"[BATCH] {len(videos)} videos para processar\n")
+    success = 0
+    for i, video in enumerate(videos, 1):
+        print(f"\n{'='*50}")
+        print(f"[{i}/{len(videos)}] {video.name}")
+        print(f"{'='*50}")
+        args.video = str(video)
+        args.output = None
+        if process_single(args) == 0:
+            success += 1
+
+    print(f"\n[BATCH] Concluido: {success}/{len(videos)} videos processados")
+    return 0 if success == len(videos) else 1
+
+
+def process_single(args) -> int:
 
     t0 = time.time()
 
@@ -283,6 +386,22 @@ def main() -> int:
 
         if len(segments) <= 1:
             print("\n[OK] Video praticamente sem silencios para cortar.")
+            return 0
+
+        # Dry-run: mostra relatorio sem processar
+        if args.dry_run:
+            print(f"\n[DRY-RUN] Segmentos que serao mantidos:")
+            total_kept = 0
+            for i, (start, end) in enumerate(segments, 1):
+                seg_dur = end - start
+                total_kept += seg_dur
+                print(f"   {i}. {start:.1f}s - {end:.1f}s ({seg_dur:.1f}s)")
+            total_removed = duration - total_kept
+            print(f"\n[DRY-RUN] Resumo:")
+            print(f"   Duracao original: {duration:.1f}s")
+            print(f"   Duracao final estimada: {total_kept:.1f}s")
+            print(f"   Tempo removido: {total_removed:.1f}s ({total_removed/duration*100:.0f}%)")
+            print(f"\n[DRY-RUN] Remova --dry-run para processar o video.")
             return 0
 
         concat_segments(video_path, segments, output_path)
