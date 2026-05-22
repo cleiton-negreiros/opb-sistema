@@ -60,7 +60,7 @@ class OllamaProvider(LLMProvider):
             return f"[ERRO] Modelo {self.model} não suporta imagens. Use llama3.2-vision."
         
         try:
-            response = requests.post(self.api_url, json=payload, timeout=180)
+            response = requests.post(self.api_url, json=payload, timeout=30)
             response.raise_for_status()
             
             result = response.json()
@@ -78,8 +78,35 @@ class OllamaProvider(LLMProvider):
         Generate a mock response when Ollama is not available.
         This allows testing and development without Ollama installed.
         """
-        # Extract key information from prompt for a more relevant mock response
-        if "post educativo" in prompt.lower() or "educational" in prompt.lower():
+        # Business consultation prompts (Consultor de Negócios OPB)
+        if "consultor de negócios" in prompt.lower() or "plano estratégico" in prompt.lower() or "análise swot" in prompt.lower() or "calendário editorial" in prompt.lower() or "gestão de tempo" in prompt.lower() or "kpis" in prompt.lower() or "paz na conta" in prompt.lower():
+            return """## Diagnóstico Estratégico
+
+Visão Geral:
+Seus 3 negocios (Paz na Conta, Toque de Paz, Caminho Vida) formam um ecossistema integrado com enorme potencial de sinergia.
+
+Recomendacoes Prioritarias:
+
+1. Paz na Conta (Financas Catolicas)
+   - Fortaleça o conteudo educativo como porta de entrada
+   - Crie programas de mentoria em grupo para escalar sem sacrificar qualidade
+   - Estabeleça parcerias com paroquias e movimentos eclesiais
+
+2. Toque de Paz (Musica com Proposito)
+   - Desenvolva um metodo de ensino que integre tecnica musical e formacao espiritual
+   - Produza material didatico exclusivo para musicos catolicos
+   - Organize eventos sazonais (retiros musicais, oficinas de louvor)
+
+3. Caminho Vida (Formacao Espiritual)
+   - Crie trilhas de formacao progressiva (iniciante ao avancado)
+   - Use o formato digital para alcance, presencial para profundidade
+   - Integre conteudos dos outros dois negocios como estudos de caso
+
+Principio Unificador:
+Que cada negocio sirva aos outros, criando valor que nenhum alcancaria sozinho.
+
+Buscai primeiro o Reino de Deus e a sua justica, e todas estas coisas vos serao acrescentadas. (Mt 6,33)"""
+        elif "post educativo" in prompt.lower() or "educational" in prompt.lower():
             return f"""💡 DICA RÁPIDA: {prompt.split('sobre')[1].split('.')[0].strip() if 'sobre' in prompt else 'organização'}
 
 Lembre-se de aplicar esses princípios no seu dia a dia:

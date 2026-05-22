@@ -567,7 +567,7 @@ def api_agentes():
                          "designer": "fa-paint-brush",
                          "coordinator": "fa-cogs",
                          "telegram_bot": "fa-paper-plane",
-                         "consultor_negocios": "fa-university",
+                         "consultor-negocios": "fa-university",
                      }.get(d.name, "fa-robot")
                 })
 

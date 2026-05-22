@@ -15,7 +15,9 @@ from pathlib import Path
 from dotenv import load_dotenv
 
 REPO_DIR = Path(__file__).parent
-load_dotenv(REPO_DIR / ".env")
+load_dotenv(REPO_DIR / ".env", override=True)
+
+load_dotenv()  # fallback: tenta .env do diretório atual
 
 from scrapers import scrape_youtube, scrape_instagram, scrape_twitter, scrape_linkedin, scrape_web_news
 from analyzer import generate_reel_ideas

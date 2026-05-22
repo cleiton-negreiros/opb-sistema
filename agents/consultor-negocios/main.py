@@ -184,8 +184,7 @@ def main():
         try:
             context_data = json.loads(sys.argv[2])
         except json.JSONDecodeError:
-            print("Warning: Invalid JSON provided for context. Using empty context.")
-            context_data = {}
+            context_data = {"user_input": sys.argv[2]}
     
     print("Consultor de Negocios OPB")
     print("Tipo de consulta: {}".format(consultation_type))

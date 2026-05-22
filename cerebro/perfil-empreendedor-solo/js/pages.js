@@ -690,3 +690,37 @@ function togglePerfilModulos() {
         modulos.style.display = 'none';
     }
 }
+
+function buildContextoJson(tipo, input) {
+    if (tipo === 'analise_swot') return JSON.stringify({business_name: input});
+    if (tipo === 'planejamento_conteudo') return JSON.stringify({timeframe: 'próximo mês', objectives: input});
+    if (tipo === 'otimizacao_tempo') return JSON.stringify({challenges: input});
+    if (tipo === 'consulta_geral') return JSON.stringify({question: input});
+    return JSON.stringify({contexto: input});
+}
+
+async function runConsultorNegocios() {
+    const tipo = document.getElementById('consultor-tipo').value;
+    const input = document.getElementById('consultor-input').value;
+    if (!input.trim()) { showToast('Descreva sua situação ou desafio', 'error'); return; }
+    const out = document.getElementById('consultor-output');
+    const copyBtn = document.getElementById('consultor-copy-btn');
+    out.style.display = 'block';
+    copyBtn.style.display = 'none';
+    out.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Consultando...';
+    const r = await apiCall('/api/agentes/executar','POST',{agente:'consultor-negocios',args:[tipo,buildContextoJson(tipo,input)]});
+    if (r.sucesso) {
+        out.innerHTML = `<pre style="white-space:pre-wrap;font-family:'JetBrains Mono',monospace;font-size:0.85rem;line-height:1.5">${escapeHtml(r.stdout||r.mensagem)}</pre>`;
+        copyBtn.style.display = 'inline-flex';
+        document.getElementById('consultor-historico').innerHTML = ''; 
+    } else {
+        out.innerHTML = `<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><h3>Erro na Consulta</h3><p>${escapeHtml(r.erro||r.mensagem||'Tente novamente')}</p></div>`;
+    }
+    showToast(r.sucesso?'Consultoria concluída!':'Erro na consulta', r.sucesso?'success':'error');
+}
+
+function quickConsultoria(tipo, contexto) {
+    document.getElementById('consultor-tipo').value = tipo;
+    document.getElementById('consultor-input').value = contexto;
+    runConsultorNegocios();
+}

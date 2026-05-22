@@ -51,6 +51,7 @@
                 <div class="nav-item" onclick="navigateTo('text-generator')"><i class="fas fa-pen-fancy"></i><span>Text Generator</span><span class="badge">IA</span></div>
                 <div class="nav-item" onclick="navigateTo('narvi')"><i class="fas fa-video"></i><span>Narvi</span><span class="badge">IA</span></div>
                 <div class="nav-item" onclick="navigateTo('radagast')"><i class="fas fa-rss"></i><span>Radagast</span><span class="badge">IA</span></div>
+                <div class="nav-item" onclick="navigateTo('consultor-negocios')"><i class="fas fa-university"></i><span>Consultor</span><span class="badge">IA</span></div>
             </div>
             <div class="nav-section">
                 <div class="nav-section-title">Ferramentas</div>
@@ -200,6 +201,10 @@
         <div class="agent-tile" onclick="navigateTo('radagast')">
             <div class="at-icon">📡</div>
             <div class="at-info"><div class="at-name">Radagast</div><div class="at-status"><span class="at-dot on"></span> Online</div></div>
+        </div>
+        <div class="agent-tile" onclick="navigateTo('consultor-negocios')">
+            <div class="at-icon">🏛️</div>
+            <div class="at-info"><div class="at-name">Consultor</div><div class="at-status"><span class="at-dot on"></span> Novo</div></div>
         </div>
     </div>
 </div>
@@ -625,6 +630,42 @@
 </div>
 <div class="card" style="margin-top:20px"><div class="card-header"><div class="card-title"><i class="fas fa-history"></i> Histórico de Execuções</div></div>
 <div id="radagast-history"><div class="empty-state"><i class="fas fa-rss"></i><h3>Nenhuma curadoria executada</h3><p>Execute a curadoria para ver os resultados aqui</p></div></div>
+</div>
+</div>
+
+<!-- ==============================================
+     CONSULTOR DE NEGÓCIOS
+     ============================================== -->
+<div class="page" id="page-consultor-negocios">
+<div class="grid-2">
+<div class="card"><div class="card-header"><div class="card-title"><i class="fas fa-university" style="color:var(--accent-light)"></i> Consultor de Negócios OPB</div></div>
+<p style="color:var(--text-muted);margin-bottom:16px">Assistente de estratégia e gestão para empreendedores católicos. Análise SWOT, planejamento de conteúdo, otimização de tempo, métricas e KPIs, planejamento estratégico.</p>
+<div class="form-group"><label class="form-label">Tipo de Consulta</label>
+<select class="form-select" id="consultor-tipo">
+<option value="planejamento_estrategico">📊 Planejamento Estratégico</option>
+<option value="analise_swot">🔍 Análise SWOT</option>
+<option value="planejamento_conteudo">📝 Planejamento de Conteúdo</option>
+<option value="otimizacao_tempo">⏱️ Otimização de Tempo</option>
+<option value="metricas_kpis">📈 Métricas e KPIs</option>
+<option value="consulta_geral">💬 Consulta Geral</option>
+</select></div>
+<div class="form-group"><label class="form-label">Contexto / Desafio</label>
+<textarea class="form-textarea" id="consultor-input" rows="5" placeholder="Descreva sua situação, desafio ou objetivo para receber orientação estratégica..."></textarea></div>
+<button class="btn btn-primary btn-block" onclick="runConsultorNegocios()"><i class="fas fa-university"></i> Consultar Agora</button>
+<div class="console-output" id="consultor-output" style="margin-top:16px;display:none"></div>
+<button class="btn btn-sm btn-outline" id="consultor-copy-btn" style="display:none;margin-top:8px" onclick="copyOutput('consultor-output')"><i class="fas fa-copy"></i> Copiar Resultado</button>
+</div>
+<div class="card"><div class="card-header"><div class="card-title"><i class="fas fa-history" style="color:var(--success)"></i> Últimas Consultorias</div></div>
+<div id="consultor-historico"><div class="empty-state"><i class="fas fa-university"></i><h3>Nenhuma consultoria ainda</h3><p>Realize sua primeira consulta estratégica</p></div></div>
+</div>
+</div>
+<div class="card" style="margin-top:20px"><div class="card-header"><div class="card-title"><i class="fas fa-bolt" style="color:var(--warning)"></i> Consultas Rápidas</div></div>
+<div style="display:flex;flex-wrap:wrap;gap:10px">
+<button class="btn btn-outline btn-sm" onclick="quickConsultoria('planejamento_estrategico','Preciso expandir meu negócio Paz na Conta, que é assessoria financeira católica. Tenho 50 clientes ativos e quero dobrar em 6 meses.')">📊 Estratégia Paz na Conta</button>
+<button class="btn btn-outline btn-sm" onclick="quickConsultoria('analise_swot','Faça uma análise SWOT do meu negócio Toque de Paz, que é uma escola de música com 30 alunos, focada em música católica e formação humana.')">🔍 SWOT Toque de Paz</button>
+<button class="btn btn-outline btn-sm" onclick="quickConsultoria('otimizacao_tempo','Sou empreendedor solo com 3 negócios: Paz na Conta (finanças), Toque de Paz (música) e Caminho Vida (formação). Tenho 2h/dia para grupos, 1h/dia para conteúdo, 30min para administração.')">⏱️ Otimizar 3 Negócios</button>
+<button class="btn btn-outline btn-sm" onclick="quickConsultoria('planejamento_conteudo','Preciso planejar conteúdo integrado para LinkedIn e Substack sobre finanças católicas, música com propósito e espiritualidade. Objetivo: educar, engajar e converter.')">📝 Conteúdo Integrado</button>
+</div>
 </div>
 </div>
 

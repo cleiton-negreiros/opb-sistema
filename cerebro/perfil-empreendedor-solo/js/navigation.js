@@ -1,7 +1,7 @@
 // ============================================
 // NAVIGATION
 // ============================================
-const PAGES = { dashboard:'Dashboard', cerebro:'Cérebro', rotinas:'Rotinas', transcricao:'Transcrição', 'capa-video':'Capa Vídeo', carrossel:'Carrossel', consumo:'Consumo', posicionamento:'Posicionamento', 'text-generator':'Text Generator',   narvi:'Narvi', radagast:'Radagast', perfil:'Meu Perfil', produtividade:'Produtividade',
+const PAGES = { dashboard:'Dashboard', cerebro:'Cérebro', rotinas:'Rotinas', transcricao:'Transcrição', 'capa-video':'Capa Vídeo', carrossel:'Carrossel', consumo:'Consumo', posicionamento:'Posicionamento', 'text-generator':'Text Generator',   narvi:'Narvi', radagast:'Radagast', 'consultor-negocios':'Consultor de Negócios', perfil:'Meu Perfil', produtividade:'Produtividade',
   'quadro-avisos':'Quadro de Avisos', inspiracoes:'Inspirações', config:'Configurações' };
 
 function navigateTo(page) {

@@ -16,6 +16,8 @@ BOLD='\033[1m'
 # Cache do diretório do projeto
 OPB_CACHE="$HOME/.cache/opb-dir"
 mkdir -p "$HOME/.cache"
+mkdir -p "$HOME/.cache/opb"
+OPB_TMP="$HOME/.cache/opb"
 
 # ========== LOCALIZAR PROJETO ==========
 find_project() {
@@ -59,7 +61,7 @@ PROJETO=$(find_project)
 # ========== UTILITÁRIOS ==========
 check_api() {
     if command -v curl &> /dev/null; then
-        curl -s -o /dev/null -w "%{http_code}" --connect-timeout 2 http://localhost:5000/ 2>/dev/null
+        curl -sL -o /dev/null -w "%{http_code}" --connect-timeout 2 http://localhost:5000/ 2>/dev/null
     else
         echo "000"
     fi
@@ -68,7 +70,7 @@ check_api() {
 check_port() {
     # Termux não tem permissão para ss/netstat - usa curl como fallback
     if command -v curl &> /dev/null; then
-        curl -s -o /dev/null --connect-timeout 1 http://localhost:$1/ 2>/dev/null && echo "ok" || echo "no"
+        curl -sL -o /dev/null --connect-timeout 1 http://localhost:$1/ 2>/dev/null && echo "ok" || echo "no"
     elif command -v nc &> /dev/null; then
         nc -z localhost $1 2>/dev/null && echo "ok" || echo "no"
     else
@@ -162,19 +164,19 @@ start_api() {
     fi
 
     # Limpa log anterior
-    rm -f /tmp/opb-api.log
+    rm -f $OPB_TMP/opb-api.log
 
     # Inicia API com log visível
-    python api_server.py > /tmp/opb-api.log 2>&1 &
+    python api_server.py > $OPB_TMP/opb-api.log 2>&1 &
     API_PID=$!
-    echo "$API_PID" > /tmp/opb-api.pid
+    echo "$API_PID" > $OPB_TMP/opb-api.pid
     sleep 3
 
     # Verifica se processo ainda está rodando
     if ! kill -0 $API_PID 2>/dev/null; then
         echo -e "${RED}❌ API falhou ao iniciar!${NC}"
         echo -e "${YELLOW}📋 Log completo:${NC}"
-        cat /tmp/opb-api.log
+        cat $OPB_TMP/opb-api.log
         echo ""
         echo -e "${CYAN}💡 Verifique: termux-setup-storage${NC}"
         return
@@ -186,9 +188,9 @@ start_api() {
     else
         echo -e "${RED}❌ API falhou ao iniciar!${NC}"
         echo -e "${YELLOW}📋 Últimas linhas do log:${NC}"
-        tail -20 /tmp/opb-api.log
+        tail -20 $OPB_TMP/opb-api.log
         echo ""
-        echo -e "${CYAN}Para ver o erro completo: cat /tmp/opb-api.log${NC}"
+        echo -e "${CYAN}Para ver o erro completo: cat $OPB_TMP/opb-api.log${NC}"
     fi
     echo ""
 }
@@ -203,7 +205,7 @@ start_bot() {
     cd "$PROJETO"
     python agents/telegram_bot/main.py &
     BOT_PID=$!
-    echo "$BOT_PID" > /tmp/opb-bot.pid
+    echo "$BOT_PID" > $OPB_TMP/opb-bot.pid
     sleep 1
     echo -e "${GREEN}? Bot iniciado (PID $BOT_PID)${NC}"
     echo -e "${CYAN}   Envie /start no Telegram para come�ar${NC}"
@@ -329,15 +331,15 @@ show_posicionamento() {
 stop_all() {
     echo -e "\n${YELLOW}🔄 Parando serviços...${NC}"
 
-    if [ -f /tmp/opb-bot.pid ]; then
-        kill $(cat /tmp/opb-bot.pid) 2>/dev/null
-        rm -f /tmp/opb-bot.pid
+    if [ -f $OPB_TMP/opb-bot.pid ]; then
+        kill $(cat $OPB_TMP/opb-bot.pid) 2>/dev/null
+        rm -f $OPB_TMP/opb-bot.pid
         echo -e "  ${RED}⏹️  Bot parado${NC}"
     fi
 
-    if [ -f /tmp/opb-api.pid ]; then
-        kill $(cat /tmp/opb-api.pid) 2>/dev/null
-        rm -f /tmp/opb-api.pid
+    if [ -f $OPB_TMP/opb-api.pid ]; then
+        kill $(cat $OPB_TMP/opb-api.pid) 2>/dev/null
+        rm -f $OPB_TMP/opb-api.pid
         echo -e "  ${RED}⏹️  API parada${NC}"
     fi
 
@@ -367,7 +369,7 @@ open_web() {
 }
 
 clear_cache() {
-    rm -f "$OPB_CACHE" /tmp/opb-*.pid 2>/dev/null
+    rm -f "$OPB_CACHE" $OPB_TMP/opb-*.pid 2>/dev/null
     echo -e "\n${GREEN}✅ Cache limpo.${NC}"
     echo -e "${YELLOW}O diretório será re-detectado na próxima execução.${NC}"
     PROJETO=""
@@ -421,8 +423,8 @@ main() {
             c|C) clear_cache ;;
             d|D)
                 echo -e "\n${YELLOW}📋 Log da API:${NC}"
-                if [ -f /tmp/opb-api.log ]; then
-                    cat /tmp/opb-api.log
+                if [ -f $OPB_TMP/opb-api.log ]; then
+                    cat $OPB_TMP/opb-api.log
                 else
                     echo -e "${YELLOW}Nenhum log encontrado.${NC}"
                 fi

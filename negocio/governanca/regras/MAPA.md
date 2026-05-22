@@ -17,6 +17,7 @@ tipo: referencia
 | [`ritmo-sessao.md`](ritmo-sessao.md) | Uma tarefa de cada vez, propor próximos passos, salvar progresso, não esquecer. |
 | [`cerebro-manutencao.md`](cerebro-manutencao.md) | Atualizar o cérebro ao fim de sessão sem você precisar pedir. |
 | [`linguagem-escrita.md`](linguagem-escrita.md) | Como a IA deve escrever pra você ler (português, frases curtas, sem jargão cru). |
+| [`ambiente-tecnico.md`](ambiente-tecnico.md) | Configuração do ambiente, LLM provider, hardware, fallbacks. |
 
 ## Tabela de decisão (quando criar regra nova)
 
@@ -27,7 +28,7 @@ tipo: referencia
 | Como escrever copy na sua voz pra clientes | `tom-voz-copy.md` (criar) |
 | Ritmo da sessão | `ritmo-sessao.md` |
 | Atualizar o cérebro ao fim de sessões | `cerebro-manutencao.md` |
-| Ambiente técnico (versões, dependências) | `ambiente-tecnico.md` (criar) |
+| Ambiente técnico (versões, dependências) | `ambiente-tecnico.md` |
 | Processo de execução | `processo-execucao.md` (criar) |
 
 ## Padrão de cada arquivo
