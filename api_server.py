@@ -1231,6 +1231,9 @@ def api_agentes_executar():
         "capa_video": "agents/capa_video/main.py",
         "corta_silencio": "agents/corta-silencio/main.py",
         "transcrever_audio": "agents/transcrever-audio/main.py",
+        "liturgico": "agents/liturgico/main.py",
+        "hashtags": "agents/hashtags/main.py",
+        "reels_script": "agents/reels_script/main.py",
     }
 
     if agente not in AGENTES:

@@ -121,13 +121,14 @@ async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "🎤 *ÁUDIO:*\n"
         "• Envie áudio de voz → transcreve automaticamente!\n\n"
         "🎬 *VÍDEO:*\n"
-        "• /cortarsilencio [video] — Corta silêncios do vídeo\n\n"
-        "🎠 *AGENTES:*\n"
+        "• /cortarsilencio [video] — Corta silêncios do vídeo\n"
+        "• /reels [tema] — Gera roteiro para Reels/Shorts\n\n"
+        "📱 *CONTEÚDO:*\n"
         "• /carrossel [tema] — Gerar carrossel\n"
         "• /texto [objetivo] — Gerar post Instagram\n"
+        "• /hashtags [tema] — Gerar hashtags otimizadas\n"
         "• /capavideo [tema] — Ideias de capa\n"
-        "• /consumo [texto] — Processar conteúdo\n"
-        "• /radagast — Rodar curadoria\n\n"
+        "• /liturgico — Temas do calendário litúrgico\n\n"
         "📋 *TAREFAS:*\n"
         "• /tarefas — Ver pendências\n"
         "• /tarefa [desc] — Nova tarefa\n"
@@ -735,6 +736,59 @@ async def cortarsilencio_command(update: Update, context: ContextTypes.DEFAULT_T
         parse_mode="Markdown"
     )
 
+async def reels_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Gera roteiro para Reels/Shorts."""
+    if not context.args:
+        await update.message.reply_text(
+            "🎬 *Roteiro para Reels/Shorts*\n\n"
+            "Uso: `/reels [tema]`\n\n"
+            "Exemplos:\n"
+            "• `/reels 3 erros financeiros que católicos cometem`\n"
+            "• `/reels como organizar orçamento familiar`\n"
+            "• `/reels dizimo é obrigatório`\n\n"
+            "Opções:\n"
+            "• `--duracao 60` (30, 60 ou 90 segundos)\n"
+            "• `--formato shorts` (reels, shorts ou tiktok)",
+            parse_mode="Markdown"
+        )
+        return
+
+    tema = " ".join(context.args)
+    await update.message.reply_text(f"🎬 *Gerando roteiro:*\n\n`{tema[:80]}...`", parse_mode="Markdown")
+    out = run_agent("agents/reels_script/main.py", [tema], timeout=60)
+    if out and len(out) > 4000:
+        out = out[:4000] + "\n\n... (truncado)"
+    await update.message.reply_text(f"🎬 *Roteiro:*\n\n```\n{out}\n```", parse_mode="Markdown")
+
+async def hashtags_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Gera hashtags otimizadas."""
+    if not context.args:
+        await update.message.reply_text(
+            "🏷️ *Gerador de Hashtags*\n\n"
+            "Uso: `/hashtags [tema]`\n\n"
+            "Exemplos:\n"
+            "• `/hashtags dízimo e organização financeira`\n"
+            "• `/hashtags --pilar espiritual`\n"
+            "• `/hashtags --pilar pratico --blocos 3`",
+            parse_mode="Markdown"
+        )
+        return
+
+    tema = " ".join(context.args)
+    await update.message.reply_text(f"🏷️ *Gerando hashtags:*\n\n`{tema[:80]}`", parse_mode="Markdown")
+    out = run_agent("agents/hashtags/main.py", [tema], timeout=30)
+    if out and len(out) > 4000:
+        out = out[:4000] + "\n\n... (truncado)"
+    await update.message.reply_text(f"🏷️ *Hashtags:*\n\n```\n{out}\n```", parse_mode="Markdown")
+
+async def liturgico_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Mostra temas do calendário litúrgico."""
+    await update.message.reply_text("📅 *Consultando calendário litúrgico...*", parse_mode="Markdown")
+    out = run_agent("agents/liturgico/main.py", ["hoje"], timeout=30)
+    if out and len(out) > 4000:
+        out = out[:4000] + "\n\n... (truncado)"
+    await update.message.reply_text(f"📅 *Calendário Litúrgico:*\n\n```\n{out}\n```", parse_mode="Markdown")
+
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     texto = update.message.text
     
@@ -788,6 +842,9 @@ def main():
     app.add_handler(CommandHandler("tarefa", tarefa_command))
     app.add_handler(CommandHandler("concluir", concluir_command))
     app.add_handler(CommandHandler("cortarsilencio", cortarsilencio_command))
+    app.add_handler(CommandHandler("reels", reels_command))
+    app.add_handler(CommandHandler("hashtags", hashtags_command))
+    app.add_handler(CommandHandler("liturgico", liturgico_command))
     app.add_handler(MessageHandler(filters.VOICE | filters.AUDIO, voice_command))
     app.add_handler(CommandHandler("transcreveraudio", transcrever_help_command))
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))

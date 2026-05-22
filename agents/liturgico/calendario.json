@@ -1,0 +1,459 @@
+{
+  "versao": "1.0",
+  "descricao": "Calendário Litúrgico Católico 2026-2027 - Paz na Conta",
+  "tempos_liturgicos": {
+    "advento_2025": {
+      "inicio": "2025-11-30",
+      "fim": "2025-12-24",
+      "cor": "Roxo",
+      "descricao": "Tempo de espera e preparação para a vinda do Senhor",
+      "tema_financeiro": "Esperança e preparação - Planejando o futuro com fé e prudência"
+    },
+    "natal_2025": {
+      "inicio": "2025-12-25",
+      "fim": "2026-01-11",
+      "cor": "Branco",
+      "descricao": "Celebramos a Encarnação do Filho de Deus",
+      "tema_financeiro": "Generosidade e partilha - Dar com alegria como Deus nos deu"
+    },
+    "tempo_comum_1": {
+      "inicio": "2026-01-12",
+      "fim": "2026-02-17",
+      "cor": "Verde",
+      "descricao": "Crescimento na fé e na vida cristã",
+      "tema_financeiro": "Planejamento e sabedoria - Construindo hábitos financeiros saudáveis"
+    },
+    "quaresma_2026": {
+      "inicio": "2026-02-18",
+      "fim": "2026-04-01",
+      "cor": "Roxo",
+      "descricao": "Tempo de conversão, jejum, oração e esmola",
+      "tema_financeiro": "Desapego e caridade - Jejum financeiro e doação aos pobres"
+    },
+    "semana_santa_2026": {
+      "inicio": "2026-03-29",
+      "fim": "2026-04-04",
+      "cor": "Roxo/Vermelho",
+      "descricao": "Paixão, morte e sepultura do Senhor",
+      "tema_financeiro": "Sacrifício e esperança - Superando crises com fé"
+    },
+    "pascoa_2026": {
+      "inicio": "2026-04-05",
+      "fim": "2026-05-24",
+      "cor": "Branco",
+      "descricao": "Alegria da Ressurreição do Senhor",
+      "tema_financeiro": "Renovação e providência - Recomeços financeiros com Deus"
+    },
+    "tempo_comum_2": {
+      "inicio": "2026-05-25",
+      "fim": "2026-11-28",
+      "cor": "Verde",
+      "descricao": "Crescimento na vida do Espírito após Pentecostes",
+      "tema_financeiro": "Frutificação e multiplicação - Fazendo render os talentos"
+    },
+    "advento_2026": {
+      "inicio": "2026-11-29",
+      "fim": "2026-12-24",
+      "cor": "Roxo",
+      "descricao": "Tempo de espera e preparação para o Natal",
+      "tema_financeiro": "Esperança e preparação - Planejando o futuro com fé"
+    },
+    "natal_2026": {
+      "inicio": "2026-12-25",
+      "fim": "2027-01-10",
+      "cor": "Branco",
+      "descricao": "Celebramos a Encarnação do Filho de Deus",
+      "tema_financeiro": "Generosidade e partilha - Dar com alegria"
+    },
+    "tempo_comum_3": {
+      "inicio": "2027-01-11",
+      "fim": "2027-02-09",
+      "cor": "Verde",
+      "descricao": "Crescimento na fé e na vida cristã",
+      "tema_financeiro": "Planejamento e sabedoria - Construindo hábitos saudáveis"
+    },
+    "quaresma_2027": {
+      "inicio": "2027-02-10",
+      "fim": "2027-03-27",
+      "cor": "Roxo",
+      "descricao": "Tempo de conversão, jejum, oração e esmola",
+      "tema_financeiro": "Desapego e caridade - Jejum financeiro e doação"
+    },
+    "pascoa_2027": {
+      "inicio": "2027-03-28",
+      "fim": "2027-05-16",
+      "cor": "Branco",
+      "descricao": "Alegria da Ressurreição do Senhor",
+      "tema_financeiro": "Renovação e providência - Recomeços com Deus"
+    }
+  },
+  "festas_fixas": {
+    "santa_mae_deus": {
+      "data": "01-01",
+      "nome": "Solenidade de Santa Maria, Mãe de Deus",
+      "tipo": "Solenidade",
+      "descricao": "Primeiro dia do ano, consagrado a Maria",
+      "tema_financeiro": "Consagração do ano e das finanças a Deus"
+    },
+    "epifania": {
+      "data": "01-06",
+      "nome": "Solenidade da Epifania do Senhor",
+      "tipo": "Solenidade",
+      "descricao": "Manifestação de Jesus aos povos",
+      "tema_financeiro": "Generosidade dos Reis Magos - ofertar com generosidade"
+    },
+    "sao_jose_trabalhador": {
+      "data": "05-01",
+      "nome": "São José Operário",
+      "tipo": "Memória",
+      "descricao": "Padroeiro dos trabalhadores",
+      "tema_financeiro": "Trabalho digno e administração responsável dos bens"
+    },
+    "sao_jose": {
+      "data": "03-19",
+      "nome": "Solenidade de São José",
+      "tipo": "Solenidade",
+      "descricao": "Esposo de Maria e pai adotivo de Jesus",
+      "tema_financeiro": "São José como provedor fiel - planejamento e proteção familiar"
+    },
+    "anunciacao": {
+      "data": "03-25",
+      "nome": "Solenidade da Anunciação do Senhor",
+      "tipo": "Solenidade",
+      "descricao": "O anjo anuncia a Maria que ela será a Mãe de Deus",
+      "tema_financeiro": "Dizer sim aos planos de Deus para nossas finanças"
+    },
+    "sao_pedro_sao_paulo": {
+      "data": "06-29",
+      "nome": "Solenidade de São Pedro e São Paulo",
+      "tipo": "Solenidade",
+      "descricao": "Os dois grandes apóstolos da Igreja",
+      "tema_financeiro": "Pedro: administração fiel; Paulo: generosidade nas coletas"
+    },
+    "assuncao": {
+      "data": "08-15",
+      "nome": "Solenidade da Assunção de Nossa Senhora",
+      "tipo": "Solenidade",
+      "descricao": "Maria é elevada ao céu em corpo e alma",
+      "tema_financeiro": "Desapego dos bens materiais - olhar para o céu"
+    },
+    "todos_santos": {
+      "data": "11-01",
+      "nome": "Solenidade de Todos os Santos",
+      "tipo": "Solenidade",
+      "descricao": "Celebramos todos os santos conhecidos e desconhecidos",
+      "tema_financeiro": "Santidade também nas finanças - testemunho de integridade"
+    },
+    "finados": {
+      "data": "11-02",
+      "nome": "Comemoração de Todos os Fiéis Defuntos",
+      "tipo": "Comemoração",
+      "descricao": "Rezamos pelos falecidos",
+      "tema_financeiro": "Legado e herança - o que deixamos para os nossos"
+    },
+    "cristo_rei": {
+      "data": "11-22",
+      "nome": "Solenidade de Cristo Rei do Universo",
+      "tipo": "Solenidade",
+      "descricao": "Cristo é o Rei de todo o universo",
+      "tema_financeiro": "Cristo como Senhor também das nossas finanças"
+    },
+    "imaculada_conceicao": {
+      "data": "12-08",
+      "nome": "Solenidade da Imaculada Conceição",
+      "tipo": "Solenidade",
+      "descricao": "Maria foi concebida sem pecado original",
+      "tema_financeiro": "Pureza de intenção nas decisões financeiras"
+    },
+    "natal": {
+      "data": "12-25",
+      "nome": "Solenidade do Natal do Senhor",
+      "tipo": "Solenidade",
+      "descricao": "Nascimento de Jesus Cristo",
+      "tema_financeiro": "O maior presente: Deus se faz pobre por nós"
+    },
+    "dia_mundial_pobre": {
+      "data": "11-16",
+      "nome": "Dia Mundial dos Pobres (Papa Francisco)",
+      "tipo": "Comemoração",
+      "descricao": "Dia dedicado aos pobres instituído pelo Papa Francisco",
+      "tema_financeiro": "Caridade e solidariedade com os mais necessitados"
+    }
+  },
+  "santos": {
+    "sao_jose": {
+      "data": "03-19",
+      "nome": "São José",
+      "patrono": "Trabalhadores, pais de família, boa morte, Igreja Universal",
+      "biografia": "Esposo de Maria e pai adotivo de Jesus. Carpinteiro de Nazaré, São José é exemplo de trabalhador honesto, provedor fiel e homem de fé. Protegeu a Sagrada Família e administrou com sabedoria os recursos disponíveis.",
+      "tema_financeiro": "São José é o modelo de administração financeira familiar. Como provedor da Sagrada Família, ensina sobre planejamento, trabalho digno, confiança na providência divina e proteção do patrimônio familiar.",
+      "ideias_conteudo": [
+        "São José e o orçamento familiar: lições do carpinteiro de Nazaré",
+        "Como São José ensina a proteger financeiramente sua família",
+        "Trabalho e fé: a espiritualidade de São José Operário",
+        "O dízimo de São José: fidelidade mesmo na simplicidade"
+      ]
+    },
+    "sao_mateus": {
+      "data": "09-21",
+      "nome": "São Mateus",
+      "patrono": "Contadores, banqueiros, agentes financeiros, alfandegários",
+      "biografia": "Cobrador de impostos chamado por Jesus, deixou tudo para segui-lo. Autor do primeiro Evangelho, é padroeiro dos profissionais da área financeira.",
+      "tema_financeiro": "São Mateus deixou uma profissão lucrativa mas desonesta para seguir Cristo. Ensina sobre conversão financeira, integridade nos negócios e que nenhum emprego vale mais que a fidelidade a Deus.",
+      "ideias_conteudo": [
+        "São Mateus: de cobrador de impostos a evangelizador",
+        "Integridade financeira: a lição de São Mateus",
+        "Quando mudar de emprego é uma questão de fé",
+        "O Evangelho de São Mateus e o dinheiro"
+      ]
+    },
+    "sao_bento": {
+      "data": "07-11",
+      "nome": "São Bento de Núrsia",
+      "patrono": "Europa, agricultores, engenheiros",
+      "biografia": "Fundador do monaquismo ocidental. Sua regra 'Ora et Labora' (Reza e Trabalha) equilibra vida espiritual e trabalho manual.",
+      "tema_financeiro": "A regra beneditina ensina equilíbrio entre oração e trabalho, simplicidade voluntária e administração comunitária dos bens.",
+      "ideias_conteudo": [
+        "Ora et Labora: equilíbrio entre fé e trabalho",
+        "Simplicidade voluntária: lições dos monges beneditinos",
+        "São Bento e o minimalismo cristão"
+      ]
+    },
+    "sao_vicente_de_paulo": {
+      "data": "09-27",
+      "nome": "São Vicente de Paulo",
+      "patrono": "Obras de caridade, hospitais, voluntários",
+      "biografia": "Sacerdote francês dedicado aos pobres. Fundou as Conferências Vicentinas e as Filhas da Caridade.",
+      "tema_financeiro": "São Vicente ensina que a caridade deve ser organizada e eficiente. A gestão dos recursos para os pobres exige transparência e amor.",
+      "ideias_conteudo": [
+        "São Vicente de Paulo: caridade com organização",
+        "Como ajudar os pobres sem criar dependência",
+        "Gestão transparente dos recursos da caridade"
+      ]
+    },
+    "santa_monica": {
+      "data": "08-27",
+      "nome": "Santa Mônica",
+      "patrono": "Mães, esposas, vítimas de abuso",
+      "biografia": "Mãe de Santo Agostinho. Rezou durante anos pela conversão do filho.",
+      "tema_financeiro": "A perseverança de Santa Mônica ensina sobre paciência nos planos financeiros de longo prazo e a importância de investir na formação dos filhos.",
+      "ideias_conteudo": [
+        "Santa Mônica: perseverança na educação financeira dos filhos",
+        "Investir na formação: o legado de Santa Mônica",
+        "Paciência e fé nos objetivos financeiros de longo prazo"
+      ]
+    },
+    "santo_antonio": {
+      "data": "06-13",
+      "nome": "Santo Antônio de Pádua",
+      "patrono": "Pobres, objetos perdidos, noivos",
+      "biografia": "Franciscano português, grande pregador e Doutor da Igreja. Conhecido por sua devoção aos pobres.",
+      "tema_financeiro": "Santo Antônio viveu a pobreza radical e ensinou sobre desapego. Sua generosidade com os pobres é exemplo de caridade cristã.",
+      "ideias_conteudo": [
+        "Santo Antônio e a pobreza evangélica",
+        "Desapego material: lições do frade de Pádua",
+        "Generosidade com os pobres: o exemplo de Santo Antônio"
+      ]
+    },
+    "sao_francisco_de_assis": {
+      "data": "10-04",
+      "nome": "São Francisco de Assis",
+      "patrono": "Animais, ecologia, Itália, comerciantes",
+      "biografia": "Filho de rico comerciante, renunciou a toda riqueza para viver na pobreza radical seguindo o Evangelho.",
+      "tema_financeiro": "São Francisco ensina o desapego radical e a alegria na pobreza voluntária. Questiona o consumismo e convida à simplicidade.",
+      "ideias_conteudo": [
+        "São Francisco: de herdeiro rico a pobre por amor",
+        "Consumismo x simplicidade: a lição franciscana",
+        "Alegria na pobreza voluntária"
+      ]
+    },
+    "sao_joao_batista": {
+      "data": "06-24",
+      "nome": "São João Batista",
+      "patrono": "Batismo, conversão",
+      "biografia": "Precursor de Jesus, pregava a conversão e o batismo de penitência. Viveu de forma austera no deserto.",
+      "tema_financeiro": "João Batista ensinava: 'Quem tem duas túnicas, dê a quem não tem' (Lc 3,11). É o princípio da partilha e da justiça social.",
+      "ideias_conteudo": [
+        "'Quem tem duas túnicas': a partilha segundo João Batista",
+        "Austeridade e conversão financeira",
+        "Justiça social no Evangelho"
+      ]
+    },
+    "santo_afonso": {
+      "data": "08-01",
+      "nome": "Santo Afonso Maria de Ligório",
+      "patrono": "Moralistas, confessores",
+      "biografia": "Bispo e Doutor da Igreja, escreveu sobre teologia moral e questões econômicas de seu tempo.",
+      "tema_financeiro": "Santo Afonso abordou questões de justiça nos contratos, preços justos e usura em sua teologia moral.",
+      "ideias_conteudo": [
+        "Santo Afonso e a justiça nos negócios",
+        "Preço justo: ensinamento da moral católica",
+        "Ética nas transações financeiras"
+      ]
+    },
+    "sao_tomas_de_aquino": {
+      "data": "01-28",
+      "nome": "São Tomás de Aquino",
+      "patrono": "Estudantes, universidades, teólogos",
+      "biografia": "Doutor Angélico, maior teólogo da Igreja. Abordou questões econômicas na Suma Teológica.",
+      "tema_financeiro": "São Tomás ensinou sobre propriedade privada, preço justo, usura e destino universal dos bens. Base da Doutrina Social da Igreja.",
+      "ideias_conteudo": [
+        "São Tomás de Aquino e a economia",
+        "Propriedade privada e bem comum",
+        "O que a Igreja pensa sobre usura"
+      ]
+    },
+    "sao_maximiliano_kolbe": {
+      "data": "08-14",
+      "nome": "São Maximiliano Kolbe",
+      "patrono": "Jornalistas, prisioneiros, movimento pró-vida",
+      "biografia": "Franciscano polonês que deu sua vida em Auschwitz. Fundou a Cidade de Maria Imaculada com meios de comunicação.",
+      "tema_financeiro": "São Maximiliano usou recursos financeiros para evangelização em massa. Ensina sobre investimento no Reino de Deus.",
+      "ideias_conteudo": [
+        "São Maximiliano: investimento em evangelização",
+        "Uso dos recursos para o Reino de Deus",
+        "Comunicação e finanças na obra de Kolbe"
+      ]
+    },
+    "santa_clara": {
+      "data": "08-11",
+      "nome": "Santa Clara de Assis",
+      "patrono": "Televisão, bordadeiras",
+      "biografia": "Seguidora de São Francisco, fundou as Clarissas. Vendeu tudo que tinha para viver na pobreza.",
+      "tema_financeiro": "Santa Clara renunciou a sua herança para seguir Cristo. Ensina sobre coragem nas decisões financeiras radicais.",
+      "ideias_conteudo": [
+        "Santa Clara: coragem para renunciar",
+        "Pobreza radical: o exemplo de Clara",
+        "Quando o desapego é libertação"
+      ]
+    },
+    "santa_rita_de_cassia": {
+      "data": "05-22",
+      "nome": "Santa Rita de Cássia",
+      "patrono": "Casos impossíveis, mães, casamentos difíceis",
+      "biografia": "Esposa e mãe, depois religiosa agostiniana. Viveu situações familiares muito difíceis.",
+      "tema_financeiro": "Santa Rita ensina sobre perseverança nas dificuldades familiares, incluindo crises financeiras que afetam o casamento.",
+      "ideias_conteudo": [
+        "Santa Rita: fé nas crises familiares e financeiras",
+        "Quando o dinheiro ameaça o casamento",
+        "Perseverança e esperança nas dificuldades"
+      ]
+    },
+    "sao_gabriel_arcanjo": {
+      "data": "09-29",
+      "nome": "São Miguel, Gabriel e Rafael - Arcanjos",
+      "patrono": "Proteção, mensagens de Deus",
+      "biografia": "Os três arcanjos celebrados juntos. Gabriel trouxe a mensagem da Encarnação a Maria.",
+      "tema_financeiro": "São Gabriel anunciou o plano de Deus. Ensina sobre discernimento nas decisões financeiras importantes.",
+      "ideias_conteudo": [
+        "Discernimento financeiro: ouvindo a voz de Deus",
+        "Os arcanjos e as decisões importantes",
+        "Proteção espiritual nas finanças"
+      ]
+    }
+  },
+  "doutrina_social_temas": {
+    "dignidade_pessoa": {
+      "nome": "Dignidade da Pessoa Humana",
+      "descricao": "Base de toda a Doutrina Social da Igreja. A pessoa é mais importante que o capital.",
+      "aplicacao_financeira": "Finanças a serviço da pessoa, não o contrário"
+    },
+    "bem_comum": {
+      "nome": "Bem Comum",
+      "descricao": "Buscar o que é bom para todos, não apenas para si.",
+      "aplicacao_financeira": "Investimentos éticos e consumo responsável"
+    },
+    "destino_universal_bens": {
+      "nome": "Destino Universal dos Bens",
+      "descricao": "Os bens da Terra são para todos. A propriedade privada tem função social.",
+      "aplicacao_financeira": "Generosidade, partilha e responsabilidade social"
+    },
+    "solidariedade": {
+      "nome": "Solidariedade",
+      "descricao": "Compromisso com o próximo, especialmente os mais pobres.",
+      "aplicacao_financeira": "Dízimo, doação e voluntariado"
+    },
+    "subsidiariedade": {
+      "nome": "Subsidiariedade",
+      "descricao": "As decisões devem ser tomadas no nível mais próximo possível das pessoas.",
+      "aplicacao_financeira": "Autonomia financeira familiar e comunitária"
+    },
+    "trabalho": {
+      "nome": "Dignidade do Trabalho",
+      "descricao": "O trabalho é participação na criação de Deus, não mera mercadoria.",
+      "aplicacao_financeira": "Trabalho digno, salário justo, equilíbrio vida-trabalho"
+    },
+    "opcao_pelos_pobres": {
+      "nome": "Opção Preferencial pelos Pobres",
+      "descricao": "Deus tem preferência pelos mais necessitados.",
+      "aplicacao_financeira": "Caridade prioritária, justiça social, microcrédito solidário"
+    },
+    "ecologia_integral": {
+      "nome": "Ecologia Integral (Laudato Si')",
+      "descricao": "Cuidado com a casa comum e com os pobres afetados pela degradação.",
+      "aplicacao_financeira": "Investimentos sustentáveis, consumo consciente"
+    }
+  },
+  "meses_liturgicos": {
+    "janeiro": {
+      "tempo": "Natal / Tempo Comum",
+      "temas": ["Consagração do ano", "Planejamento anual", "Propósitos financeiros com fé"],
+      "santos_destaque": ["Santa Maria Mãe de Deus (01/01)", "São Tomás de Aquino (28/01)"]
+    },
+    "fevereiro": {
+      "tempo": "Tempo Comum / Quaresma",
+      "temas": ["Conversão financeira", "Jejum de gastos supérfluos", "Caridade quaresmal"],
+      "santos_destaque": ["São José (19/02 - em alguns calendários)"]
+    },
+    "marco": {
+      "tempo": "Quaresma",
+      "temas": ["Desapego", "Esmola", "Conversão radical", "São José provedor"],
+      "santos_destaque": ["São José (19/03)", "Anunciação (25/03)"]
+    },
+    "abril": {
+      "tempo": "Quaresma / Páscoa",
+      "temas": ["Ressurreição e recomeço", "Esperança financeira", "Providência divina"],
+      "santos_destaque": ["Páscoa (data móvel)"]
+    },
+    "maio": {
+      "tempo": "Páscoa / Tempo Comum",
+      "temas": ["Maria e as famílias", "Frutificação dos talentos", "Trabalho digno"],
+      "santos_destaque": ["São José Operário (01/05)", "Santa Rita (22/05)"]
+    },
+    "junho": {
+      "tempo": "Tempo Comum",
+      "temas": ["Sagrado Coração", "São João Batista e partilha", "Santo Antônio e pobreza"],
+      "santos_destaque": ["Santo Antônio (13/06)", "São João Batista (24/06)", "São Pedro e São Paulo (29/06)"]
+    },
+    "julho": {
+      "tempo": "Tempo Comum",
+      "temas": ["São Bento e equilíbrio", "Trabalho e oração", "Simplicidade"],
+      "santos_destaque": ["São Bento (11/07)"]
+    },
+    "agosto": {
+      "tempo": "Tempo Comum",
+      "temas": ["Assunção e desapego", "Santa Clara e pobreza", "São Vicente e caridade"],
+      "santos_destaque": ["Santo Afonso (01/08)", "Santa Clara (11/08)", "São Maximiliano (14/08)", "Assunção (15/08)", "São Vicente (27/08)"]
+    },
+    "setembro": {
+      "tempo": "Tempo Comum",
+      "temas": ["São Mateus e integridade", "Arcanjos e discernimento", "São Vicente e caridade organizada"],
+      "santos_destaque": ["São Mateus (21/09)", "São Vicente (27/09)", "Arcanjos (29/09)"]
+    },
+    "outubro": {
+      "tempo": "Tempo Comum",
+      "temas": ["São Francisco e desapego", "Nossa Senhora do Rosário", "Consumo consciente"],
+      "santos_destaque": ["São Francisco (04/10)"]
+    },
+    "novembro": {
+      "tempo": "Tempo Comum / Advento",
+      "temas": ["Todos os Santos", "Finados e legado", "Cristo Rei", "Dia dos Pobres"],
+      "santos_destaque": ["Todos os Santos (01/11)", "Finados (02/11)", "Dia Mundial dos Pobres", "Cristo Rei"]
+    },
+    "dezembro": {
+      "tempo": "Advento / Natal",
+      "temas": ["Esperança", "Preparação", "Generosidade do Natal", "Imaculada Conceição"],
+      "santos_destaque": ["Imaculada Conceição (08/12)", "Natal (25/12)"]
+    }
+  }
+}
