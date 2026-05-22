@@ -203,7 +203,7 @@ start_bot() {
     sleep 1
 
     cd "$PROJETO"
-    python agents/telegram_bot/main.py &
+    python agents/telegram_bot/main.py > $OPB_TMP/opb-bot.log 2>&1 &
     BOT_PID=$!
     echo "$BOT_PID" > $OPB_TMP/opb-bot.pid
     sleep 1
