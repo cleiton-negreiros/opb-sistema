@@ -131,6 +131,30 @@ def get_perfil_path_for_user():
     """Get perfil path - uses active profile"""
     return get_perfil_path()
 
+def get_cerebro_path_for_user_with_fallback():
+    """Get cerebro path for active profile, with fallback to global cerebro."""
+    profile_path = get_cerebro_path_for_user()
+    if profile_path.exists() and any(profile_path.iterdir()):
+        return profile_path
+    return PROJECT_PATH / "cerebro"
+
+def resolve_cerebro_path(caminho: str) -> Path:
+    """Resolve caminho no cerebro: tenta profile-specific, fallback global."""
+    profile_base = get_cerebro_path_for_user()
+    global_base = PROJECT_PATH / "cerebro"
+
+    # Try profile-specific first
+    profile_file = profile_base / caminho
+    if profile_file.exists():
+        return profile_file
+
+    # Fallback to global
+    global_file = global_base / caminho
+    if global_file.exists():
+        return global_file
+
+    return profile_file  # Return profile path even if not found (will 404)
+
 # ============================================
 # UTILIDADES
 # ============================================
@@ -533,17 +557,18 @@ def api_agentes():
                     "tipo": soul.get('tipo', 'Agente'),
                     "descricao": soul.get('descricao', ''),
                     "status": status,
-                    "icone": {
-                        "transcricao": "fa-microphone-alt",
-                        "capa_video": "fa-image",
-                        "carrossel": "fa-layer-group",
-                        "consumo": "fa-book-reader",
-                        "text_generator": "fa-pen-fancy",
-                        "posicionamento": "fa-crosshairs",
-                        "designer": "fa-paint-brush",
-                        "coordinator": "fa-cogs",
-                        "telegram_bot": "fa-paper-plane",
-                    }.get(d.name, "fa-robot")
+                     "icone": {
+                         "transcricao": "fa-microphone-alt",
+                         "capa_video": "fa-image",
+                         "carrossel": "fa-layer-group",
+                         "consumo": "fa-book-reader",
+                         "text_generator": "fa-pen-fancy",
+                         "posicionamento": "fa-crosshairs",
+                         "designer": "fa-paint-brush",
+                         "coordinator": "fa-cogs",
+                         "telegram_bot": "fa-paper-plane",
+                         "consultor_negocios": "fa-university",
+                     }.get(d.name, "fa-robot")
                 })
 
     return jsonify(agentes)
@@ -555,20 +580,34 @@ def api_agentes():
 
 @app.route('/api/cerebro/arvore', methods=['GET'])
 def api_cerebro_arvore():
-    """Retorna a árvore de arquivos do cérebro."""
-    cerebro_path = PROJECT_PATH / "cerebro"
+    """Retorna a árvore de arquivos do cérebro (profile-aware)."""
+    cerebro_path = get_cerebro_path_for_user_with_fallback()
+    global_base = PROJECT_PATH / "cerebro"
+    profile_base = get_cerebro_path_for_user()
     arvore = []
 
-    if cerebro_path.exists():
-        for item in sorted(cerebro_path.rglob("*")):
+    seen = set()
+
+    # Add profile-specific items first (they override global)
+    if profile_base.exists():
+        for item in sorted(profile_base.rglob("*")):
             if '.git' in str(item):
                 continue
-            rel = item.relative_to(PROJECT_PATH)
+            try:
+                rel = item.relative_to(profile_base)
+            except ValueError:
+                continue
+            rel_str = str(rel)
+            if rel_str in seen:
+                continue
+            seen.add(rel_str)
+            perfil_only = not (global_base / rel).exists()
             if item.is_dir():
                 arvore.append({
                     "nome": item.name,
                     "caminho": str(rel),
-                    "tipo": "pasta"
+                    "tipo": "pasta",
+                    "perfil_only": perfil_only
                 })
             else:
                 arvore.append({
@@ -576,7 +615,38 @@ def api_cerebro_arvore():
                     "caminho": str(rel),
                     "tipo": "arquivo",
                     "tamanho": item.stat().st_size if item.exists() else 0,
-                    "modificado": datetime.fromtimestamp(item.stat().st_mtime).isoformat() if item.exists() else None
+                    "modificado": datetime.fromtimestamp(item.stat().st_mtime).isoformat() if item.exists() else None,
+                    "perfil_only": perfil_only
+                })
+
+    # Add global items not overridden by profile
+    if global_base.exists():
+        for item in sorted(global_base.rglob("*")):
+            if '.git' in str(item):
+                continue
+            try:
+                rel = item.relative_to(global_base)
+            except ValueError:
+                continue
+            rel_str = str(rel)
+            if rel_str in seen:
+                continue
+            seen.add(rel_str)
+            if item.is_dir():
+                arvore.append({
+                    "nome": item.name,
+                    "caminho": str(rel),
+                    "tipo": "pasta",
+                    "perfil_only": False
+                })
+            else:
+                arvore.append({
+                    "nome": item.name,
+                    "caminho": str(rel),
+                    "tipo": "arquivo",
+                    "tamanho": item.stat().st_size if item.exists() else 0,
+                    "modificado": datetime.fromtimestamp(item.stat().st_mtime).isoformat() if item.exists() else None,
+                    "perfil_only": False
                 })
 
     return jsonify(arvore)
@@ -584,31 +654,67 @@ def api_cerebro_arvore():
 
 @app.route('/api/cerebro/ler', methods=['GET'])
 def api_cerebro_ler():
-    """Lê o conteúdo de um arquivo do cérebro."""
+    """Lê o conteúdo de um arquivo do cérebro (profile-aware)."""
     caminho = request.args.get('caminho', '')
     if not caminho:
         return jsonify({"error": "Parâmetro 'caminho' obrigatório"}), 400
 
-    full_path = PROJECT_PATH / caminho
+    # Try profile-specific path first, fallback to global
+    full_path = resolve_cerebro_path(caminho)
     if not full_path.exists():
-        return jsonify({"error": "Arquivo não encontrado"}), 404
+        # Last resort: try absolute path from PROJECT_PATH
+        full_path = PROJECT_PATH / caminho
+        if not full_path.exists():
+            return jsonify({"error": "Arquivo não encontrado"}), 404
 
     conteudo = read_file_safe(full_path)
     return jsonify({
         "caminho": caminho,
         "conteudo": conteudo,
-        "nome": full_path.name
+        "nome": full_path.name,
+        "perfil": get_active_profile()
     })
 
 
 @app.route('/api/cerebro/mapas', methods=['GET'])
 def api_cerebro_mapas():
-    """Lista todos os MAPAs disponíveis."""
+    """Lista todos os MAPAs disponíveis (profile-aware)."""
     mapas = []
+    seen = set()
+
+    # Search profile-specific cerebro first
+    profile_cerebro = get_cerebro_path_for_user()
+    if profile_cerebro.exists():
+        for f in profile_cerebro.rglob("MAPA.md"):
+            rel = f.relative_to(profile_cerebro)
+            seen.add(str(rel))
+            conteudo = read_file_safe(f)
+            linhas = conteudo.split('\n')
+            desc = ""
+            for l in linhas:
+                if l.strip() and not l.startswith('#') and not l.startswith('---') and not l.startswith('>'):
+                    desc = l.strip()[:80]
+                    break
+            mapas.append({
+                "caminho": str(rel),
+                "pasta": str(rel.parent),
+                "descricao": desc,
+                "perfil": get_active_profile()
+            })
+
+    # Then search global cerebro, skipping already found
     for f in PROJECT_PATH.rglob("MAPA.md"):
-        rel = f.relative_to(PROJECT_PATH)
+        try:
+            rel = f.relative_to(PROJECT_PATH)
+        except ValueError:
+            continue
+        if str(rel) in seen:
+            continue
+        # Skip if this file is inside a profile path
+        if "perfis" in str(rel):
+            continue
+        seen.add(str(rel))
         conteudo = read_file_safe(f)
-        # Extrai primeira linha de conteúdo como descrição
         linhas = conteudo.split('\n')
         desc = ""
         for l in linhas:
@@ -618,7 +724,8 @@ def api_cerebro_mapas():
         mapas.append({
             "caminho": str(rel),
             "pasta": str(rel.parent),
-            "descricao": desc
+            "descricao": desc,
+            "perfil": "global"
         })
     return jsonify(mapas)
 
@@ -1234,6 +1341,7 @@ def api_agentes_executar():
         "liturgico": "agents/liturgico/main.py",
         "hashtags": "agents/hashtags/main.py",
         "reels_script": "agents/reels_script/main.py",
+        "consultor-negocios": "agents/consultor-negocios/main.py",
     }
 
     if agente not in AGENTES:
