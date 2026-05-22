@@ -42,7 +42,6 @@ context-brain/
 !.env.example
 
 # Agent runtime state
-agents/radagast/.env
 agents/radagast/.state.json
 
 # User data (auth, settings, analytics)

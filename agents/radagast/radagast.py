@@ -128,7 +128,7 @@ def send_telegram_messages(messages: list[str]) -> None:
     """Envia mensagens pro bot Telegram do aluno."""
     import requests
 
-    bot_token = os.environ.get("RADAGAST_BOT_TOKEN", "").strip()
+    bot_token = os.environ.get("RADAGAST_BOT_TOKEN", "").strip() or os.environ.get("TELEGRAM_BOT_TOKEN", "").strip()
     chat_id = os.environ.get("RADAGAST_CHAT_ID", "").strip()
     if not bot_token or not chat_id:
         logger.error(
