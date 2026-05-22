@@ -23,6 +23,7 @@
     <button class="bottom-nav-item" onclick="navigateTo('cerebro')"><i class="fas fa-brain"></i><span>Cérebro</span></button>
     <button class="bottom-nav-item" onclick="navigateTo('carrossel')"><i class="fas fa-layer-group"></i><span>Carrossel</span></button>
     <button class="bottom-nav-item" onclick="navigateTo('quadro-avisos')"><i class="fas fa-clipboard-list"></i><span>Tarefas</span></button>
+    <button class="bottom-nav-item" onclick="navigateTo('jornada-ia')"><i class="fas fa-book-open"></i><span>Jornada</span></button>
     <button class="bottom-nav-item" onclick="navigateTo('config')"><i class="fas fa-cog"></i><span>Mais</span></button>
 </nav>
 
@@ -52,6 +53,7 @@
                 <div class="nav-item" onclick="navigateTo('narvi')"><i class="fas fa-video"></i><span>Narvi</span><span class="badge">IA</span></div>
                 <div class="nav-item" onclick="navigateTo('radagast')"><i class="fas fa-rss"></i><span>Radagast</span><span class="badge">IA</span></div>
                 <div class="nav-item" onclick="navigateTo('consultor-negocios')"><i class="fas fa-university"></i><span>Consultor</span><span class="badge">IA</span></div>
+                <div class="nav-item" onclick="navigateTo('jornada-ia')"><i class="fas fa-book-open"></i><span>Jornada IA</span><span class="badge">Diário</span></div>
             </div>
             <div class="nav-section">
                 <div class="nav-section-title">Ferramentas</div>
@@ -761,6 +763,220 @@
 <button class="btn btn-danger btn-sm" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Sair</button>
 </div>
 </div>
+</div>
+</div>
+
+<!-- ==============================================
+     JORNADA IA
+     ============================================== -->
+<div class="page" id="page-jornada-ia">
+<div class="page-article" style="max-width:800px;margin:0 auto">
+
+<div class="card" style="margin-bottom:24px;background:linear-gradient(135deg,var(--primary),#8B5CF6);color:white;text-align:center;padding:48px 32px">
+    <h1 style="font-size:2.2rem;margin:0 0 12px">🚀 Jornada IA</h1>
+    <p style="opacity:0.9;font-size:1.1rem;margin:0">Como construí um sistema de agentes de IA do zero — sozinho, num PC simples, em 10 dias.</p>
+    <div style="margin-top:20px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+        <span style="background:rgba(255,255,255,0.2);padding:6px 16px;border-radius:20px;font-size:0.85rem">📅 12 a 22 Maio 2026</span>
+        <span style="background:rgba(255,255,255,0.2);padding:6px 16px;border-radius:20px;font-size:0.85rem">⚡ 10 dias de desenvolvimento</span>
+        <span style="background:rgba(255,255,255,0.2);padding:6px 16px;border-radius:20px;font-size:0.85rem">🤖 15+ agentes de IA</span>
+    </div>
+</div>
+
+<div class="card" style="margin-bottom:24px;padding:32px">
+    <h2 style="margin-top:0">💡 A Grande Ideia</h2>
+    <p style="line-height:1.7;font-size:1.05rem">E se um empreendedor solo pudesse ter uma equipe inteira de especialistas trabalhando pra ele 24h por dia, 7 dias por semana, por centavos de energia elétrica?</p>
+    <p style="line-height:1.7;font-size:1.05rem">Não, não é propaganda de curso. É o que eu construí. Um sistema operacional de negócios movido a IA — com agentes que transcrevem vídeos, geram roteiros, analisam concorrência, curam conteúdo, criam carrosséis, consultam estratégia e muito mais.</p>
+    <p style="line-height:1.7;font-size:1.05rem">E o melhor: tudo roda local, sem assinatura mensal, num notebook Acer 2012 com 8GB de RAM.</p>
+</div>
+
+<h2 style="margin:32px 0 20px">📆 Linha do Tempo</h2>
+
+<!-- DIA 1 -->
+<div class="card jornada-dia" style="margin-bottom:16px;padding:24px;border-left:4px solid var(--primary)">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;margin-bottom:12px">
+        <h3 style="margin:0;display:flex;align-items:center;gap:8px">📅 Dia 1 — 12 de Maio</h3>
+        <span style="background:var(--primary);color:white;padding:4px 12px;border-radius:12px;font-size:0.8rem">Fundação</span>
+    </div>
+    <p><strong>Tema:</strong> "Será que eu consigo fazer um robô que me ajuda a criar conteúdo?"</p>
+    <p>Comecei sem saber por onde. Instalei Python, baixei um modelo de IA (Ollama + tinyllama), e criei o primeiro esboço de um agente que transcreve vídeos do YouTube. Funcionou. Lento — cada resposta levava 3 minutos — mas funcionou.</p>
+    <p>Daí veio o <strong>Agente Carrossel</strong>: "me dá um tema e eu gero 5 slides de Instagram". E o <strong>Agente Designer</strong>: virava roteiro em descrição visual. No fim do dia, eu já tinha 3 agentes conversando entre si.</p>
+    <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
+        <span class="jornada-tag" style="background:#E0E7FF;color:#4338CA;padding:4px 12px;border-radius:12px;font-size:0.8rem">🤖 Primeiro agente de IA</span>
+        <span class="jornada-tag" style="background:#E0E7FF;color:#4338CA;padding:4px 12px;border-radius:12px;font-size:0.8rem">🐘 Ollama local</span>
+        <span class="jornada-tag" style="background:#E0E7FF;color:#4338CA;padding:4px 12px;border-radius:12px;font-size:0.8rem">📝 Carrossel funcional</span>
+    </div>
+</div>
+
+<!-- DIA 2 -->
+<div class="card jornada-dia" style="margin-bottom:16px;padding:24px;border-left:4px solid #10B981">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;margin-bottom:12px">
+        <h3 style="margin:0;display:flex;align-items:center;gap:8px">📅 Dia 2 — 13 de Maio</h3>
+        <span style="background:#10B981;color:white;padding:4px 12px;border-radius:12px;font-size:0.8rem">Expansão</span>
+    </div>
+    <p><strong>Tema:</strong> "Preciso de um lugar pra ver tudo funcionando."</p>
+    <p>Criei a <strong>Plataforma Web (SPA)</strong> — uma interface única onde todos os agentes vivem. Cada agente ganhou sua própria página, com formulário, botão de executar e área de resultado. Adicionei navegação por abas, suporte mobile (PWA), e um formulário interativo de perfil do empreendedor.</p>
+    <p>Construí o <strong>Agente Consumo</strong> (que lê artigos e livros por você) e o <strong>Agente Capa Vídeo</strong>. Também fiz um script de <strong>alimentação automática do cérebro</strong> — o sistema aprende sozinho com o que você joga nele.</p>
+    <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
+        <span class="jornada-tag" style="background:#D1FAE5;color:#065F46;padding:4px 12px;border-radius:12px;font-size:0.8rem">🌐 Plataforma web SPA</span>
+        <span class="jornada-tag" style="background:#D1FAE5;color:#065F46;padding:4px 12px;border-radius:12px;font-size:0.8rem">📱 PWA mobile</span>
+        <span class="jornada-tag" style="background:#D1FAE5;color:#065F46;padding:4px 12px;border-radius:12px;font-size:0.8rem">🧠 Cérebro auto-alimentado</span>
+    </div>
+</div>
+
+<!-- DIA 3-5 -->
+<div class="card jornada-dia" style="margin-bottom:16px;padding:24px;border-left:4px solid #F59E0B">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;margin-bottom:12px">
+        <h3 style="margin:0;display:flex;align-items:center;gap:8px">📅 Dias 3 a 5 — 14 a 16 de Maio</h3>
+        <span style="background:#F59E0B;color:white;padding:4px 12px;border-radius:12px;font-size:0.8rem">Refinamento</span>
+    </div>
+    <p><strong>Tema:</strong> "O visual importa. Vou deixar bonito."</p>
+    <p>Refiz o layout inteiro com gradientes, glassmorphism e modo escuro. A plataforma foi componentizada — CSS separado, JS modular, tudo organizado. Criei uma <strong>Landing Page PRO</strong> pra mostrar o projeto como se fosse um SaaS de verdade.</p>
+    <p>O <strong>Radagast</strong> nasceu: um agente curador que todo dia varre YouTube, Twitter e web em busca de ideias de conteúdo. Ele coleta, analisa com IA, gera sugestões de Reels e manda tudo no Telegram.</p>
+    <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
+        <span class="jornada-tag" style="background:#FEF3C7;color:#92400E;padding:4px 12px;border-radius:12px;font-size:0.8rem">🎨 Layout profissional</span>
+        <span class="jornada-tag" style="background:#FEF3C7;color:#92400E;padding:4px 12px;border-radius:12px;font-size:0.8rem">🌙 Modo escuro</span>
+        <span class="jornada-tag" style="background:#FEF3C7;color:#92400E;padding:4px 12px;border-radius:12px;font-size:0.8rem">📡 Radagast curador</span>
+    </div>
+</div>
+
+<!-- DIA 6 -->
+<div class="card jornada-dia" style="margin-bottom:16px;padding:24px;border-left:4px solid #8B5CF6">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;margin-bottom:12px">
+        <h3 style="margin:0;display:flex;align-items:center;gap:8px">📅 Dia 6 — 17 a 19 de Maio</h3>
+        <span style="background:#8B5CF6;color:white;padding:4px 12px;border-radius:12px;font-size:0.8rem">Estratégia</span>
+    </div>
+    <p><strong>Tema:</strong> "Mapeei o mercado. Descobri onde atacar."</p>
+    <p>Pesquisei 40+ influenciadores de finanças no Brasil. Entendi o gap: <em>finanças pessoais com perspectiva católica, sem teologia da prosperidade</em>. Criei o <strong>Agente Posicionamento</strong> que analisa concorrentes e sugere seu diferencial. Adicionei 16 perfis e 12 keywords ao Radagast.</p>
+    <p>Documentei tudo no <strong>mapa do nicho</strong> — concorrentes, formato de conteúdo, gaps, oportunidades. O projeto deixou de ser "um brinquedo de IA" e virou um negócio com identidade.</p>
+    <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
+        <span class="jornada-tag" style="background:#EDE9FE;color:#5B21B6;padding:4px 12px;border-radius:12px;font-size:0.8rem">🔍 Pesquisa de mercado</span>
+        <span class="jornada-tag" style="background:#EDE9FE;color:#5B21B6;padding:4px 12px;border-radius:12px;font-size:0.8rem">🎯 Nicho finanças católicas</span>
+        <span class="jornada-tag" style="background:#EDE9FE;color:#5B21B6;padding:4px 12px;border-radius:12px;font-size:0.8rem">📊 Mapa de concorrência</span>
+    </div>
+</div>
+
+<!-- DIA 7 -->
+<div class="card jornada-dia" style="margin-bottom:16px;padding:24px;border-left:4px solid #EF4444">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;margin-bottom:12px">
+        <h3 style="margin:0;display:flex;align-items:center;gap:8px">📅 Dia 7 — 20 de Maio</h3>
+        <span style="background:#EF4444;color:white;padding:4px 12px;border-radius:12px;font-size:0.8rem">Multi-Perfil</span>
+    </div>
+    <p><strong>Tema:</strong> "Um sistema de agentes pra 3 negócios ao mesmo tempo."</p>
+    <p>Implementei <strong>multi-perfil</strong> — Paz na Conta (finanças católicas), Toque de Paz (música com propósito) e Caminho Vida (formação espiritual). Cada perfil tem seu próprio cérebro, seu posicionamento e seus agentes, mas compartilham a mesma plataforma.</p>
+    <p>Criei <strong>Dashboard PWA</strong> com cards de status, <strong>sincronia PC-celular</strong> via GitHub, <strong>landing page adaptada</strong>, <strong>SaaS PRO</strong> com autenticação, onboarding, validação, e mais 2 agentes: <strong>corta-silêncio</strong> e <strong>transcrever-áudio</strong>.</p>
+    <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
+        <span class="jornada-tag" style="background:#FEE2E2;color:#991B1B;padding:4px 12px;border-radius:12px;font-size:0.8rem">👥 3 perfis de negócio</span>
+        <span class="jornada-tag" style="background:#FEE2E2;color:#991B1B;padding:4px 12px;border-radius:12px;font-size:0.8rem">🔄 Sync PC → Celular</span>
+        <span class="jornada-tag" style="background:#FEE2E2;color:#991B1B;padding:4px 12px;border-radius:12px;font-size:0.8rem">📱 PWA Dashboard</span>
+        <span class="jornada-tag" style="background:#FEE2E2;color:#991B1B;padding:4px 12px;border-radius:12px;font-size:0.8rem">🔐 Autenticação</span>
+    </div>
+</div>
+
+<!-- DIA 8-9 -->
+<div class="card jornada-dia" style="margin-bottom:16px;padding:24px;border-left:4px solid #EC4899">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;margin-bottom:12px">
+        <h3 style="margin:0;display:flex;align-items:center;gap:8px">📅 Dias 8 e 9 — 21 de Maio</h3>
+        <span style="background:#EC4899;color:white;padding:4px 12px;border-radius:12px;font-size:0.8rem">Automação Total</span>
+    </div>
+    <p><strong>Tema:</strong> "Quanto mais agentes, mais o sistema fica inteligente."</p>
+    <p>Criei o <strong>Agente Hashtags</strong> (analisa e sugere hashtags com IA), o <strong>Reels Script</strong> (roteiro completo pra vídeo), e mais integrações no Telegram Bot — agora você comanda o sistema inteiro pelo celular. Adicionei o <strong>Consultor de Negócios</strong>, um agente que faz análise SWOT, planejamento estratégico e otimização de tempo pra empreendedores católicos.</p>
+    <p>Cada agente recebeu sua <strong>SOUL.md</strong> (alma do agente) e <strong>STATUS.md</strong> — um padrão que documenta propósito, personalidade e estado atual.</p>
+    <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
+        <span class="jornada-tag" style="background:#FCE7F3;color:#9D174D;padding:4px 12px;border-radius:12px;font-size:0.8rem">🏛️ Consultor de Negócios</span>
+        <span class="jornada-tag" style="background:#FCE7F3;color:#9D174D;padding:4px 12px;border-radius:12px;font-size:0.8rem">#️⃣ Hashtags IA</span>
+        <span class="jornada-tag" style="background:#FCE7F3;color:#9D174D;padding:4px 12px;border-radius:12px;font-size:0.8rem">🎬 Reels Script</span>
+        <span class="jornada-tag" style="background:#FCE7F3;color:#9D174D;padding:4px 12px;border-radius:12px;font-size:0.8rem">🤖 Bot Telegram completo</span>
+    </div>
+</div>
+
+<!-- DIA 10 -->
+<div class="card jornada-dia" style="margin-bottom:16px;padding:24px;border-left:4px solid #06B6D4">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;margin-bottom:12px">
+        <h3 style="margin:0;display:flex;align-items:center;gap:8px">📅 Dia 10 — 22 de Maio</h3>
+        <span style="background:#06B6D4;color:white;padding:4px 12px;border-radius:12px;font-size:0.8rem">Mobile + Deploy</span>
+    </div>
+    <p><strong>Tema:</strong> "Rodou no PC. E no celular de 2015?"</p>
+    <p>Levei o sistema pro <strong>Termux (Android)</strong>. Descobri na prática os problemas de permissão, line endings (CRLF vs LF), diretórios sem escrita, tokens de API não encontrados. Resolvi um por um — e documentei cada erro como lição aprendida.</p>
+    <p>No fim do dia, o sistema roda inteiro no celular: API, bot Telegram, agentes, curadoria. Tudo via terminal. Criei a <strong>seção Jornada IA</strong> que você está vendo agora — pra contar essa história e inspirar outros empreendedores solos.</p>
+    <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
+        <span class="jornada-tag" style="background:#CFFAFE;color:#155E75;padding:4px 12px;border-radius:12px;font-size:0.8rem">📱 Termux Android</span>
+        <span class="jornada-tag" style="background:#CFFAFE;color:#155E75;padding:4px 12px;border-radius:12px;font-size:0.8rem">🐛 Debug + Lições</span>
+        <span class="jornada-tag" style="background:#CFFAFE;color:#155E75;padding:4px 12px;border-radius:12px;font-size:0.8rem">📖 Diário de bordo</span>
+        <span class="jornada-tag" style="background:#CFFAFE;color:#155E75;padding:4px 12px;border-radius:12px;font-size:0.8rem">🚀 GitHub + Vercel</span>
+    </div>
+</div>
+
+<!-- RESUMO -->
+<div class="card" style="margin:32px 0 24px;padding:32px;background:linear-gradient(135deg,#1E293B,#334155);color:white">
+    <h2 style="margin-top:0;color:white">📊 O Que Foi Construído</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-top:20px">
+        <div style="text-align:center;padding:16px;background:rgba(255,255,255,0.1);border-radius:12px">
+            <div style="font-size:2rem;font-weight:700">15+</div>
+            <div style="opacity:0.8;font-size:0.9rem">Agentes de IA</div>
+        </div>
+        <div style="text-align:center;padding:16px;background:rgba(255,255,255,0.1);border-radius:12px">
+            <div style="font-size:2rem;font-weight:700">3</div>
+            <div style="opacity:0.8;font-size:0.9rem">Negócios na mesma plataforma</div>
+        </div>
+        <div style="text-align:center;padding:16px;background:rgba(255,255,255,0.1);border-radius:12px">
+            <div style="font-size:2rem;font-weight:700">2</div>
+            <div style="opacity:0.8;font-size:0.9rem">Dispositivos (PC + Celular)</div>
+        </div>
+        <div style="text-align:center;padding:16px;background:rgba(255,255,255,0.1);border-radius:12px">
+            <div style="font-size:2rem;font-weight:700">89</div>
+            <div style="opacity:0.8;font-size:0.9rem">Commits no GitHub</div>
+        </div>
+        <div style="text-align:center;padding:16px;background:rgba(255,255,255,0.1);border-radius:12px">
+            <div style="font-size:2rem;font-weight:700">10</div>
+            <div style="opacity:0.8;font-size:0.9rem">Dias de desenvolvimento</div>
+        </div>
+        <div style="text-align:center;padding:16px;background:rgba(255,255,255,0.1);border-radius:12px">
+            <div style="font-size:2rem;font-weight:700">R$ 0</div>
+            <div style="opacity:0.8;font-size:0.9rem">Gasto em assinaturas</div>
+        </div>
+    </div>
+</div>
+
+<!-- LIÇÕES -->
+<div class="card" style="margin-bottom:24px;padding:32px">
+    <h2 style="margin-top:0">💡 O Que Aprendi</h2>
+    <div style="display:flex;flex-direction:column;gap:12px;margin-top:16px">
+        <div style="display:flex;gap:12px;align-items:start">
+            <span style="background:var(--primary);color:white;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:0.8rem;font-weight:600">1</span>
+            <div><strong>IA local funciona, sim.</strong> Com 8GB de RAM e um modelo tinyllama de 637MB, você tem um assistente 24h. É lento (~2 tokens/segundo), mas funciona sem internet e sem assinatura.</div>
+        </div>
+        <div style="display:flex;gap:12px;align-items:start">
+            <span style="background:var(--primary);color:white;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:0.8rem;font-weight:600">2</span>
+            <div><strong>Agentes são como funcionários.</strong> Cada um tem sua especialidade, sua personalidade (SOUL.md) e seu estado (STATUS.md). Você não pede pro mesmo funcionário fazer tudo.</div>
+        </div>
+        <div style="display:flex;gap:12px;align-items:start">
+            <span style="background:var(--primary);color:white;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:0.8rem;font-weight:600">3</span>
+            <div><strong>Mobile-first não é opcional.</strong> 70% dos empreendedores brasileiros usam só o celular. Seu sistema precisa rodar no Android de entrada também.</div>
+        </div>
+        <div style="display:flex;gap:12px;align-items:start">
+            <span style="background:var(--primary);color:white;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:0.8rem;font-weight:600">4</span>
+            <div><strong>Documente tudo.</strong> Cada erro vira lição. Cada lição vira regra. O sistema fica mais inteligente com o tempo — e você também.</div>
+        </div>
+        <div style="display:flex;gap:12px;align-items:start">
+            <span style="background:var(--primary);color:white;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:0.8rem;font-weight:600">5</span>
+            <div><strong>Nicho é tudo.</strong> "Finanças com fé, sem teologia da prosperidade" não é só um slogan — é um posicionamento de mercado que diferencia e atrai.</div>
+        </div>
+    </div>
+</div>
+
+<!-- PARA POSTAR -->
+<div class="card" style="margin-bottom:24px;padding:32px;border:2px dashed var(--primary)">
+    <h2 style="margin-top:0">📢 Compartilhe Esta Jornada</h2>
+    <p style="line-height:1.7">Essa história prova que <strong>você não precisa de grana, equipe ou um PC poderoso</strong> pra construir tecnologia que transforma seu negócio. Você precisa de um problema real, vontade de aprender, e 10 dias de foco.</p>
+    <p style="line-height:1.7"><strong>Pronto pra começar a sua jornada IA?</strong> O melhor momento pra começar foi ontem. O segundo melhor é agora. O hardware que você tem é suficiente. O conhecimento você constrói no caminho.</p>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:16px">
+        <button class="btn btn-primary" onclick="navigator.clipboard.writeText('Construí um sistema de agentes de IA do zero em 10 dias — sozinho, num PC de 2012, gastando R$ 0 em assinaturas. E vou te contar como. 🧵👇')"><i class="fas fa-copy"></i> Copiar Thread LinkedIn</button>
+        <button class="btn btn-outline" onclick="navigator.clipboard.writeText('🚀 10 dias. 1 pessoa. 15 agentes de IA. 3 negócios.\n\nConstruí um sistema operacional de negócios movido a IA — e tudo roda num notebook de 2012 com 8GB de RAM.\n\nO hardware que você tem é suficiente. O conhecimento se constrói no caminho.\n\n#IA #Empreendedorismo #Inovação #OPBStudio')"><i class="fas fa-copy"></i> Copiar Post LinkedIn</button>
+        <button class="btn btn-outline" onclick="navigator.clipboard.writeText('🚀 10 days. 1 person. 15 AI agents. 3 businesses.\n\nBuilt an AI-powered business operating system — and it runs on a 2012 laptop with 8GB RAM.\n\nThe hardware you have is enough. Knowledge builds along the way.')"><i class="fas fa-copy"></i> Copiar Versão EN</button>
+    </div>
+    <p style="margin-top:16px;color:var(--text-muted);font-size:0.9rem">Use os botões acima pra copiar textos prontos pra LinkedIn, Substack, Twitter/X ou Instagram.</p>
+</div>
+
 </div>
 </div>
 
