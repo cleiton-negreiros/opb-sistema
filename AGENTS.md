@@ -227,4 +227,15 @@ Ou executar:
 
 ---
 
+---
+
+## 🧠 Integração com o Cérebro
+
+**Regra:** Todo agente que gera texto deve chamar `get_brain_context()` no início e incluir o resultado no prompt. Agentes técnicos (corta-silencio, transcrever-audio, etc.) podem pular. Os utilitários em `utils/` (`context_loader.py`, `profile_loader.py`) agora são profile-aware — aceitam `profile_id` opcional e nunca quebram se arquivos não existirem.
+
+**Agentes integrados:** consultor-negocios, text_generator, carrossel, consumo, designer, capa_video ✅
+**Agentes que não precisam:** corta-silencio, transcrever-audio, telegram_bot, coordinator, quadro-de-avisos, hashtags
+
+---
+
 _Last updated: 2026-05-22_
