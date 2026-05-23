@@ -16,7 +16,7 @@ os.environ['PYTHONIOENCODING'] = 'utf-8'
 # Add utils to path
 sys.path.append(str(Path(__file__).parent.parent.parent / "utils"))
 
-from context_loader import load_context, get_business_value, get_personal_value
+from context_loader import get_brain_context, get_business_value
 from llm_provider import generate_text
 
 def load_templates():
@@ -51,24 +51,11 @@ def generate_business_advice(consultation_type: str, context_data: dict = None) 
     Returns:
         Generated business advice text
     """
-    print(f"DEBUG: generate_business_advice called with consultation_type='{consultation_type}', context_data={context_data}")
-    # Load context
-    context = load_context()
-    print(f"DEBUG: context loaded successfully")
-    
-    # Get context values
-    tone = get_business_value(context, "tom_de_voz", "sábio e prático")
-    values = get_business_value(context, "valores", [])
-    values_str = ", ".join(values) if values else "integridade, stewardship e serviço"
-    
-    # Prepare context string
-    context_str = f"""
-    Perfil Ativo: {get_business_value(context, 'nome', 'Empreendedor Católico')}
-    Nicho Principal: {get_business_value(context, 'nicho', 'Múltiplos negócios com visão católica')}
-    Valores: {values_str}
-    Tom de Voz: {tone}
-    Data da Consulta: {datetime.now().strftime('%d/%m/%Y')}
-    """
+    context_str = get_brain_context()
+    if context_str:
+        context_str += f" | Data: {datetime.now().strftime('%d/%m/%Y')}"
+    else:
+        context_str = f"Data da Consulta: {datetime.now().strftime('%d/%m/%Y')}"
     
     # Add specific context data if provided
     if context_data:

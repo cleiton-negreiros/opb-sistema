@@ -17,9 +17,6 @@ OUTPUT_PATH = PROJECT_PATH / "acervo" / "carrossel"
 # Adiciona utils ao path
 sys.path.append(str(PROJECT_PATH / "utils"))
 
-from context_loader import load_context, get_business_value
-
-
 def ensure_output():
     OUTPUT_PATH.mkdir(parents=True, exist_ok=True)
     index = OUTPUT_PATH / "index.md"
@@ -49,10 +46,8 @@ def load_templates():
 
 def carregar_contexto():
     """Carrega identidade e regras do cérebro"""
-    sys.path.append(str(PROJECT_PATH / "utils"))
     from profile_loader import load_profile as load_perfil
     perfil = load_perfil()
-
     ctx = {
         "nome": perfil.get("nome", "Você"),
         "descricao": perfil.get("descricao", ""),
@@ -62,10 +57,8 @@ def carregar_contexto():
         "publico": perfil.get("publico_alvo", ""),
         "regras": perfil.get("regras_escrita", []),
     }
-
     mv = perfil.get("marca_visual", {})
     ctx["cores"] = mv.get("cores_primárias", "#FF6B6B, #4ECDC4")
-
     return ctx
 
 

@@ -15,7 +15,7 @@ os.environ['PYTHONIOENCODING'] = 'utf-8'
 # Add utils to path
 sys.path.append(str(Path(__file__).parent.parent.parent / "utils"))
 
-from context_loader import load_context, get_business_value, get_personal_value
+from context_loader import get_brain_context, get_business_value
 from llm_provider import generate_text
 
 def load_templates():
@@ -49,25 +49,20 @@ def generate_instagram_post(objective: str, post_type: str = "educational") -> s
     Returns:
         Generated Instagram post text
     """
-    # Load context
-    context = load_context()
-    
-    # Get context values
-    tone = get_business_value(context, "tom_de_voz", "direto e inspirador")
-    audience = get_business_value(context, "publico_alvo", "empreendedores")
-    values = get_business_value(context, "valores", [])
+    brain = get_brain_context()
+    tone = get_business_value("tom_de_voz", "direto e inspirador")
+    audience = get_business_value("publico_alvo", "empreendedores")
+    values = get_business_value("valores", [])
     values_str = ", ".join(values) if values else "autenticidade e praticidade"
-    
-    # Load templates
+
     templates = load_templates()
     template = templates.get(post_type, templates["educational"])
-    
-    # Format prompt
     prompt = template.format(
         topic=objective,
         tone=tone,
         audience=audience,
-        values=values_str
+        values=values_str,
+        context=brain or f"Negócio voltado para {audience}"
     )
     
     # Generate text using LLM

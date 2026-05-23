@@ -1,51 +1,85 @@
 import json
 import os
 from pathlib import Path
-from typing import Dict, Any
+from typing import Dict, Any, Optional
 
-def load_context() -> Dict[str, Any]:
-    """
-    Load all context files from the context-brain directory.
-    Returns a dictionary with all context data.
-    """
-    context_dir = Path(__file__).parent.parent / "context-brain"
-    
+PROJECT_PATH = Path(__file__).parent.parent
+
+def load_context(profile_id: Optional[str] = None) -> Dict[str, Any]:
     context = {}
-    
-    # Load business core
-    business_core_path = context_dir / "business-core.json"
-    if business_core_path.exists():
-        with open(business_core_path, 'r', encoding='utf-8') as f:
-            context["business_core"] = json.load(f)
-    else:
-        raise FileNotFoundError(f"Business core file not found at {business_core_path}")
-    
-    # Load personal profile
-    personal_profile_path = context_dir / "personal-profile.json"
-    if personal_profile_path.exists():
-        with open(personal_profile_path, 'r', encoding='utf-8') as f:
-            context["personal_profile"] = json.load(f)
-    else:
-        raise FileNotFoundError(f"Personal profile file not found at {personal_profile_path}")
-    
-    # Load goals
-    goals_path = context_dir / "goals.json"
-    if goals_path.exists():
-        with open(goals_path, 'r', encoding='utf-8') as f:
-            context["goals"] = json.load(f)
-    else:
-        raise FileNotFoundError(f"Goals file not found at {goals_path}")
-    
+    context_dir = _get_context_dir(profile_id)
+    if context_dir and context_dir.exists():
+        for fname in ["business-core.json", "personal-profile.json", "goals.json"]:
+            fp = context_dir / fname
+            if fp.exists():
+                try:
+                    context[fname.replace(".json", "")] = json.loads(fp.read_text(encoding="utf-8"))
+                except (json.JSONDecodeError, Exception):
+                    context[fname.replace(".json", "")] = {}
     return context
 
-def get_business_value(context: Dict[str, Any], key: str, default=None):
-    """Safely get a value from the business core context."""
-    return context.get("business_core", {}).get(key, default)
+def _get_context_dir(profile_id: Optional[str] = None) -> Optional[Path]:
+    if profile_id:
+        p = PROJECT_PATH / "perfis" / profile_id / "cerebro"
+        if p.exists():
+            return p
+    p = PROJECT_PATH / "context-brain"
+    if p.exists():
+        return p
+    return None
 
-def get_personal_value(context: Dict[str, Any], key: str, default=None):
-    """Safely get a value from the personal profile context."""
-    return context.get("personal_profile", {}).get(key, default)
+def get_brain_context(profile_id: Optional[str] = None) -> str:
+    ctx = load_context(profile_id)
+    parts = []
+    business = ctx.get("business-core", {})
+    if business.get("nome"):
+        parts.append(f"Negócio: {business['nome']}")
+    if business.get("missao"):
+        parts.append(f"Missão: {business['missao']}")
+    if business.get("publico_alvo"):
+        parts.append(f"Público: {business['publico_alvo']}")
+    if business.get("valores"):
+        vals = business["valores"]
+        if isinstance(vals, list):
+            parts.append(f"Valores: {', '.join(vals[:5])}")
+    profile = ctx.get("personal-profile", {})
+    if profile.get("tom_de_voz"):
+        tom = profile["tom_de_voz"]
+        if isinstance(tom, list):
+            parts.append(f"Tom de voz: {', '.join(tom[:3])}")
+        else:
+            parts.append(f"Tom de voz: {tom}")
+    goals = ctx.get("goals", {})
+    if goals.get("objetivos"):
+        objs = goals["objetivos"]
+        if isinstance(objs, list):
+            parts.append(f"Objetivos: {'; '.join(o[:80] for o in objs[:3])}")
+    if not parts:
+        return _fallback_context(profile_id)
+    return " | ".join(parts)
 
-def get_goal_value(context: Dict[str, Any], key: str, default=None):
-    """Safely get a value from the goals context."""
-    return context.get("goals", {}).get(key, default)
+def _fallback_context(profile_id: Optional[str] = None) -> str:
+    from profile_loader import load_profile
+    try:
+        p = load_profile(profile_id)
+        parts = []
+        if p.get("nome"): parts.append(f"Negócio: {p['nome']}")
+        if p.get("missao"): parts.append(f"Missão: {p['missao']}")
+        if p.get("publico_alvo"): parts.append(f"Público: {p['publico_alvo']}")
+        if p.get("valores"): parts.append(f"Valores: {', '.join(p['valores'][:5])}")
+        if p.get("tom_de_voz"): parts.append(f"Tom: {', '.join(p['tom_de_voz'][:3])}")
+        return " | ".join(parts) if parts else ""
+    except Exception:
+        return ""
+
+def get_business_value(key: str, default=None, profile_id: Optional[str] = None):
+    ctx = load_context(profile_id)
+    return ctx.get("business-core", {}).get(key, default)
+
+def get_personal_value(key: str, default=None, profile_id: Optional[str] = None):
+    ctx = load_context(profile_id)
+    return ctx.get("personal-profile", {}).get(key, default)
+
+def get_goal_value(key: str, default=None, profile_id: Optional[str] = None):
+    ctx = load_context(profile_id)
+    return ctx.get("goals", {}).get(key, default)

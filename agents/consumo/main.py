@@ -19,9 +19,6 @@ ACERVO_PATH = PROJECT_PATH / "acervo" / "conhecimento"
 # Adiciona utils ao path
 sys.path.append(str(PROJECT_PATH / "utils"))
 
-from context_loader import load_context, get_business_value
-
-
 def ensure_dirs():
     """Garante que os diretórios de saída existam."""
     CONTEXT_PATH.mkdir(parents=True, exist_ok=True)
