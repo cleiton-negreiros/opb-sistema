@@ -4,7 +4,7 @@ import json
 from pathlib import Path
 
 BASE = Path(r"C:\Users\cleit\Desktop\opb-sistema")
-OUT = BASE / "snapshot.html"
+OUT = BASE / "cerebro" / "perfil-empreendedor-solo" / "snapshot.html"
 PROFILE_DIR = BASE / "cerebro" / "perfil-empreendedor-solo"
 ACERVO = BASE / "acervo"
 

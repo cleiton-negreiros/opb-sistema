@@ -12,6 +12,8 @@
     { "source": "/auth.html", "destination": "/auth.html" },
     { "source": "/onboarding", "destination": "/onboarding.html" },
     { "source": "/onboarding.html", "destination": "/onboarding.html" },
+    { "source": "/snapshot", "destination": "/snapshot.html" },
+    { "source": "/snapshot.html", "destination": "/snapshot.html" },
     { "source": "/manifest.json", "destination": "/manifest.json" },
     { "source": "/sw.js", "destination": "/sw.js" }
   ],
