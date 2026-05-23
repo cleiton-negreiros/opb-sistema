@@ -46,6 +46,33 @@ async function loadPerfilData() {
             const p = data.posicionamento;
             if (p.diferencial) document.getElementById('perfil-diferencial').value = p.diferencial;
             if (p['proposta de valor'] || p.proposta) document.getElementById('perfil-proposta').value = p['proposta de valor'] || p.proposta;
+            if (p['frase de posicionamento'] || p['frase']) document.getElementById('perfil-frase-posicionamento').value = p['frase de posicionamento'] || p['frase'];
+        }
+
+        // Concorrentes
+        if (data.concorrentes_secoes) {
+            const concEl = document.getElementById('perfil-concorrentes-display');
+            if (concEl) {
+                let html = '';
+                for (const [cat, nomes] of Object.entries(data.concorrentes_secoes)) {
+                    const nomesLimpos = nomes.map(n => {
+                        let nome = n.replace(/^- \*\*/g, '').replace(/\*\*/g, '');
+                        nome = nome.replace(/\(@\S+\)/g, '').trim();
+                        return nome;
+                    });
+                    html += `<div style="margin-bottom:8px"><strong style="font-size:0.8rem;color:var(--accent-light)">${cat}</strong><div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:4px">${nomesLimpos.map(n => `<span class="tag tag-blue" style="font-size:0.75rem">${n}</span>`).join('')}</div></div>`;
+                }
+                concEl.innerHTML = html;
+            }
+        } else if (data.concorrentes) {
+            const concEl = document.getElementById('perfil-concorrentes-display');
+            if (concEl) concEl.innerHTML = `<pre style="white-space:pre-wrap;font-size:0.8rem;margin:0">${escapeHtml(data.concorrentes)}</pre>`;
+        }
+
+        // Análise detalhada
+        if (data.analise_concorrentes) {
+            const analiseEl = document.getElementById('perfil-analise-concorrentes');
+            if (analiseEl) analiseEl.innerHTML = `<pre style="white-space:pre-wrap;font-size:0.8rem;margin:0;font-family:'JetBrains Mono',monospace">${escapeHtml(data.analise_concorrentes)}</pre>`;
         }
 
         if (data.narrativa) {
@@ -69,6 +96,7 @@ async function loadPerfilData() {
 
 async function loadPageData(page) {
     if (page === 'perfil') { await loadPerfilData(); }
+    if (page === 'posicionamento') { await loadPosicionamentoPage(); }
     else if (page === 'arquivos') { loadFileBrowser(); }
     else if (page === 'transcricao') { loadTranscricoes(); }
     else if (page === 'dashboard') {
@@ -114,6 +142,7 @@ async function loadPageData(page) {
     }
     if (page === 'inspiracoes') loadInspiracoes();
     if (page === 'quadro-avisos') loadQuadroAvisos();
+    if (page === 'config') { checkObsidian(); loadNotionConfig(); }
 }
 
 async function checkAgentsApi() {
@@ -346,6 +375,39 @@ async function runRadagast() {
     showToast('Radagast requer execução via terminal', 'info');
 }
 
+async function loadPosicionamentoPage() {
+    try {
+        const data = await apiCall('/api/load-profile');
+        if (!data || data.error) return;
+        // Preenche nicho do perfil
+        if (data.basico && data.basico.nicho) {
+            document.getElementById('posicionamento-nicho').value = data.basico.nicho;
+        }
+        // Preenche concorrentes do quem-sou
+        if (data.concorrentes_secoes) {
+            const concs = [];
+            for (const [cat, nomes] of Object.entries(data.concorrentes_secoes)) {
+                nomes.forEach(n => {
+                    const match = n.match(/@(\S+)/);
+                    if (match) concs.push('@' + match[1]);
+                });
+            }
+            if (concs.length) {
+                document.getElementById('posicionamento-concorrentes').value = concs.slice(0, 10).join('\n');
+            }
+        }
+        // Preenche frase de posicionamento
+        if (data.posicionamento) {
+            const p = data.posicionamento;
+            if (p['frase de posicionamento'] || p['frase']) {
+                document.getElementById('frase-posicionamento').value = p['frase de posicionamento'] || p['frase'];
+            }
+        }
+    } catch (e) {
+        console.error('Erro ao carregar dados na página de posicionamento:', e);
+    }
+}
+
 async function analyzeCompetitors() {
     const nicho = document.getElementById('posicionamento-nicho').value;
     const conc = document.getElementById('posicionamento-concorrentes').value;
@@ -366,7 +428,13 @@ async function savePosicionamento() {
     const v = document.getElementById('minha-verdade').value;
     const f = document.getElementById('frase-posicionamento').value;
     if (!v||!f) { showToast('Preencha os campos', 'error'); return; }
-    showToast('Posicionamento salvo!', 'success');
+    try {
+        const content = '## Minha Verdade\n\n' + v + '\n\n## Frase de Posicionamento\n\n' + f;
+        const r = await apiCall('/api/save-profile', 'POST', { modulo: 'posicionamento', content, filename: 'POSICIONAMENTO.md' });
+        showToast(r.sucesso ? '✅ Posicionamento salvo!' : 'Erro: ' + (r.error || ''), r.sucesso ? 'success' : 'error');
+    } catch (e) {
+        showToast('Erro: ' + e.message, 'error');
+    }
 }
 
 async function runAlimentarFromModal() {
@@ -422,7 +490,7 @@ async function savePerfilModulo(modulo) {
             break;
         case 'posicionamento':
             filename = 'POSICIONAMENTO.md';
-            content = '## Diferencial\n\n' + (document.getElementById('perfil-diferencial').value || '') + '\n\n## Proposta de Valor\n\n' + (document.getElementById('perfil-proposta').value || '');
+            content = '## Diferencial\n\n' + (document.getElementById('perfil-diferencial').value || '') + '\n\n## Proposta de Valor\n\n' + (document.getElementById('perfil-proposta').value || '') + '\n\n## Frase de Posicionamento\n\n' + (document.getElementById('perfil-frase-posicionamento').value || '');
             break;
         case 'narrativa':
             filename = 'NARRATIVA.md';
@@ -1190,10 +1258,86 @@ function loadNotes() {
     if (saved) el.value = saved;
 }
 
-// Inicializar resultados salvos quando a página carregar
+// ============================================
+// OBSIDIAN
+// ============================================
+async function checkObsidian() {
+    const el = document.getElementById('obsidian-status');
+    if (!el) return;
+    try {
+        const r = await apiCall('/api/obsidian/status');
+        if (r.instalado) {
+            el.innerHTML = '<span class="status-dot" style="background:var(--success)"></span><span style="color:var(--success)">Obsidian instalado</span>';
+        } else {
+            el.innerHTML = '<span class="status-dot" style="background:gray"></span><span>Obsidian não encontrado</span>';
+        }
+    } catch {
+        el.innerHTML = '<span class="status-dot" style="background:gray"></span><span>Servidor offline</span>';
+    }
+}
+
+async function openObsidian(comando) {
+    showToast('Abrindo no Obsidian...', 'info');
+    try {
+        const r = await apiCall('/api/obsidian/abrir', 'POST', { comando });
+        showToast(r.sucesso ? '✅ Aberto no Obsidian!' : '❌ Obsidian não encontrado', r.sucesso ? 'success' : 'error');
+    } catch (e) {
+        showToast('Erro: ' + e.message, 'error');
+    }
+}
+
+// ============================================
+// NOTION
+// ============================================
+async function saveNotionConfig() {
+    const token = document.getElementById('notion-token').value;
+    const db = document.getElementById('notion-database-id').value;
+    if (!token.trim()) { showToast('Informe o token do Notion', 'error'); return; }
+    try {
+        const r = await apiCall('/api/notion/config', 'POST', { token, database_id: db });
+        showToast(r.sucesso ? '✅ Configuração salva!' : 'Erro', r.sucesso ? 'success' : 'error');
+        document.getElementById('notion-status').textContent = r.sucesso ? '✅ Configurado' : '';
+    } catch (e) {
+        showToast('Erro: ' + e.message, 'error');
+    }
+}
+
+async function loadNotionConfig() {
+    try {
+        const r = await apiCall('/api/notion/config');
+        if (r.token) {
+            document.getElementById('notion-token').value = r.token;
+            document.getElementById('notion-database-id').value = r.database_id || '';
+            document.getElementById('notion-status').textContent = '✅ Configurado';
+        }
+    } catch {}
+}
+
+async function syncToNotion(tipo) {
+    const titulo = prompt('Título para o Notion:', tipo === 'ideia' ? 'Nova Ideia' : 'Resultado OPB');
+    if (!titulo) return;
+    const conteudo = prompt('Conteúdo para enviar ao Notion:');
+    if (!conteudo) return;
+    try {
+        const r = await apiCall('/api/notion/sync', 'POST', { titulo, conteudo, tipo });
+        if (r.sucesso) {
+            showToast('✅ ' + r.mensagem, 'success');
+        } else {
+            showToast('❌ ' + (r.error || 'Erro'), 'error');
+        }
+    } catch (e) {
+        showToast('Erro: ' + e.message, 'error');
+    }
+}
+
+// ============================================
+// INICIALIZAÇÃO
+// ============================================
 document.addEventListener('DOMContentLoaded', () => {
     renderSavedResults();
     loadNotes();
+    checkObsidian();
+    loadNotionConfig();
 });
 
 // ============================================

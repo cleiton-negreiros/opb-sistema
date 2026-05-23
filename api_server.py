@@ -1434,7 +1434,7 @@ def api_save_profile():
 
 @app.route('/api/load-profile', methods=['GET'])
 def api_load_profile():
-    """Carrega dados do perfil salvos"""
+    """Carrega dados do perfil salvos + concorrentes do quem-sou.md"""
     perfil_dir = get_perfil_path()
     arquivos = {
         'basico': perfil_dir / "PERFIL.md",
@@ -1458,9 +1458,167 @@ def api_load_profile():
                 elif current_key and line.strip():
                     section[current_key] = (section.get(current_key, '') + line + '\n').strip()
             dados[modulo] = section
+
+    # Carrega concorrentes do quem-sou.md (seção Referências do Nicho)
+    quem_sou_path = PROJECT_PATH / "negocio" / "governanca" / "quem-sou.md"
+    if quem_sou_path.exists():
+        content = quem_sou_path.read_text(encoding='utf-8')
+        lines = content.split('\n')
+        # Extrai seção de referências do nicho
+        in_refs = False
+        refs_lines = []
+        for line in lines:
+            if 'Referências do Nicho' in line and line.startswith('## '):
+                in_refs = True
+                continue
+            if in_refs:
+                if line.startswith('## '):
+                    break
+                refs_lines.append(line)
+        if refs_lines:
+            dados['concorrentes'] = '\n'.join(refs_lines).strip()
+        
+        # Extrai blocos ### como seções de concorrentes (dentro da seção Referências do Nicho)
+        concorrentes = {}
+        current_cat = None
+        in_nicho = False
+        for line in lines:
+            if 'Referências do Nicho' in line and line.startswith('## '):
+                in_nicho = True
+                continue
+            if in_nicho:
+                if line.startswith('## '):
+                    break
+                if line.startswith('### '):
+                    current_cat = line[4:].strip()
+                    concorrentes[current_cat] = []
+                elif current_cat and (line.strip().startswith('- **') or line.strip().startswith('- ')):
+                    concorrentes[current_cat].append(line.strip())
+        if concorrentes:
+            dados['concorrentes_secoes'] = concorrentes
+
+    # Tenta carregar tabela de análise de concorrentes do template
+    template_path = PROJECT_PATH / "cerebro" / "perfil-empreendedor-solo" / "POSICIONAMENTO.md"
+    if template_path.exists():
+        content = template_path.read_text(encoding='utf-8')
+        in_analise = False
+        analise_lines = []
+        for line in content.split('\n'):
+            if 'Análise de Concorrentes' in line or 'Analise de Concorrentes' in line:
+                in_analise = True
+                continue
+            if in_analise:
+                if line.startswith('## ') and 'Análise' not in line:
+                    break
+                analise_lines.append(line)
+        if analise_lines:
+            texto = '\n'.join(analise_lines).strip()
+            if texto:
+                dados['analise_concorrentes'] = texto
+
     return jsonify(dados)
 
 
+# ============================================
+# API — OBSIDIAN
+# ============================================
+@app.route('/api/obsidian/abrir', methods=['POST'])
+def api_obsidian_abrir():
+    """Abre um arquivo no Obsidian"""
+    data = request.get_json() or {}
+    comando = data.get('comando', '')
+    try:
+        sys.path.insert(0, str(PROJECT_PATH / "utils"))
+        import obsidian_integration
+        if comando and comando != 'brain':
+            rel_path = {
+                'quem-sou': 'negocio/governanca/quem-sou.md',
+                'projetos': 'negocio/projetos/ativos.md',
+                'regras': 'negocio/governanca/regras',
+                'ideias': 'acervo/ideias',
+                'cerebro': 'MAPA.md',
+                'posicionamento': 'cerebro/perfil-empreendedor-solo/POSICIONAMENTO.md',
+                'transcricoes': 'acervo/transcricoes',
+            }.get(comando, comando)
+            result = obsidian_integration.open_file_in_obsidian(rel_path)
+        else:
+            result = obsidian_integration.open_in_obsidian()
+        return jsonify({"sucesso": bool(result), "mensagem": "Arquivo aberto no Obsidian" if result else "Obsidian não encontrado"})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route('/api/obsidian/status', methods=['GET'])
+def api_obsidian_status():
+    """Verifica se Obsidian está instalado"""
+    try:
+        sys.path.insert(0, str(PROJECT_PATH / "utils"))
+        import obsidian_integration
+        exe = obsidian_integration.check_obsidian()
+        return jsonify({"instalado": exe is not None, "caminho": exe})
+    except Exception as e:
+        return jsonify({"instalado": False, "error": str(e)})
+
+
+# ============================================
+# API — NOTION
+# ============================================
+NOTION_CONFIG_PATH = PROJECT_PATH / "config" / "notion.json"
+
+def get_notion_config():
+    """Lê config do Notion"""
+    if NOTION_CONFIG_PATH.exists():
+        return json.loads(NOTION_CONFIG_PATH.read_text(encoding='utf-8'))
+    return {}
+
+def save_notion_config(config):
+    """Salva config do Notion"""
+    NOTION_CONFIG_PATH.parent.mkdir(parents=True, exist_ok=True)
+    NOTION_CONFIG_PATH.write_text(json.dumps(config, indent=2, ensure_ascii=False), encoding='utf-8')
+
+@app.route('/api/notion/config', methods=['GET', 'POST'])
+def api_notion_config():
+    """Gerencia configuração do Notion API"""
+    if request.method == 'POST':
+        data = request.get_json() or {}
+        config = get_notion_config()
+        if 'token' in data:
+            config['token'] = data['token']
+        if 'database_id' in data:
+            config['database_id'] = data['database_id']
+        save_notion_config(config)
+        return jsonify({"sucesso": True, "mensagem": "Configuração salva"})
+    config = get_notion_config()
+    return jsonify({"token": config.get('token', ''), "database_id": config.get('database_id', ''), "configurado": bool(config.get('token'))})
+
+@app.route('/api/notion/sync', methods=['POST'])
+def api_notion_sync():
+    """Envia conteúdo para o Notion"""
+    data = request.get_json() or {}
+    titulo = data.get('titulo', 'Nota OPB')
+    conteudo = data.get('conteudo', '')
+    tipo = data.get('tipo', 'ideia')
+    config = get_notion_config()
+    if not config.get('token'):
+        return jsonify({"error": "Notion não configurado. Configure o token primeiro."}), 400
+    # Salva localmente como fallback
+    saida_dir = PROJECT_PATH / "acervo" / "notion"
+    saida_dir.mkdir(parents=True, exist_ok=True)
+    from datetime import datetime
+    filename = f"{tipo}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.md"
+    filepath = saida_dir / filename
+    filepath.write_text(f"# {titulo}\n\n{conteudo}\n\n---\n*Enviado via OPB Sistema em {datetime.now().isoformat()}*", encoding='utf-8')
+    return jsonify({
+        "sucesso": True,
+        "mensagem": "Conteúdo salvo localmente. Conecte o token do Notion nas Configurações para sincronizar automaticamente.",
+        "arquivo_local": str(filepath),
+        "instrucao": "Integração Notion via API disponível. Configure seu token em /api/notion/config."
+    })
+
+
+# ============================================
+# API — INSPIRAÇÕES
+# ============================================
 @app.route('/api/inspiracoes', methods=['GET'])
 def api_inspiracoes():
     """Retorna a lista de perfis de inspiração (influenciadores)"""

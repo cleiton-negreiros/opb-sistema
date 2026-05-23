@@ -535,8 +535,24 @@
 </div>
 
 <div class="card" style="margin-bottom:16px"><div class="card-header"><div class="card-title"><i class="fas fa-crosshairs" style="color:var(--danger)"></i> 🎯 Posicionamento</div><button class="btn btn-sm btn-primary" onclick="savePerfilModulo('posicionamento')"><i class="fas fa-save"></i> Salvar</button></div>
-<div class="form-group"><label class="form-label">Seu diferencial competitivo:</label><textarea class="form-textarea" id="perfil-diferencial" rows="4" placeholder="O que te torna único no mercado?"></textarea></div>
-<div class="form-group"><label class="form-label">Sua proposta de valor:</label><textarea class="form-textarea" id="perfil-proposta" rows="4" placeholder="Como você entrega valor único?"></textarea></div>
+
+<!-- Concorrentes -->
+<div class="form-group">
+<label class="form-label" style="display:flex;align-items:center;gap:8px"><i class="fas fa-users" style="color:var(--warning)"></i> Concorrentes do Nicho</label>
+<div id="perfil-concorrentes-display" style="background:var(--bg-input);border-radius:8px;padding:12px;font-size:0.85rem;line-height:1.6;margin-bottom:8px">
+<span style="color:var(--text-muted)">Carregando...</span>
+</div>
+<details style="margin-top:8px">
+<summary style="cursor:pointer;font-size:0.8rem;color:var(--text-muted)">Ver análise detalhada dos concorrentes</summary>
+<div id="perfil-analise-concorrentes" style="background:var(--bg-input);border-radius:8px;padding:12px;margin-top:8px;font-size:0.85rem;line-height:1.5;overflow-x:auto">
+<span style="color:var(--text-muted)">Carregando...</span>
+</div>
+</details>
+</div>
+
+<div class="form-group"><label class="form-label">Seu diferencial competitivo:</label><textarea class="form-textarea" id="perfil-diferencial" rows="3" placeholder="O que te torna único no mercado?"></textarea></div>
+<div class="form-group"><label class="form-label">Sua proposta de valor:</label><textarea class="form-textarea" id="perfil-proposta" rows="3" placeholder="Como você entrega valor único?"></textarea></div>
+<div class="form-group"><label class="form-label">Frase de Posicionamento:</label><textarea class="form-textarea" id="perfil-frase-posicionamento" rows="2" placeholder="Ex: Ajudo [QUEM] a [O QUÊ], mesmo que [OBSTÁCULO]"></textarea></div>
 </div>
 
 <div class="card" style="margin-bottom:16px"><div class="card-header"><div class="card-title"><i class="fas fa-bullhorn" style="color:var(--success)"></i> 📣 Narrativa</div><button class="btn btn-sm btn-primary" onclick="savePerfilModulo('narrativa')"><i class="fas fa-save"></i> Salvar</button></div>
@@ -726,6 +742,42 @@
 <div style="display:flex;align-items:center;gap:20px">
 <div style="width:60px;height:60px;background:var(--accent);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.5rem">🧠</div>
 <div><h3 style="margin-bottom:4px">OPB Sistema v2.3</h3><p style="color:var(--text-muted);font-size:0.85rem">Sistema Multi-Agentes IA para Solopreneurs</p><p style="color:var(--text-muted);font-size:0.8rem;margin-top:4px">Build: 2026-05-20 | Agentes: 9 | API: v2 | Auth: ✅</p></div>
+</div>
+</div>
+
+<div class="card" style="margin-top:20px"><div class="card-header"><div class="card-title"><i class="fab fa-obsidian" style="color:#7C3AED"></i> 🔗 Obsidian</div></div>
+<div style="padding:12px 0">
+<p style="font-size:0.85rem;color:var(--text-muted);margin-bottom:12px">Abra arquivos do cérebro diretamente no Obsidian.</p>
+<div id="obsidian-status" style="display:flex;align-items:center;gap:8px;margin-bottom:12px;font-size:0.85rem">
+<span class="status-dot" style="background:gray"></span>
+<span>Verificando...</span>
+</div>
+<div style="display:flex;flex-wrap:wrap;gap:8px">
+<button class="btn btn-sm btn-outline" onclick="openObsidian('cerebro')"><i class="fas fa-brain"></i> Cérebro</button>
+<button class="btn btn-sm btn-outline" onclick="openObsidian('quem-sou')"><i class="fas fa-user"></i> Quem Sou</button>
+<button class="btn btn-sm btn-outline" onclick="openObsidian('projetos')"><i class="fas fa-tasks"></i> Projetos</button>
+<button class="btn btn-sm btn-outline" onclick="openObsidian('posicionamento')"><i class="fas fa-crosshairs"></i> Posicionamento</button>
+<button class="btn btn-sm btn-outline" onclick="openObsidian('ideias')"><i class="fas fa-lightbulb"></i> Ideias</button>
+<button class="btn btn-sm btn-outline" onclick="openObsidian('transcricoes')"><i class="fas fa-microphone"></i> Transcrições</button>
+</div>
+</div>
+</div>
+
+<div class="card" style="margin-top:20px"><div class="card-header"><div class="card-title"><i class="fas fa-notion" style="color:var(--text-secondary)"></i> 📝 Notion</div></div>
+<div style="padding:12px 0">
+<p style="font-size:0.85rem;color:var(--text-muted);margin-bottom:12px">Sincronize ideias e resultados com o Notion.</p>
+<div class="form-group"><label class="form-label">Notion Token (Internal Integration)</label>
+<div style="display:flex;gap:8px">
+<input type="password" class="form-input" id="notion-token" placeholder="ntn_..." style="flex:1">
+<button class="btn btn-sm btn-primary" onclick="saveNotionConfig()"><i class="fas fa-save"></i> Salvar</button>
+</div>
+</div>
+<div class="form-group"><label class="form-label">Database ID (opcional)</label><input type="text" class="form-input" id="notion-database-id" placeholder="Cole o Database ID"></div>
+<div id="notion-status" style="font-size:0.8rem;color:var(--text-muted);margin-top:8px"></div>
+<div style="display:flex;gap:8px;margin-top:8px">
+<button class="btn btn-sm btn-outline" onclick="syncToNotion('ideia')"><i class="fas fa-lightbulb"></i> Enviar Ideia</button>
+<button class="btn btn-sm btn-outline" onclick="syncToNotion('resultado')"><i class="fas fa-file-alt"></i> Enviar Resultado</button>
+</div>
 </div>
 </div>
 

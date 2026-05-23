@@ -376,6 +376,31 @@ def run_curadoria(profiles: list[dict], search_terms: list[str],
     processed = list(set(processed + new_urls))[-500:]
     state["processed_urls"] = processed
 
+    # Salva ideias em disco
+    ideas_dir = Path(__file__).parent.parent.parent / "acervo" / "ideias"
+    ideas_dir.mkdir(parents=True, exist_ok=True)
+    timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    ideas_content = f"""# Ideias Geradas pelo Radagast — {datetime.now().strftime('%d/%m/%Y %H:%M')}
+
+> Geradas a partir de {len(all_contents)} itens coletados de {platforms_ok} plataformas.
+
+"""
+    for i, idea in enumerate(ideas, 1):
+        ideas_content += f"""## {i}. {idea.get('titulo', 'Ideia')}
+
+**Hook:** {idea.get('hook', '')}
+**Fonte:** {idea.get('fonte_autor', 'desconhecido')}
+**URL:** {idea.get('fonte_url', '')}
+**Ângulo:** {idea.get('angulo_br', '')}
+**Formato:** {idea.get('formato_sugerido', 'reels')}
+**Pontos-chave:** {', '.join(idea.get('pontos', []))}
+
+---
+"""
+    idea_file = ideas_dir / f"radagast_{timestamp}.md"
+    idea_file.write_text(ideas_content.strip(), encoding='utf-8')
+    logger.info(f"Ideias salvas em: {idea_file}")
+
     save_state(state)
     logger.info(f"Sucesso: {len(ideas)} ideias de Reels geradas e enviadas no Telegram.")
 

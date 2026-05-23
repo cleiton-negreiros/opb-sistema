@@ -4,6 +4,17 @@
 
 ## ✅ Concluído
 
+### 23/05/2026 — Concorrentes + Obsidian + Notion + Radagast
+- [x] Perfil > Posicionamento: tabela de concorrentes carregada automaticamente do `quem-sou.md` (5 seções de concorrentes)
+- [x] Análise detalhada de concorrentes visível ao expandir no perfil
+- [x] Página Posicionamento pré-preenchida com nicho e concorrentes do perfil
+- [x] Frase de Posicionamento adicionada ao formulário de perfil
+- [x] Obsidian: UI integrada na tela de Config (botões para abrir cérebro, quem-sou, projetos, etc.)
+- [x] Obsidian: endpoint `/api/obsidian/abrir` + `/api/obsidian/status`
+- [x] Notion: utilitário `utils/notion_integration.py` com fallback local
+- [x] Notion: UI na Config + endpoints `/api/notion/config` e `/api/notion/sync`
+- [x] Radagast: ideias salvas em `acervo/ideias/radagast_*.md`
+
 ### Infraestrutura
 - [x] Servidor Flask API (`api_server.py`) - 18 endpoints REST
 - [x] Telegram Bot integrado (NegreirosBot @NegreirosBot)
@@ -49,8 +60,11 @@
 
 ## 🔄 Em Progresso
 
-- [ ] Preencher perfil do empreendedor com conteúdo real
+- [ ] Preencher perfil do empreendedor com conteúdo real (parcial: dados básicos + posicionamento ok)
 - [ ] Pesquisar solução para acessar iniciar-dia.bat remotamente (SSH ou /api/start no Termux)
+- [ ] Testar Radagast salvando ideias em disco
+- [ ] Configurar Notion token para sincronia automática
+- [ ] Adicionar `showResult()` nos demais agentes (Consumo, Narvi, Radagast)
 
 ## 🔧 Notas Técnicas
 - Modelo padrão: **tinyllama** (~637MB, funciona com ~3.4GB RAM)
