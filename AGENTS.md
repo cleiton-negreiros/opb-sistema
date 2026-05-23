@@ -4,6 +4,12 @@
 
 ---
 
+## Regra de Trabalho
+
+Você (agente) sempre executa os comandos e ações por mim. Eu tomo as decisões de negócio e você implementa. Se eu pedir algo, faça — não pergunte "quer que eu faça X?" ou "prefere Y?". Apenas execute.
+
+---
+
 ## 🆕 Guia Rápido para Novo Agente
 
 1. **Leia MAPA.md** - Estrutura do cérebro
