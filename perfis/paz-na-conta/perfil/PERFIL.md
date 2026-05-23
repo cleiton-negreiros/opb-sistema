@@ -1,6 +1,6 @@
 ---
 name: "Basico"
-updated_at: 2026-05-22
+updated_at: 2026-05-23
 ---
 
 ## Nome
@@ -13,11 +13,11 @@ Paz na Conta
 
 ## Nicho
 
-Mentoria de Finanças Católicas
+Mentoria de Finanças Católica
 
 ## Publico Alvo
 
-Católicos que desejam organizar suas finanças com base na fé
+Católicos que desejam organizar suas finanças com base na doutrina da Igreja
 
 ## Problema
 

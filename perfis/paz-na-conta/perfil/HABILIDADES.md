@@ -1,7 +1,14 @@
-﻿## Habilidades
+## Habilidades
 
-(Em desenvolvimento - perfil Paz na Conta)
+Programação
+Vibe conding
+Automação de Processos
+redação de textos
+gestão de TI 
+Teologia
+História
+inglês
 
 ## Resumo
 
-Finanças à luz da fé católica
+Tecnologia da informação trabalahndo no mercado financeiro

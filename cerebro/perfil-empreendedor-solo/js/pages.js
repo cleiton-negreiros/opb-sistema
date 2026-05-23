@@ -53,6 +53,15 @@ async function loadPerfilData() {
             if (n.missão || n.missao) document.getElementById('perfil-missao').value = n.missão || n.missao;
             if (n.origem) document.getElementById('perfil-origem').value = n.origem;
         }
+        // Carrega identidade visual do localStorage
+        if (localStorage.getItem('opb_cor1')) document.getElementById('perfil-cor1').value = localStorage.getItem('opb_cor1');
+        if (localStorage.getItem('opb_cor2')) document.getElementById('perfil-cor2').value = localStorage.getItem('opb_cor2');
+        if (localStorage.getItem('opb_cor3')) document.getElementById('perfil-cor3').value = localStorage.getItem('opb_cor3');
+        if (localStorage.getItem('opb_fonte')) document.getElementById('perfil-fonte-titulo').value = localStorage.getItem('opb_fonte');
+        // Atualiza previews
+        document.getElementById('preview-c1').style.background = document.getElementById('perfil-cor1').value;
+        document.getElementById('preview-c2').style.background = document.getElementById('perfil-cor2').value;
+        document.getElementById('preview-c3').style.background = document.getElementById('perfil-cor3').value;
     } catch (e) {
         console.error('Erro ao carregar perfil:', e);
     }
@@ -99,13 +108,11 @@ async function loadPageData(page) {
         }
         await checkAgentsApi();
     }
-    if (page === 'consumo') await loadKnowledge();
     if (page === 'cerebro') {
         await loadCerebroTree();
         await loadMapas();
     }
     if (page === 'inspiracoes') loadInspiracoes();
-    if (page === 'carrossel') loadCarrosseis();
     if (page === 'quadro-avisos') loadQuadroAvisos();
 }
 
@@ -157,6 +164,31 @@ async function checkIntegrity() {
         document.getElementById('stat-mapas').textContent = maps.length;
         showToast(`✅ Integridade OK: ${files.length} arquivos, ${maps.length} MAPAs`, 'success');
     }
+}
+
+// ============================================
+// CARROSSEL
+// ============================================
+async function gerarCarrossel() {
+    const tema = document.getElementById('carrossel-ideia').value;
+    if (!tema.trim()) { showToast('Descreva sua ideia', 'error'); return; }
+    const out = document.getElementById('carrossel-output');
+    out.style.display = 'block';
+    out.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Gerando carrossel...`;
+    const slides = document.getElementById('carrossel-slides').value;
+    const tipo = document.getElementById('carrossel-tipo').value;
+    const r = await apiCall('/api/carrossel','POST',{tema, tipo, slides:parseInt(slides)});
+    if (r.sucesso) {
+        const texto = r.saida || r.mensagem || r.stdout || '';
+        showResult('carrossel-output', 'carrossel-copy-btn', texto, 'carrossel');
+        const saved = JSON.parse(localStorage.getItem('opb_resultados') || '[]');
+        saved.unshift({id:Date.now(), texto, tag:'carrossel', data:new Date().toLocaleString('pt-BR')});
+        localStorage.setItem('opb_resultados', JSON.stringify(saved.slice(0,50)));
+        renderSavedResults();
+    } else {
+        out.innerHTML = `<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><h3>Erro</h3><p>${escapeHtml(r.erro||r.mensagem||'Tente novamente')}</p></div>`;
+    }
+    showToast(r.sucesso ? 'Carrossel gerado!' : 'Erro', r.sucesso ? 'success' : 'error');
 }
 
 async function runTranscricao() {
@@ -260,13 +292,13 @@ async function runCapaVideo() {
     const copyBtn = document.getElementById('capa-copy-btn');
     out.style.display = 'block';
     copyBtn.style.display = 'none';
-    out.innerHTML = `🖼️ Gerando...`;
+    out.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Gerando...`;
     const r = await apiCall('/api/capa-video','POST',{tema, quantidade:parseInt(document.getElementById('capa-qtd').value)});
     if (r.sucesso) {
-        out.innerHTML = `<pre style="white-space:pre-wrap;font-family:'JetBrains Mono',monospace;font-size:0.85rem;line-height:1.5">${escapeHtml(r.saida||r.mensagem)}</pre>`;
-        copyBtn.style.display = 'inline-flex';
+        const texto = r.saida || r.mensagem || '';
+        showResult('capa-output', 'capa-copy-btn', texto, 'capa-video');
     } else {
-        out.innerHTML = `❌ ${escapeHtml(r.erro||r.mensagem)}`;
+        out.innerHTML = `<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><h3>Erro</h3><p>${escapeHtml(r.erro||r.mensagem||'Tente novamente')}</p></div>`;
     }
     showToast(r.sucesso?'Capas geradas!':'Erro', r.sucesso?'success':'error');
 }
@@ -277,29 +309,15 @@ async function runConsumo() {
     const out = document.getElementById('consumo-output');
     out.style.display = 'block';
     const titulo = document.getElementById('consumo-titulo').value || 'Conteúdo';
-    out.innerHTML = `📖 Processando "${escapeHtml(titulo)}"...`;
+    out.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Processando...`;
     const r = await apiCall('/api/consumo','POST',{input:input.slice(0,3000), tipo:document.getElementById('consumo-tipo').value, titulo});
-    if (r.sucesso) out.innerHTML = `📖 ${escapeHtml(r.mensagem)}\n\n${escapeHtml(r.saida||'')}`;
-    else out.innerHTML = `❌ ${escapeHtml(r.erro||r.mensagem)}`;
-    showToast(r.sucesso?'Conteúdo processado!':'Erro', r.sucesso?'success':'error');
-}
-
-async function runTextGenerator() {
-    const obj = document.getElementById('text-gen-objetivo').value;
-    if (!obj.trim()) { showToast('Informe o objetivo', 'error'); return; }
-    const out = document.getElementById('text-gen-output');
-    const copyBtn = document.getElementById('textgen-copy-btn');
-    out.style.display = 'block';
-    copyBtn.style.display = 'none';
-    out.innerHTML = `✍️ Gerando...`;
-    const r = await apiCall('/api/text-generator','POST',{objetivo:obj, tipo:document.getElementById('text-gen-tipo').value});
     if (r.sucesso) {
-        out.innerHTML = `<pre style="white-space:pre-wrap;font-family:'JetBrains Mono',monospace;font-size:0.85rem;line-height:1.5">${escapeHtml(r.saida||r.mensagem)}</pre>`;
-        copyBtn.style.display = 'inline-flex';
+        const texto = `${r.mensagem}\n\n${r.saida||''}`;
+        showResult('consumo-output', null, texto, 'consumo');
     } else {
-        out.innerHTML = `❌ ${escapeHtml(r.erro||r.mensagem)}`;
+        out.innerHTML = `<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><h3>Erro</h3><p>${escapeHtml(r.erro||r.mensagem||'Tente novamente')}</p></div>`;
     }
-    showToast(r.sucesso?'Post gerado!':'Erro', r.sucesso?'success':'error');
+    showToast(r.sucesso?'Conteúdo processado!':'Erro', r.sucesso?'success':'error');
 }
 
 async function runNarvi() {
@@ -334,9 +352,13 @@ async function analyzeCompetitors() {
     const out = document.getElementById('posicionamento-output');
     if (!nicho || !conc.trim()) { showToast('Preencha nicho e concorrentes', 'error'); return; }
     out.style.display = 'block';
-    out.innerHTML = `📊 Analisando...`;
+    out.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Analisando...`;
     const r = await apiCall('/api/posicionamento','POST',{nicho, concorrentes:conc.split('\n').filter(l=>l.trim()).join(' ')});
-    out.innerHTML = escapeHtml((r&&r.analise)||(r&&r.mensagem)||conc.split('\n').filter(l=>l.trim()).map((c,i)=>`${i+1}. @${c.trim()}`).join('\n'));
+    if (r && r.analise) {
+        showResult('posicionamento-output', null, r.analise, 'posicionamento');
+    } else {
+        out.innerHTML = `<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><h3>Erro</h3><p>${escapeHtml(r.erro||r.mensagem||'Tente novamente')}</p></div>`;
+    }
     showToast('Análise concluída!', 'info');
 }
 
@@ -361,6 +383,14 @@ async function runAlimentarFromModal() {
 async function savePerfil(){
     const n=document.getElementById('perfil-nome').value;
     if(!n){showToast('Preencha seu nome','error');return}
+    const cor1 = document.getElementById('perfil-cor1').value;
+    const cor2 = document.getElementById('perfil-cor2').value;
+    const cor3 = document.getElementById('perfil-cor3').value;
+    const fonte = document.getElementById('perfil-fonte-titulo').value;
+    localStorage.setItem('opb_cor1', cor1);
+    localStorage.setItem('opb_cor2', cor2);
+    localStorage.setItem('opb_cor3', cor3);
+    localStorage.setItem('opb_fonte', fonte);
     const content='---\nname: "Basico"\nupdated_at: '+new Date().toISOString().split('T')[0]+'\n---\n\n## Nome\n\n'+n+'\n\n## Nome Publico\n\n'+document.getElementById('perfil-nome-publico').value+'\n\n## Nicho\n\n'+document.getElementById('perfil-nicho').value+'\n\n## Publico Alvo\n\n'+document.getElementById('perfil-publico').value+'\n\n## Problema\n\n'+document.getElementById('perfil-problema').value+'\n';
     try{
         const r=await apiCall('/api/save-profile','POST',{modulo:'basico',content,filename:'PERFIL.md'});
@@ -704,15 +734,16 @@ async function runConsultorNegocios() {
     const input = document.getElementById('consultor-input').value;
     if (!input.trim()) { showToast('Descreva sua situação ou desafio', 'error'); return; }
     const out = document.getElementById('consultor-output');
-    const copyBtn = document.getElementById('consultor-copy-btn');
     out.style.display = 'block';
-    copyBtn.style.display = 'none';
     out.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Consultando...';
     const r = await apiCall('/api/agentes/executar','POST',{agente:'consultor-negocios',args:[tipo,buildContextoJson(tipo,input)]});
     if (r.sucesso) {
-        out.innerHTML = `<pre style="white-space:pre-wrap;font-family:'JetBrains Mono',monospace;font-size:0.85rem;line-height:1.5">${escapeHtml(r.stdout||r.mensagem)}</pre>`;
-        copyBtn.style.display = 'inline-flex';
-        document.getElementById('consultor-historico').innerHTML = ''; 
+        const texto = r.stdout||r.mensagem||'';
+        showResult('consultor-output', 'consultor-copy-btn', texto, 'consultor-negocios');
+        const saved = JSON.parse(localStorage.getItem('opb_resultados') || '[]');
+        saved.unshift({id:Date.now(), texto, tag:`consulta-${tipo}`, data:new Date().toLocaleString('pt-BR')});
+        localStorage.setItem('opb_resultados', JSON.stringify(saved.slice(0,50)));
+        renderSavedResults();
     } else {
         out.innerHTML = `<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><h3>Erro na Consulta</h3><p>${escapeHtml(r.erro||r.mensagem||'Tente novamente')}</p></div>`;
     }
@@ -965,4 +996,229 @@ function updateCharCount() {
     const text = document.getElementById('shareEditor').value;
     const count = text.length;
     document.getElementById('shareCharCount').textContent = `${count} caracteres`;
+}
+
+// ============================================
+// COMPONENTE: Resultado + Compartilhar
+// ============================================
+function showResult(outputId, copyBtnId, text, extraShareText) {
+    const out = document.getElementById(outputId);
+    const copyBtn = document.getElementById(copyBtnId);
+    out.style.display = 'block';
+    if (copyBtn) copyBtn.style.display = 'inline-flex';
+    const safe = escapeHtml(text);
+    out.innerHTML = `
+<textarea class="result-editor" id="${outputId}-editor" rows="8" style="width:100%;padding:12px;border:2px solid var(--border);border-radius:8px;font-family:'Inter',sans-serif;font-size:0.9rem;line-height:1.6;resize:vertical;background:var(--bg-card);color:var(--text)">${safe}</textarea>
+<div class="result-actions" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">
+    <button class="btn btn-sm" style="background:var(--primary);color:white;border:none" onclick="copyResult('${outputId}-editor')"><i class="fas fa-copy"></i> Copiar</button>
+    <button class="btn btn-sm" style="background:#0A66C2;color:white;border:none" onclick="shareResult('${outputId}-editor','linkedin','${escapeHtml(extraShareText||'')}')"><i class="fab fa-linkedin"></i> LinkedIn</button>
+    <button class="btn btn-sm" style="background:#1DA1F2;color:white;border:none" onclick="shareResult('${outputId}-editor','twitter','${escapeHtml(extraShareText||'')}')"><i class="fab fa-x-twitter"></i> Twitter/X</button>
+    <button class="btn btn-sm" style="background:linear-gradient(135deg,#F58529,#DD2A7B);color:white;border:none" onclick="shareResult('${outputId}-editor','instagram','${escapeHtml(extraShareText||'')}')"><i class="fab fa-instagram"></i> Instagram</button>
+    <button class="btn btn-sm btn-outline" onclick="saveResult('${outputId}-editor','${escapeHtml(extraShareText||'')}')"><i class="fas fa-save"></i> Salvar</button>
+</div>`;
+}
+
+function copyResult(editorId) {
+    const text = document.getElementById(editorId).value;
+    navigator.clipboard.writeText(text);
+    showToast('Texto copiado!', 'success');
+}
+
+function shareResult(editorId, platform, extra) {
+    const text = document.getElementById(editorId).value;
+    const encoded = encodeURIComponent(text.substring(0,280) + (text.length>280?'...':''));
+    const urls = {
+        linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=&text=${encoded}`,
+        twitter: `https://twitter.com/intent/tweet?text=${encoded}`,
+        instagram: null
+    };
+    if (platform === 'instagram') {
+        navigator.clipboard.writeText(text);
+        showToast('Texto copiado! Cole no Instagram.', 'info');
+    } else if (urls[platform]) {
+        window.open(urls[platform], '_blank', 'width=600,height=400');
+    }
+}
+
+function saveResult(editorId, tag) {
+    const text = document.getElementById(editorId).value;
+    if (!text.trim()) { showToast('Nada pra salvar', 'error'); return; }
+    const saved = JSON.parse(localStorage.getItem('opb_resultados') || '[]');
+    saved.unshift({
+        id: Date.now(),
+        texto: text,
+        tag: tag || 'geral',
+        data: new Date().toLocaleString('pt-BR')
+    });
+    localStorage.setItem('opb_resultados', JSON.stringify(saved.slice(0,50)));
+    showToast('Salvo! Consulte em "Meus Resultados"', 'success');
+    renderSavedResults();
+}
+
+function renderSavedResults() {
+    const containers = document.querySelectorAll('.saved-results');
+    const container = Array.from(containers).find(el => el.closest('.page')?.style.display !== 'none') || containers[0];
+    if (!container) return;
+    const saved = JSON.parse(localStorage.getItem('opb_resultados') || '[]');
+    if (saved.length === 0) {
+        container.innerHTML = '<div class="empty-state"><i class="fas fa-inbox"></i><h3>Nenhum resultado salvo</h3></div>';
+        return;
+    }
+    container.innerHTML = saved.map((r,i) => `
+<div class="saved-item" style="padding:12px;background:var(--bg-overlay);border-radius:8px;margin-bottom:8px;border-left:3px solid var(--primary)">
+    <div style="font-size:0.75rem;color:var(--text-muted);margin-bottom:4px">${r.data} ${r.tag ? '— '+r.tag : ''}</div>
+    <div style="font-size:0.85rem;white-space:pre-wrap;max-height:80px;overflow:hidden;cursor:pointer" onclick="expandSaved(this,${i})">${escapeHtml(r.texto.substring(0,200))}${r.texto.length>200?'...':''}</div>
+    <div style="display:flex;gap:6px;margin-top:6px">
+        <button class="btn btn-sm btn-outline" onclick="copySaved(${i})" style="font-size:0.75rem"><i class="fas fa-copy"></i></button>
+        <button class="btn btn-sm btn-outline" onclick="deleteSaved(${i})" style="font-size:0.75rem;color:var(--danger)"><i class="fas fa-trash"></i></button>
+    </div>
+</div>`).join('');
+}
+
+function expandSaved(el) {
+    const full = JSON.parse(localStorage.getItem('opb_resultados') || '[]');
+    const idx = parseInt(el.getAttribute('onclick').match(/\d+/)[0]);
+    if (el.style.maxHeight === 'none') {
+        el.style.maxHeight = '80px';
+    } else {
+        el.style.maxHeight = 'none';
+        el.textContent = full[idx].texto;
+    }
+}
+
+function copySaved(idx) {
+    const saved = JSON.parse(localStorage.getItem('opb_resultados') || '[]');
+    navigator.clipboard.writeText(saved[idx].texto);
+    showToast('Copiado!', 'success');
+}
+
+function deleteSaved(idx) {
+    const saved = JSON.parse(localStorage.getItem('opb_resultados') || '[]');
+    saved.splice(idx, 1);
+    localStorage.setItem('opb_resultados', JSON.stringify(saved));
+    renderSavedResults();
+    showToast('Removido', 'info');
+}
+
+function startRoutine(tipo) {
+    const prefix = tipo === 'morning' ? 'mr' : 'nr';
+    const items = [];
+    for (let i = 1; i <= 5; i++) {
+        const cb = document.getElementById(prefix + i);
+        if (cb) items.push(cb);
+    }
+    if (!items.length) { showToast('Rotina não encontrada', 'error'); return; }
+    let idx = 0;
+    const checkNext = () => {
+        if (idx >= items.length) {
+            showToast('Rotina concluída! 🎉', 'success');
+            return;
+        }
+        items[idx].checked = true;
+        showToast(`Passo ${idx+1}/${items.length} concluído`, 'info');
+        idx++;
+        if (idx < items.length) {
+            setTimeout(checkNext, 2000);
+        } else {
+            setTimeout(() => showToast('Rotina concluída! 🎉', 'success'), 500);
+        }
+    };
+    checkNext();
+}
+
+function quickIdeia(texto) {
+    document.getElementById('carrossel-ideia').value = texto;
+    gerarCarrossel();
+}
+
+function quickPost(obj, tipo) {
+    document.getElementById('text-gen-objetivo').value = obj;
+    document.getElementById('text-gen-tipo').value = tipo;
+    runTextGenerator();
+}
+
+function showAlimentarModal() {
+    const modal = document.getElementById('alimentarModal');
+    if (modal) modal.classList.add('active');
+}
+
+function loadCarrosseis() {
+    const container = document.getElementById('carrossel-lista');
+    if (!container) return;
+    apiCall('/api/carrossel/lista').then(r => {
+        if (!r || !r.carrosseis || !r.carrosseis.length) {
+            container.innerHTML = '<div class="empty-state"><i class="fas fa-layer-group"></i><h3>Nenhum carrossel gerado</h3></div>';
+            return;
+        }
+        container.innerHTML = r.carrosseis.map(c => `
+        <div style="padding:12px;background:var(--bg-overlay);border-radius:8px;margin-bottom:8px;border-left:3px solid var(--primary)">
+            <div style="font-size:0.85rem;white-space:pre-wrap;max-height:80px;overflow:hidden">${escapeHtml(c.tema)}</div>
+            <div style="font-size:0.75rem;color:var(--text-muted);margin-top:4px">${c.data || ''}</div>
+        </div>`).join('');
+        const count = document.getElementById('carrossel-count');
+        if (count) count.textContent = r.carrosseis.length;
+    }).catch(() => {});
+}
+
+function loadKnowledge() {
+    const container = document.getElementById('conhecimento-lista');
+    if (!container) return;
+    apiCall('/api/conhecimento').then(r => {
+        if (!r || !r.conhecimentos || !r.conhecimentos.length) {
+            container.innerHTML = '<div class="empty-state"><i class="fas fa-book-open"></i><h3>Nenhum conhecimento salvo</h3></div>';
+            return;
+        }
+        container.innerHTML = r.conhecimentos.map(c => `
+        <div style="padding:10px;background:var(--bg-overlay);border-radius:8px;margin-bottom:6px;border-left:3px solid var(--success)">
+            <div style="font-size:0.85rem">${escapeHtml(c.titulo || c.nome || '')}</div>
+            <div style="font-size:0.75rem;color:var(--text-muted)">${c.data || ''}</div>
+        </div>`).join('');
+    }).catch(() => {});
+}
+
+function saveNotes() {
+    const text = document.getElementById('daily-notes').value;
+    if (!text.trim()) { showToast('Nada para salvar', 'error'); return; }
+    localStorage.setItem('opb_daily_notes', text);
+    showToast('Notas salvas!', 'success');
+}
+
+function loadNotes() {
+    const el = document.getElementById('daily-notes');
+    if (!el) return;
+    const saved = localStorage.getItem('opb_daily_notes');
+    if (saved) el.value = saved;
+}
+
+// Inicializar resultados salvos quando a página carregar
+document.addEventListener('DOMContentLoaded', () => {
+    renderSavedResults();
+    loadNotes();
+});
+
+// ============================================
+// TEXT GENERATOR — atualizado
+// ============================================
+async function runTextGenerator() {
+    const obj = document.getElementById('text-gen-objetivo').value;
+    if (!obj.trim()) { showToast('Informe o objetivo', 'error'); return; }
+    const out = document.getElementById('text-gen-output');
+    const copyBtn = document.getElementById('textgen-copy-btn');
+    out.style.display = 'block';
+    copyBtn.style.display = 'none';
+    out.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Gerando...`;
+    const tipo = document.getElementById('text-gen-tipo').value;
+    const r = await apiCall('/api/text-generator','POST',{objetivo:obj, tipo});
+    if (r.sucesso) {
+        const texto = r.saida || r.mensagem || r.stdout || '';
+        showResult('text-gen-output', 'textgen-copy-btn', texto, 'text-generator');
+        // Salva auto
+        const saved = JSON.parse(localStorage.getItem('opb_resultados') || '[]');
+        saved.unshift({id:Date.now(), texto, tag:`texto-${tipo}`, data:new Date().toLocaleString('pt-BR')});
+        localStorage.setItem('opb_resultados', JSON.stringify(saved.slice(0,50)));
+        renderSavedResults();
+    } else {
+        out.innerHTML = `<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><h3>Erro</h3><p>${escapeHtml(r.erro||r.mensagem||'Tente novamente')}</p></div>`;
+    }
+    showToast(r.sucesso ? 'Post gerado!' : 'Erro', r.sucesso ? 'success' : 'error');
 }

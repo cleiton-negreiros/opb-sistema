@@ -315,10 +315,10 @@
 <div class="form-group"><label class="form-label">Quantidade de Ideias</label><select class="form-select" id="capa-qtd"><option value="3">3 ideias</option><option value="5" selected>5 ideias</option><option value="6">6 ideias</option><option value="8">8 ideias</option></select></div>
 <button class="btn btn-warning btn-block" onclick="runCapaVideo()"><i class="fas fa-magic"></i> Gerar Ideias</button>
 <div class="console-output" id="capa-output" style="margin-top:16px;display:none;"></div>
-<button class="btn btn-sm btn-outline" id="capa-copy-btn" style="display:none;margin-top:8px" onclick="copyOutput('capa-output')"><i class="fas fa-copy"></i> Copiar Ideias</button>
+<button class="btn btn-sm btn-outline" id="capa-copy-btn" style="display:none;margin-top:8px" onclick="copyResult('capa-output-editor')"><i class="fas fa-copy"></i> Copiar</button>
 </div>
-<div class="card"><div class="card-header"><div class="card-title"><i class="fas fa-images" style="color:var(--success)"></i> Capas Geradas</div></div>
-<div id="capas-lista"><div class="empty-state"><i class="fas fa-image"></i><h3>Nenhuma capa gerada</h3><p>Gere ideias para thumbnails</p></div></div>
+<div class="card"><div class="card-header"><div class="card-title"><i class="fas fa-history" style="color:var(--success)"></i> Meus Resultados</div></div>
+<div class="saved-results"><div class="empty-state"><i class="fas fa-inbox"></i><h3>Nenhum resultado salvo</h3><p>As ideias geradas aparecem aqui</p></div></div>
 </div>
 </div>
 </div>
@@ -373,16 +373,11 @@
 <div class="form-group"><label class="form-label">Tipo</label><select class="form-select" id="carrossel-tipo"><option value="educational">📚 Educativo</option><option value="inspirational">✨ Inspiracional</option><option value="promotional">🚀 Promocional</option><option value="engagement">💬 Engajamento</option></select></div>
 </div>
 <button class="btn btn-primary btn-block" onclick="gerarCarrossel()"><i class="fas fa-layer-group"></i> Gerar Carrossel</button>
-<div id="carrossel-resultado" style="margin-top:16px;display:none">
-<div class="console-output" id="carrossel-output" style="max-height:200px"></div>
-<div class="carrossel-actions" id="carrossel-result-actions" style="display:none">
-<button class="btn btn-sm btn-success" onclick="copyCarrosselConteudo()"><i class="fas fa-copy"></i> Copiar para Canva</button>
-<button class="btn btn-sm btn-outline" onclick="refreshCarrosselList()"><i class="fas fa-sync"></i> Ver no Acervo</button>
+<div class="console-output" id="carrossel-output" style="margin-top:16px;display:none"></div>
+<button class="btn btn-sm btn-outline" id="carrossel-copy-btn" style="display:none;margin-top:8px" onclick="copyResult('carrossel-output-editor')"><i class="fas fa-copy"></i> Copiar</button>
 </div>
-</div>
-</div>
-<div class="card"><div class="card-header"><div class="card-title"><i class="fas fa-archive" style="color:var(--success)"></i> Acervo de Carrosséis</div><span id="carrossel-count" style="font-size:0.7rem;color:var(--text-muted)">0</span></div>
-<div id="carrossel-lista"><div class="empty-state"><i class="fas fa-layer-group"></i><h3>Nenhum carrossel gerado</h3><p>Crie seu primeiro carrossel com a ideia ao lado</p></div></div>
+<div class="card"><div class="card-header"><div class="card-title"><i class="fas fa-history" style="color:var(--success)"></i> Meus Resultados</div></div>
+<div class="saved-results"><div class="empty-state"><i class="fas fa-inbox"></i><h3>Nenhum resultado salvo</h3><p>Os carrosséis gerados aparecem aqui</p></div></div>
 </div>
 </div>
 <div class="card" style="margin-top:20px"><div class="card-header"><div class="card-title"><i class="fas fa-bolt" style="color:var(--warning)"></i> Ideias Rápidas</div></div>
@@ -394,28 +389,6 @@
 <button class="btn btn-outline btn-sm" onclick="quickIdeia('O que a DSI ensina sobre dinheiro')">📜 DSI e Dinheiro</button>
 <button class="btn btn-outline btn-sm" onclick="quickIdeia('Orçamento familiar com propósito cristão')">👨‍👩‍👧‍👦 Orçamento</button>
 </div>
-</div>
-</div>
-
-<!-- Modal de Visualização/Edição -->
-<div class="modal-overlay" id="carrossel-modal">
-<div class="modal modal-wide">
-<div class="card-header" style="margin-bottom:12px">
-<div class="card-title"><i class="fas fa-layer-group" style="color:var(--accent-light)"></i> <span id="carrossel-modal-titulo">Carrossel</span></div>
-<div><button class="btn btn-sm btn-outline" onclick="closeCarrosselModal()"><i class="fas fa-times"></i></button></div>
-</div>
-<div id="carrossel-modal-body">
-<textarea class="carrossel-editor" id="carrossel-editor" style="display:none"></textarea>
-<div class="carrossel-preview" id="carrossel-preview"></div>
-</div>
-<div class="carrossel-actions" style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border-subtle)">
-<button class="btn btn-sm btn-success" id="carrossel-modal-copy" onclick="copyCarrosselModal()"><i class="fas fa-copy"></i> Copiar para Canva</button>
-<button class="btn btn-sm btn-warning" id="carrossel-modal-edit" onclick="toggleCarrosselEdit()"><i class="fas fa-pen"></i> Editar</button>
-<button class="btn btn-sm btn-primary" id="carrossel-modal-save" style="display:none" onclick="saveCarrosselEdit()"><i class="fas fa-save"></i> Salvar</button>
-<button class="btn btn-sm btn-outline" id="carrossel-modal-cancel" style="display:none" onclick="cancelCarrosselEdit()"><i class="fas fa-times"></i> Cancelar</button>
-<button class="btn btn-sm btn-danger" onclick="deleteCarrosselConfirm()" style="margin-left:auto"><i class="fas fa-trash"></i> Excluir</button>
-</div>
-<input type="hidden" id="carrossel-modal-filename">
 </div>
 </div>
 
@@ -432,9 +405,8 @@
 <button class="btn btn-success btn-block" onclick="runConsumo()"><i class="fas fa-book-reader"></i> Processar Conteúdo</button>
 <div class="console-output" id="consumo-output" style="margin-top:16px;display:none;"></div>
 </div>
-<div class="card"><div class="card-header"><div class="card-title"><i class="fas fa-database" style="color:var(--accent-light)"></i> Conhecimento Salvo</div></div>
-<div class="tabs-inline"><div class="tab-inline active" onclick="filterConhecimento('todos',this)">Todos</div><div class="tab-inline" onclick="filterConhecimento('recente',this)">Recentes</div><div class="tab-inline" onclick="filterConhecimento('carrossel',this)">Carrossel</div></div>
-<div id="conhecimento-lista"><div class="empty-state"><i class="fas fa-book-open"></i><h3>Nenhum conhecimento salvo</h3><p>Processe textos para alimentar o cérebro</p></div></div>
+<div class="card"><div class="card-header"><div class="card-title"><i class="fas fa-history" style="color:var(--success)"></i> Meus Resultados</div></div>
+<div class="saved-results"><div class="empty-state"><i class="fas fa-inbox"></i><h3>Nenhum resultado salvo</h3><p>Os conteúdos processados aparecem aqui</p></div></div>
 </div>
 </div>
 <div class="card" style="margin-top:20px"><div class="card-header"><div class="card-title"><i class="fas fa-link" style="color:var(--warning)"></i> Alimentar Cérebro (Perfil)</div></div>
@@ -459,6 +431,9 @@
 <div class="form-group"><label class="form-label">Frase de Posicionamento</label><textarea class="form-textarea" id="frase-posicionamento" rows="3" placeholder="Eu ensino [QUEM] a [O QUÊ], mesmo que [OBSTÁCULO]"></textarea></div>
 <button class="btn btn-info btn-block" onclick="savePosicionamento()"><i class="fas fa-save"></i> Salvar</button>
 </div>
+<div class="card"><div class="card-header"><div class="card-title"><i class="fas fa-history" style="color:var(--success)"></i> Meus Resultados</div></div>
+<div class="saved-results"><div class="empty-state"><i class="fas fa-inbox"></i><h3>Nenhum resultado salvo</h3><p>As análises realizadas aparecem aqui</p></div></div>
+</div>
 <div class="card"><div class="card-header"><div class="card-title"><i class="fas fa-check-circle" style="color:var(--success)"></i> Checklist</div></div>
 <div id="posicionamento-checklist">
 <div class="todo-item" style="display:flex;align-items:center;gap:10px;padding:10px;border-radius:8px;margin-bottom:6px;background:var(--bg-input)"><input type="checkbox"><label>Analisei 5 concorrentes</label></div>
@@ -477,14 +452,14 @@
 <div class="page" id="page-text-generator">
 <div class="grid-2">
 <div class="card"><div class="card-header"><div class="card-title"><i class="fas fa-pen-fancy" style="color:var(--accent-light)"></i> Gerar Posts Instagram</div></div>
-<div class="form-group"><label class="form-label">Objetivo do Post</label><textarea class="form-textarea" id="text-gen-objetivo" rows="3" placeholder="Ex: Educar sobre organização"></textarea></div>
+<div class="form-group"><label class="form-label">Objetivo do Post</label><textarea class="form-textarea" id="text-gen-objetivo" rows="3" placeholder="Ex: Educar sobre organização financeira"></textarea></div>
 <div class="form-group"><label class="form-label">Tipo de Post</label><select class="form-select" id="text-gen-tipo"><option value="educational">📚 Educational</option><option value="inspirational">✨ Inspirational</option><option value="promotional">🚀 Promotional</option><option value="engagement">💬 Engagement</option></select></div>
 <button class="btn btn-primary btn-block" onclick="runTextGenerator()"><i class="fas fa-pen-fancy"></i> Gerar Post</button>
 <div class="console-output" id="text-gen-output" style="margin-top:16px;display:none"></div>
-<button class="btn btn-sm btn-outline" id="textgen-copy-btn" style="display:none;margin-top:8px" onclick="copyOutput('text-gen-output')"><i class="fas fa-copy"></i> Copiar Texto</button>
+<button class="btn btn-sm btn-outline" id="textgen-copy-btn" style="display:none;margin-top:8px" onclick="copyResult('text-gen-output-editor')"><i class="fas fa-copy"></i> Copiar Texto</button>
 </div>
-<div class="card"><div class="card-header"><div class="card-title"><i class="fas fa-history" style="color:var(--success)"></i> Posts Gerados</div></div>
-<div id="posts-lista"><div class="empty-state"><i class="fas fa-pen-fancy"></i><h3>Nenhum post gerado</h3><p>Gere posts para Instagram</p></div></div>
+<div class="card"><div class="card-header"><div class="card-title"><i class="fas fa-history" style="color:var(--success)"></i> Meus Resultados</div></div>
+<div class="saved-results"><div class="empty-state"><i class="fas fa-inbox"></i><h3>Nenhum resultado salvo</h3><p>Os textos gerados aparecem aqui</p></div></div>
 </div>
 </div>
 <div class="card" style="margin-top:20px"><div class="card-header"><div class="card-title"><i class="fas fa-bolt" style="color:var(--warning)"></i> Templates Rápidos</div></div>
@@ -526,9 +501,9 @@
 </div>
 <div class="card"><div class="card-header"><div class="card-title"><i class="fas fa-palette" style="color:var(--success)"></i> Identidade Visual</div></div>
 <div id="identidade-form">
-<div class="form-group"><label class="form-label">Cor Primária</label><input type="color" class="form-input" id="perfil-cor1" value="#FF6B6B" style="height:42px;padding:4px"></div>
-<div class="form-group"><label class="form-label">Cor Secundária</label><input type="color" class="form-input" id="perfil-cor2" value="#4ECDC4" style="height:42px;padding:4px"></div>
-<div class="form-group"><label class="form-label">Cor de Destaque</label><input type="color" class="form-input" id="perfil-cor3" value="#45B7D1" style="height:42px;padding:4px"></div>
+<div class="form-group"><label class="form-label">Cor Primária</label><input type="color" class="form-input" id="perfil-cor1" value="#FF6B6B" style="height:42px;padding:4px" oninput="document.getElementById('preview-c1').style.background=this.value"></div>
+<div class="form-group"><label class="form-label">Cor Secundária</label><input type="color" class="form-input" id="perfil-cor2" value="#4ECDC4" style="height:42px;padding:4px" oninput="document.getElementById('preview-c2').style.background=this.value"></div>
+<div class="form-group"><label class="form-label">Cor de Destaque</label><input type="color" class="form-input" id="perfil-cor3" value="#45B7D1" style="height:42px;padding:4px" oninput="document.getElementById('preview-c3').style.background=this.value"></div>
 <div class="form-group"><label class="form-label">Fonte Título</label><select class="form-select" id="perfil-fonte-titulo"><option value="Montserrat">Montserrat</option><option value="Inter">Inter</option><option value="Poppins">Poppins</option></select></div>
 <div class="preview-colors" style="display:flex;gap:12px;margin-top:16px"><div style="width:60px;height:60px;border-radius:12px;background:#FF6B6B" id="preview-c1"></div><div style="width:60px;height:60px;border-radius:12px;background:#4ECDC4" id="preview-c2"></div><div style="width:60px;height:60px;border-radius:12px;background:#45B7D1" id="preview-c3"></div></div>
 </div>
@@ -655,10 +630,10 @@
 <textarea class="form-textarea" id="consultor-input" rows="5" placeholder="Descreva sua situação, desafio ou objetivo para receber orientação estratégica..."></textarea></div>
 <button class="btn btn-primary btn-block" onclick="runConsultorNegocios()"><i class="fas fa-university"></i> Consultar Agora</button>
 <div class="console-output" id="consultor-output" style="margin-top:16px;display:none"></div>
-<button class="btn btn-sm btn-outline" id="consultor-copy-btn" style="display:none;margin-top:8px" onclick="copyOutput('consultor-output')"><i class="fas fa-copy"></i> Copiar Resultado</button>
+<button class="btn btn-sm btn-outline" id="consultor-copy-btn" style="display:none;margin-top:8px" onclick="copyResult('consultor-output-editor')"><i class="fas fa-copy"></i> Copiar</button>
 </div>
-<div class="card"><div class="card-header"><div class="card-title"><i class="fas fa-history" style="color:var(--success)"></i> Últimas Consultorias</div></div>
-<div id="consultor-historico"><div class="empty-state"><i class="fas fa-university"></i><h3>Nenhuma consultoria ainda</h3><p>Realize sua primeira consulta estratégica</p></div></div>
+<div class="card"><div class="card-header"><div class="card-title"><i class="fas fa-history" style="color:var(--success)"></i> Meus Resultados</div></div>
+<div class="saved-results"><div class="empty-state"><i class="fas fa-inbox"></i><h3>Nenhum resultado salvo</h3><p>As consultorias realizadas aparecem aqui</p></div></div>
 </div>
 </div>
 <div class="card" style="margin-top:20px"><div class="card-header"><div class="card-title"><i class="fas fa-bolt" style="color:var(--warning)"></i> Consultas Rápidas</div></div>
