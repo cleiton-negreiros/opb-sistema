@@ -227,6 +227,24 @@ Ou executar:
 
 ---
 
+## 🗓️ Progresso — 22/05/2026 (Sexta)
+
+### Feito hoje
+- **Correções carregamento perfil**: identidade visual salva/recuperada, previews de cor ao vivo
+- **Funções ausentes criadas**: `startRoutine()`, `quickIdeia()`, `showAlimentarModal()`, `saveNotes()` — zero ReferenceErrors
+- **Modal carrossel morto removido**: 6 botões sem handler deletados
+- **Snapshot estático**: `snapshot.html` (60KB, self-contained, dados reais) + `gerar_snapshot.py`
+- **Deploy Vercel**: 3 commits no master, CI/CD deve publicar em `https://opb-sistema.vercel.app/snapshot`
+- **Regra de trabalho**: AGENTE EXECUTA — USUÁRIO DECIDE (linha 10)
+
+### Pendente para amanhã
+- [ ] Verificar deploy da snapshot
+- [ ] Aplicar `showResult()` nos demais agentes
+- [ ] Salvar resultados no servidor via API
+- [ ] Card Jornada IA de hoje
+
+---
+
 ## 🗓️ Jornada IA — Alimentação Diária
 
 **Instrução:** Toda nova funcionalidade implementada deve ser registrada na seção Jornada IA da plataforma (`plataforma.html → #page-jornada-ia`). Cada dia de vira um card na timeline (tema + realizações + tags). Manter os textos de compartilhamento (LinkedIn, Twitter, Instagram, Substack, Carrossel) atualizados com os novos marcos. Isso gera autoridade pública e documenta o progresso real.
