@@ -724,3 +724,245 @@ function quickConsultoria(tipo, contexto) {
     document.getElementById('consultor-input').value = contexto;
     runConsultorNegocios();
 }
+
+// ============================================
+// JORNADA IA — COMPARTILHAR
+// ============================================
+function openShareEditor(platform) {
+    const titles = {
+        linkedin: '📢 LinkedIn',
+        twitter: '🐦 Twitter / X',
+        instagram: '📸 Instagram / Reels',
+        substack: '📧 Substack',
+        carrossel: '🎠 Carrossel 5 Slides'
+    };
+    document.getElementById('shareModalTitle').innerHTML = `<i class="fas fa-pen" style="color:var(--primary);margin-right:8px"></i> Editar — ${titles[platform] || platform}`;
+
+    const texts = {
+        linkedin: `🚀 10 dias. 1 pessoa. 15 agentes de IA. 3 negócios. R$ 0 em assinaturas.
+
+Construí um sistema operacional de negócios movido a inteligência artificial — DO ZERO — sozinho, num notebook Acer de 2012 com 8GB de RAM.
+
+E não, não é milagre. É estratégia.
+
+Aqui está o que eu construí em 10 dias:
+
+📌 Dia 1-2: Instalei Python + Ollama (IA local). Criei 3 agentes que transcrevem vídeos, geram carrosséis do Instagram e descrevem designs. Cada resposta levava 3 minutos — mas funcionava.
+
+📌 Dia 3-5: Construí uma plataforma web completa (SPA) onde todos os agentes vivem. Cada um com sua página, seu formulário, seu propósito. Adicionei o Radagast — um curador automático que varre YouTube, Twitter e web todo dia pra me trazer ideias de conteúdo.
+
+📌 Dia 6: Mapeei o mercado. 40+ influenciadores de finanças no Brasil analisados. Descobri o gap: finanças pessoais com perspectiva cristã, sem teologia da prosperidade. Isso virou meu posicionamento.
+
+📌 Dia 7: Implementei multi-perfil — 3 negócios (Paz na Conta, Toque de Paz, Caminho Vida) compartilham a mesma plataforma, cada um com seu cérebro e seus agentes. Adicionei sincronia PC-celular via GitHub.
+
+📌 Dia 8-9: Criei o Consultor de Negócios (análise SWOT, planejamento estratégico), Agente Hashtags, Reels Script, e integração total com Telegram Bot — o sistema inteiro no bolso.
+
+📌 Dia 10: Rodei tudo no celular via Termux. Debug de permissão, line endings, tokens. Cada erro virou lição documentada.
+
+O resultado?
+✅ 15+ agentes de IA trabalhando 24h
+✅ 3 negócios na mesma plataforma
+✅ R$ 0 gasto em assinaturas
+✅ PC fraco + celular antigo = suficiente
+
+Essa história prova que você NÃO precisa de:
+❌ Grana pra investir em tecnologia cara
+❌ Equipe de desenvolvedores
+❌ PC poderoso
+❌ Conhecimento avançado
+
+Você precisa de:
+✅ Um problema real pra resolver
+✅ Vontade de aprender
+✅ 10 dias de foco
+
+O hardware que você tem é suficiente. O conhecimento se constrói no caminho.
+
+Se eu consegui, você consegue também.
+
+#IA #EmpreendedorismoSolo #OPBStudio #Inovação #FinançasCatólicas #Produtividade`,
+
+        twitter: `🧵 Construí um sistema de agentes de IA do zero em 10 dias — sozinho, num PC de 2012, gastando R$ 0 em assinaturas.
+
+1/10 🚀 O sonho: ter uma equipe de especialistas 24h. A realidade: um notebook Acer 2012 com 8GB RAM.
+
+Dia 1: Instalei Python + Ollama (IA local). Criei 3 agentes que transcrevem, geram carrosséis e descrevem designs. Lentos, mas funcionais. 🐢
+
+2/10 Dia 2: Construí a plataforma web. Cada agente ganhou página própria com formulário e resultado. Adicionei PWA mobile e alimentação automática do cérebro.
+
+3/10 Dias 3-5: Layout profissional com gradientes + modo escuro + Landing Page. Nasceu o Radagast — curador que varre YouTube/Twitter/web todo dia e gera ideias de Reels com IA.
+
+4/10 Dia 6: Mapeei o mercado. 40+ influenciadores. Descobri o gap: finanças com fé, sem teologia da prosperidade.
+
+5/10 Dia 7: Multi-perfil — 3 negócios na mesma plataforma. Dashboard PWA. Sincronia PC-celular. Autenticação. Agentes corta-silêncio e transcrever-áudio.
+
+6/10 Dias 8-9: Consultor de Negócios (SWOT, estratégia). Hashtags IA. Reels Script. Telegram Bot comandando tudo.
+
+7/10 Dia 10: TUDO RODANDO NO CELULAR via Termux. Debug de permissão, CRLF, tokens. Cada erro documentado como lição.
+
+8/10 Resultado: 15+ agentes, 3 negócios, R$ 0, PC de 2012 + celular antigo.
+
+9/10 Lição: Hardware não é desculpa. Conhecimento se constrói no caminho. O problema real + foco > qualquer recurso.
+
+10/10 Se eu consegui, você consegue. Comece hoje.
+
+#IA #Empreendedorismo #Inovação #OPBStudio #TinyLLM`,
+
+        instagram: `🚀 10 DIAS. 1 PESSOA. 15 AGENTES DE IA.
+
+Construí um SISTEMA OPERACIONAL DE NEGÓCIOS inteiro movido a inteligência artificial.
+
+Sozinho.
+Num notebook de 2012.
+Gastando R$ 0 em assinaturas.
+
+O que esse sistema faz:
+📹 Transcreve vídeos automaticamente
+🎠 Gera carrosséis para Instagram
+✍️ Cria roteiros para Reels
+📡 Curadoria diária de conteúdo
+🏛️ Consultoria estratégica (SWOT, KPIs)
+🔍 Análise de concorrência
+📊 Planejamento de conteúdo
+🎬 Roteiro para vídeos
+🤖 E muito mais...
+
+Tudo roda LOCALMENTE — sem enviar seus dados pra ninguém.
+
+E o melhor: você controla TUDO pelo Telegram no celular.
+
+O hardware que você tem é SUFICIENTE.
+O conhecimento se constrói no caminho.
+O melhor momento pra começar foi ontem. O segundo melhor é AGORA.
+
+#IA #EmpreendedorismoSolo #OPBStudio #Inovação #Produtividade #FinançasCatólicas`,
+
+        substack: `# Como construí um sistema de agentes de IA do zero em 10 dias (sozinho, num PC de 2012, gastando R$ 0)
+
+---
+
+**TL;DR:** Instalei Python, baixei um modelo de IA gratuito (Ollama + tinyllama), e em 10 dias construí um sistema com 15+ agentes que gerenciam 3 negócios — tudo rodando local, sem assinatura, num notebook Acer de 2012.
+
+---
+
+## Por que isso importa?
+
+Vivemos a era do "empreendedor solo aumentado". Pela primeira vez na história, uma única pessoa pode ter uma equipe inteira de especialistas trabalhando 24h por dia, 7 dias por semana, por centavos de energia elétrica.
+
+Eu resolvi testar esse limite na prática.
+
+## O experimento
+
+**Setup:** Notebook Acer Aspire E1-571, Intel Core i5-2400, 8GB RAM, Intel HD Graphics 3000. Sem GPU. Sem internet dedicada. Hardware que qualquer pessoa tem guardado numa gaveta.
+
+**Modelo de IA:** Tinyllama (637MB) via Ollama — IA local, gratuita, que roda sem internet. Vazão: ~2 tokens/segundo. É lento, mas funciona.
+
+**O que foi construído em 10 dias:**
+
+| Dia | O que aconteceu |
+|-----|----------------|
+| 1 | Primeiros agentes (transcrição, carrossel, designer) + Ollama local |
+| 2 | Plataforma web SPA com PWA mobile + Agentes Consumo e Capa Vídeo |
+| 3-5 | Layout profissional, modo escuro, Landing Page, Radagast (curador diário) |
+| 6 | Pesquisa de mercado (40+ concorrentes), definição de nicho e posicionamento |
+| 7 | Multi-perfil (3 negócios), sincronia PC-celular, autenticação, dashboard PWA |
+| 8-9 | Consultor de Negócios, Hashtags IA, Reels Script, integração Telegram total |
+| 10 | Deploy no celular via Termux, debug de Android, lições documentadas |
+
+## O resultado
+
+✅ **15+ agentes de IA** trabalhando em paralelo
+✅ **3 negócios** na mesma plataforma (cada um com seu cérebro)
+✅ **R$ 0** gasto em assinaturas de SaaS
+✅ **PC fraco + celular antigo** = infraestrutura suficiente
+✅ **89 commits** no GitHub em 10 dias
+
+## A lição mais importante
+
+O hardware que você tem é suficiente. O conhecimento se constrói no caminho. O que realmente importa é:
+
+1. **Um problema real** — sem isso, nenhuma tecnologia resolve nada
+2. **Vontade de aprender** — você vai errar muito. Anote cada erro.
+3. **Foco** — 10 dias dedicados valem mais que 6 meses de "vou fazer quando der"
+
+Se eu consegui com um notebook de 2012, você consegue também.
+
+—
+
+*Este artigo faz parte da série "Jornada IA" — documentando em tempo real a construção de um sistema operacional de negócios movido a inteligência artificial.*
+
+[Assine a newsletter](#) para receber as atualizações semanais.`,
+
+        carrossel: `Slide 1 — CAPA
+🚀 10 DIAS. 1 PESSOA. 15 AGENTES DE IA.
+Construí um sistema operacional de negócios movido a IA — do zero, num PC de 2012, gastando R$ 0.
+(Imagem: você no centro, ícones de IA girando ao redor)
+
+Slide 2 — O PROBLEMA
+😰 Ser empreendedor solo é fazer tudo sozinho:
+📹 Conteúdo
+✍️ Roteiros
+📊 Estratégia
+📡 Curadoria
+📈 Análises
+🤝 Gestão
+E se você pudesse ter uma equipe de especialistas trabalhando 24h por dia?
+(Imagem: pessoa sobrecarregada vs pessoa com robôs ajudando)
+
+Slide 3 — A SOLUÇÃO
+🤖 Conheça os agentes OPB:
+📹 Transcrição de vídeos → automático
+🎠 Carrossel Instagram → 1 clique
+📡 Radagast → curadoria diária
+🏛️ Consultor → análise SWOT + estratégia
+✍️ Text Generator → posts prontos
+🔍 Consumo → livros resumidos por IA
+📊 Posicionamento → diferencial competitivo
+(Imagem: grid de ícones com cada agente)
+
+Slide 4 — O DIFERENCIAL
+💡 Tudo roda LOCALMENTE:
+✅ Sem internet necessária
+✅ Sem enviar seus dados
+✅ Sem assinatura mensal
+✅ PC fraco serve (8GB RAM)
+✅ Celular também roda
+Hardware não é desculpa. Conhecimento se constrói no caminho.
+(Imagem: notebook + celular com check verde)
+
+Slide 5 — CTA
+👇 Pronto pra começar sua jornada IA?
+O melhor momento foi ontem.
+O segundo melhor é AGORA.
+Comente "EU VOU" ou compartilhe com quem precisa ler isso.
+🚀 #IA #EmpreendedorismoSolo #OPBStudio #Inovação #Produtividade
+(Imagem: fundo inspirador com texto "COMECE HOJE")
+`
+    };
+
+    const editor = document.getElementById('shareEditor');
+    editor.value = texts[platform] || '';
+    updateCharCount();
+    document.getElementById('shareModal').style.display = 'flex';
+}
+
+function closeShareModal(e) {
+    if (e && e.target !== e.currentTarget) return;
+    document.getElementById('shareModal').style.display = 'none';
+}
+
+function copyShareText() {
+    const text = document.getElementById('shareEditor').value;
+    navigator.clipboard.writeText(text);
+    showToast('✅ Texto copiado!', 'success');
+}
+
+document.addEventListener('input', function(e) {
+    if (e.target && e.target.id === 'shareEditor') updateCharCount();
+});
+
+function updateCharCount() {
+    const text = document.getElementById('shareEditor').value;
+    const count = text.length;
+    document.getElementById('shareCharCount').textContent = `${count} caracteres`;
+}

@@ -219,4 +219,12 @@ Ou executar:
 
 ---
 
-_Last updated: 2026-05-13_
+---
+
+## 🗓️ Jornada IA — Alimentação Diária
+
+**Instrução:** Toda nova funcionalidade implementada deve ser registrada na seção Jornada IA da plataforma (`plataforma.html → #page-jornada-ia`). Cada dia de vira um card na timeline (tema + realizações + tags). Manter os textos de compartilhamento (LinkedIn, Twitter, Instagram, Substack, Carrossel) atualizados com os novos marcos. Isso gera autoridade pública e documenta o progresso real.
+
+---
+
+_Last updated: 2026-05-22_
