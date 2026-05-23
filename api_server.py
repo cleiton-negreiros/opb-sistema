@@ -1330,19 +1330,13 @@ def api_agentes_executar():
     agente = data.get('agente', '')
     args = data.get('args', [])
 
-    AGENTES = {
-        "radagast": "agents/radagast/radagast.py",
-        "carrossel": "agents/carrossel/main.py",
-        "text_generator": "agents/text_generator/main.py",
-        "consumo": "agents/consumo/main.py",
-        "capa_video": "agents/capa_video/main.py",
-        "corta_silencio": "agents/corta-silencio/main.py",
-        "transcrever_audio": "agents/transcrever-audio/main.py",
-        "liturgico": "agents/liturgico/main.py",
-        "hashtags": "agents/hashtags/main.py",
-        "reels_script": "agents/reels_script/main.py",
-        "consultor-negocios": "agents/consultor-negocios/main.py",
-    }
+    AGENTES = {}
+    agents_dir = PROJECT_PATH / "agents"
+    if agents_dir.exists():
+        for d in agents_dir.iterdir():
+            main_py = d / "main.py"
+            if d.is_dir() and main_py.exists():
+                AGENTES[d.name] = str(main_py.relative_to(PROJECT_PATH))
 
     if agente not in AGENTES:
         return jsonify({"error": f"Agente '{agente}' não encontrado. Disponíveis: {list(AGENTES.keys())}", "sucesso": False}), 400
