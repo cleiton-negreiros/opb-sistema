@@ -24,7 +24,7 @@ def format_telegram_message(ideas: list[dict], stats: dict) -> list[str]:
     Retorna lista de mensagens (divide se passar do limite).
     """
     header = (
-        f"🦉 <b>RADAGAST</b> — Curadoria {datetime.now().strftime('%d/%m/%Y')}\n\n"
+        f"🙏 <b>PAZ NA CONTA</b> — Curadoria {datetime.now().strftime('%d/%m/%Y')}\n\n"
         f"📊 Varridos: {stats.get('total_items', 0)} posts de {stats.get('platforms', 0)} plataformas\n"
         f"💡 Ideias geradas: {len(ideas)}\n"
         f"━━━━━━━━━━━━━━━━━━━━\n"
@@ -32,7 +32,8 @@ def format_telegram_message(ideas: list[dict], stats: dict) -> list[str]:
 
     footer = (
         f"\n━━━━━━━━━━━━━━━━━━━━\n"
-        f"⏰ Proximo scan: amanha 6h30"
+        f"⏰ Proximo scan: amanha 6h30\n"
+        f"📱 @paznaconta"
     )
 
     idea_blocks = []
@@ -42,18 +43,29 @@ def format_telegram_message(ideas: list[dict], stats: dict) -> list[str]:
             pontos = "\n".join(f"  • {p}" for p in idea["pontos"])
 
         numero = _numero_emoji(i)
+        pilar = idea.get('pilar', 'dica-pratica')
+        formato = idea.get('formato', 'post')
+
+        emoji_pilar = {
+            "dica-pratica": "🛠", "fe-nas-financas": "🙏",
+            "casal-pac": "💑", "contraste": "⚖️", "viral": "🔥"
+        }
+        emoji_formato = {
+            "carrossel": "📑", "post": "📝", "reel": "🎬", "story": "📱"
+        }
+
         block = (
             f"\n{numero} <b>{idea.get('titulo', 'Sem titulo')}</b>\n"
-            f"🎣 <i>\"{idea.get('hook', '')}\"</i>\n"
+            f"🎣 <i>\"{idea.get('hook', '')[:150]}\"</i>\n"
         )
         if pontos:
             block += f"{pontos}\n"
-        if idea.get("formato_sugerido"):
-            block += f"🎬 {idea['formato_sugerido']}\n"
+        block += f"{emoji_pilar.get(pilar, '📌')} {pilar.replace('-', ' ').title()} | {emoji_formato.get(formato, '📄')} {formato.title()}\n"
         if idea.get("fonte_url"):
             block += f"🔗 {idea['fonte_url']}\n"
-        if idea.get("angulo_br"):
-            block += f"🇧🇷 {idea['angulo_br']}\n"
+        angulo = idea.get('angulo_catolico', '') or idea.get('angulo_br', '')
+        if angulo:
+            block += f"✝️ {angulo[:100]}\n"
 
         idea_blocks.append(block)
 

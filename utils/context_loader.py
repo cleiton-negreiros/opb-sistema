@@ -53,7 +53,7 @@ def get_brain_context(profile_id: Optional[str] = None) -> str:
     if goals.get("objetivos"):
         objs = goals["objetivos"]
         if isinstance(objs, list):
-            parts.append(f"Objetivos: {'; '.join(o[:80] for o in objs[:3])}")
+            parts.append(f"Objetivos: {'; '.join(str(o)[:80] for o in objs[:3])}")
     if not parts:
         return _fallback_context(profile_id)
     return " | ".join(parts)

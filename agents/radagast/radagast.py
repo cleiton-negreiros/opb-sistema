@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""radagast.py — Curadoria diaria de conteudo EN para Reels.
+"""radagast.py — Curadoria diaria de conteudo para Paz na Conta (@paznaconta).
 
-Versao publica OPB School: enxuta, sem dependencias do fellowship.
+Gera ideias de posts/carrosseis/reels para Instagram sobre financas catolicas.
 """
 
 import argparse
@@ -15,9 +15,12 @@ from pathlib import Path
 from dotenv import load_dotenv
 
 REPO_DIR = Path(__file__).parent
+PROJECT_DIR = REPO_DIR.parent.parent
 load_dotenv(REPO_DIR / ".env", override=True)
 
 load_dotenv()  # fallback: tenta .env do diretório atual
+
+sys.path.insert(0, str(PROJECT_DIR))
 
 from scrapers import scrape_youtube, scrape_instagram, scrape_twitter, scrape_linkedin, scrape_web_news
 from analyzer import generate_reel_ideas
@@ -337,19 +340,27 @@ def run_curadoria(profiles: list[dict], search_terms: list[str],
         ])
         return
 
-    logger.info("--- GERANDO IDEIAS ---")
+    # Carrega contexto do perfil Paz na Conta
+    profile_context = ""
     try:
-        ideas = []
-        for c in all_contents[:8]:
-            ideas.append({
-                "titulo": c.get("title") or c.get("text", "")[:80],
-                "hook": c.get("text", "")[:120],
-                "pontos": [f"Fonte: {c.get('author', 'desconhecido')}"],
-                "fonte_url": c.get("url", ""),
-                "fonte_autor": c.get("author", ""),
-                "angulo_br": "Adaptar para o contexto brasileiro de financas com fe catolica",
-                "formato_sugerido": "talking head"
-            })
+        from profile_loader import load_profile
+        p = load_profile()
+        if p:
+            profile_context = (
+                f"Marca: {p.get('nome', 'Paz na Conta')}\n"
+                f"Missao: {p.get('missao', '')}\n"
+                f"Publico: {p.get('publico_alvo', '')}\n"
+                f"Tom: {', '.join(p.get('tom_de_voz', []))}\n"
+                f"Valores: {', '.join(p.get('valores', []))}\n"
+                f"Regras: {'; '.join(p.get('regras_escrita', []))}"
+            )
+            logger.info("Contexto do perfil carregado para geracao de ideias")
+    except Exception as e:
+        logger.warning(f"Nao foi possivel carregar perfil: {e}")
+
+    logger.info("--- GERANDO IDEIAS (via Ollama) ---")
+    try:
+        ideas = generate_reel_ideas(all_contents, profile_context)
         logger.info(f"Geradas {len(ideas)} ideias a partir dos {len(all_contents)} itens coletados")
     except Exception as e:
         send_telegram_messages([f"<b>Radagast</b>\nFalha ao gerar ideias: {e}"])
@@ -377,23 +388,35 @@ def run_curadoria(profiles: list[dict], search_terms: list[str],
     state["processed_urls"] = processed
 
     # Salva ideias em disco
-    ideas_dir = Path(__file__).parent.parent.parent / "acervo" / "ideias"
+    ideas_dir = PROJECT_DIR / "acervo" / "ideias"
     ideas_dir.mkdir(parents=True, exist_ok=True)
     timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-    ideas_content = f"""# Ideias Geradas pelo Radagast — {datetime.now().strftime('%d/%m/%Y %H:%M')}
+    ideas_content = f"""---
+fonte: radagast
+perfil: Paz na Conta
+data: {datetime.now().strftime('%Y-%m-%d %H:%M')}
+itens_coletados: {len(all_contents)}
+plataformas: {platforms_ok}
+tags: [curadoria, paz-na-conta, financas-catolicas]
+---
 
-> Geradas a partir de {len(all_contents)} itens coletados de {platforms_ok} plataformas.
+# Ideias Radagast — @paznaconta
+
+> {len(ideas)} ideias geradas a partir de {len(all_contents)} itens de {platforms_ok} plataformas.
 
 """
     for i, idea in enumerate(ideas, 1):
+        pilar = idea.get('pilar', 'dica-pratica')
+        formato = idea.get('formato', 'post')
+        angulo = idea.get('angulo_catolico', '') or idea.get('angulo_br', '')
         ideas_content += f"""## {i}. {idea.get('titulo', 'Ideia')}
 
-**Hook:** {idea.get('hook', '')}
-**Fonte:** {idea.get('fonte_autor', 'desconhecido')}
-**URL:** {idea.get('fonte_url', '')}
-**Ângulo:** {idea.get('angulo_br', '')}
-**Formato:** {idea.get('formato_sugerido', 'reels')}
-**Pontos-chave:** {', '.join(idea.get('pontos', []))}
+**Hook:** {idea.get('hook', '')[:200]}
+**Pilar:** {pilar}
+**Formato:** {formato}
+**Ângulo católico:** {angulo}
+**Fonte:** {idea.get('fonte_autor', 'desconhecido')} ({idea.get('fonte_url', '')})
+**Pontos-chave:** {', '.join(idea.get('pontos', []))[:300]}
 
 ---
 """
@@ -402,7 +425,7 @@ def run_curadoria(profiles: list[dict], search_terms: list[str],
     logger.info(f"Ideias salvas em: {idea_file}")
 
     save_state(state)
-    logger.info(f"Sucesso: {len(ideas)} ideias de Reels geradas e enviadas no Telegram.")
+    logger.info(f"Sucesso: {len(ideas)} ideias geradas para @paznaconta e enviadas no Telegram.")
 
 
 def main():

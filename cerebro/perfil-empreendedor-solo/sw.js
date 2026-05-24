@@ -23,10 +23,15 @@ self.addEventListener("activate", (e) => {
 
 self.addEventListener("fetch", (e) => {
   if (e.request.url.includes("/api/")) {
-    e.respondWith(fetch(e.request).catch(() => new Response(JSON.stringify({ error: "offline" }), { status: 503 })));
+    e.respondWith(fetch(e.request).catch(() => new Response(JSON.stringify({ error: "offline" }), { status: 503, headers: { "Content-Type": "application/json" } })));
     return;
   }
   e.respondWith(
-    caches.match(e.request).then((r) => r || fetch(e.request).catch(() => new Response("Offline", { status: 503 })))
+    caches.match(e.request).then((r) => r || fetch(e.request).catch(() => {
+      if (e.request.mode === "navigate") {
+        return caches.match("/plataforma.html");
+      }
+      return new Response('<html><body><h1>Offline</h1><p>Conteúdo não disponível sem internet.</p></body></html>', { status: 503, headers: { "Content-Type": "text/html;charset=UTF-8" } });
+    }))
   );
 });

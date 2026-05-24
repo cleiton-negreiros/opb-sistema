@@ -1092,16 +1092,26 @@ def api_narvi():
 
 @app.route('/api/radagast', methods=['POST'])
 def api_radagast():
-    """Executa o agente Radagast para curadoria de conteúdo."""
-    data = request.get_json()
-    days_back = data.get('days_back', 1)
-
-    return jsonify({
-        "sucesso": True,
-        "mensagem": "Radagast usa fontes gratuitas (yt-dlp + RSS)",
-        "instrucao": "Configure agents/radagast/.env (só Telegram) e config/keywords.json",
-        "execucao": "python agents/radagast/radagast.py --dry-run (teste) / python agents/radagast/radagast.py (executar)"
-    })
+    """Executa o agente Radagast — curadoria de conteúdo para Paz na Conta."""
+    try:
+        import subprocess
+        radagast_path = PROJECT_PATH / "agents" / "radagast" / "radagast.py"
+        if not radagast_path.exists():
+            return jsonify({"sucesso": False, "erro": "radagast.py não encontrado"})
+        result = subprocess.run(
+            [sys.executable, str(radagast_path), "--dry-run"],
+            capture_output=True, text=True, timeout=120,
+            cwd=str(PROJECT_PATH)
+        )
+        return jsonify({
+            "sucesso": result.returncode == 0,
+            "saida": result.stdout[-2000:] if result.stdout else "",
+            "erro": result.stderr[-500:] if result.stderr else None
+        })
+    except subprocess.TimeoutExpired:
+        return jsonify({"sucesso": False, "erro": "Timeout após 120s"})
+    except Exception as e:
+        return jsonify({"sucesso": False, "erro": str(e)})
 
 
 # ============================================

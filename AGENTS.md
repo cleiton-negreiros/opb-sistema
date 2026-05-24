@@ -227,20 +227,31 @@ Ou executar:
 
 ---
 
-## 🗓️ Progresso — 22/05/2026 (Sexta)
+## 🗓️ Progresso — 23/05/2026 (Sábado)
 
 ### Feito hoje
-- **Correções carregamento perfil**: identidade visual salva/recuperada, previews de cor ao vivo
-- **Funções ausentes criadas**: `startRoutine()`, `quickIdeia()`, `showAlimentarModal()`, `saveNotes()` — zero ReferenceErrors
-- **Modal carrossel morto removido**: 6 botões sem handler deletados
-- **Snapshot estático**: `snapshot.html` (60KB, self-contained, dados reais) + `gerar_snapshot.py`
-- **Deploy Vercel**: 3 commits no master, CI/CD deve publicar em `https://opb-sistema.vercel.app/snapshot`
-- **Regra de trabalho**: AGENTE EXECUTA — USUÁRIO DECIDE (linha 10)
+- **Pesquisa concorrentes finanças católicas**: websearch profundo (4 buscas), mapeou 15 concorrentes cristãos + 10 seculares + Vaticano
+- **Novos concorrentes descobertos**: Cristão Rico (574K YouTube), FinancasCore (app cristão), Enriclass (plataforma), Matheus Machado (católico FGV/Oxford), Diego Nascimento (300K, 29M views), Frei Rogério, Jaque Chaves, Vida Financeira Cristã
+- **Dado de mercado**: FInfluence 10 — 904 finfluencers no Brasil, audiência de 310.7M (+300% desde 2020)
+- **Novidade Vaticano**: Morningstar IOR Catholic Principles (índices de ações católicos, fev/2026) — Banco do Vaticano + Morningstar
+- **Arquivos atualizados**:
+  - `negocio/governanca/quem-sou.md` — add seções: Plataformas/Apps Cristãos, Contexto de Mercado, Vaticano Finanças expandido
+  - `cerebro/perfil-empreendedor-solo/POSICIONAMENTO.md` — +5 concorrentes na tabela
+  - `cerebro/PROMPT.md` — add referências dos novos concorrentes + Docs Vaticano + palavras-chave
+  - `acervo/pesquisas/concorrentes_financas_catolicas_2026-05.md` — pesquisa completa salva
+- **Startup automático**: `iniciar-startup.bat` (não-interativo) + `setup-startup.bat` (registra no Agendador de Tarefas)
+- **Pesquisa gurus/influencers fé+finanças**: mapeou 27 gurus (12 cristãos BR, 5 católicos BR, 3 seculares BR, 5 internacionais católicos, 5 padres influencers)
+- **Novos descobertos**: WalletWin/EUA (podcast 8 anos), Daniel Catone/Arimathea ($4.5B), Catholic Planners Network, Charles Wicz (4x #1 ANBIMA), Alcir Guimarães (pastor+empresário), Cristão Rico (574K), Carlos Chiquim, Dedé Melo, Nicson Vangel, William Ribeiro (1M+)
+- **Arquivos atualizados**:
+  - `acervo/pesquisas/gurus_influencers_financas_fe_2026-05.md` — pesquisa completa com 27 gurus, lições, tabelas
+  - `negocio/governanca/quem-sou.md` — +Linha Editorial (5 teses, 5 pilares, 5 conteúdos anzol, rota de evolução), +referências internacionais
+- **Linha Editorial criada**: 5 teses do Paz na Conta + 5 pilares editoriais + tom refinado + conteúdos anzol + rota de evolução
 
-### Pendente para amanhã
+### Pendente
 - [ ] Verificar deploy da snapshot
 - [ ] Aplicar `showResult()` nos demais agentes
-- [ ] Salvar resultados no servidor via API
+- [ ] Configurar token Notion para integração
+- [x] Configurar startup automático (rodar `setup-startup.bat` como Admin)
 - [ ] Card Jornada IA de hoje
 
 ---

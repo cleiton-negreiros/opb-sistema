@@ -31,6 +31,7 @@
 --sidebar-width: 250px;
 --ease-premium: cubic-bezier(0.16, 1, 0.3, 1);
 --transition-speed: 0.28s;
+--primary: var(--accent);
 --theme-icon: "🌙";
 }
 
@@ -361,6 +362,7 @@ padding: 8px 14px; border-radius: var(--radius-input);
 font-size: 0.8rem; font-weight: 600; cursor: pointer; 
 transition: all var(--transition-speed) var(--ease-premium); 
 font-family: 'Inter', sans-serif;
+touch-action: manipulation;
 }
 .btn:hover, .btn-primary:hover { 
 background: transparent; border-color: var(--text-heading); color: var(--text-heading);
@@ -597,13 +599,6 @@ table td, table th { padding: 12px; font-size: 0.85rem; }
 .toast-container { bottom: 72px; right: 12px; left: 12px; }
 .toast { width: 100%; }
 
-/* Hide desktop-only elements */
-.sidebar.collapsed .logo-text,
-.sidebar.collapsed .nav-item span,
-.sidebar.collapsed .nav-item .badge,
-.sidebar.collapsed .nav-section-title {
-opacity: 1; width: auto; overflow: visible; display: inline; pointer-events: auto;
-}
 }
 
 /* Tablet adjustments */
@@ -623,6 +618,11 @@ opacity: 1; width: auto; overflow: visible; display: inline; pointer-events: aut
 
 .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 99; }
 .sidebar-overlay.active { display: block; }
+
+/* Mobile sidebar open state */
+@media (max-width: 768px) {
+.sidebar.mobile-open { display: flex; position: fixed; top: 0; left: 0; bottom: 0; width: 280px; z-index: 110; }
+}
 
 /* ============================================
 DASHBOARD PRO — WOW FACTOR

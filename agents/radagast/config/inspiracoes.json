@@ -1,22 +1,39 @@
 {
   "profiles": [
     {
-      "name": "Dan Koe",
+      "name": "Cristão Rico",
       "platforms": {
-        "twitter": "https://x.com/TheDankoe"
-      }
+        "youtube": "https://youtube.com/@cristaorico",
+        "website": "https://cristaorico.com.br"
+      },
+      "nicho": "financas biblicas",
+      "descricao": "574K YouTube, maior plataforma de finanças bíblicas do Brasil, plataforma EBF + Grana no Bolso (R$1.997/ano)"
     },
     {
-      "name": "Justin Welsh",
+      "name": "Diego Nascimento / Jesus e a Bíblia",
       "platforms": {
-        "twitter": "https://x.com/thejustinwelsh"
-      }
+        "youtube": "https://youtube.com/@jesuseabiblia"
+      },
+      "nicho": "financas biblicas",
+      "descricao": "300K YouTube, 29M views, Método FSB (Finanças Saudáveis à Luz da Bíblia), 20+ anos de mercado"
     },
     {
-      "name": "Naval",
+      "name": "Matheus Machado",
       "platforms": {
-        "twitter": "https://x.com/naval"
-      }
+        "instagram": "https://instagram.com/matheusfinancas",
+        "youtube": "https://youtube.com/@matheusfinancas"
+      },
+      "nicho": "financas catolico",
+      "descricao": "Finanças Católico, educador financeiro, advogado, MBA FGV/Ibmec, Oxford, presidente UNIAPAC ADCE Jovem Brasil"
+    },
+    {
+      "name": "WalletWin",
+      "platforms": {
+        "website": "https://walletwin.com",
+        "podcast": "https://walletwin.com/catholic-money-show"
+      },
+      "nicho": "financas catolico",
+      "descricao": "Jonathan e Amanda Teixeira. 'The Catholic Money Show' (2018-2026). Catholic Money Academy. Tom leve, divertido, prático. Inspiração direta para o Paz na Conta."
     },
     {
       "name": "Joao Oliveira",
@@ -29,13 +46,6 @@
       "name": "Leo Casellato",
       "platforms": {
         "instagram": "https://instagram.com/leocasellato"
-      },
-      "nicho": "financas cristao investimentos"
-    },
-    {
-      "name": "Eduardo M Reis Filho",
-      "platforms": {
-        "instagram": "https://instagram.com/eduardomrfilho"
       },
       "nicho": "financas cristao investimentos"
     },
@@ -61,67 +71,75 @@
       "nicho": "financas cristao"
     },
     {
-      "name": "Matheus Machado",
+      "name": "Frei Rogério Soares",
       "platforms": {
-        "instagram": "https://instagram.com/matheusfinancas"
+        "youtube": "https://youtube.com/@freirogeriosoares"
       },
-      "nicho": "financas catolico"
+      "nicho": "financas catolico fe",
+      "descricao": "Sacerdote católico, projetos de geração de renda, ensino de prosperidade com fé (Jataí-GO)"
     },
     {
-      "name": "Nathalia Arcuri",
+      "name": "Jaque Chaves",
       "platforms": {
-        "instagram": "https://instagram.com/nathaliaarcuri"
+        "instagram": "https://instagram.com/jaquechaves",
+        "website": "https://mulheres.life"
       },
-      "nicho": "educacao financeira"
+      "nicho": "financas cristao mulheres",
+      "descricao": "Paz Financeira para Mulheres Cristãs, Método das Caixinhas de Propósito"
     },
     {
-      "name": "Thiago Nigro",
+      "name": "Charles Wicz",
       "platforms": {
-        "instagram": "https://instagram.com/primo_rico"
+        "instagram": "https://instagram.com/charleswicz",
+        "youtube": "https://youtube.com/@charleswicz"
       },
-      "nicho": "educacao financeira"
+      "nicho": "financas investimentos",
+      "descricao": "4x #1 ANBIMA, consultor de investimentos, maior referência em independência financeira no Brasil"
     },
     {
-      "name": "Suzanna Tenorio",
+      "name": "William Ribeiro",
       "platforms": {
-        "instagram": "https://instagram.com/suzannatenorio"
+        "instagram": "https://instagram.com/williamribeiro",
+        "youtube": "https://youtube.com/@williamribeiro"
       },
-      "nicho": "educacao financeira"
+      "nicho": "financas empreendedorismo",
+      "descricao": "1M+ seguidores, finanças e empreendedorismo com fé"
     },
     {
-      "name": "Professor Mira",
+      "name": "Eduardo Feldberg (Primo Pobre)",
       "platforms": {
-        "instagram": "https://instagram.com/professormira"
+        "youtube": "https://youtube.com/@primopobre",
+        "instagram": "https://instagram.com/primopobre"
       },
-      "nicho": "financas investimentos"
+      "nicho": "educacao financeira pobres",
+      "descricao": "3.5M YouTube, 2.9M Instagram. Maior canal de finanças para pobres do mundo. Cristão. Best-seller 'Deixe de Ser Pobre'. Inspiração de nicho hiper-específico + humor."
     },
     {
-      "name": "Ana Luisa",
+      "name": "Emmir Nogueira (Comunidade Shalom)",
       "platforms": {
-        "instagram": "https://instagram.com/temeducacaofinanceira"
+        "website": "https://comshalom.org",
+        "youtube": "https://youtube.com/@comshalom",
+        "instagram": "https://instagram.com/comshalom"
       },
-      "nicho": "educacao financeira"
+      "nicho": "economia do reino catolico",
+      "descricao": "Cofundadora da Comunidade Católica Shalom, autora de 'O Segredo da Divina Providência', Economia do Reino como confiança no Pai"
     },
     {
-      "name": "Natalia Moraes",
+      "name": "Matheus Ortega - Economia do Reino",
       "platforms": {
-        "instagram": "https://instagram.com/natmoraesd"
+        "website": "https://economiadoreino.com",
+        "instagram": "https://instagram.com/economiadoreino"
       },
-      "nicho": "educacao financeira"
+      "nicho": "teologia financeira cristao",
+      "descricao": "Autor 'Economia do Reino' (Thomas Nelson). MSc London School of Economics. Quatro perfis: doador, moderado, transformador, abnegado"
     },
     {
-      "name": "Gustavo Cerbasi",
+      "name": "Alice Zenyanne (Shalom)",
       "platforms": {
-        "instagram": "https://instagram.com/gustavocerbasi"
+        "website": "https://comshalom.org"
       },
-      "nicho": "educacao financeira"
-    },
-    {
-      "name": "Nath Financas",
-      "platforms": {
-        "instagram": "https://instagram.com/nathfinancas"
-      },
-      "nicho": "educacao financeira"
+      "nicho": "organizacao financeira catolico",
+      "descricao": "Consagrada da Comunidade Shalom, consultora de organização financeira à luz da fé católica"
     },
     {
       "name": "Visao Catolica",
@@ -139,13 +157,13 @@
       "nicho": "doutrina social catolico"
     },
     {
-      "name": "Daniel Catone",
+      "name": "Daniel Catone (Arimathea)",
       "platforms": {
         "website": "https://arimatheainvesting.com",
         "podcast": "https://arimatheainvesting.com/treasures-in-heaven"
       },
       "nicho": "investimentos catolico",
-      "descricao": "Founder Arimathea Investing, mestre em Teologia Católica, podcast 'Treasures in Heaven'"
+      "descricao": "Arimathea Investing ($4.5B+ gestão?), mestre em Teologia, podcast 'Treasures in Heaven'"
     },
     {
       "name": "Deb Meyer (WorthyNest)",
@@ -154,85 +172,16 @@
         "podcast": "https://worthynest.com/beyond-budgets"
       },
       "nicho": "planejamento financeiro catolico",
-      "descricao": "CFP, CPA, autora 'Redefining Family Wealth', podcast 'Beyond Budgets', Catholic Money Mastermind"
+      "descricao": "CFP, CPA, autora 'Redefining Family Wealth', podcast 'Beyond Budgets'"
     },
     {
-      "name": "Catholic Financial Planners Network",
+      "name": "Catholic Money Talk",
       "platforms": {
-        "website": "https://catholicfinancialplanners.com",
-        "podcast": "https://catholicfinancialplanners.com/catholic-money-mastermind"
+        "website": "https://catholicmoneytalk.com",
+        "podcast": "https://catholicmoneytalk.com"
       },
-      "nicho": "planejamento financeiro catolico",
-      "descricao": "Rede de assessores financeiros católicos, podcast 'Catholic Money Mastermind' com Ben Martinek"
-    },
-    {
-      "name": "Apostolic Financial Advisors",
-      "platforms": {
-        "website": "https://apostolicfa.com"
-      },
-      "nicho": "investimentos catolico",
-      "descricao": "Assessoria financeira católica, investimento baseado em valores, critérios USCCB"
-    },
-    {
-      "name": "Chris Schilmoeller",
-      "platforms": {
-        "website": "https://catholicfinancialplanners.com"
-      },
-      "nicho": "planejamento financeiro catolico",
-      "descricao": "Ex-missionário FOCUS, assessor financeiro, abordagem Tomás de Aquino para finanças"
-    },
-    {
-      "name": "Instituto Humanitas Unisinos (IHU)",
-      "platforms": {
-        "youtube": "https://youtube.com/@institutohumanitasunisinos",
-        "website": "https://ihu.unisinos.br"
-      },
-      "nicho": "doutrina social catolico",
-      "descricao": "Cobertura aprofundada da Doutrina Social, Papa Francisco e economia"
-    },
-    {
-      "name": "Drexel Day Financial",
-      "platforms": {
-        "website": "https://drexeldayfinancial.com"
-      },
-      "nicho": "planejamento financeiro catolico",
-      "descricao": "Assessoria financeira católica, alinhada com USCCB Socially Responsible Investment Guidelines"
-    },
-    {
-      "name": "Arimathea Investing",
-      "platforms": {
-        "website": "https://arimatheainvesting.com",
-        "podcast": "https://arimatheainvesting.com/theology-of-money"
-      },
-      "nicho": "investimentos catolico",
-      "descricao": "Plataforma de investimento católico, podcast 'Theology of Money'"
-    },
-    {
-      "name": "Catholic Answers - Financas",
-      "platforms": {
-        "website": "https://catholic.com",
-        "podcast": "https://catholic.com/audio"
-      },
-      "nicho": "doutrina social catolico",
-      "descricao": "Trent Horn e outros apologistas abordam finanças à luz da fé católica"
-    },
-    {
-      "name": "Matheus Ortega - Economia do Reino",
-      "platforms": {
-        "website": "https://economiadoreino.com",
-        "instagram": "https://instagram.com/economiadoreino"
-      },
-      "nicho": "teologia financeira cristao",
-      "descricao": "Autor do livro 'Economia do Reino' (Thomas Nelson). MSc London School of Economics. Quatro perfis: doador, moderado, transformador, abnegado"
-    },
-    {
-      "name": "Emmir Nogueira (Comunidade Shalom)",
-      "platforms": {
-        "website": "https://comshalom.org",
-        "youtube": "https://youtube.com/@comshalom"
-      },
-      "nicho": "economia do reino catolico",
-      "descricao": "Cofundadora da Comunidade Católica Shalom, autora de 'O Segredo da Divina Providência', Economia do Reino como confiança no Pai"
+      "nicho": "financas catolico",
+      "descricao": "Paul Scarfone. 83 episódios, 5 estrelas. Todos os temas financeiros sob a lente católica."
     },
     {
       "name": "Economy of Francesco",
@@ -241,148 +190,116 @@
         "youtube": "https://youtube.com/@economyoffrancesco"
       },
       "nicho": "economia catolico",
-      "descricao": "Movimento global inspirado por São Francisco e pelo Papa Francisco. Jovens economistas e empreendedores repensando a economia. Fundado em Assis, 2020"
+      "descricao": "Movimento global inspirado por São Francisco e pelo Papa Francisco. Jovens economistas repensando a economia."
     },
     {
-      "name": "Alice Zenyanne (Shalom)",
+      "name": "Enriclass",
       "platforms": {
-        "website": "https://comshalom.org"
+        "website": "https://enriclass.com.br",
+        "instagram": "https://instagram.com/enriclass"
       },
-      "nicho": "organizacao financeira catolico",
-      "descricao": "Consagrada da Comunidade Shalom, consultora de organização financeira à luz da fé católica"
+      "nicho": "financas cristao",
+      "descricao": "Plataforma por assinatura, 3 pilares: Natural, Emocional, Espiritual. Foco em sair das dívidas com princípios bíblicos."
+    },
+    {
+      "name": "FinancasCore",
+      "platforms": {
+        "website": "https://financascore.com.br",
+        "instagram": "https://instagram.com/financascore"
+      },
+      "nicho": "financas cristao app",
+      "descricao": "App de finanças com princípios bíblicos, modo casal, IA, alertas bíblicos, R$9,90/mês. Concorrente direto."
     }
   ],
   "recursos": [
     {
       "titulo": "Patris Corde (2020) - Papa Francisco",
       "url": "https://www.vatican.va/content/francesco/pt/apost_letters/documents/papa-francesco-lettera-ap_20201208_patris-corde.html",
-      "descricao": "Carta Apostólica sobre São José. Cap.6 'Pai trabalhador': o trabalho como participação na obra da salvação, dignidade do trabalho, conexão com Rerum Novarum. 'Nenhuma família sem trabalho'.",
+      "descricao": "Carta Apostólica sobre São José. Cap.6 'Pai trabalhador': o trabalho como participação na obra da salvação.",
       "tema": "trabalho dignidade"
     },
     {
       "titulo": "Mateus 5-6 (Sermão da Montanha)",
       "url": "https://www.bibliaonline.com.br/nvi/mt/5",
-      "descricao": "Base bíblica essencial: Bem-aventuranças (Mt 5), Pai-Nosso (Mt 6:9-13), 'Não podeis servir a Deus e ao dinheiro' (Mt 6:24), 'Não vos preocupeis' (Mt 6:25-34), 'Ajuntai tesouros no céu' (Mt 6:19-21).",
+      "descricao": "Bem-aventuranças (Mt 5), 'Não podeis servir a Deus e ao dinheiro' (Mt 6:24), 'Ajuntai tesouros no céu' (Mt 6:19-21).",
       "tema": "biblia financas"
     },
     {
       "titulo": "Laborem Exercens (1981) - João Paulo II",
       "url": "https://www.vatican.va/content/john-paul-ii/pt/encyclicals/documents/hf_jp-ii_enc_14091981_laborem-exercens.html",
-      "descricao": "O trabalho como chave da questão social. Prioridade do trabalho sobre o capital. Dignidade do trabalhador. Justo salário. O homem como sujeito do trabalho.",
+      "descricao": "O trabalho como chave da questão social. Prioridade do trabalho sobre o capital. Dignidade do trabalhador.",
       "tema": "trabalho dignidade"
     },
     {
       "titulo": "Rerum Novarum (1891) - Leão XIII",
       "url": "https://www.vatican.va/content/leo-xiii/en/encyclicals/documents/hf_l-xiii_enc_15051891_rerum-novarum.pdf",
-      "descricao": "Marco inicial da DSI. Sobre capital e trabalho, propriedade privada com função social, justo salário, direito de associação dos trabalhadores.",
+      "descricao": "Marco inicial da DSI. Sobre capital e trabalho, propriedade privada com função social, justo salário.",
       "tema": "doutrina social"
     },
     {
       "titulo": "Centesimus Annus (1991) - João Paulo II",
       "url": "https://www.vatican.va/content/john-paul-ii/pt/encyclicals/documents/hf_jp-ii_enc_01051991_centesimus-annus.html",
-      "descricao": "100 anos da Rerum Novarum. Mercado e Estado, lucro com função social, 'lucro não é o único indicador', crítica ao capitalismo selvagem, propriedade e destino universal dos bens.",
+      "descricao": "100 anos da Rerum Novarum. 'Lucro não é o único indicador', crítica ao capitalismo selvagem, destino universal dos bens.",
       "tema": "financas etica"
     },
     {
       "titulo": "Oeconomicae et pecuniariae quaestiones (2018)",
       "url": "https://www.vatican.va/roman_curia/congregations/cfaith/documents/rc_con_cfaith_doc_20180106_oeconomicae-et-pecuniariae_po.html",
-      "descricao": "Considerações para um discernimento ético sobre o atual sistema econômico-financeiro. Documento conjunto da Congregação para a Doutrina da Fé e Dicastério para o Desenvolvimento Humano Integral.",
+      "descricao": "Considerações para um discernimento ético sobre o atual sistema econômico-financeiro.",
       "tema": "financas etica"
     },
     {
       "titulo": "Mensuram Bonam (2022)",
       "url": "https://www.pass.va/en/publications/other-publications/mensuram_bonam_eng.html",
-      "descricao": "Guia do Vaticano para investidores católicos: integrar a Doutrina Social da Igreja na gestão de ativos financeiros.",
+      "descricao": "Guia do Vaticano para investidores católicos: integrar a DSI na gestão de ativos financeiros.",
       "tema": "investimentos etica"
     },
     {
       "titulo": "Compêndio da Doutrina Social da Igreja (2004)",
       "url": "https://www.vatican.va/roman_curia/pontifical_councils/justpeace/documents/rc_pc_justpeace_doc_20060526_compendio-dott-soc_po.html",
-      "descricao": "Referência completa da DSI. Capítulo 7: Vida Econômica; seção sobre sistema financeiro internacional, trabalho, empresa, mercado.",
+      "descricao": "Capítulo 7: Vida Econômica; sistema financeiro internacional, trabalho, empresa, mercado.",
       "tema": "doutrina social"
     },
     {
       "titulo": "Caritas in veritate (2009) - Bento XVI",
       "url": "https://www.vatican.va/content/benedict-xvi/pt/encyclicals/documents/hf_ben-xvi_enc_20090629_caritas-in-veritate.html",
-      "descricao": "Encíclica sobre economia e finanças. Toda decisão econômica tem consequência moral. Economia precisa de ética centrada na pessoa. Mercado, Estado e sociedade civil.",
-      "tema": "financas etica"
-    },
-    {
-      "titulo": "Quadragesimo Anno (1931) - Pio XI",
-      "url": "https://www.vatican.va/content/pius-xi/en/encyclicals/documents/hf_p-xi_enc_19310515_quadragesimo-anno.html",
-      "descricao": "Após crise de 1929. Crítica ao despotismo econômico, concentração de poder, concorrência desenfreada. Profética sobre crises financeiras.",
+      "descricao": "Toda decisão econômica tem consequência moral. Economia precisa de ética centrada na pessoa.",
       "tema": "financas etica"
     },
     {
       "titulo": "Laudato Si' (2015) - Papa Francisco",
       "url": "https://www.vatican.va/content/francesco/pt/encyclicals/documents/papa-francesco_20150524_enciclica-laudato-si.html",
-      "descricao": "Economia e ecologia integradas. Crítica à especulação financeira e ao poder das finanças sobre a política. Cap. 3 e 5 sobre economia.",
+      "descricao": "Crítica à especulação financeira e ao poder das finanças sobre a política. Cap. 3 e 5 sobre economia.",
       "tema": "financas etica"
     },
     {
       "titulo": "Fratelli Tutti (2020) - Papa Francisco",
       "url": "https://www.vatican.va/content/francesco/pt/encyclicals/documents/papa-francesco_20201003_enciclica-fratelli-tutti.html",
-      "descricao": "Sistema financeiro global que exclui. Dinheiro deve servir, não governar. Crítica ao neoliberalismo e finanças especulativas. Cap. 5 sobre economia.",
+      "descricao": "Dinheiro deve servir, não governar. Crítica ao neoliberalismo e finanças especulativas. Cap. 5 sobre economia.",
       "tema": "financas etica"
-    },
-    {
-      "titulo": "Gaudium et spes (1965) - Vaticano II",
-      "url": "https://www.vatican.va/archive/hist_councils/ii_vatican_council/documents/vat-ii_const_19651207_gaudium-et-spes_po.html",
-      "descricao": "Nº 63-72: A vida econômico-social. 'O homem é autor, centro e fim de toda vida econômica'. Investimentos devem gerar emprego e renda para o presente e futuro.",
-      "tema": "doutrina social"
-    },
-    {
-      "titulo": "Populorum Progressio (1967) - Paulo VI",
-      "url": "https://www.vatican.va/content/paul-vi/pt/encyclicals/documents/hf_p-vi_enc_26031967_populorum.html",
-      "descricao": "Desenvolvimento integral dos povos. 'O desenvolvimento é o novo nome da paz'. Economia a serviço do homem todo e de todos os homens.",
-      "tema": "doutrina social"
     },
     {
       "titulo": "Catecismo da Igreja Católica §2401-2463",
       "url": "https://www.vatican.va/archive/ccc/index_po.htm",
-      "descricao": "Seção sobre vida econômica e social: destinação universal dos bens, propriedade privada, atividade econômica, justiça social, trabalho, salário justo.",
+      "descricao": "Seção sobre vida econômica e social: destinação universal dos bens, propriedade privada, atividade econômica, justiça social.",
       "tema": "doutrina social"
-    },
-    {
-      "titulo": "São Francisco de Assis e a Pobreza Evangélica",
-      "url": "https://ihu.unisinos.br/521402-a-pobreza-evangelica-segundo-francisco-de-assis",
-      "descricao": "A pobreza voluntária como despojamento e confiança total em Deus. A opção preferencial pelos pobres. Francisco: 'Da riqueza nascem as lutas que impedem o amor'.",
-      "tema": "doutrina social"
-    },
-    {
-      "titulo": "Economia de Francisco e Clara",
-      "url": "https://ihu.unisinos.br/categorias/598959-economia-de-francisco-e-clara-uma-introducao",
-      "descricao": "Inspirada em São Francisco e Clara de Assis. Jovens economistas repensando a economia: vida, dignidade, democracia, trabalho, meio ambiente, função social da propriedade.",
-      "tema": "economia catolico"
-    },
-    {
-      "titulo": "Vídeo do Papa - Maio 2021: Finanças Justas",
-      "url": "https://thepopevideo.org/financas-justas-inclusivas-e-sustentaveis-o-video-do-papa-de-maio-pede-um-mundo-financeiro-que-cuide-das-pessoas/?lang=pt-br",
-      "descricao": "Intenção de oração do Papa Francisco: 'rezar para que os responsáveis pelo mundo financeiro colaborem com os governos para regulamentar os mercados financeiros'.",
-      "tema": "financas etica"
-    },
-    {
-      "titulo": "Atividade financeira na DSI - Curso completo",
-      "url": "https://catholicsocialthought.org.uk/course_unit/a-atividade-financeira-na-doutrina-social-da-igreja/?lang=pt-pt",
-      "descricao": "Curso completo em português sobre finanças à luz da DSI: usura medieval, banco, sistema financeiro moderno, Oeconomicae et pecuniariae quaestiones.",
-      "tema": "financas etica"
-    },
-    {
-      "titulo": "USCCB Socially Responsible Investment Guidelines",
-      "url": "https://www.usccb.org/resources/Socially%20Responsible%20Investment%20Guidelines%202021%20(003).pdf",
-      "descricao": "Diretrizes práticas dos bispos dos EUA para investimento ético católico: pró-vida, dignidade humana, justiça econômica, meio ambiente.",
-      "tema": "investimentos etica"
     },
     {
       "titulo": "O Segredo da Divina Providência",
       "url": "https://comshalom.org/se-vivessemos-a-economia-do-reino-nao-haveria-necessitados-entre-nos/",
-      "descricao": "Emmir Nogueira (Comunidade Shalom): 'A Economia do Reino é a forma que o Pai do Céu rege a sua família'. Confiança em Deus, partilha dos bens, Atos 2 e 4.",
+      "descricao": "Emmir Nogueira (Shalom): 'A Economia do Reino é a forma que o Pai do Céu rege a sua família'. Confiança em Deus, partilha dos bens.",
       "tema": "economia do reino"
     },
     {
-      "titulo": "Catecismo da Igreja Católica §302-307 (Divina Providência)",
+      "titulo": "Morningstar IOR Catholic Principles (fev/2026)",
+      "url": "https://www.morningstar.com",
+      "descricao": "Índices de ações católicos (EUA e Europa) lançados pelo Banco do Vaticano + Morningstar. Inclui Meta, Amazon, Nvidia.",
+      "tema": "investimentos etica"
+    },
+    {
+      "titulo": "Catecismo §302-307 (Divina Providência)",
       "url": "https://www.vatican.va/archive/ccc/index_po.htm",
-      "descricao": "Deus conduz a criação à perfeição através da Divina Providência. O ser humano é chamado a cooperar livremente, como 'causa inteligente e livre', completando a obra da criação e aperfeiçoando sua harmonia (Mt 6:31-33, 1Cor 3:9).",
+      "descricao": "Deus conduz a criação através da Divina Providência. O ser humano coopera livremente, completando a obra da criação.",
       "tema": "doutrina social"
     }
   ]

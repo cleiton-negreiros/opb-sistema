@@ -121,7 +121,8 @@ async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "• /ideias — Ver ideias\n"
         "• Envie texto direto → salva como ideia\n\n"
         "🎤 *ÁUDIO:*\n"
-        "• Envie áudio de voz → transcreve automaticamente!\n\n"
+        "• Envie áudio de voz → transcreve automaticamente!\n"
+        "• /audio — Transcrição de áudio (comando explícito)\n\n"
         "🎬 *VÍDEO:*\n"
         "• /cortarsilencio [video] — Corta silêncios do vídeo\n"
         "• /reels [tema] — Gera roteiro para Reels/Shorts\n\n"
@@ -175,7 +176,10 @@ async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "• /transcrever — Transcrição YouTube\n"
         "• /hub — Hub produtividade\n"
         "• /obsidian — Obsidian\n"
-        "• /executar [cmd] — Executa comando no PC",
+        "• /executar [cmd] — Executa comando no PC\n"
+        "🎤 *ÁUDIO*\n"
+        "• /audio [caminho] — Transcreve audio e salva como ideia\n"
+        "• Envie audio/voz direto → transcreve automaticamente",
         parse_mode="Markdown"
     )
 
@@ -369,77 +373,109 @@ async def ideias_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     
     await update.message.reply_text(msg, parse_mode="Markdown")
 
-async def voice_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    """Recebe mensagem de voz e transcreve automaticamente"""
-    await update.message.reply_text("🎤 *Processando áudio...*", parse_mode="Markdown")
-    
+async def _process_audio_file(update: Update, file_path, usuario):
+    """Processa arquivo de audio: transcreve com Audio Transcriber Agent e salva."""
     try:
-        # Baixar o arquivo de voz
+        # Tenta o novo agente audio_transcriber (com --json para resposta estruturada)
+        r = subprocess.run(
+            [sys.executable, str(PROJECT_PATH / "agents" / "audio_transcriber" / "main.py"),
+             str(file_path), "--usuario", usuario, "--json"],
+            capture_output=True, text=True, timeout=180,
+            cwd=str(PROJECT_PATH)
+        )
+
+        if r.returncode == 0 and r.stdout.strip():
+            try:
+                resultado = json.loads(r.stdout)
+                if resultado.get("sucesso"):
+                    texto = resultado["texto"]
+                    if len(texto) > 4000:
+                        texto = texto[:4000] + "\n\n... (truncado)"
+                    await update.message.reply_text(
+                        f"📝 *Transcricao concluida!*\n\n```\n{texto}\n```\n\n"
+                        f"✅ Ideia salva em `acervo/ideias/`\n"
+                        f"📄 Transcricao em `acervo/transcricoes/`",
+                        parse_mode="Markdown"
+                    )
+                    return True
+            except json.JSONDecodeError:
+                pass
+
+        # Fallback: tenta o agente antigo
+        out = run_agent("agents/transcrever-audio/main.py", [str(file_path)], timeout=120)
+        if out and "❌" not in out:
+            if len(out) > 4000:
+                out = out[:4000] + "\n\n... (truncado)"
+            await update.message.reply_text(
+                f"📝 *Transcricao:*\n\n```\n{out}\n```",
+                parse_mode="Markdown"
+            )
+            save_ideia(out[:200], usuario)
+            return True
+
+        await update.message.reply_text(
+            f"⚠️ *Nao foi possivel transcrever.*\n\n"
+            f"💡 *Dica:* Envie a ideia em texto com /ideia [texto]",
+            parse_mode="Markdown"
+        )
+        return False
+
+    except subprocess.TimeoutExpired:
+        await update.message.reply_text(
+            "⏱️ *Tempo excedido.* Envie a ideia em texto:\n`/ideia [sua ideia]`",
+            parse_mode="Markdown"
+        )
+        return False
+    except Exception as e:
+        await update.message.reply_text(
+            f"❌ *Erro ao processar audio:*\n\n`{str(e)[:200]}`",
+            parse_mode="Markdown"
+        )
+        return False
+
+
+async def audio_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """/audio [caminho] — Transcreve um arquivo de audio manualmente."""
+    if not context.args:
+        await update.message.reply_text(
+            "🎤 *Audio Transcriber*\n\n"
+            "Uso:\n`/audio caminho/do/arquivo.ogg`\n\n"
+            "Ou envie um audio de voz direto que transcrevo automaticamente!",
+            parse_mode="Markdown"
+        )
+        return
+
+    audio_path = " ".join(context.args)
+    file_path = Path(audio_path)
+    if not file_path.is_absolute():
+        file_path = PROJECT_PATH / audio_path
+
+    if not file_path.exists():
+        await update.message.reply_text(f"❌ Arquivo nao encontrado:\n`{file_path}`", parse_mode="Markdown")
+        return
+
+    await update.message.reply_text(f"🎤 *Processando audio...*", parse_mode="Markdown")
+    await _process_audio_file(update, file_path, update.effective_user.name)
+
+
+async def voice_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Recebe mensagem de voz e transcreve automaticamente via Audio Transcriber Agent."""
+    await update.message.reply_text("🎤 *Processando audio...*", parse_mode="Markdown")
+
+    try:
         file = await context.bot.get_file(update.message.voice.file_id)
         file_path = PROJECT_PATH / "acervo" / "temp" / f"voice_{update.message.message_id}.ogg"
         file_path.parent.mkdir(parents=True, exist_ok=True)
         await file.download_to_drive(str(file_path))
-        
-        await update.message.reply_text("🎤 *Transcrevendo áudio...*", parse_mode="Markdown")
-        
-        # Transcrever usando o agente
-        out = run_agent("agents/transcrever-audio/main.py", [str(file_path)], timeout=120)
-        
-        if out and "❌" not in out:
-            # Salvar transcrição
-            timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-            trans_path = ACERVO_PATH.parent / "transcricoes" / f"voz_{timestamp}.md"
-            trans_path.parent.mkdir(parents=True, exist_ok=True)
-            
-            content = f"""---
-name: "Transcrição {timestamp}"
-tipo: transcricao_voz
-autor: {update.effective_user.name}
-data: {datetime.now().strftime("%Y-%m-%d")}
----
 
-# 🎤 Transcrição de Voz
+        await _process_audio_file(update, file_path, update.effective_user.name)
 
-**Autor:** {update.effective_user.name}
-**Data:** {datetime.now().strftime("%Y-%m-%d %H:%M")}
-**Status:** ✅ Transcrito
-
----
-
-{out}
-
----
-
-*Transcrito via NegreirosBot*"""
-            
-            trans_path.write_text(content, encoding='utf-8')
-            
-            # Enviar transcrição
-            if len(out) > 4000:
-                out = out[:4000] + "\n\n... (truncado)"
-            
-            await update.message.reply_text(
-                f"📝 *Transcrição:*\n\n```\n{out}\n```",
-                parse_mode="Markdown"
-            )
-            
-            # Salvar como ideia também
-            save_ideia(out[:200], update.effective_user.name)
-        else:
-            await update.message.reply_text(
-                f"⚠️ *Não foi possível transcrever.*\n\n"
-                f"Erro: {out[:200]}\n\n"
-                f"💡 *Dica:* Envie a ideia em texto!",
-                parse_mode="Markdown"
-            )
-        
-        # Limpar arquivo temporário
         if file_path.exists():
             file_path.unlink()
-            
+
     except Exception as e:
         await update.message.reply_text(
-            f"❌ *Erro ao processar áudio:*\n\n`{str(e)[:200]}`",
+            f"❌ *Erro ao baixar audio:*\n\n`{str(e)[:200]}`",
             parse_mode="Markdown"
         )
 
@@ -847,7 +883,9 @@ def main():
     app.add_handler(CommandHandler("reels", reels_command))
     app.add_handler(CommandHandler("hashtags", hashtags_command))
     app.add_handler(CommandHandler("liturgico", liturgico_command))
+    app.add_handler(CommandHandler("audio", audio_command))
     app.add_handler(MessageHandler(filters.VOICE | filters.AUDIO, voice_command))
+    app.add_handler(CommandHandler("transcreveraudio", transcrever_help_command))
     app.add_handler(CommandHandler("transcreveraudio", transcrever_help_command))
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
     

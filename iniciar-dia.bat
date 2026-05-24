@@ -37,7 +37,7 @@ goto iniciar
 :iniciar
 echo.
 
-echo [1/7] Carregando contexto do cerebro...
+echo [1/7] Auditoria de codigo + Contexto do cerebro...
 python morning_routine.py
 
 echo.

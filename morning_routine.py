@@ -162,6 +162,21 @@ def show_commands():
    /agents       → Ver agentes
 """)
 
+def run_coordinator_cycle():
+    """Executa o ciclo do coordenador (consulta ao consultor + sugestao de acao)."""
+    print_section("🤖 COORDENADOR - Ciclo de Orquestracao")
+    coord_script = PROJECT_PATH / "agents" / "coordinator" / "main.py"
+    if coord_script.exists():
+        result = subprocess.run(
+            [sys.executable, str(coord_script), "morning"],
+            capture_output=True, text=True, timeout=180
+        )
+        print(result.stdout[-2000:] if result.stdout else "")
+        if result.stderr:
+            print(f"  [coordinator stderr]: {result.stderr[:300]}")
+    else:
+        print("  ⚠️  Coordenador nao encontrado")
+
 def run_full_routine():
     """Executa a rotina completa"""
     print_header()
@@ -170,6 +185,8 @@ def run_full_routine():
     get_git_status()
     list_agents()
     list_acervo_stats()
+    run_audit()
+    run_coordinator_cycle()
     show_commands()
     
     print(f"\n{'='*60}")
@@ -211,12 +228,31 @@ def quick_status():
 /iniciar - Rotina matinal
 """
 
+def run_audit():
+    print_section("🔍 AUDITORIA DE CÓDIGO")
+    audit_script = PROJECT_PATH / "audit" / "auditoria_diaria.py"
+    if audit_script.exists():
+        result = subprocess.run(
+            [sys.executable, str(audit_script), "--quick"],
+            capture_output=True, text=True
+        )
+        print(result.stdout)
+        if result.returncode != 0:
+            print("  ⚠️  Auditoria encontrou problemas críticos")
+    else:
+        print("  ⚠️  Script de auditoria não encontrado")
+
 def main():
     if len(sys.argv) > 1:
         arg = sys.argv[1]
         
         if arg == "--status" or arg == "--quick":
             print(quick_status())
+            return
+        
+        if arg == "--audit":
+            run_audit()
+            run_coordinator_cycle()
             return
         
         if arg == "--help":
@@ -227,12 +263,14 @@ USO:
    python morning_routine.py
    python morning_routine.py --status
    python morning_routine.py --quick
+   python morning_routine.py --audit
    python morning_routine.py --help
 
 OPCOES:
    (vazio)    → Rotina completa com contexto
    --status   → Status resumido
    --quick    → Status rapido (para Telegram)
+   --audit    → + Auditoria de código completa
    --help     → Esta ajuda
 """)
             return

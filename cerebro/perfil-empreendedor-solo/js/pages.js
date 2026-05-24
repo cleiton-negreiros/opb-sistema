@@ -510,8 +510,10 @@ async function savePerfilModulo(modulo) {
     }
 }
 
+let pR1 = false, pI1 = null, pS1 = 25 * 60;
+
 function togglePomodoro() {
-    pR1=!pR1;
+    pR1 = !pR1;
     const b=document.getElementById('pomodoro-btn');
     if(pR1){b.innerHTML='<i class="fas fa-pause"></i> Pausar';b.className='btn btn-warning btn-lg';pI1=setInterval(()=>{pS1--;updateTimer('pomodoro-timer',pS1);if(pS1<=0){clearInterval(pI1);pS1=25*60;pR1=false;b.innerHTML='<i class="fas fa-play"></i> Iniciar';b.className='btn btn-success btn-lg';showToast('✅ Ciclo completo!','success')}},1000)}
     else{clearInterval(pI1);b.innerHTML='<i class="fas fa-play"></i> Iniciar';b.className='btn btn-success btn-lg'}
@@ -1042,12 +1044,12 @@ Comente "EU VOU" ou compartilhe com quem precisa ler isso.
     const editor = document.getElementById('shareEditor');
     editor.value = texts[platform] || '';
     updateCharCount();
-    document.getElementById('shareModal').style.display = 'flex';
+    document.getElementById('shareModal').classList.add('active');
 }
 
 function closeShareModal(e) {
     if (e && e.target !== e.currentTarget) return;
-    document.getElementById('shareModal').style.display = 'none';
+    document.getElementById('shareModal').classList.remove('active');
 }
 
 function copyShareText() {
@@ -1341,7 +1343,24 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // ============================================
-// TEXT GENERATOR — atualizado
+// APRENDIZADOS VIBE CODING
+// ============================================
+async function loadAprendizadosDoc() {
+    const out = document.getElementById('aprendizados-doc');
+    if (!out) return;
+    out.style.display = 'block';
+    out.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Carregando documento...';
+    const r = await apiCall('/api/arquivo/ler', 'POST', { caminho: 'acervo/conhecimento/aprendizados-vibe-coding.md' });
+    if (r && r.sucesso) {
+        out.innerHTML = '<pre style="white-space:pre-wrap;font-size:0.82rem;line-height:1.6;margin:0">' + escapeHtml(r.conteudo) + '</pre>';
+        showToast('Documento carregado!', 'success');
+    } else {
+        out.innerHTML = '<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><h3>Arquivo nao encontrado</h3><p>Execute a geracao do documento primeiro ou acesse pelo navegador de arquivos.</p></div>';
+    }
+}
+
+// ============================================
+// TEXT GENERATOR
 // ============================================
 async function runTextGenerator() {
     const obj = document.getElementById('text-gen-objetivo').value;
@@ -1365,4 +1384,168 @@ async function runTextGenerator() {
         out.innerHTML = `<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><h3>Erro</h3><p>${escapeHtml(r.erro||r.mensagem||'Tente novamente')}</p></div>`;
     }
     showToast(r.sucesso ? 'Post gerado!' : 'Erro', r.sucesso ? 'success' : 'error');
+}
+
+// ============================================
+// POST TEMPLATES para compartilhar
+// ============================================
+const POST_TEMPLATES = {
+    linkedin: `Construi 20+ agentes de IA do zero em 10 dias.
+
+Sozinho.
+Num notebook de 2012 com 8GB de RAM.
+Gastando R$ 0 em assinaturas.
+
+Nao, isso nao e curso. E o que o "vibe coding" torna possivel.
+
+O que eu construi:
+- Um sistema que transcreve videos automaticamente
+- Agentes que geram posts, carrosseis, roteiros
+- Curadoria diaria de conteudo (sem APIs pagas)
+- Consultoria estrategica com IA
+- Tudo controlavel pelo Telegram no celular
+- Tudo rodando local, sem enviar dados pra ninguem
+
+A stack: Python + Ollama (tinyllama) + Flask + PWA + GitHub
+O hardware: Notebook Acer 2012, 8GB RAM, sem placa de video
+O custo: R$ 0 de assinatura mensal
+
+Vivemos a era do "empreendedor solo aumentado". Pela primeira vez na historia, uma pessoa so pode ter uma equipe de especialistas trabalhando 24h por centavos de energia eletrica.
+
+O hardware que voce tem e suficiente. O conhecimento se constroi no caminho.
+
+Se eu consegui com um PC de 2012, voce consegue tambem.
+
+#VibeCoding #IA #EmpreendedorismoSolo #Inovacao #IALocal #Solopreneur`,
+
+    instagram: `🚀 10 DIAS. 1 PESSOA. 20+ AGENTES DE IA.
+
+Construi um SISTEMA OPERACIONAL DE NEGOCIOS inteiro movido a inteligencia artificial.
+
+Sozinho.
+Num notebook de 2012.
+Gastando R$ 0 em assinaturas.
+
+O que esse sistema faz:
+- Transcreve videos
+- Gera carrosseis para Instagram
+- Cria roteiros para Reels
+- Curadoria diaria de conteudo
+- Consultoria estrategica
+- Analise de concorrencia
+- Tudo pelo Telegram no celular
+
+Tudo roda LOCALMENTE sem enviar seus dados.
+Tudo de GRACA sem assinatura mensal.
+Tudo num PC VELHO 8GB de RAM bastam.
+
+O hardware que voce tem e SUFICIENTE.
+O conhecimento se constroi no caminho.
+
+Comenta "EU VOU" se voce quer entender como.
+
+#IA #EmpreendedorismoSolo #VibeCoding #Inovacao #Tecnologia`,
+
+    twitter: `Construi 20+ agentes de IA num PC de 2012 com 8GB RAM gastando R$ 0.
+
+Nao precisa de GPU. Ollama + tinyllama (637MB) rodam em CPU.
+
+Stack: Python + Flask + Ollama + HTML/CSS/JS puro. Zero assinaturas.
+
+20+ agentes: transcricao, carrossel, posts, curadoria, consultoria, video, audio.
+
+PWA instalavel no celular. Telegram Bot como controle.
+
+O "vibe coding" e a maior superpotencia do empreendedor solo hoje.
+
+PC fraco e suficiente. O conhecimento se constroi no caminho.
+
+Se eu consegui com um notebook de 2012, voce consegue tambem.
+
+#VibeCoding #IA #Solopreneur #Python #LLM`,
+
+    substack: `# Como construi 20+ agentes de IA do zero em 10 dias (sozinho, num PC de 2012, gastando R$ 0)
+
+## A historia de como o "vibe coding" transformou um notebook velho num sistema operacional de negocios movido a IA.
+
+Faz dez dias, eu tinha uma duvida: "Sera que eu consigo fazer um robo que me ajuda a criar conteudo?"
+
+Hoje, eu tenho 20+ agentes de IA trabalhando 24h por dia.
+
+Tudo rodando num notebook Acer de 2012 com 8GB de RAM.
+Tudo de graca, sem assinatura mensal.
+Tudo controlavel pelo Telegram no celular.
+
+## A stack (tudo gratuito)
+- IA Local: Ollama + Tinyllama (637MB, roda em CPU)
+- Backend: Python + Flask (20+ endpoints)
+- Frontend: HTML/CSS/JS puro + PWA
+- Interface movel: Telegram Bot
+- Infra: PC local + GitHub + Vercel (gratis)
+
+## O hardware
+Notebook Acer Aspire E1-571 (2012): Intel Core i5, 8GB RAM, sem placa de video, SSD 240GB.
+
+## Quanto custa
+R$ 0 de assinatura mensal.
+
+Economia total vs ferramentas pagas: ~R$ 4.000/mes.
+
+## 10 licoes
+1. IA local funciona — 8GB RAM + modelo 637MB dao conta
+2. Agentes sao como funcionarios — cada um com sua especialidade
+3. Mobile-first nao e opcional — 70% usam so celular
+4. Documente tudo — cada erro vira regra
+5. Nicho e tudo — IA sem nicho e brinquedo
+6. Comece pelo problema — tecnologia e meio
+7. Vibe coding e superpotencia — 3 meses viram 3 dias
+8. PC fraco e suficiente — hardware nunca foi desculpa
+9. Contexto e rei — mais dados = melhores respostas
+10. Gratuito e viavel — voce nao precisa de dinheiro, precisa de foco
+
+O melhor momento para comecar foi ontem. O segundo melhor e AGORA.`,
+
+    carrossel: `Slide 1 - CAPA
+10 DIAS. 1 PESSOA. 20+ AGENTES DE IA.
+Construi um sistema operacional de negocios movido a IA - do zero, num PC de 2012, gastando R$ 0.
+
+Slide 2 - O PROBLEMA
+Ser empreendedor solo e fazer tudo sozinho: conteudo, roteiros, estrategia, curadoria, analises, gestao.
+E se voce pudesse ter uma equipe de especialistas trabalhando 24h por dia?
+
+Slide 3 - A SOLUCAO (STACK)
+A stack que roda tudo:
+- Ollama + Tinyllama (IA local, 637MB, CPU)
+- Python + Flask (20+ endpoints API)
+- HTML/CSS/JS puro + PWA (instalavel no celular)
+- Telegram Bot (controle pelo celular)
+Tudo rodando localmente, sem internet, sem assinatura.
+
+Slide 4 - O DIFERENCIAL
+Tudo isso num NOTEBOOK ACER 2012:
+- Intel Core i5, 8GB RAM, sem placa de video
+- R$ 0 em assinaturas de SaaS
+- 20+ agentes trabalhando 24h
+- 3 negocios na mesma plataforma
+Hardware nao e desculpa. Conhecimento se constroi no caminho.
+
+Slide 5 - CTA
+Pronto para comecar sua jornada?
+O melhor momento foi ontem. O segundo melhor e AGORA.
+Comente "VIBE" ou compartilhe com quem precisa ler isso.`
+};
+
+function loadPostTemplate(platform) {
+    const text = POST_TEMPLATES[platform];
+    if (!text) { showToast('Template nao encontrado', 'error'); return; }
+    const editor = document.getElementById('shareEditor');
+    if (editor) {
+        editor.value = text;
+        updateCharCount();
+        document.getElementById('shareModal').classList.add('active');
+        document.getElementById('shareModalTitle').innerHTML = '<i class="fas fa-pen" style="color:var(--primary);margin-right:8px"></i> Editar - ' + platform.charAt(0).toUpperCase() + platform.slice(1);
+    } else {
+        navigator.clipboard.writeText(text);
+        showToast('Texto copiado!', 'success');
+    }
 }
