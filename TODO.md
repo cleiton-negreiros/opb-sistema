@@ -62,9 +62,10 @@
 
 - [ ] Preencher perfil do empreendedor com conteúdo real (parcial: dados básicos + posicionamento ok)
 - [ ] Pesquisar solução para acessar iniciar-dia.bat remotamente (SSH ou /api/start no Termux)
-- [ ] Testar Radagast salvando ideias em disco
+- [x] Testar Radagast salvando ideias em disco ✅
 - [ ] Configurar Notion token para sincronia automática
-- [ ] Adicionar `showResult()` nos demais agentes (Consumo, Narvi, Radagast)
+- [x] Adicionar `showResult()` nos demais agentes (Consumo ✅, Narvi ✅, Radagast ✅)
+- [ ] Verificar deploy da snapshot
 
 ## 🔧 Notas Técnicas
 - Modelo padrão: **tinyllama** (~637MB, funciona com ~3.4GB RAM)

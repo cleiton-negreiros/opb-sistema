@@ -358,36 +358,26 @@ def run_curadoria(profiles: list[dict], search_terms: list[str],
     except Exception as e:
         logger.warning(f"Nao foi possivel carregar perfil: {e}")
 
+    # --- GERAÇÃO DE IDEIAS ---
     logger.info("--- GERANDO IDEIAS (via Ollama) ---")
+    ideas = []
+    llm_ok = False
     try:
         ideas = generate_reel_ideas(all_contents, profile_context)
-        logger.info(f"Geradas {len(ideas)} ideias a partir dos {len(all_contents)} itens coletados")
+        if ideas:
+            llm_ok = True
+            logger.info(f"Geradas {len(ideas)} ideias via Ollama")
+        else:
+            logger.warning("Ollama retornou 0 ideias")
     except Exception as e:
-        send_telegram_messages([f"<b>Radagast</b>\nFalha ao gerar ideias: {e}"])
-        return
+        logger.warning(f"Ollama falhou: {e}")
 
+    # Fallback: gera ideias template a partir dos títulos coletados
     if not ideas:
-        send_telegram_messages([
-            "<b>Radagast</b>\nNenhuma ideia gerada. O Claude retornou resposta vazia ou houve erro de parse."
-        ])
-        return
+        logger.info("Gerando ideias de fallback (template) a partir dos itens coletados...")
+        ideas = _fallback_ideas(all_contents)
 
-    stats = {"total_items": len(all_contents), "platforms": platforms_ok}
-    messages = format_telegram_message(ideas, stats)
-    send_telegram_messages(messages)
-
-    state["last_run"] = datetime.now().isoformat()
-    state.setdefault("stats", {})
-    state["stats"]["last_ideas"] = len(ideas)
-    state["stats"]["last_items"] = len(all_contents)
-    state["stats"]["last_platforms"] = platforms_ok
-
-    processed = state.get("processed_urls", [])
-    new_urls = [c["url"] for c in all_contents if c.get("url")]
-    processed = list(set(processed + new_urls))[-500:]
-    state["processed_urls"] = processed
-
-    # Salva ideias em disco
+    # --- SALVA EM DISCO (sempre) ---
     ideas_dir = PROJECT_DIR / "acervo" / "ideias"
     ideas_dir.mkdir(parents=True, exist_ok=True)
     timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
@@ -397,12 +387,14 @@ perfil: Paz na Conta
 data: {datetime.now().strftime('%Y-%m-%d %H:%M')}
 itens_coletados: {len(all_contents)}
 plataformas: {platforms_ok}
+llm_ok: {str(llm_ok).lower()}
 tags: [curadoria, paz-na-conta, financas-catolicas]
 ---
 
 # Ideias Radagast — @paznaconta
 
 > {len(ideas)} ideias geradas a partir de {len(all_contents)} itens de {platforms_ok} plataformas.
+> LLM: {'sim' if llm_ok else 'fallback (template)'}
 
 """
     for i, idea in enumerate(ideas, 1):
@@ -424,8 +416,67 @@ tags: [curadoria, paz-na-conta, financas-catolicas]
     idea_file.write_text(ideas_content.strip(), encoding='utf-8')
     logger.info(f"Ideias salvas em: {idea_file}")
 
+    # --- TELEGRAM (se houver ideias) ---
+    if ideas:
+        stats = {"total_items": len(all_contents), "platforms": platforms_ok}
+        messages = format_telegram_message(ideas, stats)
+        send_telegram_messages(messages)
+        logger.info(f"Enviadas {len(ideas)} ideias via Telegram")
+    else:
+        send_telegram_messages([
+            "<b>Radagast</b>\nNenhuma ideia gerada hoje (nem fallback). Conteúdo bruto salvo em disco."
+        ])
+
+    # --- STATE ---
+    state["last_run"] = datetime.now().isoformat()
+    state.setdefault("stats", {})
+    state["stats"]["last_ideas"] = len(ideas)
+    state["stats"]["last_items"] = len(all_contents)
+    state["stats"]["last_platforms"] = platforms_ok
+    state["stats"]["llm_ok"] = llm_ok
+
+    processed = state.get("processed_urls", [])
+    new_urls = [c["url"] for c in all_contents if c.get("url")]
+    processed = list(set(processed + new_urls))[-500:]
+    state["processed_urls"] = processed
     save_state(state)
-    logger.info(f"Sucesso: {len(ideas)} ideias geradas para @paznaconta e enviadas no Telegram.")
+    logger.info(f"Sucesso: {len(ideas)} ideias geradas para @paznaconta ({'LLM' if llm_ok else 'fallback'}).")
+
+
+def _fallback_ideas(contents: list[dict], max_ideas: int = 5) -> list[dict]:
+    """Gera ideias template a partir dos itens coletados (fallback sem LLM)."""
+    import random
+    hooks = [
+        "Você sabia disso?",
+        "Isso muda tudo!",
+        "O que a Igreja diz sobre isso?",
+        "Pare e reflita:",
+        "Você já pensou nisso?",
+    ]
+    pilares = ["dica-pratica", "fe-nas-financas", "casal-pac", "contraste", "viral"]
+    formatos = ["carrossel", "post", "reel", "story"]
+
+    ideas = []
+    seen_titles = set()
+    for c in contents:
+        if len(ideas) >= max_ideas:
+            break
+        title = (c.get("title") or "")[:80]
+        if not title or title in seen_titles:
+            continue
+        seen_titles.add(title)
+        text = (c.get("text") or "")[:200]
+        ideas.append({
+            "titulo": f"Baseado em: {title}",
+            "hook": random.choice(hooks),
+            "pontos": [text[:100]] if text else ["Tema relevante para finanças católicas"],
+            "fonte_url": c.get("url", ""),
+            "fonte_autor": c.get("author", "desconhecido"),
+            "pilar": random.choice(pilares),
+            "formato": random.choice(formatos),
+            "angulo_catolico": "Aplicação da Doutrina Social da Igreja ao tema",
+        })
+    return ideas
 
 
 def main():

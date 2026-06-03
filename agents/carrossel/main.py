@@ -5,6 +5,7 @@ Transforma texto em estrutura de carrossel para Instagram
 """
 
 import os
+import re
 import sys
 from datetime import datetime
 from pathlib import Path
@@ -264,28 +265,41 @@ def salvar_carrossel(tema: str, slides: list) -> str:
     ensure_output()
 
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    tema_seguro = tema.replace(' ', '-').lower()[:30]
+    import re
+    tema_seguro = re.sub(r'[^\w\s-]', '', tema).strip().replace(' ', '-').lower()[:30]
+    if not tema_seguro:
+        tema_seguro = "carrossel"
     filename = f"{tema_seguro}_{timestamp}.md"
     filepath = OUTPUT_PATH / filename
 
     conteudo = formatar_carrossel(slides, tema)
-    filepath.write_text(conteudo, encoding='utf-8')
+    try:
+        filepath.write_text(conteudo, encoding='utf-8')
+    except PermissionError:
+        fallback_dir = Path.home() / ".opb" / "acervo" / "carrossel"
+        fallback_dir.mkdir(parents=True, exist_ok=True)
+        filepath = fallback_dir / filename
+        filepath.write_text(conteudo, encoding='utf-8')
+        OUTPUT_PATH = fallback_dir
 
-    # Atualizar index
-    index_path = OUTPUT_PATH / "index.md"
-    existing = index_path.read_text(encoding='utf-8')
-    novo_entry = f"- [{tema}](carrossel/{filename})\n"
-    if "## Índice" not in existing:
-        existing = existing.replace(
-            "_Last updated:_",
-            f"## Índice\n\n{novo_entry}\n_Last updated:_"
-        )
-    else:
-        existing = existing.replace(
-            "## Índice\n\n",
-            f"## Índice\n\n{novo_entry}"
-        )
-    index_path.write_text(existing, encoding='utf-8')
+    try:
+        save_dir = filepath.parent
+        index_path = save_dir / "index.md"
+        existing = index_path.read_text(encoding='utf-8')
+        novo_entry = f"- [{tema}](carrossel/{filename})\n"
+        if "## Índice" not in existing:
+            existing = existing.replace(
+                "_Last updated:_",
+                f"## Índice\n\n{novo_entry}\n_Last updated:_"
+            )
+        else:
+            existing = existing.replace(
+                "## Índice\n\n",
+                f"## Índice\n\n{novo_entry}"
+            )
+        index_path.write_text(existing, encoding='utf-8')
+    except (PermissionError, FileNotFoundError):
+        pass
 
     return filename
 

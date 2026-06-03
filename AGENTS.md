@@ -236,31 +236,29 @@ Ou executar:
 
 ---
 
-## 🗓️ Progresso — 23/05/2026 (Sábado)
+## 🗓️ Progresso — 03/06/2026 (Quarta)
 
 ### Feito hoje
-- **Pesquisa concorrentes finanças católicas**: websearch profundo (4 buscas), mapeou 15 concorrentes cristãos + 10 seculares + Vaticano
-- **Novos concorrentes descobertos**: Cristão Rico (574K YouTube), FinancasCore (app cristão), Enriclass (plataforma), Matheus Machado (católico FGV/Oxford), Diego Nascimento (300K, 29M views), Frei Rogério, Jaque Chaves, Vida Financeira Cristã
-- **Dado de mercado**: FInfluence 10 — 904 finfluencers no Brasil, audiência de 310.7M (+300% desde 2020)
-- **Novidade Vaticano**: Morningstar IOR Catholic Principles (índices de ações católicos, fev/2026) — Banco do Vaticano + Morningstar
-- **Arquivos atualizados**:
-  - `negocio/governanca/quem-sou.md` — add seções: Plataformas/Apps Cristãos, Contexto de Mercado, Vaticano Finanças expandido
-  - `cerebro/perfil-empreendedor-solo/POSICIONAMENTO.md` — +5 concorrentes na tabela
-  - `cerebro/PROMPT.md` — add referências dos novos concorrentes + Docs Vaticano + palavras-chave
-  - `acervo/pesquisas/concorrentes_financas_catolicas_2026-05.md` — pesquisa completa salva
-- **Startup automático**: `iniciar-startup.bat` (não-interativo) + `setup-startup.bat` (registra no Agendador de Tarefas)
-- **Pesquisa gurus/influencers fé+finanças**: mapeou 27 gurus (12 cristãos BR, 5 católicos BR, 3 seculares BR, 5 internacionais católicos, 5 padres influencers)
-- **Novos descobertos**: WalletWin/EUA (podcast 8 anos), Daniel Catone/Arimathea ($4.5B), Catholic Planners Network, Charles Wicz (4x #1 ANBIMA), Alcir Guimarães (pastor+empresário), Cristão Rico (574K), Carlos Chiquim, Dedé Melo, Nicson Vangel, William Ribeiro (1M+)
-- **Arquivos atualizados**:
-  - `acervo/pesquisas/gurus_influencers_financas_fe_2026-05.md` — pesquisa completa com 27 gurus, lições, tabelas
-  - `negocio/governanca/quem-sou.md` — +Linha Editorial (5 teses, 5 pilares, 5 conteúdos anzol, rota de evolução), +referências internacionais
-- **Linha Editorial criada**: 5 teses do Paz na Conta + 5 pilares editoriais + tom refinado + conteúdos anzol + rota de evolução
+- **showResult() no Radagast**: Adicionado output formatado com botões copiar/compartilhar/salvar na UI do Radagast (`plataforma.html` + `pages.js`)
+- **Radagast otimizado**:
+  - Google News RSS: locale alterado de `en-US` para `pt-BR` — agora retorna resultados em português (96 itens vs 0 antes)
+  - YouTube channels: fallback por nome quando channel_id falha (William Ribeiro, Economy of Francesco)
+  - Sistema de fallback de ideias (template) quando Ollama está lento — gera 5 ideias a partir dos títulos coletados
+  - Salvamento em disco agora é **obrigatório** (sempre salva, mesmo sem Ollama)
+  - Timeout do Ollama aumentado para 600s (mas tinyllama é lento demais para CPU-only)
+- **Radagast salvando em disco**: `acervo/ideias/radagast_*.md` — testado e funcionando (187 itens coletados, 5 ideias salvas)
+- **Arquivos alterados**:
+  - `agents/radagast/analyzer.py` — max_items=3, timeout=600
+  - `agents/radagast/radagast.py` — `_fallback_ideas()`, save sempre, refatorado
+  - `agents/radagast/scrapers.py` — Google News locale BR, fallback channel por nome
+  - `cerebro/perfil-empreendedor-solo/plataforma.html` — output + copy btn Radagast
+  - `cerebro/perfil-empreendedor-solo/js/pages.js` — `runRadagast()` com `showResult()`
 
-### Pendente
-- [ ] Verificar deploy da snapshot
-- [ ] Aplicar `showResult()` nos demais agentes
+### Pendente anterior (atualizado)
+- [x] Aplicar `showResult()` nos demais agentes ✅
+- [x] Testar Radagast salvando ideias em disco ✅
 - [ ] Configurar token Notion para integração
-- [x] Configurar startup automático (rodar `setup-startup.bat` como Admin)
+- [ ] Verificar deploy da snapshot
 - [ ] Card Jornada IA de hoje
 
 ---

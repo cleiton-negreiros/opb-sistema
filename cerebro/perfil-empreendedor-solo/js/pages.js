@@ -375,11 +375,14 @@ async function runRadagast() {
     out.innerHTML = `<div style="padding:20px;text-align:center"><i class="fas fa-spinner fa-spin" style="font-size:2rem;color:var(--warning)"></i><p style="margin-top:10px">Executando curadoria...</p></div>`;
     const r = await apiCall('/api/radagast','POST',{days_back:1});
     if (r && r.sucesso) {
-        out.innerHTML = `<div style="padding:20px;background:var(--bg-input);border-radius:8px"><strong>${escapeHtml(r.mensagem||'Radagast')}</strong><p style="color:var(--text-muted);margin-top:8px">${escapeHtml(r.instrucao||'')}</p><p style="margin-top:12px">Execute no terminal:</p><code style="display:block;padding:10px;background:var(--bg-dark);border-radius:4px;margin-top:8px">${escapeHtml(r.execucao||'python agents/radagast/radagast.py')}</code></div>`;
+        out.innerHTML = '';
+        const texto = `${r.saida||'Curadoria executada com sucesso.'}`;
+        showResult('radagast-output', 'radagast-copy-btn', texto, 'radagast');
+        showToast(r.mensagem||'Curadoria concluída!', 'success');
     } else {
-        out.innerHTML = `❌ ${escapeHtml(r.erro||'Erro')}`;
+        out.innerHTML = `<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><h3>Erro</h3><p>${escapeHtml(r.erro||'Falha ao executar curadoria')}</p></div>`;
+        showToast(r.erro||'Erro na curadoria', 'error');
     }
-    showToast('Radagast requer execução via terminal', 'info');
 }
 
 async function loadPosicionamentoPage() {

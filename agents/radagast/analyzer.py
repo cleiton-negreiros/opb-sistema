@@ -94,7 +94,7 @@ Gere entre 5 e 8 ideias. Responda APENAS com o JSON. Sem texto antes ou depois.
 def generate_reel_ideas(contents: list[dict], profile_context: str = "") -> list[dict]:
     """Envia conteudos coletados para Ollama e retorna ideias para Paz na Conta."""
     content_lines = []
-    max_items = min(len(contents), 10)
+    max_items = min(len(contents), 3)
     for i, c in enumerate(contents[:max_items], 1):
         line = (
             f"{i}. [{c['source'].upper()}] {c['author']}: "
@@ -129,7 +129,7 @@ def generate_reel_ideas(contents: list[dict], profile_context: str = "") -> list
                 "stream": False,
                 "options": {"num_gpu": 0}
             },
-            timeout=120,
+            timeout=600,
         )
         if response.status_code == 200:
             raw_text = response.json().get("response", "")

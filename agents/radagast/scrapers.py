@@ -45,10 +45,12 @@ _CHANNEL_CACHE = {}
 
 
 def _get_channel_id_from_url(url: str) -> str | None:
-    """Obtém channel_id de uma URL do YouTube usando yt-dlp."""
+    """Obtém channel_id de uma URL do YouTube usando yt-dlp.
+    Fallback: extrai o @handle e tenta o RSS direto do YouTube."""
     if url in _CHANNEL_CACHE:
         return _CHANNEL_CACHE[url]
 
+    # Tenta yt-dlp primeiro
     try:
         import yt_dlp
         with yt_dlp.YoutubeDL({"quiet": True, "extract_flat": True, "playlistend": 1}) as ydl:
@@ -60,6 +62,17 @@ def _get_channel_id_from_url(url: str) -> str | None:
                     return cid
     except Exception as e:
         logger.debug(f"yt-dlp channel_id para {url}: {e}")
+
+    # Fallback: usa @handle direto no RSS (YouTube suporta
+    # https://www.youtube.com/feeds/videos.xml?user=handle)
+    handle = url.rstrip("/").split("/")[-1].lstrip("@")
+    if handle:
+        # Tenta formato user=
+        rss_url = f"https://www.youtube.com/feeds/videos.xml?user={handle}"
+        xml_data = _fetch_url(rss_url)
+        if xml_data and "<feed" in xml_data[:200]:
+            _CHANNEL_CACHE[url] = handle
+            return handle
 
     _CHANNEL_CACHE[url] = None
     return None
@@ -175,7 +188,12 @@ def scrape_youtube(profiles: list[dict], search_terms: list[str],
             continue
         channel_id = _get_channel_id_from_url(yt_url)
         if not channel_id:
-            logger.warning(f"  YT canal {profile['name']}: não foi possível obter channel_id")
+            # Fallback: busca por nome do perfil
+            logger.warning(f"  YT canal {profile['name']}: channel_id não obtido, buscando por nome")
+            name_search = _search_youtube_ytdlp(profile['name'], days_back)
+            if name_search:
+                logger.info(f"  YT fallback nome: {profile['name']} -> {len(name_search)} itens")
+                results.extend(name_search)
             continue
         logger.info(f"  YT RSS canal: {profile['name']}")
         results.extend(_parse_youtube_rss(channel_id, days_back))
@@ -284,7 +302,7 @@ def scrape_web_news(search_terms: list[str], days_back: int = 3) -> list[dict]:
     for term in search_terms[:3]:
         rss_url = (
             f"https://news.google.com/rss/search?q={urllib.parse.quote(term)}"
-            f"&hl=en-US&gl=US&ceid=US:en"
+            f"&hl=pt-BR&gl=BR&ceid=BR:pt"
         )
         logger.info(f"  Web RSS: '{term}'")
         xml_data = _fetch_url(rss_url)
