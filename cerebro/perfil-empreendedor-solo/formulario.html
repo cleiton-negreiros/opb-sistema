@@ -1143,19 +1143,21 @@ function exportAllSections() {
 }
 
 // ==============================
-// SAVE / LOAD PROGRESS
+// SAVE / LOAD PROGRESS (API + localStorage)
 // ==============================
 
-function saveAll() {
+const API_BASE = document.getElementById('cfg-api-url')?.value || 'http://localhost:5000';
+
+function _collectFormData() {
     const data = {};
-    // Save all input values
-    document.querySelectorAll('#tab-habilidades input, #tab-habilidades textarea, #tab-habilidades select').forEach(el => {
-        data[el.placeholder || 'hab_' + Math.random()] = el.value;
+    document.querySelectorAll('.tab-content input, .tab-content textarea, .tab-content select').forEach(el => {
+        if (el.closest('table') || el.closest('[id$="-list"]')) return;
+        const id = el.id || el.placeholder || 'field_' + Math.random();
+        data[id] = el.value;
     });
-    // Save dynamic rows
     ['habilidades-tecnicas', 'habilidades-humanas', 'habilidades-conhecimentos', 'habilidades-experiencias',
      'historias-trabalho', 'historias-estudos', 'historias-familia', 'historias-superacoes', 'historias-essenciais',
-     'concorrentes-list', 'desvios-list', 'perfis-list'].forEach(id => {
+     'concorrentes-list', 'desvios-list'].forEach(id => {
         const rows = document.querySelectorAll('#' + id + ' tr');
         data[id] = [];
         rows.forEach(row => {
@@ -1164,26 +1166,46 @@ function saveAll() {
             data[id].push(vals);
         });
     });
-    localStorage.setItem('opb-perfil', JSON.stringify(data));
-    showNotification('💾 Progresso salvo!');
-    updateProgress();
+    // perfis-list (div-based)
+    data['perfis-list'] = [];
+    document.querySelectorAll('#perfis-list > div').forEach(div => {
+        const vals = [];
+        div.querySelectorAll('input, textarea').forEach(el => {
+            if (el.type === 'checkbox') vals.push(el.checked);
+            else vals.push(el.value);
+        });
+        data['perfis-list'].push(vals);
+    });
+    // crencas-list (div-based)
+    data['crencas-list'] = [];
+    document.querySelectorAll('#crencas-list div').forEach(div => {
+        const inp = div.querySelector('input[type="text"]');
+        const chk = div.querySelector('input[type="checkbox"]');
+        if (inp || chk) data['crencas-list'].push([inp?.value || '', chk?.checked || false]);
+    });
+    // valores-list (div-based)
+    data['valores-list'] = [];
+    document.querySelectorAll('#valores-list div').forEach(div => {
+        const inputs = div.querySelectorAll('input[type="text"]');
+        if (inputs.length) data['valores-list'].push([inputs[0]?.value || '', inputs[1]?.value || '']);
+    });
+    return data;
 }
 
-function loadAll() {
-    const data = JSON.parse(localStorage.getItem('opb-perfil'));
-    if (!data) { showNotification('⚠️ Nenhum progresso salvo'); return; }
-
-    // Clear existing rows
+function _restoreFormData(data) {
+    if (!data) return;
     ['habilidades-tecnicas', 'habilidades-humanas', 'habilidades-conhecimentos', 'habilidades-experiencias',
      'historias-trabalho', 'historias-estudos', 'historias-familia', 'historias-superacoes', 'historias-essenciais',
-     'concorrentes-list', 'desvios-list', 'perfis-list'].forEach(id => {
+     'concorrentes-list', 'desvios-list'].forEach(id => {
         document.getElementById(id).innerHTML = '';
     });
-
-    // Restore dynamic rows
+    // Clear div-based sections before restore
+    ['crencas-list', 'valores-list', 'perfis-list'].forEach(id => {
+        document.getElementById(id).innerHTML = '';
+    });
     ['habilidades-tecnicas', 'habilidades-humanas', 'habilidades-conhecimentos', 'habilidades-experiencias',
      'historias-trabalho', 'historias-estudos', 'historias-familia', 'historias-superacoes', 'historias-essenciais',
-     'concorrentes-list', 'desvios-list', 'perfis-list'].forEach(id => {
+     'concorrentes-list', 'desvios-list'].forEach(id => {
         const rows = data[id] || [];
         rows.forEach(vals => {
             addRow(id);
@@ -1193,16 +1215,113 @@ function loadAll() {
             });
         });
     });
-
-    // Update static textareas
-    document.querySelectorAll('textarea[id^="hab-resumo"], textarea[id^="lema-"], textarea[id^="visao-"]').forEach(el => {
-        const key = Object.keys(data).find(k => k.includes(el.placeholder?.toLowerCase()));
-        if (key && data[key]) el.value = data[key];
+    // Restore perfis-list (div-based)
+    const perfis = data['perfis-list'] || [];
+    perfis.forEach(vals => {
+        addPerfil();
+        const last = document.querySelector('#perfis-list > div:last-child');
+        last.querySelectorAll('input, textarea').forEach((el, i) => {
+            if (el.type === 'checkbox') el.checked = vals[i] === true;
+            else el.value = vals[i] || '';
+        });
     });
+    // Restore crencas-list (div-based)
+    const crencas = data['crencas-list'] || [];
+    crencas.forEach(vals => {
+        addCrenca();
+        const last = document.querySelector('#crencas-list div:last-child');
+        const inp = last.querySelector('input[type="text"]');
+        const chk = last.querySelector('input[type="checkbox"]');
+        if (inp) inp.value = vals[0] || '';
+        if (chk) chk.checked = vals[1] === true;
+    });
+    // Restore valores-list (div-based)
+    const valores = data['valores-list'] || [];
+    valores.forEach(vals => {
+        addValor();
+        const last = document.querySelector('#valores-list div:last-child');
+        const inputs = last.querySelectorAll('input[type="text"]');
+        if (inputs[0]) inputs[0].value = vals[0] || '';
+        if (inputs[1]) inputs[1].value = vals[1] || '';
+    });
+    // Restore standalone fields by ID
+    document.querySelectorAll('.tab-content input, .tab-content textarea, .tab-content select').forEach(el => {
+        if (el.closest('table') || el.closest('[id$="-list"]')) return;
+        const id = el.id || el.placeholder;
+        if (id && data[id] !== undefined) el.value = data[id];
+    });
+}
 
-    showNotification('📂 Progresso carregado!');
+async function saveToApi(data) {
+    try {
+        const blob = JSON.stringify(data, null, 2);
+        await fetch(API_BASE + '/api/save-profile', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                modulo: 'formulario',
+                content: blob,
+                filename: 'PERFIL_FORM.json'
+            })
+        });
+    } catch (e) {
+        console.warn('API save failed, using localStorage only:', e);
+    }
+}
+
+async function loadFromApi() {
+    try {
+        const resp = await fetch(API_BASE + '/api/load-profile', { method: 'GET' });
+        if (!resp.ok) return null;
+        const json = await resp.json();
+        if (json && json.formulario) {
+            try {
+                return JSON.parse(json.formulario);
+            } catch (e) {
+                return null;
+            }
+        }
+        return null;
+    } catch (e) {
+        return null;
+    }
+}
+
+function saveAll() {
+    const data = _collectFormData();
+    localStorage.setItem('opb-perfil', JSON.stringify(data));
+    saveToApi(data);
+    showNotification('💾 Salvo no servidor!');
     updateProgress();
 }
+
+async function loadAll() {
+    // Tenta servidor primeiro
+    let data = await loadFromApi();
+    let origem = 'servidor';
+    if (!data) {
+        data = JSON.parse(localStorage.getItem('opb-perfil'));
+        origem = 'local';
+    }
+    if (!data) { showNotification('⚠️ Nenhum progresso salvo'); return; }
+    _restoreFormData(data);
+    showNotification('📂 Carregado do ' + origem + '!');
+    updateProgress();
+}
+
+// Auto-save: salva a cada 30s se houver mudanças
+let _hasChanges = false;
+document.addEventListener('input', () => {
+    _hasChanges = true;
+});
+setInterval(() => {
+    if (_hasChanges) {
+        _hasChanges = false;
+        const data = _collectFormData();
+        localStorage.setItem('opb-perfil', JSON.stringify(data));
+        saveToApi(data);
+    }
+}, 30000);
 
 // ==============================
 // INIT
@@ -1219,6 +1338,9 @@ window.addEventListener('DOMContentLoaded', () => {
             .then(reg => console.log('Service Worker registered:', reg))
             .catch(err => console.log('Service Worker error:', err));
     }
+
+    // Auto-load perfil do servidor ao abrir
+    setTimeout(() => loadAll(), 500);
 });
 </script>
 

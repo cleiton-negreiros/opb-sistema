@@ -159,11 +159,13 @@ def resolve_cerebro_path(caminho: str) -> Path:
 # UTILIDADES
 # ============================================
 
-def run_agent(agent_path: str, args: list = None) -> dict:
+def run_agent(agent_path: str, args: list = None, cwd: str = None) -> dict:
     """Executa um agente Python e retorna stdout/stderr."""
     full_path = PROJECT_PATH / agent_path
     if not full_path.exists():
         return {"error": f"Agente não encontrado: {agent_path}", "code": 404}
+
+    working_dir = cwd if cwd else str(PROJECT_PATH)
 
     try:
         cmd = [sys.executable, str(full_path)] + (args or [])
@@ -172,7 +174,7 @@ def run_agent(agent_path: str, args: list = None) -> dict:
             capture_output=True,
             text=True,
             timeout=180,
-            cwd=str(PROJECT_PATH),
+            cwd=working_dir,
             encoding='utf-8',
             errors='replace'
         )
@@ -1072,17 +1074,29 @@ def api_start_bot():
 
 @app.route('/api/narvi', methods=['POST'])
 def api_narvi():
-    """Executa o agente Narvi para edição de vídeo."""
+    """Executa o Narvi para edição de vídeo."""
     data = request.get_json()
-    video = data.get('video', '')
+    video_path = data.get('video_path', data.get('video', ''))
     corte = data.get('corte', 'medio')
     ratio = data.get('ratio', 'both')
 
+    if not video_path:
+        return jsonify({"sucesso": False, "erro": "Caminho do vídeo não informado"}), 400
+
+    resolved = Path(video_path).expanduser().resolve()
+    if not resolved.exists():
+        return jsonify({"sucesso": False, "erro": f"Arquivo não encontrado: {resolved}"}), 404
+
+    args = [str(resolved), f"--corte={corte}", f"--ratio={ratio}"]
+    result = run_agent("agents/narvi/narvi.py", args)
+
+    saida = result.get("stdout", "") + result.get("stderr", "")
     return jsonify({
-        "sucesso": True,
-        "mensagem": "Narvi requer FFmpeg instalado",
-        "instrucao": f"python agents/narvi/narvi.py \"{video}\" --corte={corte} --ratio={ratio}",
-        "saida": "~/Desktop/narvi-saida/"
+        "sucesso": result.get("success", False),
+        "saida": saida,
+        "erro": result.get("error", result.get("stderr", "")),
+        "mensagem": "Vídeo processado!" if result.get("success") else "Falha no processamento",
+        "saida_pasta": str(Path.home() / "Desktop" / "narvi-saida" / resolved.stem)
     })
 
 
@@ -1333,6 +1347,55 @@ def api_servicos_parar():
     })
 
 
+@app.route('/api/gimli/status', methods=['GET'])
+def api_gimli_status():
+    """Retorna status do Gimli: .env existe, logs recentes."""
+    gimli_dir = PROJECT_PATH / "agents" / "gimli"
+    env_ok = (gimli_dir / ".env").exists()
+    logs_dir = gimli_dir / "logs"
+    logs = []
+    if logs_dir.exists():
+        for f in sorted(logs_dir.glob("*.log"), key=lambda x: x.stat().st_mtime, reverse=True)[:5]:
+            logs.append({"arquivo": f.name, "data": f.stat().st_mtime, "tamanho": f.stat().st_size})
+    return jsonify({"env_ok": env_ok, "logs": logs, "dir": str(gimli_dir)})
+
+
+@app.route('/api/gimli/executar', methods=['POST'])
+def api_gimli_executar():
+    """Executa Gimli com flags específicas."""
+    data = request.get_json()
+    comando = data.get('comando', '')
+    gimli_dir = PROJECT_PATH / "agents" / "gimli"
+    main_py = gimli_dir / "main.py"
+
+    if not main_py.exists():
+        return jsonify({"erro": "Gimli não encontrado", "sucesso": False}), 404
+
+    # Mapeia comandos para args
+    flag_map = {
+        "teste": ["--teste"],
+        "producao": ["--producao"],
+        "listar": ["--listar"],
+        "segmentos": ["--segmentos"],
+        "sync-listas": ["--sync-listas"],
+    }
+    args = flag_map.get(comando, [])
+    if comando.startswith("agora:"):
+        titulo = comando.replace("agora:", "", 1).strip()
+        args = ["--agora", titulo]
+
+    path = str(main_py.relative_to(PROJECT_PATH))
+    result = run_agent(path, args, cwd=str(gimli_dir))
+
+    return jsonify({
+        "sucesso": result.get("success", False),
+        "stdout": result.get("stdout", "")[:5000],
+        "stderr": result.get("stderr", "")[:2000],
+        "comando": comando,
+        "mensagem": "Gimli executado com sucesso!" if result.get("success") else "Gimli falhou."
+    })
+
+
 @app.route('/api/agentes/executar', methods=['POST'])
 def api_agentes_executar():
     """Executa um agente pelo nome."""
@@ -1352,7 +1415,9 @@ def api_agentes_executar():
         return jsonify({"error": f"Agente '{agente}' não encontrado. Disponíveis: {list(AGENTES.keys())}", "sucesso": False}), 400
 
     path = AGENTES[agente]
-    result = run_agent(path, args)
+    # Gimli precisa rodar de dentro da própria pasta (para achar .env)
+    agent_cwd = str(PROJECT_PATH / "agents" / agente) if agente == "gimli" else None
+    result = run_agent(path, args, cwd=agent_cwd)
 
     if "error" in result:
         return jsonify({"error": result["error"], "sucesso": False}), result.get("code", 500)

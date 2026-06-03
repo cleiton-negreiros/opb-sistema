@@ -58,6 +58,7 @@
                 <div class="nav-item" onclick="navigateTo('audio-transcriber')"><i class="fas fa-microphone-alt"></i><span>Audio Transcriber</span><span class="badge">IA</span></div>
                 <div class="nav-item" onclick="navigateTo('consultor-negocios')"><i class="fas fa-university"></i><span>Consultor</span><span class="badge">IA</span></div>
                 <div class="nav-item" onclick="navigateTo('jornada-ia')"><i class="fas fa-book-open"></i><span>Jornada IA</span><span class="badge">Diário</span></div>
+                <div class="nav-item" onclick="navigateTo('gimli')"><i class="fas fa-envelope-open-text"></i><span>Gimli</span><span class="badge badge-new">Email</span></div>
             </div>
             <div class="nav-section">
                 <div class="nav-section-title">Ferramentas</div>
@@ -213,6 +214,10 @@
         <div class="agent-tile" onclick="navigateTo('consultor-negocios')">
             <div class="at-icon">🏛️</div>
             <div class="at-info"><div class="at-name">Consultor</div><div class="at-status"><span class="at-dot on"></span> Novo</div></div>
+        </div>
+        <div class="agent-tile" onclick="navigateTo('gimli')">
+            <div class="at-icon">📧</div>
+            <div class="at-info"><div class="at-name">Gimli</div><div class="at-status"><span class="at-dot on"></span> Email</div></div>
         </div>
     </div>
 </div>
@@ -588,17 +593,17 @@
 <div class="grid-2">
 <div class="card"><div class="card-header"><div class="card-title"><i class="fas fa-video" style="color:var(--warning)"></i> Narvi - Editor de Vídeo</div></div>
 <p style="color:var(--text-muted);margin-bottom:16px">Editor de vídeo automático. Corte silências, gere legendas e exporte para Reels e YouTube.</p>
-<div class="form-group"><label class="form-label">Arquivo de Vídeo</label><input type="file" class="form-input" id="narvi-video" accept="video/*"></div>
+<div class="form-group"><label class="form-label">Caminho do Vídeo</label><input type="text" class="form-input" id="narvi-path" placeholder="C:/Videos/meu-video.mp4" style="font-family:monospace;font-size:0.85rem"></div>
 <div class="form-group"><label class="form-label">Tipo de Corte</label><select class="form-select" id="narvi-corte"><option value="medio">Médio (150ms lead, 300ms tail)</option><option value="brando">Brando (300ms lead, 500ms tail)</option><option value="agressivo">Agressivo (80ms lead, 150ms tail)</option></select></div>
 <div class="form-group"><label class="form-label">Formato de Saída</label><select class="form-select" id="narvi-ratio"><option value="both">Ambos (9x16 + 16x9)</option><option value="9x16">Apenas Vertical (9x16)</option><option value="16x9">Apenas Horizontal (16x9)</option></select></div>
 <button class="btn btn-warning btn-block" onclick="runNarvi()"><i class="fas fa-play"></i> Processar Vídeo</button>
-<div style="margin-top:12px"><span class="tag tag-muted">FFmpeg requerido</span> <span class="tag tag-muted">faster-whisper</span></div>
+<div style="margin-top:12px"><span class="tag tag-muted">FFmpeg requerido</span> <span class="tag tag-muted">faster-whisper</span> <span class="tag tag-muted">HEVC</span></div>
 </div>
 <div class="card"><div class="card-header"><div class="card-title"><i class="fas fa-info-circle"></i> Como Usar</div></div>
 <div style="display:flex;flex-direction:column;gap:12px">
-<div style="padding:12px;background:var(--bg-input);border-radius:8px"><strong>1. Selecione o vídeo</strong><p style="font-size:0.85rem;color:var(--text-muted);margin-top:4px">Escolha um arquivo .mp4 ou .mov do seu computador</p></div>
-<div style="padding:12px;background:var(--bg-input);border-radius:8px"><strong>2. Configure o corte</strong><p style="font-size:0.85rem;color:var(--text-muted);margin-top:4px">O Narvi remove silências do início e fim automaticamente</p></div>
-<div style="padding:12px;background:var(--bg-input);border-radius:8px"><strong>3. Escolha os formatos</strong><p style="font-size:0.85rem;color:var(--text-muted);margin-top:4px">Gere versão para Reels (9x16) e YouTube (16x9)</p></div>
+<div style="padding:12px;background:var(--bg-input);border-radius:8px"><strong>1. Informe o caminho</strong><p style="font-size:0.85rem;color:var(--text-muted);margin-top:4px">Cole o caminho completo do vídeo (.mp4 ou .mov) no campo acima</p></div>
+<div style="padding:12px;background:var(--bg-input);border-radius:8px"><strong>2. Configure o corte</strong><p style="font-size:0.85rem;color:var(--text-muted);margin-top:4px">O Narvi remove silêncios do início e fim automaticamente</p></div>
+<div style="padding:12px;background:var(--bg-input);border-radius:8px"><strong>3. Escolha os formatos</strong><p style="font-size:0.85rem;color:var(--text-muted);margin-top:4px">Gere versão Reels (9x16), YouTube (16x9) ou ambos</p></div>
 <div style="padding:12px;background:var(--bg-input);border-radius:8px"><strong>4. Saída</strong><p style="font-size:0.85rem;color:var(--text-muted);margin-top:4px">Vídeos salvos em: <code>~/Desktop/narvi-saida/</code></p></div>
 </div>
 </div>
@@ -1119,6 +1124,38 @@
     <p style="margin-top:12px;color:var(--text-muted);font-size:0.9rem">Clique em uma plataforma — você pode <strong>editar o texto</strong> antes de copiar.</p>
 </div>
 
+</div>
+</div>
+
+<!-- ==============================================
+     GIMLI — Email Marketing
+     ============================================== -->
+<div class="page" id="page-gimli">
+<div class="grid-2">
+<div class="card">
+<div class="card-header"><div class="card-title"><i class="fas fa-envelope-open-text" style="color:var(--accent-light)"></i> Gimli — Email Marketing</div></div>
+<p style="color:var(--text-muted);margin-bottom:16px">Agente de email marketing: lê do Notion (CMS), monta campanhas segmentadas e dispara no ActiveCampaign (ESP). AR (Artigos), MF (Mensagens Fraternas), DC (Dicas Católicas).</p>
+<div class="form-group"><label class="form-label">Comando</label>
+<select class="form-select" id="gimli-comando">
+<option value="teste">🧪 Teste (preview sem disparar)</option>
+<option value="producao">🚀 Produção (disparar campanhas)</option>
+<option value="sync-listas">🔄 Sync Listas (Notion → AC)</option>
+<option value="listar">📋 Listar Listas (ActiveCampaign)</option>
+<option value="segmentos">🏷️ Listar Segmentos (ActiveCampaign)</option>
+</select></div>
+<div class="form-group"><label class="form-label">Título do Email (modo Agora)</label>
+<input class="form-input" id="gimli-titulo" type="text" placeholder="Título exato do email no Notion para disparar agora..." style="width:100%"></div>
+<div class="grid-2" style="gap:8px">
+<button class="btn btn-primary btn-block" onclick="runGimli()"><i class="fas fa-play"></i> Executar</button>
+<button class="btn btn-warning btn-block" onclick="runGimliAgora()"><i class="fas fa-bolt"></i> Disparar Agora</button>
+</div>
+<div class="console-output" id="gimli-output" style="margin-top:16px;display:none"></div>
+<button class="btn btn-sm btn-outline" id="gimli-copy-btn" style="display:none;margin-top:8px" onclick="copyResult('gimli-output-editor')"><i class="fas fa-copy"></i> Copiar</button>
+</div>
+<div class="card">
+<div class="card-header"><div class="card-title"><i class="fas fa-info-circle" style="color:var(--info)"></i> Status do Gimli</div></div>
+<div id="gimli-status" style="padding:16px;text-align:center;color:var(--text-muted)"><i class="fas fa-spinner fa-spin"></i> Verificando...</div>
+</div>
 </div>
 </div>
 

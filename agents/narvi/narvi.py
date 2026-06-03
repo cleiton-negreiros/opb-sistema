@@ -145,7 +145,13 @@ NARVI_DIR = Path(__file__).resolve().parent
 GLOSSARIO_YAML = NARVI_DIR / "glossario.yaml"
 CACHE_DIR = NARVI_DIR / "cache" / "whisper"
 FFMPEG = "ffmpeg"
-DEFAULT_OUTPUT_BASE = Path.home() / "Desktop" / "narvi-saida"
+
+# Output path: Desktop no PC, ~/storage/downloads no Termux/Android
+_IS_TERMUX = "com.termux" in str(Path.home())
+if _IS_TERMUX:
+    DEFAULT_OUTPUT_BASE = Path.home() / "storage" / "downloads" / "narvi-saida"
+else:
+    DEFAULT_OUTPUT_BASE = Path.home() / "Desktop" / "narvi-saida"
 
 
 # ============================================================

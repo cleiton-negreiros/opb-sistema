@@ -143,6 +143,7 @@ async function loadPageData(page) {
     if (page === 'inspiracoes') loadInspiracoes();
     if (page === 'quadro-avisos') loadQuadroAvisos();
     if (page === 'config') { checkObsidian(); loadNotionConfig(); }
+    if (page === 'gimli') { loadGimliStatus(); }
 }
 
 async function checkAgentsApi() {
@@ -350,17 +351,23 @@ async function runConsumo() {
 }
 
 async function runNarvi() {
-    const videoInput = document.getElementById('narvi-video');
-    if (!videoInput.files[0]) { showToast('Selecione um vídeo', 'error'); return; }
+    const pathInput = document.getElementById('narvi-path');
+    const videoPath = pathInput.value.trim();
+    if (!videoPath) { showToast('Informe o caminho do vídeo', 'error'); return; }
     const out = document.getElementById('narvi-output');
     out.style.display = 'block';
-    const r = await apiCall('/api/narvi','POST',{video:videoInput.files[0].name, corte:document.getElementById('narvi-corte').value, ratio:document.getElementById('narvi-ratio').value});
+    out.innerHTML = `<div style="padding:20px;text-align:center"><i class="fas fa-spinner fa-spin" style="font-size:2rem;color:var(--warning)"></i><p style="margin-top:10px">Processando vídeo... (pode levar minutos)</p></div>`;
+    const r = await apiCall('/api/narvi','POST',{video_path:videoPath, corte:document.getElementById('narvi-corte').value, ratio:document.getElementById('narvi-ratio').value});
+    out.innerHTML = '';
     if (r && r.sucesso) {
-        out.innerHTML = `<pre style="white-space:pre-wrap;font-family:'JetBrains Mono',monospace;font-size:0.85rem;line-height:1.5">${escapeHtml(r.instrucao||r.mensagem)}\n\nSaída: ${escapeHtml(r.saida||'~/Desktop/narvi-saida/')}</pre>`;
+        showResult('narvi-output', r.saida, '', 'narvi');
+        if (r.saida_pasta) {
+            out.innerHTML += `<div style="margin-top:12px;padding:12px;background:var(--bg-input);border-radius:8px"><strong>📁 Saída:</strong> <code>${escapeHtml(r.saida_pasta)}</code></div>`;
+        }
     } else {
-        out.innerHTML = `❌ ${escapeHtml(r.erro||'Erro ao processar')}`;
+        out.innerHTML = `<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><h3>Erro</h3><p>${escapeHtml(r.erro||r.mensagem||'Falha ao processar')}</p></div>`;
     }
-    showToast('Verifique o terminal para executar', 'info');
+    showToast(r?.sucesso?'Vídeo processado!':'Erro', r?.sucesso?'success':'error');
 }
 
 async function runRadagast() {
@@ -1547,5 +1554,63 @@ function loadPostTemplate(platform) {
     } else {
         navigator.clipboard.writeText(text);
         showToast('Texto copiado!', 'success');
+    }
+}
+
+// ===== GIMLI =====
+async function loadGimliStatus() {
+    const el = document.getElementById('gimli-status');
+    try {
+        const st = await apiCall('/api/gimli/status');
+        if (st && !st.error) {
+            const envBadge = st.env_ok ? '<span class="badge badge-new" style="font-size:0.75rem">✅ .env OK</span>' : '<span class="badge" style="background:var(--danger);font-size:0.75rem">⚠️ .env ausente</span>';
+            let logsHtml = '';
+            if (st.logs && st.logs.length) {
+                logsHtml = '<div style="margin-top:12px"><strong>Últimos logs:</strong></div>' +
+                    st.logs.map(l => `<div style="font-size:0.8rem;color:var(--text-muted);padding:2px 0">${l.arquivo} (${(l.tamanho/1024).toFixed(0)}KB)</div>`).join('');
+            } else {
+                logsHtml = '<div style="margin-top:12px;color:var(--text-muted);font-size:0.85rem">Nenhum log encontrado</div>';
+            }
+            el.innerHTML = `<div style="text-align:left">${envBadge}${logsHtml}</div>`;
+        } else {
+            el.innerHTML = '<div style="color:var(--danger)">API offline</div>';
+        }
+    } catch (e) {
+        el.innerHTML = '<div style="color:var(--danger)">Erro ao verificar status</div>';
+    }
+}
+
+async function runGimli() {
+    const comando = document.getElementById('gimli-comando').value;
+    const output = document.getElementById('gimli-output');
+    const copyBtn = document.getElementById('gimli-copy-btn');
+    output.style.display = 'block';
+    output.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Executando Gimli...';
+    copyBtn.style.display = 'none';
+    try {
+        const res = await apiCall('/api/gimli/executar', { comando }, 'POST');
+        const text = res.stdout || res.stderr || 'Sem resposta';
+        const isErr = !res.sucesso;
+        showResult('gimli-output', 'gimli-copy-btn', text, null);
+        if (isErr) output.innerHTML = '<div style="color:var(--danger)">⚠️ ' + escapeHtml(text.slice(0,500)) + '</div>';
+    } catch (e) {
+        output.innerHTML = '<div style="color:var(--danger)">Erro: ' + e.message + '</div>';
+    }
+}
+
+async function runGimliAgora() {
+    const titulo = document.getElementById('gimli-titulo').value.trim();
+    if (!titulo) { showToast('Digite o título do email', 'warning'); return; }
+    const output = document.getElementById('gimli-output');
+    const copyBtn = document.getElementById('gimli-copy-btn');
+    output.style.display = 'block';
+    output.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Disparando email agora...';
+    copyBtn.style.display = 'none';
+    try {
+        const res = await apiCall('/api/gimli/executar', { comando: 'agora:' + titulo }, 'POST');
+        const text = res.stdout || res.stderr || 'Sem resposta';
+        showResult('gimli-output', 'gimli-copy-btn', text, null);
+    } catch (e) {
+        output.innerHTML = '<div style="color:var(--danger)">Erro: ' + e.message + '</div>';
     }
 }

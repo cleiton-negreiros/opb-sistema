@@ -145,6 +145,9 @@ python api_server.py
 | POST | `/api/bot/start` | Inicia Telegram Bot |
 | POST | `/api/start` | Inicia serviços remotamente |
 | POST | `/api/save-profile` | Salva perfil do usuário |
+| GET | `/api/gimli/status` | Status do Gimli (.env + logs) |
+| POST | `/api/gimli/executar` | Executa Gimli (comando: teste/producao/sync-listas/listar/segmentos/agora:) |
+| POST | `/api/agentes/executar` | Executa qualquer agente (inclui Gimli com CWD correto) |
 
 ### Agente Coordenador
 **Caminho**: `agents/coordinator/main.py`
@@ -180,6 +183,11 @@ http://localhost:8088/hub.html
 # Usar coordenador
 python agents/coordinator/main.py
 
+# Gimli (email marketing)
+cd agents/gimli && python gimli.py --teste
+cd agents/gimli && python gimli.py --producao
+cd agents/gimli && python gimli.py --sync-listas
+
 # Deploy (já automatizado via CI/CD)
 # A cada push no master, deploy automático no Vercel
 ```
@@ -197,6 +205,7 @@ python agents/coordinator/main.py
 - Agente Transcrição (YouTube) com visualização formatada + botão copiar
 - Agente Radagast (reescrito sem Apify/Claude — só yt-dlp + RSS, gratuito)
 - Agente Narvi (editor de vídeo com FFmpeg)
+- Agente Gimli (email marketing Notion → ActiveCampaign, integrado na plataforma)
 - Telegram Bot integrado (@NegreirosBot)
 - API Server Flask (18 endpoints REST)
 - Navegador de Arquivos na plataforma (listar/ler arquivos do projeto)

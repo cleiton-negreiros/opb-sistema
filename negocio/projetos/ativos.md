@@ -9,43 +9,35 @@ description: "Lista viva de projetos em andamento — atualizar toda semana"
 
 ## Em curso
 
+- **Paz na Conta** — Finanças católicas (@paznaconta). Conteúdo Instagram + YouTube + comunidade.
+  - **Início:** 2026-05-21
+  - **Próximo passo:** Produzir primeiro carrossel educativo e publicar no Instagram
+  - **Status:** Planejamento
+  - **Pasta:** `negocio/produtos/paz-na-conta/`
+
+- **Aulas de Violão** — Ensino de violão online com diagramas SVG e método para adultos ocupados.
+  - **Início:** 2026-06-01
+  - **Próximo passo:** Gravar primeira aula demonstrativa e diagramas de acordes básicos
+  - **Status:** Planejamento
+  - **Pasta:** `negocio/produtos/aulas-violao/`
+
+- **Macminho Vida** — Infoprodutos de nutrição, emagrecimento e vida saudável para CLT.
+  - **Início:** 2026-06-01
+  - **Próximo passo:** Definir primeiro produto (ebook "Emagrece CLT") e criar calendário de conteúdo
+  - **Status:** Planejamento
+  - **Pasta:** `negocio/produtos/macminho-vida/`
+
 - **Sistema de Agentes** — Consolidar sistema de agentes básicos para economia de 5h/semana
   - **Início:** 2026-04-01
   - **Status:** Em andamento
   - **Key Results:**
-    - Agente de transcrição funcionando com 90%+ de acurácia
-    - Agente de geração de texto para Instagram produzindo posts utilizáveis
-    - Sistema de contexto carregando corretamente em todos os agentes
-
-- **Agente Designer** — Assistente de design gráfico para criar diagramas, briefings, paletas e mockups
-  - **Início:** 2026-05-12
-  - **Status:** Novo
-  - **Key Results:**
-    - Gerar diagramas de acorde SVG para aulas de violão
-    - Produzir briefings criativos com identidade visual consistente
-    - Reduzir tempo de criação de design de 2h para 15min
-
-- **Rotina de Conteúdo** — Estabelecer rotina de criação de conteúdo consistente
-  - **Início:** 2026-04-01
-  - **Status:** Planejado
-  - **Key Results:**
-    - Publicar 2x por semana no Instagram
-    - Ter pelo menos 1 carrossel educativo por mês pronto
-    - Reduzir tempo de criação de post de 2h para 30min
-
-## Padrão de entrada
-
-```markdown
-- **[Nome do projeto]** — [Objetivo em 1 frase]
-  - **Início:** AAAA-MM-DD
-  - **Prazo:** AAAA-MM-DD
-  - **Próximo passo:** [Ação específica]
-  - **Pasta:** `negocio/projetos/[slug]/`
-```
+    - Agente de transcrição funcionando com 90%+ de acurácia ✅
+    - Agente de geração de texto para Instagram produzindo posts utilizáveis ✅
+    - Sistema de contexto carregando corretamente em todos os agentes ✅
 
 ## Pausados
 
-- _Vazio_
+- **Agente Designer** — Assistente de design gráfico (diagramas, briefings, paletas). Pausado enquanto foco está nos 3 negócios.
 
 ## Concluídos (últimos 30 dias)
 

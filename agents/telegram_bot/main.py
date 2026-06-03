@@ -29,6 +29,17 @@ if not TOKEN:
 PROJECT_PATH = Path(__file__).parent.parent.parent
 ACERVO_PATH = PROJECT_PATH / "acervo" / "ideias"
 
+def check_ollama() -> bool:
+    """Verifica se o Ollama está rodando localmente."""
+    try:
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        s.settimeout(2)
+        ok = s.connect_ex(("127.0.0.1", 11434)) == 0
+        s.close()
+        return ok
+    except:
+        return False
+
 def ensure_acervo():
     ACERVO_PATH.mkdir(parents=True, exist_ok=True)
     index_path = ACERVO_PATH / "index.md"
@@ -515,7 +526,8 @@ async def obsidian_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     )
 
 async def iniciar_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    """Executa rotina matinal — sobe API + Bot + plataforma + Radagast"""
+    """Executa rotina matinal — adaptado para PC ou Termux."""
+    _is_termux = "com.termux" in str(PROJECT_PATH)
     await update.message.reply_text("🌅 *Iniciando OPB Sistema...*", parse_mode="Markdown")
 
     resultados = []
@@ -532,63 +544,79 @@ async def iniciar_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     except Exception as e:
         resultados.append(f"🧠 Contexto: ❌ {str(e)[:60]}")
 
-    # 2. API server (se não estiver rodando)
-    api_rodando = False
-    try:
-        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        s.settimeout(2)
-        api_rodando = s.connect_ex(("127.0.0.1", 5000)) == 0
-        s.close()
-    except:
-        pass
-
-    if not api_rodando:
+    # 2. API server (só no PC)
+    if not _is_termux:
+        api_rodando = False
         try:
-            subprocess.Popen(
-                [sys.executable, str(PROJECT_PATH / "api_server.py")],
-                cwd=str(PROJECT_PATH),
-                stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
-                creationflags=subprocess.CREATE_NO_WINDOW if sys.platform == 'win32' else 0
-            )
-            resultados.append("🌐 API Server: ✅ iniciado")
-        except Exception as e:
-            resultados.append(f"🌐 API Server: ❌ {str(e)[:60]}")
+            s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            s.settimeout(2)
+            api_rodando = s.connect_ex(("127.0.0.1", 5000)) == 0
+            s.close()
+        except:
+            pass
+
+        if not api_rodando:
+            try:
+                subprocess.Popen(
+                    [sys.executable, str(PROJECT_PATH / "api_server.py")],
+                    cwd=str(PROJECT_PATH),
+                    stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+                    creationflags=subprocess.CREATE_NO_WINDOW if sys.platform == 'win32' else 0
+                )
+                resultados.append("🌐 API Server: ✅ iniciado")
+            except Exception as e:
+                resultados.append(f"🌐 API Server: ❌ {str(e)[:60]}")
+        else:
+            resultados.append("🌐 API Server: ✅ já rodando")
     else:
-        resultados.append("🌐 API Server: ✅ já rodando")
+        resultados.append("📱 Modo Termux: API Server não disponível no celular")
 
     # 3. Telegram Bot (self-check)
     resultados.append("🤖 Telegram Bot: ✅ ativo (você está falando comigo)")
 
-    # 4. Radagast
+    # 4. Radagast (só se tiver Ollama rodando)
     try:
-        r = subprocess.run(
-            [sys.executable, str(PROJECT_PATH / "agents" / "radagast" / "radagast.py")],
-            capture_output=True, text=True, timeout=120,
-            cwd=str(PROJECT_PATH / "agents" / "radagast")
-        )
-        if r.returncode == 0:
-            resultados.append(f"📡 Radagast: ✅ executado")
-            # Envia resumo do Radagast
-            if r.stdout:
-                lines = [l for l in r.stdout.split('\n') if l.strip()]
-                resume = '\n'.join(lines[-5:])
-                await update.message.reply_text(
-                    f"📡 *Radagast - Resumo*\n```\n{resume[:1500]}\n```",
-                    parse_mode="Markdown"
-                )
+        import socket as sock
+        ollama_ok = False
+        try:
+            s = sock.socket(sock.AF_INET, sock.SOCK_STREAM)
+            s.settimeout(2)
+            ollama_ok = s.connect_ex(("127.0.0.1", 11434)) == 0
+            s.close()
+        except:
+            pass
+
+        if ollama_ok:
+            r = subprocess.run(
+                [sys.executable, str(PROJECT_PATH / "agents" / "radagast" / "radagast.py")],
+                capture_output=True, text=True, timeout=120,
+                cwd=str(PROJECT_PATH / "agents" / "radagast")
+            )
+            if r.returncode == 0:
+                resultados.append(f"📡 Radagast: ✅ executado")
+                if r.stdout:
+                    lines = [l for l in r.stdout.split('\n') if l.strip()]
+                    resume = '\n'.join(lines[-5:])
+                    await update.message.reply_text(
+                        f"📡 *Radagast - Resumo*\n```\n{resume[:1500]}\n```",
+                        parse_mode="Markdown"
+                    )
+            else:
+                resultados.append(f"📡 Radagast: ⚠️ erro (veja logs)")
         else:
-            resultados.append(f"📡 Radagast: ⚠️ erro (veja logs)")
+            resultados.append(f"📡 Radagast: ⏭️ Ollama não está rodando. Use `ollama serve` primeiro")
     except Exception as e:
         resultados.append(f"📡 Radagast: ❌ {str(e)[:60]}")
 
     tempo = (datetime.now() - inicio).total_seconds()
 
+    plat_url = "http://localhost:5000" if not _is_termux else "não disponível no Termux"
     msg = f"""🌅 *Sistema Iniciado!* ({tempo:.0f}s)
 
 {chr(10).join(resultados)}
 
 📌 *Acesse:*
-• Plataforma: http://localhost:5000
+• Plataforma: {plat_url}
 • Hub: https://opb-sistema.vercel.app/hub.html
 
 💡 *Comandos:*
@@ -602,6 +630,9 @@ async def iniciar_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def radagast_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Roda Radagast e envia resultado."""
+    if not check_ollama():
+        await update.message.reply_text("⚠️ *Ollama não está rodando* 🦙\n\nO Radagast precisa do Ollama para gerar ideias.\nInicie com:\n```\nollama serve\n```\n\nDepois tente novamente.", parse_mode="Markdown")
+        return
     await update.message.reply_text("📡 *Executando Radagast...* (pode levar 2-3 min)", parse_mode="Markdown")
     try:
         r = subprocess.run(
@@ -647,6 +678,9 @@ async def carrossel_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if not context.args:
         await update.message.reply_text("🎠 *Carrossel*\n\nUso: `/carrossel [tema]`\nEx: `/carrossel Dízimo e organização financeira`", parse_mode="Markdown")
         return
+    if not check_ollama():
+        await update.message.reply_text("⚠️ *Ollama não está rodando* 🦙\n\nPara usar agentes de IA, inicie o Ollama:\n```\nollama serve\n```\n\nOu use agentes offline: `/hashtags`, `/liturgico`, `/tarefas`", parse_mode="Markdown")
+        return
     tema = " ".join(context.args)
     await update.message.reply_text(f"🎠 Gerando carrossel: `{tema[:60]}...`", parse_mode="Markdown")
     out = run_agent("agents/carrossel/main.py", [tema, "educational", "5"], timeout=60)
@@ -656,6 +690,9 @@ async def consumo_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Processa conteúdo via Agente Consumo."""
     if not context.args:
         await update.message.reply_text("📖 *Consumo*\n\nUso: `/consumo [texto]`\nProcessa texto e salva no acervo.", parse_mode="Markdown")
+        return
+    if not check_ollama():
+        await update.message.reply_text("⚠️ *Ollama não está rodando* 🦙\n\nEste comando precisa do Ollama.\nUse `/ideia [texto]` para salvar a ideia e processar depois.", parse_mode="Markdown")
         return
     texto = " ".join(context.args)
     await update.message.reply_text(f"📖 Processando conteúdo... ({len(texto)} caracteres)", parse_mode="Markdown")
@@ -667,6 +704,9 @@ async def textogen_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if not context.args:
         await update.message.reply_text("✍️ *Text Generator*\n\nUso: `/texto [objetivo]`\nEx: `/texto Como economizar no supermercado`", parse_mode="Markdown")
         return
+    if not check_ollama():
+        await update.message.reply_text("⚠️ *Ollama não está rodando* 🦙\n\nEste comando precisa do Ollama.\nUse `/ideia [texto]` para salvar a ideia e processar depois.", parse_mode="Markdown")
+        return
     objetivo = " ".join(context.args)
     await update.message.reply_text(f"✍️ Gerando texto...", parse_mode="Markdown")
     out = run_agent("agents/text_generator/main.py", [objetivo, "educational"], timeout=60)
@@ -676,6 +716,9 @@ async def capavideo_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Gera ideias de capa via Capa Vídeo."""
     if not context.args:
         await update.message.reply_text("📸 *Capa Vídeo*\n\nUso: `/capavideo [tema] [qtd]`\nEx: `/capavideo Finanças católicas 5`", parse_mode="Markdown")
+        return
+    if not check_ollama():
+        await update.message.reply_text("⚠️ *Ollama não está rodando* 🦙\n\nEste comando precisa do Ollama.\nUse `/ideia [texto]` para salvar a ideia e processar depois.", parse_mode="Markdown")
         return
     args = context.args
     tema = " ".join(args[:-1]) if len(args) > 1 else args[0]
@@ -759,20 +802,62 @@ async def concluir_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(f"📋 {out}", parse_mode="Markdown")
 
 async def cortarsilencio_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    """Corta silêncios de um vídeo."""
+    """Corta silêncios de um vídeo. Aceita caminho ou vídeo enviado."""
+    if context.args:
+        video_path = " ".join(context.args)
+        file_path = Path(video_path)
+        if not file_path.is_absolute():
+            file_path = PROJECT_PATH / video_path
+        if file_path.exists():
+            await update.message.reply_text(f"🎬 Processando: `{file_path.name}`...", parse_mode="Markdown")
+            out = run_agent("agents/corta-silencio/main.py", [str(file_path)], timeout=120)
+            await update.message.reply_text(
+                f"🎬 *Corte concluído*\n```\n{out[:2000]}\n```",
+                parse_mode="Markdown"
+            )
+            return
+        else:
+            await update.message.reply_text(f"❌ Arquivo não encontrado: `{file_path}`", parse_mode="Markdown")
+            return
+
     await update.message.reply_text(
         "🎬 *Cortar Silêncios*\n\n"
-        "Envie o vídeo como documento ou use:\n\n"
-        "No PC/Termux:\n"
-        "```\n"
-        "python agents/corta-silencio/main.py video.mp4\n"
-        "```\n\n"
-        "Opções:\n"
+        "Envie um **vídeo** ou um **caminho de arquivo**:\n\n"
+        "```\n/cortarsilencio /caminho/do/video.mp4\n```\n\n"
+        "Ou apenas envie o vídeo como documento/arquivo que processo automaticamente!\n\n"
+        "Opções (via comando):\n"
         "• `--threshold -30` (sensibilidade dB)\n"
         "• `--min-duration 0.5` (duração mínima silêncio)\n"
         "• `--keep-silence 0.3` (transição natural)",
         parse_mode="Markdown"
     )
+
+async def video_message_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Recebe vídeo enviado e processa com corta-silencio."""
+    await update.message.reply_text("🎬 *Baixando vídeo para cortar silêncios...*", parse_mode="Markdown")
+    try:
+        file = await context.bot.get_file(update.message.video.file_id)
+        temp_dir = PROJECT_PATH / "acervo" / "temp"
+        temp_dir.mkdir(parents=True, exist_ok=True)
+        file_path = temp_dir / f"video_{update.message.message_id}.mp4"
+        await file.download_to_drive(str(file_path))
+
+        await update.message.reply_text(f"🎬 Processando: `{file_path.name}`...", parse_mode="Markdown")
+        out = run_agent("agents/corta-silencio/main.py", [str(file_path)], timeout=120)
+
+        # Envia resultado
+        await update.message.reply_text(
+            f"🎬 *Corte concluído*\n```\n{out[:2000]}\n```",
+            parse_mode="Markdown"
+        )
+
+        # Limpa arquivo temporário
+        if file_path.exists():
+            file_path.unlink()
+    except subprocess.TimeoutExpired:
+        await update.message.reply_text("⏱️ Processamento excedeu 2 min. Tente com um vídeo menor.", parse_mode="Markdown")
+    except Exception as e:
+        await update.message.reply_text(f"❌ Erro: {str(e)[:200]}", parse_mode="Markdown")
 
 async def reels_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Gera roteiro para Reels/Shorts."""
@@ -793,7 +878,11 @@ async def reels_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     tema = " ".join(context.args)
     await update.message.reply_text(f"🎬 *Gerando roteiro:*\n\n`{tema[:80]}...`", parse_mode="Markdown")
-    out = run_agent("agents/reels_script/main.py", [tema], timeout=60)
+    args = [tema]
+    if not check_ollama():
+        args.append("--sem-ollama")
+        await update.message.reply_text("⚙️ Usando modo offline (templates). Ollama não detectado.", parse_mode="Markdown")
+    out = run_agent("agents/reels_script/main.py", args, timeout=60)
     if out and len(out) > 4000:
         out = out[:4000] + "\n\n... (truncado)"
     await update.message.reply_text(f"🎬 *Roteiro:*\n\n```\n{out}\n```", parse_mode="Markdown")
@@ -814,7 +903,11 @@ async def hashtags_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     tema = " ".join(context.args)
     await update.message.reply_text(f"🏷️ *Gerando hashtags:*\n\n`{tema[:80]}`", parse_mode="Markdown")
-    out = run_agent("agents/hashtags/main.py", [tema], timeout=30)
+    args = [tema]
+    if not check_ollama():
+        args.append("--sem-ollama")
+        await update.message.reply_text("⚙️ Usando banco local de hashtags (offline).", parse_mode="Markdown")
+    out = run_agent("agents/hashtags/main.py", args, timeout=30)
     if out and len(out) > 4000:
         out = out[:4000] + "\n\n... (truncado)"
     await update.message.reply_text(f"🏷️ *Hashtags:*\n\n```\n{out}\n```", parse_mode="Markdown")
@@ -886,7 +979,7 @@ def main():
     app.add_handler(CommandHandler("audio", audio_command))
     app.add_handler(MessageHandler(filters.VOICE | filters.AUDIO, voice_command))
     app.add_handler(CommandHandler("transcreveraudio", transcrever_help_command))
-    app.add_handler(CommandHandler("transcreveraudio", transcrever_help_command))
+    app.add_handler(MessageHandler(filters.VIDEO, video_message_handler))
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
     
     print("🤖 NegreirosBot iniciado!")

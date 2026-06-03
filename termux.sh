@@ -120,6 +120,7 @@ show_menu() {
     echo -e "  ${CYAN}4)${NC}  📡 Radagast (curadoria automática)"
     echo -e "  ${CYAN}5)${NC}  🎠 Gerar Carrossel"
     echo -e "  ${CYAN}6)${NC}  ✍️  Gerar Post para Instagram"
+    echo -e "  ${CYAN}e)${NC}  📧 Gimli — Email Marketing"
     echo ""
     echo -e "${BOLD}📋 FERRAMENTAS:${NC}"
     echo -e "  ${CYAN}7)${NC}  📋 Quadro de Avisos (tarefas)"
@@ -252,6 +253,42 @@ run_texto() {
         cd "$PROJETO"
         python agents/text_generator/main.py "$objetivo" "educational"
     fi
+    echo ""
+    read -p "Pressione ENTER para voltar..."
+}
+
+run_gimli() {
+    echo -e "\n${YELLOW}📧 Gimli — Email Marketing${NC}"
+    echo -e "${CYAN}Escolha o comando:${NC}"
+    echo "  1) 🧪 Teste (preview sem disparar)"
+    echo "  2) 🚀 Produção (disparar campanhas)"
+    echo "  3) 🔄 Sync Listas (Notion → AC)"
+    echo "  4) 📋 Listar Listas"
+    echo "  5) 🏷️  Listar Segmentos"
+    echo "  6) ⚡ Disparar email AGORA"
+    echo "  q) Voltar"
+    echo ""
+    read -n1 -r -p "👉 Escolha: " opt
+    echo ""
+    cd "$PROJETO/agents/gimli" 2>/dev/null
+
+    case "$opt" in
+        1) python gimli.py --teste ;;
+        2) python gimli.py --producao ;;
+        3) python gimli.py --sync-listas ;;
+        4) python gimli.py --listar ;;
+        5) python gimli.py --segmentos ;;
+        6)
+            echo ""
+            echo -e "${CYAN}Título do email no Notion:${NC} "
+            read -r titulo
+            if [ -n "$titulo" ]; then
+                python gimli.py --agora "$titulo"
+            fi
+            ;;
+        q) return ;;
+        *) echo -e "${RED}Opção inválida${NC}" ;;
+    esac
     echo ""
     read -p "Pressione ENTER para voltar..."
 }
@@ -415,6 +452,7 @@ main() {
             4) run_radagast ;;
             5) run_carrossel ;;
             6) run_texto ;;
+            e|E) run_gimli ;;
             7) show_quadro ;;
             8) show_ideias ;;
             9) show_posicionamento ;;

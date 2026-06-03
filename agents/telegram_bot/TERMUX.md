@@ -19,7 +19,8 @@ pip install python-telegram-bot requests jinja2
 ### 3. Configure o token (opcional - já vem incluso)
 
 ```bash
-export TELEGRAM_BOT_TOKEN="8789174206:AAEFbU9kz0PQQLFlCw4vMVzIYiXSnmVRjxQ"
+# Substitua pelo seu token do @BotFather
+export TELEGRAM_BOT_TOKEN="seu-token-aqui"
 ```
 
 ### 4. Inicie o bot

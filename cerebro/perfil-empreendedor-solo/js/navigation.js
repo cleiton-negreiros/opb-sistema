@@ -2,7 +2,7 @@
 // NAVIGATION
 // ============================================
 const PAGES = { dashboard:'Dashboard', cerebro:'Cérebro', rotinas:'Rotinas', transcricao:'Transcrição', 'capa-video':'Capa Vídeo', carrossel:'Carrossel', consumo:'Consumo', posicionamento:'Posicionamento', 'text-generator':'Text Generator',   narvi:'Narvi', radagast:'Radagast', 'consultor-negocios':'Consultor de Negócios', 'jornada-ia':'Jornada IA', perfil:'Meu Perfil', produtividade:'Produtividade',
-  'quadro-avisos':'Quadro de Avisos', inspiracoes:'Inspirações', aprendizados:'Aprendizados', config:'Configurações' };
+  'quadro-avisos':'Quadro de Avisos', inspiracoes:'Inspirações', aprendizados:'Aprendizados', config:'Configurações', gimli:'Gimli' };
 
 function navigateTo(page) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));

@@ -7,43 +7,40 @@
 | Métrica | Valor |
 |---------|-------|
 | **Online** | ✅ Sim |
-| **Token** | Configurado |
-| **Ideias salvas** | 0 |
-
-## Saúde
-
-- ✅ Bot iniciando corretamente
-- ✅ Salvando no cérebro
-- ✅ Respondendo comandos
-- ✅ Execução remota funcionando
+| **Token** | Configurado via .env ou variável de ambiente |
+| **Ideias salvas** | (automático) |
+| **Plataformas** | ✅ Windows, ✅ Termux (Android), ✅ Linux/Mac |
 
 ## Comandos Disponíveis
 
-| Comando | Status |
-|---------|--------|
-| `/start` | ✅ |
-| `/help` | ✅ |
-| `/ideia` | ✅ |
-| `/listar` | ✅ |
-| `/status` | ✅ |
-| `/agents` | ✅ |
-| `/hub` | ✅ |
-| `/executar` | ✅ |
-| `/projetos` | ✅ |
-| `/regras` | ✅ |
-
-## Plataformas Suportadas
-
-- ✅ Windows (PC)
-- ✅ Termux (Android)
-- ✅ Linux/Mac
+| Comando | Status | Ollama? | Mobile? |
+|---------|--------|---------|---------|
+| `/start`, `/help`, `/status` | ✅ | Não | ✅ |
+| `/ideia`, `/ideias`, `/listar` | ✅ | Não | ✅ |
+| `/cerebro`, `/regras`, `/projetos` | ✅ | Não | ✅ |
+| `/posicionamento`, `/meuid` | ✅ | Não | ✅ |
+| `/agents`, `/hub`, `/executar` | ✅ | Não | ✅ |
+| `/tarefas`, `/tarefa`, `/concluir` | ✅ | Não | ✅ |
+| `/plano`, `/briefing` | ✅ | Não | ✅ |
+| `/liturgico` | ✅ | Não (standalone) | ✅ |
+| `/reels` | ✅ | Fallback offline | ✅ |
+| `/hashtags` | ✅ | Fallback offline | ✅ |
+| `/cortarsilencio` | ✅ | Não (FFmpeg) | ✅ |
+| `/carrossel` | ✅ | Sim | ⚠️ |
+| `/texto` | ✅ | Sim | ⚠️ |
+| `/capavideo` | ✅ | Sim | ⚠️ |
+| `/consumo` | ✅ | Sim | ⚠️ |
+| `/radagast` | ✅ | Sim | ⚠️ |
+| `/iniciar` | ✅ | Adaptativo | ✅ |
+| `/audio` | ✅ | Whisper | ⚠️ lento |
+| Enviar vídeo | ✅ | Não (FFmpeg) | ✅ |
 
 ## Configuração
 
-- **Token**: `8789174206:AAEFbU9kz0PQQLFlCw4vMVzIYiXSnmVRjxQ`
+- **Token**: `(configurado via .env ou variável de ambiente)`
 - **Pasta de saída**: `acervo/ideias/`
 - **Modo**: Polling (contínuo)
 
 ---
 
-_Last updated: 2026-05-12_
+_Last updated: 2026-05-24_
