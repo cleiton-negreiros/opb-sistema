@@ -1,7 +1,12 @@
-﻿## Habilidades
+## Habilidades
 
-(Em desenvolvimento - perfil Toque de Paz)
+Violão 
+Baixo
+Guitarra
+Cavaquinho 
+Teoria musical
+Técnica vocal
+
 
 ## Resumo
 
-Música e louvor com propósito

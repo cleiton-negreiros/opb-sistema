@@ -1,7 +1,6 @@
-﻿## Valores
+## Valores
 
-(Em desenvolvimento - perfil Toque de Paz)
+Qualquer pessoa que se dedique, seja perseverante e tenha paixão por aprender sempre mais, pode se expressar através da música.
 
 ## Crenças
 
-(Em desenvolvimento)

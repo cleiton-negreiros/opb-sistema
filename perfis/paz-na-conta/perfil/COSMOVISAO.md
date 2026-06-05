@@ -1,6 +1,6 @@
-﻿## Valores
+## Valores
 
-Fé, Organização, Paz, Serviço, Propósito
+Trabalhar de casa pra estar com minha família.
 
 ## Crenças
 

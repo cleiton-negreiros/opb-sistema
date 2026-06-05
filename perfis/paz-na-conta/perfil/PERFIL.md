@@ -21,4 +21,4 @@ Católicos que desejam organizar suas finanças com base na doutrina da Igreja
 
 ## Problema
 
-Ajudo pessoas a organizar suas finanças pessoais e familiares com base nos princípios da Doutrina Social da Igreja e nos ensinamentos católicos sobre administração ds bens.
+Ajudo pessoas a organizar suas finanças pessoais e familiares com base nos princípios da Doutrina Social da Igreja e nos ensinamentos católicos sobre administração ds bens. Levar indivíduos de uma situação de endividamento e desorganização financeira a uma situação está e de investimentir.

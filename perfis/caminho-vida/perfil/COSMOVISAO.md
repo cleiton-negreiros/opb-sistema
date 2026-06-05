@@ -1,7 +1,10 @@
-﻿## Valores
+## Valores
 
-(Em desenvolvimento - perfil Caminho Vida)
+Deus
+Família 
+Trabalhar em casa
+
 
 ## Crenças
 
-(Em desenvolvimento)
+Se a gente se empenhar e seguir o caminho certo é sempre possível alcançar resultados.
