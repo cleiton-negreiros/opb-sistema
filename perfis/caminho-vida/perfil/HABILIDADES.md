@@ -1,7 +1,11 @@
-﻿## Habilidades
+## Habilidades
 
-(Em desenvolvimento - perfil Caminho Vida)
+Ensinar 
+Formação humana
+Edição de vídeo 
+Falar em público 
+
 
 ## Resumo
 
-Formação e espiritualidade católica
+Unir autoconhecimento e nutrição.

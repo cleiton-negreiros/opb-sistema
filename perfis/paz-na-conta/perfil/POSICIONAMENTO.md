@@ -1,7 +1,7 @@
-﻿## Diferencial
+## Diferencial
 
-Único no nicho que une fé católica + finanças práticas sem teologia da prosperidade
+Educação financeira à luz da fé católica.Uso evangélico dos bens conforme a doutrina da Igreja.
 
 ## Proposta de Valor
 
-Ajudar católicos a organizar as finanças com fé, sem culpa e sem prosperidade falsa
+Conteúdo católico de finanças que ajuda concretamente pessoas endividadas e desorganizadas a atender suas necessidades.

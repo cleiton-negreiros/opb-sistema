@@ -1,7 +1,7 @@
-﻿## Missão
+## Missão
 
-Ajudar católicos a organizar as finanças com fé, sem culpa e sem prosperidade falsa
+Formar as pessoas na mentalidade católica sobre a boa administração dos bens.
 
 ## Origem
 
-Ingrid e Cleiton - um casal católico que viveu na pele a falta de organização financeira e decidiu mudar
+Ingrid e Cleiton - um casal católico que vive a organização financeira desde o namoro e hoje colhe os frutos de uma vida ordenada, tendo Deus como o centro, e não o dinheiro.

@@ -1,7 +1,7 @@
-﻿## Cliente Ideal
+## Cliente Ideal
 
-Católicos praticantes que estão com as contas no vermelho
+Pessoas endividadas e desorganizadas financeiramente.
 
 ## Problemas
 
-Dívidas, falta de organização, ansiedade financeira
+Dívidas, falta de organização, ansiedade financeira.
