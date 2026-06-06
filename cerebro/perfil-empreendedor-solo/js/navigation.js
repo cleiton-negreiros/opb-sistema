@@ -5,6 +5,11 @@ const PAGES = { dashboard:'Dashboard', cerebro:'Cérebro', rotinas:'Rotinas', tr
   'quadro-avisos':'Quadro de Avisos', inspiracoes:'Inspirações', aprendizados:'Aprendizados', config:'Configurações', gimli:'Gimli' };
 
 function navigateTo(page) {
+    // Redirect "perfil" to formulario.html (single source of truth for profile editing)
+    if (page === 'perfil') {
+        window.open('formulario.html', '_blank');
+        return;
+    }
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     const target = document.getElementById('page-' + page);
     if (target) {

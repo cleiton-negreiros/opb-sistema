@@ -76,8 +76,33 @@ class OllamaProvider(LLMProvider):
     def _mock_generate(self, prompt: str, context: Optional[Dict[str, Any]] = None) -> str:
         """
         Generate a mock response when Ollama is not available.
-        This allows testing and development without Ollama installed.
+        Uses profile data when available to make mocks profile-aware.
         """
+        # Try to load profile data (multi-perfil aware)
+        try:
+            import sys as _sys
+            from pathlib import Path as _Path
+            _pdir = _Path(__file__).parent.parent
+            if str(_pdir) not in _sys.path:
+                _sys.path.insert(0, str(_pdir))
+            from utils.profile_loader import load_profile
+            p = load_profile()
+            profile_nome = p.get("nome", "seu negócio")
+            profile_publico = p.get("publico_alvo", "seu público")
+            profile_instagram = "@paznaconta"  # fallback
+            for cfg_path in ["./perfis/perfis.json"]:
+                try:
+                    import json as _json
+                    cfg = _json.loads(_Path(cfg_path).read_text(encoding="utf-8"))
+                    for pp in cfg.get("perfis", []):
+                        if pp.get("id") == cfg.get("ativo"):
+                            profile_instagram = pp.get("icone", "") + " " + pp.get("nome", "")
+                except Exception:
+                    pass
+        except Exception:
+            profile_nome = "seu negócio"
+            profile_publico = "seu público"
+            profile_instagram = "@seuperfil"
         # Business consultation prompts (Consultor de Negócios OPB)
         if "consultor de negócios" in prompt.lower() or "plano estratégico" in prompt.lower() or "análise swot" in prompt.lower() or "calendário editorial" in prompt.lower() or "gestão de tempo" in prompt.lower() or "kpis" in prompt.lower() or "paz na conta" in prompt.lower():
             return """## Diagnóstico Estratégico
@@ -107,27 +132,37 @@ Que cada negocio sirva aos outros, criando valor que nenhum alcancaria sozinho.
 
 Buscai primeiro o Reino de Deus e a sua justica, e todas estas coisas vos serao acrescentadas. (Mt 6,33)"""
         elif "post educativo" in prompt.lower() or "educational" in prompt.lower():
-            return f"""💡 DICA RÁPIDA: {prompt.split('sobre')[1].split('.')[0].strip() if 'sobre' in prompt else 'organização'}
+            # Extract topic from prompt (best effort)
+            topic = "organização"
+            for sep in ["sobre", "topico:", "tópico:", "tema:"]:
+                if sep in prompt.lower():
+                    try:
+                        after = prompt.lower().split(sep, 1)[1]
+                        topic = after.split(".")[0].split("\n")[0].strip()[:60]
+                        break
+                    except Exception:
+                        pass
+            return f"""💡 DICA RÁPIDA: {topic}
 
 Lembre-se de aplicar esses princípios no seu dia a dia:
 1. Comece pequeno, mas comece hoje
 2. Foque no progresso, não na perfeição
 3. Celebre cada conquista, por menor que seja
 
-Como isso se aplica ao seu negócio? Compartilhe nos comentários! 👇
+Como isso se aplica à sua vida? Compartilhe nos comentários! 👇
 
-#produtividade #empreendedorismo #dicas"""
-        
+#dicas #{profile_nome.split()[0].lower() if profile_nome else 'dica'} #{profile_publico.split()[0].lower() if profile_publico else 'dica'}"""
+
         elif "post inspirador" in prompt.lower() or "inspirational" in prompt.lower():
             return f"""✨ LEMBRE-SE:
 
-Você já tem tudo que precisa para começar. Não espere pelo momento "perfeito" - ele não existe.
+Você já tem tudo que precisa para começar. Não espere pelo momento "perfeito" — ele não existe.
 
 Cada grande jornada começa com um pequeno passo. O importante é dar esse passo hoje.
 
 Acredite no seu processo e confie no seu tempo. Você está no caminho certo.
 
-#mentalidade #empreendedorismo #jornada"""
+#fé #{profile_nome.split()[0].lower() if profile_nome else 'jornada'} #propósito"""
         
         elif "post promocional" in prompt.lower() or "promotional" in prompt.lower():
             return f"""🚀 OFERTA ESPECIAL:

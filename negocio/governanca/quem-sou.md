@@ -1,5 +1,9 @@
 # Quem Sou
 
+> ⚠️ **ARQUIVO LEGADO** (2026-06-06) — Conteúdo migrado para `perfis/<id>/perfil/*.md` (multi-perfil).
+> Este arquivo ainda é lido por `profile_loader.py` como fallback se um perfil não tiver arquivo próprio.
+> Para Paz na Conta, use `perfis/paz-na-conta/perfil/PERFIL.md` (e os outros .md da mesma pasta) como fonte de verdade.
+
 > Perfil e tom de voz — base para toda comunicação gerada por IA.
 
 ## Identidade

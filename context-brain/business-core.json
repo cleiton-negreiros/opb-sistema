@@ -1,14 +1,23 @@
 {
+  "nome": "Paz na Conta",
+  "descricao": "Finanças à luz da fé católica",
+  "tagline": "Paz na Conta: Finanças à luz da fé católica",
+  "autores": "Ingrid e Cleiton",
+  "instagram": "@paznaconta",
+  "telegram": "@NegreirosBot",
+  "versiculo": "Buscai primeiro o Reino de Deus e a sua justiça, e todas estas coisas vos serão acrescentadas. (Mt 6,33)",
+  "nicho": "Finanças Católicas",
   "valores": [
-    "autenticidade",
-    "praticidade", 
-    "impacto",
-    "crescimento consciente"
+    "fé",
+    "organização",
+    "paz",
+    "serviço",
+    "propósito"
   ],
-  "tom_de_voz": "direto, inspirador, sem jargões, próximo como uma conversa de café",
-  "publico_alvo": "empreendedores solitários e pequenos times que querem crescer sem burnout",
-  "missao": "ajudar solopreneurs a automatizar o repetitivo para focar no que realmente importa: criação, conexão e liberdade",
-  "visao": "ser o cérebro por trás de mil negócios unipessoais lucrativos e sustentáveis",
+  "tom_de_voz": "leve, direto, próximo, profundo sem ser pesado, sem jargões",
+  "publico_alvo": "Católicos endividados e desorganizados financeiramente que querem paz nas contas com base na fé católica e na Doutrina Social da Igreja",
+  "missao": "Ajudar católicos a organizar as finanças com fé, sem culpa e sem prosperidade falsa — porque dinheiro bem administrado serve a Deus e ao próximo",
+  "visao": "Ser a referência em finanças católicas no Brasil",
   "marca_visual": {
     "cores_primarias": ["#FF6B6B", "#4ECDC4", "#45B7D1"],
     "cores_secundarias": ["#FFE66D", "#95E1D3"],

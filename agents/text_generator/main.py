@@ -77,19 +77,24 @@ def generate_instagram_post(objective: str, post_type: str = "educational", prof
     # Generate text using LLM
     try:
         generated_text = generate_text(prompt)
-        return generated_text.strip()
-    except Exception as e:
-        # Fallback template-based generation if LLM fails
-        return f"""💡 DICA RÁPIDA: {objective.capitalize()}
+        if generated_text and generated_text.strip():
+            return generated_text.strip()
+    except Exception:
+        pass
+
+    # Fallback template-based generation if LLM fails/unavailable
+    # Usa o público real do perfil (não hardcoded "negócio")
+    publico_curto = audience.split(".")[0].split(",")[0].strip() if audience else "seu público"
+    return f"""💡 DICA RÁPIDA: {objective.capitalize()}
 
 Lembre-se de aplicar esses princípios no seu dia a dia:
 1. Comece pequeno, mas comece hoje
 2. Foque no progresso, não na perfeição
 3. Celebre cada conquista, por menor que seja
 
-Como isso se aplica ao seu negócio? Compartilhe nos comentários! 👇
+Como isso se aplica à sua vida? Compartilhe nos comentários! 👇
 
-#produtividade #empreendedorismo #dicas"""
+#dicas #{publico_curto.split()[0].lower() if publico_curto else "dica"}"""
 
 def save_post(text: str, filename: str = None) -> str:
     """

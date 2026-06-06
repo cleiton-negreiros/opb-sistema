@@ -87,8 +87,25 @@ O cérebro é a **fonte de verdade** para contexto. Todo agente deve ler:
 
 ### Leitura obrigatória (toda sessão)
 1. `MAPA.md` - Estrutura geral
-2. `negocio/governanca/regras/quem-sou.md` - Identidade e tom de voz
+2. `perfis/<perfil-ativo>/perfil/PERFIL.md` + `REGRAS-ESCRITA.md` + `NARRATIVA.md` (D-03) - Identidade e tom de voz do perfil ativo
 3. `negocio/projetos/ativos.md` - O que está em andamento
+
+### D-03 — Fonte única de verdade do perfil (a partir de 2026-06-06)
+
+`perfis/<id>/perfil/*.md` é a fonte única. `negocio/governanca/quem-sou.md` é LEGADO (fallback apenas).
+
+| Arquivo | Conteúdo |
+|---------|----------|
+| `PERFIL.md` | nome, autores, instagram, telegram, tagline, versiculo, nicho, problema, pilares |
+| `REGRAS-ESCRITA.md` | tom_de_voz, valores, regras_escrita, marca_visual |
+| `NARRATIVA.md` | missao, visao, origem, objetivos |
+| `PUBLICO-ALVO.md` | cliente_ideal, problemas_publico |
+| `POSICIONAMENTO.md` | diferencial, proposta_valor, frase_posicionamento, pvu |
+| `HABILIDADES.md` | habilidades, resumo |
+| `HISTORIAS.md` | historia_profissional, experiencias |
+| `COSMOVISAO.md` | valores, crencas (refina REGRAS-ESCRITA) |
+
+`utils/profile_loader.py` faz parse tolerante (sem acento, aliases) — então `Público Alvo` == `Público-Alvo` == `Cliente Ideal` == `publico_alvo` automaticamente.
 
 ### Escrita (quando relevante)
 - Novas regras → `negocio/governanca/regras/`
@@ -301,6 +318,31 @@ Ou executar:
 - [ ] UI da plataforma: dropdown de ideias salvas no formulário de carrossel
 - [ ] D-02: corrigir bug de encoding em `utils/profile_loader.py` (Público/Missão sem match)
 - [ ] `api_server.py:run_agent()` injeta `--perfil <ativo>` automaticamente
+
+---
+
+## 🗓️ Progresso — 06/06/2026 (Sábado) — Fase 1 do Plano do Cérebro
+
+### Feito
+- **Resgate do cérebro (Fase 1)** — Fonte única de verdade definida (D-03):
+  - `perfis/<id>/perfil/*.md` é a fonte. `negocio/governanca/quem-sou.md` virou LEGADO.
+  - `perfis/paz-na-conta/perfil/REGRAS-ESCRITA.md` (NOVO) com tom_de_voz, valores, regras, marca visual.
+  - `perfis/paz-na-conta/perfil/NARRATIVA.md` atualizado com visao + objetivos.
+  - `perfis/paz-na-conta/perfil/PERFIL.md` atualizado com autores, tagline, versiculo, pilares.
+  - `utils/profile_loader.py` reescrito (D-02 resolvido): encoding tolerante (sem acento), aliases (Público Alvo / Público-Alvo / Cliente Ideal), parser state-machine (resolve bug do `---`).
+  - `utils/context_loader.py`: fallback para `load_profile()` quando business-core.json está vazio. **Resolve bug do público errado** ("empreendedores solitários" → católicos endividados).
+  - `context-brain/business-core.json` atualizado com dados reais do Paz na Conta.
+  - `utils/llm_provider.py`: mock do LLM agora usa o perfil (hashtags como #catolicos em vez de #empreendedorismo).
+  - `agents/text_generator/main.py`: fallback do post usa o público real (não hardcoded "negócio").
+  - `cerebro/.../js/navigation.js`: `navigateTo('perfil')` agora abre `formulario.html` em nova aba (resolve duplicação de UI).
+  - `negocio/governanca/quem-sou.md` marcado como LEGADO.
+
+### Pendente (próximas fases)
+- [ ] **Fase 2 — UX gulosa:** Chat de perfil com IA, indicador % completo, mobile-first review
+- [ ] **Fase 3 — Conteúdo:** "Gerar conteúdo com base no perfil", detector de lacunas, análise de consistência
+- [ ] **Fase 4 — Sincronização:** Banner "Atualizar do celular?", sync silencioso, dropdown de perfil no form
+- [ ] Preencher perfis `toque-de-paz` e `caminho-vida` (atualmente vazios)
+- [ ] Corrigir PUBLICO-ALVO de caminho-vida ("emagrecer" — copiou do projeto antigo)
 
 ---
 
