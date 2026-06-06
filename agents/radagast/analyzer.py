@@ -1,98 +1,182 @@
+"""
+analyzer.py — Gerador de ideias de conteúdo para OPB Sistema (multi-perfil).
+
+Substitui o SYSTEM_PROMPT hardcoded de Paz na Conta por um builder
+profile-aware. O contexto (marca, nicho, público, tom, pilares)
+vem de `utils.profile_loader.load_profile()` + `utils.multi_profile.get_profile_config()`.
+"""
 import json
 import logging
 import os
 import re
 import requests
+from typing import Optional
 
 logger = logging.getLogger("radagast.analyzer")
 
-SYSTEM_PROMPT = """\
-Voce e o Radagast, curador de conteudo para o Paz na Conta (@paznaconta).
+# Pilares default por id de perfil — usados quando o perfil não define os próprios.
+# Mantém compatibilidade com o comportamento antigo do Paz na Conta.
+PILARES_DEFAULT = {
+    "paz-na-conta": [
+        ("dica-pratica", "Dica pratica (anzol) — orcamento, dividas, poupanca, em termos simples"),
+        ("fe-nas-financas", "Fe nas financas — reflexao sobre dinheiro e fe, DSI em linguagem simples"),
+        ("casal-pac", "Casal PAC — bastidores, decisoes financeiras reais de Ingrid e Cleiton"),
+        ("contraste", "Contraste — 'O que a Biblia diz vs o que os influencers falam'"),
+        ("viral", "Conteudo viral — um guia / resolva um problema especifico"),
+    ],
+    "toque-de-paz": [
+        ("musica-nova", "Musica nova — divulgacao de lancamento, video clipe ou letra"),
+        ("devocional", "Devocional — reflexao espiritual ligada a uma musica ou salmo"),
+        ("bastidores", "Bastidores — composicao, gravacao, estudio, rotina do ministerio"),
+        ("comunidade", "Comunidade — historias de quem foi tocado pela musica"),
+        ("ensino", "Ensino — como a musica pode ser ferramenta de evangelizacao"),
+    ],
+    "caminho-vida": [
+        ("reflexao", "Reflexao biblica — meditacao sobre uma passagem do dia"),
+        ("oracao", "Oracao — guia pratico de oracao para o dia a dia"),
+        ("estudo", "Estudo — aprofundamento de um tema da doutrina catolica"),
+        ("vida-crista", "Vida crista — como viver a fe no trabalho, familia, rotina"),
+        ("sacramentos", "Sacramentos — explicacao acessivel eucarista, confissao, etc"),
+    ],
+}
+
+
+def _pilares_para(perfil_id: str) -> list[tuple[str, str]]:
+    """Retorna lista (id, descricao) dos pilares do perfil."""
+    return PILARES_DEFAULT.get(perfil_id, [
+        ("dica-pratica", "Dica pratica — conteudo util e aplicavel"),
+        ("reflexao", "Reflexao — pensamento mais profundo, inspiracao"),
+        ("bastidores", "Bastidores — rotina, jornada, vida real"),
+        ("comunidade", "Comunidade — interacao com o publico, perguntas"),
+        ("viral", "Viral — gancho forte, lista, contraste, polemica saudavel"),
+    ])
+
+
+def build_system_prompt(perfil: dict, profile_config: Optional[dict] = None,
+                        perfil_id: str = "paz-na-conta") -> str:
+    """Constroi o SYSTEM_PROMPT dinamicamente a partir do perfil carregado.
+
+    Args:
+        perfil: dict retornado por `profile_loader.load_profile(pid)`.
+                Campos: nome, descricao, tom_de_voz, valores, publico_alvo,
+                missao, visao, regras_escrita.
+        profile_config: dict do `perfis/<id>/perfil/config.json` (id, nome, icone,
+                instagram, versiculo, etc).
+        perfil_id: id do perfil (para escolher pilares default).
+
+    Returns:
+        String com o prompt completo, pronto para Ollama.
+    """
+    profile_config = profile_config or {}
+    nome = (perfil.get("nome") or profile_config.get("nome") or "Seu Perfil").strip()
+    handle = profile_config.get("instagram", "@seuarroba")
+    versiculo = profile_config.get("versiculo", "").strip()
+    descricao = (perfil.get("descricao") or profile_config.get("descricao") or "").strip()
+    missao = (perfil.get("missao") or "").strip()
+    publico = (perfil.get("publico_alvo") or "").strip()
+    tom_list = perfil.get("tom_de_voz") or ["leve, direto, proximo"]
+    tom = ", ".join(tom_list) if isinstance(tom_list, list) else str(tom_list)
+    valores = perfil.get("valores") or []
+    valores_str = ", ".join(valores) if isinstance(valores, list) else "autenticidade, respeito, pratica"
+    regras = perfil.get("regras_escrita") or []
+    regras_str = "\n- ".join(regras) if isinstance(regras, list) else ""
+
+    pilares = _pilares_para(perfil_id)
+    pilares_lista = "\n".join(f"  {i+1}. [{pid}] {pdesc}" for i, (pid, pdesc) in enumerate(pilares))
+    pilares_ids = " | ".join(pid for pid, _ in pilares)
+
+    # Formatos de saida por pilar (heuristica simples, sobrescrevivel)
+    formato_por_pilar = ", ".join(
+        f"{pid}=carrossel|post|reel|story" for pid, _ in pilares
+    )
+
+    prompt = f"""Voce e o Radagast, curador de conteudo para {nome} ({handle}).
 
 IDENTIDADE DO PERFIL:
-- Marca: Paz na Conta, de Ingrid e Cleiton (casal catolico)
-- Nicho: Financas catolicas — Doutrina Social da Igreja (DSI), economia do Reino, organizacao financeira com fe
-- Missao: ajudar catolicos a organizar as financas com fe, sem culpa e sem prosperidade falsa
-- Tagline: "Financas a luz da fe catolica"
-- Tom: leve, direto, proximo, como conversa de cafe; sem jargoes, sem moralismo
-- Publico: catolicos praticantes endividados ou desorganizados, que nao querem teologia da prosperidade
+- Marca: {nome}
+- Handle: {handle}
+- Nicho: {descricao or 'definido pela descricao do perfil'}
+- Missao: {missao or 'ajudar o publico a aplicar os principios do nicho na vida real'}
+- Publico: {publico or 'publico definido pelo perfil'}
+- Tom de voz: {tom}
+- Valores: {valores_str}
+{f'- Versiculo-chave: {versiculo}' if versiculo else ''}
 
-5 TESES DO PAZ NA CONTA:
-1. Fe e dinheiro combinam — separar os dois e o problema
-2. Deus primeiro, outros depois, voce depois — ordering principle
-3. Dinheiro e meio, nao fim — DSI pura
-4. Paz nas contas, nao riqueza a qualquer custo — diferencial contra teologia da prosperidade
-5. Organize suas financas sem perder a alma — posicionamento central
+PILARES DE CONTEUDO (usar SOMENTE estes IDs):
+{pilares_lista}
 
-5 PILARES DE CONTEUDO:
-1. Dica pratica ("anzol") — orcamento, dividas, poupanca, em termos simples
-2. Fe nas financas — reflexao sobre dinheiro e fe, DSI em linguagem simples
-3. Casal PAC — bastidores, decisoes financeiras reais de Ingrid e Cleiton
-4. Contraste — "O que a Biblia diz vs o que os influencers falam"
-5. Conteudo viral — um guia/resolva um problema especifico
-
-5 CONTEUDOS ANZOL PARA VIRAL (inspiracao):
-1. "Como quitar seu carnê de 12x em 3 meses" (metodo bola de neve catolico)
-2. "O que a DSI diz sobre o Nubank / PicPay / seu banco" (contraste polemico)
-3. "Planilha de orcamento para casais catolicos" (download + tutorial)
-4. "Investimento catolico: onde o Vaticano investe seu dinheiro?" (Morningstar IOR)
-5. "Desafio 7 dias de paz nas contas" (serie diaria no Instagram)
-
-ROTA DE EVOLUCAO (para contextualizar o momento):
-- Fase 1: Conteudo gratuito Instagram + YouTube (agora)
-- Fase 2: E-book + Metodo PAC (3 meses)
-- Fase 3: Mentoria para casais (6 meses)
-- Fase 4: Comunidade paga (12 meses)
-- Fase 5: Catholic Money Academy BR (24 meses)
-
-REFERENCIAS DO NICHO (concorrentes diretos para ficar de olho):
-- Cristao Rico (574K YouTube, plataforma EBF, R$1.997/ano)
-- Enriclass (plataforma por assinatura, 3 pilares)
-- FinancasCore (app R$9,90/mes, modo casal, concorrente direto)
-- Diego Nascimento (300K YouTube, Metodo FSB)
-- Matheus Machado (catolico, FGV/Oxford)
-- WalletWin (casal catolico nos EUA, Catholic Money Academy)
-
-TOM E VOZ REFINADO:
-- Humor leve: piadas sutis, analogias do dia-a-dia, sem forcar
-- Linguagem simples: "economes" traduzido para "portugues de cafe"
-- Fe autentica, nao pregacao: fe aparece como base moral, nao como sermao
-- Casal real: imperfeicoes, duvidas reais, decisoes conjuntas
-- Pratico > Teorico: terminar sempre com "o que fazer amanha"
+FORMATOS POR PILAR (use o mais adequado ao contexto):
+{formato_por_pilar}
 
 REGRAS DE ESCRITA:
-- Falam "a gente" (primeira pessoa do plural — Ingrid e Cleiton juntos)
-- Nunca usam travessao
-- Frases curtas e diretas
-- Evitam jargoes tecnicos
-- Fe aparece naturalmente, nao forcada
-- Sempre terminam com uma aplicacao pratica
-- Conectam cada dica a um "para que" — proposito maior que dinheiro
-- Usam linguagem de paz e leveza mesmo em temas dificeis
-- A historia pessoal (CLT -> empreendedor, Joao Pessoa, familia) aparece como testemunho, nao como autoajuda
+- Linguagem simples e direta, sem jargoes desnecessarios
+- Fe/identidade aparece naturalmente, nao forcado
+- Termine cada ideia com uma aplicacao pratica
+- Conecte a um proposito maior, nao so a um "dica legal"
+- Frases curtas
+- Sem promessas vazias nem "luz no fim do tunel" generico
+{f'- Regras especificas do perfil:{chr(10)}- ' + regras_str if regras_str else ''}
 
 FORMATO DE SAIDA (JSON puro, sem markdown):
-{
+{{
     "ideas": [
-        {
+        {{
             "titulo": "Titulo curto do post/carrossel",
             "hook": "Frase de abertura (primeira coisa que aparece na tela)",
             "pontos": ["Ponto 1", "Ponto 2", "Ponto 3"],
             "fonte_url": "Link original",
             "fonte_autor": "Quem criou o conteudo original",
-            "pilar": "dica-pratica | fe-nas-financas | casal-pac | contraste | viral",
+            "pilar": "{pilares_ids}",
             "formato": "carrossel | post | reel | story",
-            "angulo_catolico": "Como aplicar a DSI ou o Evangelho nesse tema"
-        }
+            "angulo_perfil": "Como aplicar a identidade / nicho / versiculo do perfil neste tema"
+        }}
     ]
-}
+}}
 
 Gere entre 5 e 8 ideias. Responda APENAS com o JSON. Sem texto antes ou depois.
 """
+    return prompt
 
 
-def generate_reel_ideas(contents: list[dict], profile_context: str = "") -> list[dict]:
-    """Envia conteudos coletados para Ollama e retorna ideias para Paz na Conta."""
+def _carregar_contexto_perfil(profile_id: str) -> tuple[dict, Optional[dict], str]:
+    """Helper que carrega perfil + config e retorna (perfil, profile_config, prompt).
+
+    Nunca quebra: se algum load falhar, retorna dados minimos e um prompt de fallback.
+    """
+    try:
+        sys_path = os.path.dirname(os.path.abspath(__file__))
+        base = os.path.dirname(sys_path)
+        if base not in os.sys.path:
+            os.sys.path.insert(0, base)
+            utils_path = os.path.join(base, "utils")
+            if utils_path not in os.sys.path:
+                os.sys.path.insert(0, utils_path)
+
+        from profile_loader import load_profile
+        from multi_profile import get_profile_config
+
+        perfil = load_profile(profile_id) or {}
+        pconfig = get_profile_config(profile_id)
+    except Exception as e:
+        logger.warning(f"Falha ao carregar perfil: {e}")
+        perfil, pconfig = {}, None
+
+    prompt = build_system_prompt(perfil, pconfig, profile_id)
+    return perfil, pconfig, prompt
+
+
+def generate_reel_ideas(contents: list[dict], profile_id: str = "paz-na-conta",
+                        profile_context: str = "") -> list[dict]:
+    """Envia conteudos coletados para Ollama e retorna ideias para o perfil resolvido.
+
+    Args:
+        contents: lista de dicts com 'source', 'author', 'title', 'text', 'url'.
+        profile_id: id do perfil. Se None, usa o ativo.
+        profile_context: contexto adicional (opcional) a ser inserido no prompt.
+    """
+    pid = (profile_id or "paz-na-conta").strip()
+    perfil, pconfig, system_prompt = _carregar_contexto_perfil(pid)
+
     content_lines = []
     max_items = min(len(contents), 3)
     for i, c in enumerate(contents[:max_items], 1):
@@ -106,26 +190,25 @@ def generate_reel_ideas(contents: list[dict], profile_context: str = "") -> list
 
     contexto_extra = ""
     if profile_context:
-        contexto_extra = f"\n\nCONTEXTO DO PERFIL:\n{profile_context}\n\n"
+        contexto_extra = f"\n\nCONTEXTO ADICIONAL DO PERFIL:\n{profile_context}\n\n"
 
     user_prompt = (
         f"CONTEUDOS COLETADOS ({max_items} items):\n\n"
         + "\n".join(content_lines)
         + contexto_extra
-        + "\n\nGere 5 ideias para Instagram no formato JSON:\n"
-        + '{"ideas": [{"titulo": "...", "hook": "...", "pontos": ["..."], "fonte_url": "...", "fonte_autor": "...", "pilar": "dica-pratica|fe-nas-financas|casal-pac|contraste|viral", "formato": "carrossel|post|reel|story", "angulo_catolico": "..."}]}'
+        + "\n\nGere 5 ideias no formato JSON, respeitando os pilares e o tom acima."
     )
 
     OLLAMA_URL = os.environ.get("OLLAMA_URL", "http://localhost:11434/api/generate")
     MODEL = os.environ.get("OLLAMA_MODEL", "tinyllama")
 
     try:
-        logger.info(f"Enviando {max_items} conteudos para Ollama ({MODEL})...")
+        logger.info(f"Enviando {max_items} conteudos para Ollama ({MODEL}) [perfil: {pid}]...")
         response = requests.post(
             OLLAMA_URL,
             json={
                 "model": MODEL,
-                "prompt": SYSTEM_PROMPT + "\n\n" + user_prompt,
+                "prompt": system_prompt + "\n\n" + user_prompt,
                 "stream": False,
                 "options": {"num_gpu": 0}
             },
@@ -158,5 +241,5 @@ def generate_reel_ideas(contents: list[dict], profile_context: str = "") -> list
         logger.error(f"Resposta bruta: {raw_text[:500]}...")
         ideas = []
 
-    logger.info(f"Ideias geradas: {len(ideas)}")
+    logger.info(f"Ideias geradas: {len(ideas)} [perfil: {pid}]")
     return ideas

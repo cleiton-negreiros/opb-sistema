@@ -171,6 +171,30 @@ python agents/text_generator/main.py "<objetivo>" [tipo_post]
 
 ---
 
+### Agente Radagast
+**Caminho**: `agents/radagast/radagast.py`
+
+**Uso**:
+```bash
+python agents/radagast/radagast.py              # roda com perfil ativo
+python agents/radagast/radagast.py --perfil paz-na-conta
+python agents/radagast/radagast.py --dry-run --perfil toque-de-paz
+python agents/radagast/radagast.py --discover --perfil caminho-vida
+python agents/radagast/radagast.py --check
+```
+
+**Multi-perfil (v2)**: SYSTEM_PROMPT é gerado dinamicamente a partir de
+`profile_loader.load_profile(pid)` + `multi_profile.get_profile_config(pid)`.
+Pilares default por perfil: paz-na-conta (dica-pratica/fe/casal/contraste/viral),
+toque-de-paz (musica-nova/devocional/bastidores/comunidade/ensino),
+caminho-vida (reflexao/oracao/estudo/vida-crista/sacramentos).
+
+**Config por perfil (opcional)**: `agents/radagast/config/keywords_<id>.json`
+ou `inspiracoes_<id>.json` sobrescreve o global. Salva ideias em
+`perfis/<id>/acervo/ideias/radagast_*.md`.
+
+---
+
 ## 🔧 Comandos Úteis
 
 ```bash
@@ -263,6 +287,23 @@ Ou executar:
 
 ---
 
+## 🗓️ Progresso — 06/06/2026 (Sábado)
+
+### Feito hoje
+- **Radagast multi-perfil (v2)**: SYSTEM_PROMPT agora é gerado dinamicamente por `build_system_prompt(perfil, profile_config, pid)` em `agents/radagast/analyzer.py`. Aceita `--perfil <id>` (ou `-p`) no CLI. Pilares default por perfil: paz-na-conta (dica-pratica/fe/casal/contraste/viral), toque-de-paz (musica-nova/devocional/bastidores/comunidade/ensino), caminho-vida (reflexao/oracao/estudo/vida-crista/sacramentos). Ideias salvas em `perfis/<id>/acervo/ideias/radagast_*.md`.
+- **sync-safe.sh FIX**: bug que travava o sync no celular (sync-safe.sh baixado pelo curl ficava untracked e bloqueava o git merge). Agora move o script para `~/.opb-bin/sync-safe` no início (preserva pra re-rodar) + pre-flight que move QUALQUER untracked que conflitaria com o pull/merge. Mensagens de erro agora distinguem "working tree suja" de "conflito de conteúdo".
+- **Testes**: `tests/test_radagast_multiprofile.py` e `tests/test_radagast_paths.py` validam resolução de perfil e paths por perfil.
+
+### Pendente
+- [ ] Sincronizar celular com a nova versão do sync-safe.sh (ver instruções no chat)
+- [ ] Carrossel: implementar `--ideia <arquivo>` (carrossel a partir de ideia salva)
+- [ ] Endpoint `/api/ideias/lista` filtrado por perfil ativo
+- [ ] UI da plataforma: dropdown de ideias salvas no formulário de carrossel
+- [ ] D-02: corrigir bug de encoding em `utils/profile_loader.py` (Público/Missão sem match)
+- [ ] `api_server.py:run_agent()` injeta `--perfil <ativo>` automaticamente
+
+---
+
 ## 🗓️ Jornada IA — Alimentação Diária
 
 **Instrução:** Toda nova funcionalidade implementada deve ser registrada na seção Jornada IA da plataforma (`plataforma.html → #page-jornada-ia`). Cada dia de vira um card na timeline (tema + realizações + tags). Manter os textos de compartilhamento (LinkedIn, Twitter, Instagram, Substack, Carrossel) atualizados com os novos marcos. Isso gera autoridade pública e documenta o progresso real.
@@ -275,7 +316,7 @@ Ou executar:
 
 **Regra:** Todo agente que gera texto deve chamar `get_brain_context()` no início e incluir o resultado no prompt. Agentes técnicos (corta-silencio, transcrever-audio, etc.) podem pular. Os utilitários em `utils/` (`context_loader.py`, `profile_loader.py`) agora são profile-aware — aceitam `profile_id` opcional e nunca quebram se arquivos não existirem.
 
-**Agentes integrados:** consultor-negocios, text_generator, carrossel, consumo, designer, capa_video ✅
+**Agentes integrados:** consultor-negocios, text_generator, carrossel, consumo, designer, capa_video, radagast ✅
 **Agentes que não precisam:** corta-silencio, transcrever-audio, telegram_bot, coordinator, quadro-de-avisos, hashtags
 
 ---

@@ -22,6 +22,31 @@ git config --global user.email "cleiton.negreiros@gmail.com" 2>/dev/null
 git config --global user.name "cleiton-negreiros" 2>/dev/null
 git config --global --add safe.directory "$(pwd)" 2>/dev/null
 
+# ============================================
+# 0) MOVER SELF PARA ~/.opb-bin/ (se baixado via curl)
+# ============================================
+# Quando o usuario roda `curl ... sync-safe.sh && bash sync-safe.sh`,
+# o arquivo fica untracked na working tree. Se a gente tentar
+# `git pull`/`git merge` depois, o git recusa sobrescrever untracked
+# ("would be overwritten by merge"). Solucao: mover o script para um
+# diretorio fora do repo e remover da working tree. O bash ja carregou
+# o script em memoria, entao a execucao continua normal.
+SELF_PATH="$HOME/.opb-bin/sync-safe"
+mkdir -p "$HOME/.opb-bin"
+if [ -f "sync-safe.sh" ]; then
+    if [ -f "$SELF_PATH" ]; then
+        # Ja existe versao instalada — mantem a do curl (mais nova)
+        cp sync-safe.sh "$SELF_PATH"
+    else
+        cp sync-safe.sh "$SELF_PATH"
+    fi
+    chmod +x "$SELF_PATH"
+    rm -f sync-safe.sh
+    echo "📦 sync-safe.sh movido para $SELF_PATH (working tree limpa pro merge)"
+    echo "   Para re-rodar depois: bash $SELF_PATH  (ou re-curl do GitHub)"
+    echo ""
+fi
+
 echo -e "${CYAN}============================================${NC}"
 echo -e "${BOLD}  🔄 Sync Seguro — OPB Sistema (Termux)${NC}"
 echo -e "${CYAN}============================================${NC}"
@@ -104,10 +129,39 @@ fi
 AHEAD=$(git rev-list --count origin/master ^HEAD)
 BEHIND=$(git rev-list --count HEAD ^origin/master)
 
+# Pre-flight: mover arquivos untracked que seriam sobrescritos pelo pull/merge
+UNTRACKED_STASH=$(mktemp -d /tmp/.opb-untracked.XXXXXX)
+MOVED=()
+while read -r f; do
+    [ -z "$f" ] && continue
+    if git cat-file -e "origin/master:${f}" 2>/dev/null; then
+        mkdir -p "$UNTRACKED_STASH/$(dirname "$f")"
+        cp -r "$f" "$UNTRACKED_STASH/$f"
+        rm -rf "$f"
+        MOVED+=("$f")
+    fi
+done < <(git ls-files --others --exclude-standard)
+
+if [ ${#MOVED[@]} -gt 0 ]; then
+    echo "💾 Movi ${#MOVED[@]} arquivo(s) untracked pra nao bloquear o pull/merge:"
+    for f in "${MOVED[@]}"; do
+        echo "   - $f  →  $UNTRACKED_STASH/$f"
+    done
+    echo "   (restaurado no fim se tudo der certo)"
+    echo ""
+fi
+
 if [ "$AHEAD" -gt 0 ] && [ "$BEHIND" -eq 0 ]; then
     echo -e "${YELLOW}📥 Voce esta $AHEAD commit(s) atras. Puxando do PC...${NC}"
     git pull --rebase
     echo -e "${GREEN}✅ Atualizado!${NC}"
+
+    # Restaurar arquivos movidos
+    if [ -d "$UNTRACKED_STASH" ] && [ -n "$(ls -A "$UNTRACKED_STASH" 2>/dev/null)" ]; then
+        cp -r "$UNTRACKED_STASH"/. . 2>/dev/null
+        rm -rf "$UNTRACKED_STASH"
+        echo "✅ Arquivos untracked restaurados"
+    fi
     exit 0
 fi
 
@@ -133,20 +187,50 @@ if [ "$AHEAD" -gt 0 ] && [ "$BEHIND" -gt 0 ]; then
         echo -e "${GREEN}✅ Merge feito com sucesso!${NC}"
     else
         echo ""
-        echo -e "${RED}❌ Conflito no merge (provavelmente em perfil/PERFIL.md).${NC}"
-        echo ""
-        echo "Arquivos em conflito:"
-        git diff --name-only --diff-filter=U
-        echo ""
-        echo -e "${CYAN}📋 O que fazer:${NC}"
-        echo "  1. Abra cada arquivo em conflito no editor (vim/nano/IDE)"
-        echo "  2. Procure por marcadores <<<<<<< ======= >>>>>>>"
-        echo "  3. Escolha: manter SUA versao OU a do PC OU mesclar"
-        echo "  4. Apos resolver, rode:"
-        echo "     git add <arquivo>"
-        echo "     git commit -m 'merge: resolucao de conflito'"
-        echo "     git push origin master"
-        echo ""
+        # Diferenciar 2 cenarios de erro:
+        # A) "untracked working tree files would be overwritten by merge" — working tree suja
+        # B) "CONFLICT (...)" — conflito de conteudo (ex: perfil/PERFIL.md)
+        UNTRACKED_BLOCKED=$(git status --porcelain | grep '^??' | awk '{print $2}' | while read f; do
+            if git cat-file -e "origin/master:${f}" 2>/dev/null; then echo "$f"; fi
+        done)
+        CONFLICTED=$(git diff --name-only --diff-filter=U)
+
+        if [ -n "$UNTRACKED_BLOCKED" ]; then
+            echo -e "${RED}❌ Working tree tem arquivos untracked que serao sobrescritos pelo merge.${NC}"
+            echo ""
+            echo "Arquivos bloqueando:"
+            for f in $UNTRACKED_BLOCKED; do
+                echo "  - $f"
+            done
+            echo ""
+            echo -e "${CYAN}📋 O que fazer (escolha 1):${NC}"
+            echo "  a) Mover manualmente e re-rodar:"
+            echo "     mkdir -p /tmp/opb-stash && mv sync-safe.sh /tmp/opb-stash/  # (exemplo)"
+            echo "     bash $SELF_PATH"
+            echo ""
+            echo "  b) Limpar tudo (CUIDADO: apaga arquivos nao commitados):"
+            echo "     git clean -fd  # pergunta antes de cada arquivo"
+            echo "     bash $SELF_PATH"
+            echo ""
+        fi
+
+        if [ -n "$CONFLICTED" ]; then
+            echo -e "${RED}❌ Conflito de CONTEUDO no merge.${NC}"
+            echo ""
+            echo "Arquivos em conflito:"
+            echo "$CONFLICTED"
+            echo ""
+            echo -e "${CYAN}📋 O que fazer:${NC}"
+            echo "  1. Abra cada arquivo em conflito no editor (vim/nano/IDE)"
+            echo "  2. Procure por marcadores <<<<<<< ======= >>>>>>>"
+            echo "  3. Escolha: manter SUA versao OU a do PC OU mesclar"
+            echo "  4. Apos resolver, rode:"
+            echo "     git add <arquivo>"
+            echo "     git commit -m 'merge: resolucao de conflito'"
+            echo "     git push origin master"
+            echo ""
+        fi
+
         echo -e "${YELLOW}Seu backup esta em: $BACKUP_DIR${NC}"
         echo -e "${YELLOW}Suas alteracoes locais estao em: git stash list${NC}"
         echo "  Para recupera-las depois do merge: git stash pop"
@@ -161,6 +245,13 @@ if [ "$AHEAD" -gt 0 ] && [ "$BEHIND" -gt 0 ]; then
         else
             echo -e "${YELLOW}⚠️  Conflito ao restaurar stash. Rode: git stash pop${NC}"
         fi
+    fi
+
+    # Restaurar arquivos untracked movidos no pre-flight
+    if [ -d "$UNTRACKED_STASH" ] && [ -n "$(ls -A "$UNTRACKED_STASH" 2>/dev/null)" ]; then
+        cp -r "$UNTRACKED_STASH"/. . 2>/dev/null
+        rm -rf "$UNTRACKED_STASH"
+        echo "✅ Arquivos untracked restaurados"
     fi
 fi
 

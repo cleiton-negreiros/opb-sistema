@@ -21,10 +21,15 @@ load_dotenv(REPO_DIR / ".env", override=True)
 load_dotenv()  # fallback: tenta .env do diretório atual
 
 sys.path.insert(0, str(PROJECT_DIR))
+sys.path.insert(0, str(PROJECT_DIR / "utils"))
 
 from scrapers import scrape_youtube, scrape_instagram, scrape_twitter, scrape_linkedin, scrape_web_news
 from analyzer import generate_reel_ideas
 from formatter import format_telegram_message
+from multi_profile import (
+    resolve_profile_id, parse_perfil_arg, get_acervo_path, get_profile_config,
+)
+from profile_loader import load_profile
 
 
 AGENT_NAME = "Radagast"
@@ -58,7 +63,14 @@ def save_state(state: dict) -> None:
     STATE_FILE.write_text(json.dumps(state, indent=2, ensure_ascii=False), encoding="utf-8")
 
 
-def load_config(name: str) -> dict:
+def load_config(name: str, profile_id: str = None) -> dict:
+    """Carrega config JSON. Procura primeiro config/<name>_<profile_id>.json,
+    depois config/<name>.json como fallback.
+    """
+    if profile_id:
+        scoped = CONFIG_DIR / f"{name.replace('.json', '')}_{profile_id}.json"
+        if scoped.exists():
+            return json.loads(scoped.read_text(encoding="utf-8"))
     path = CONFIG_DIR / name
     if not path.exists():
         return {}
@@ -269,10 +281,20 @@ def run_discover(profiles: list[dict], search_terms: list[str]) -> None:
 
 
 def run_curadoria(profiles: list[dict], search_terms: list[str],
-                  days_back: int, dry_run: bool) -> None:
-    """Fluxo principal: scrape -> analyze -> format -> enviar."""
+                  days_back: int, dry_run: bool, profile_id: str = "paz-na-conta") -> None:
+    """Fluxo principal: scrape -> analyze -> format -> enviar.
+
+    Args:
+        profiles: lista de perfis a serem raspados.
+        search_terms: termos de busca.
+        days_back: janela de dias para a coleta.
+        dry_run: se True, so coleta e loga.
+        profile_id: id do perfil ativo. Usado para prompt do LLM e path de salvamento.
+    """
+    pid = resolve_profile_id(profile_id)
     state = load_state()
-    logger.info(f"Perfis: {len(profiles)} | Keywords: {len(search_terms)} | Dias: {days_back}")
+    logger.info(f"Perfil ativo: {pid}")
+    logger.info(f"Perfis de inspiracao: {len(profiles)} | Keywords: {len(search_terms)} | Dias: {days_back}")
     logger.info("=" * 60)
 
     all_contents = []
@@ -340,21 +362,27 @@ def run_curadoria(profiles: list[dict], search_terms: list[str],
         ])
         return
 
-    # Carrega contexto do perfil Paz na Conta
+    # Carrega contexto do perfil (multi-perfil) — perfil do config.json complementa
+    # o que vem do PERFIL.md/quem-sou.md (handle, versiculo, etc)
     profile_context = ""
     try:
-        from profile_loader import load_profile
-        p = load_profile()
-        if p:
+        p = load_profile(pid)
+        pc = get_profile_config(pid) or {}
+        if p or pc:
+            nome = (p.get("nome") or pc.get("nome") or pid)
             profile_context = (
-                f"Marca: {p.get('nome', 'Paz na Conta')}\n"
+                f"Marca: {nome} ({pc.get('instagram', '')})".rstrip() + "\n"
+                f"Descricao: {(p.get('descricao') or pc.get('descricao') or '').strip()}\n"
                 f"Missao: {p.get('missao', '')}\n"
+                f"Visao: {p.get('visao', '')}\n"
                 f"Publico: {p.get('publico_alvo', '')}\n"
                 f"Tom: {', '.join(p.get('tom_de_voz', []))}\n"
                 f"Valores: {', '.join(p.get('valores', []))}\n"
                 f"Regras: {'; '.join(p.get('regras_escrita', []))}"
             )
-            logger.info("Contexto do perfil carregado para geracao de ideias")
+            if pc.get("versiculo"):
+                profile_context += f"\nVersiculo-chave: {pc['versiculo']}"
+            logger.info(f"Contexto do perfil '{pid}' carregado para geracao de ideias")
     except Exception as e:
         logger.warning(f"Nao foi possivel carregar perfil: {e}")
 
@@ -363,10 +391,10 @@ def run_curadoria(profiles: list[dict], search_terms: list[str],
     ideas = []
     llm_ok = False
     try:
-        ideas = generate_reel_ideas(all_contents, profile_context)
+        ideas = generate_reel_ideas(all_contents, profile_id=pid, profile_context=profile_context)
         if ideas:
             llm_ok = True
-            logger.info(f"Geradas {len(ideas)} ideias via Ollama")
+            logger.info(f"Geradas {len(ideas)} ideias via Ollama (perfil: {pid})")
         else:
             logger.warning("Ollama retornou 0 ideias")
     except Exception as e:
@@ -377,36 +405,45 @@ def run_curadoria(profiles: list[dict], search_terms: list[str],
         logger.info("Gerando ideias de fallback (template) a partir dos itens coletados...")
         ideas = _fallback_ideas(all_contents)
 
-    # --- SALVA EM DISCO (sempre) ---
-    ideas_dir = PROJECT_DIR / "acervo" / "ideias"
+    # --- SALVA EM DISCO (sempre) — path do perfil resolvido ---
+    ideas_dir = get_acervo_path(pid) / "ideias"
     ideas_dir.mkdir(parents=True, exist_ok=True)
     timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    pconfig = get_profile_config(pid) or {}
+    handle = pconfig.get("instagram", f"@{pid}")
     ideas_content = f"""---
 fonte: radagast
-perfil: Paz na Conta
+perfil: {pid}
+marca: {pconfig.get('nome', pid)}
+handle: {handle}
 data: {datetime.now().strftime('%Y-%m-%d %H:%M')}
 itens_coletados: {len(all_contents)}
 plataformas: {platforms_ok}
 llm_ok: {str(llm_ok).lower()}
-tags: [curadoria, paz-na-conta, financas-catolicas]
+tags: [curadoria, {pid}]
 ---
 
-# Ideias Radagast — @paznaconta
+# Ideias Radagast — {handle}
 
 > {len(ideas)} ideias geradas a partir de {len(all_contents)} itens de {platforms_ok} plataformas.
+> Perfil: **{pid}** ({pconfig.get('nome', pid)})
 > LLM: {'sim' if llm_ok else 'fallback (template)'}
 
 """
     for i, idea in enumerate(ideas, 1):
         pilar = idea.get('pilar', 'dica-pratica')
         formato = idea.get('formato', 'post')
-        angulo = idea.get('angulo_catolico', '') or idea.get('angulo_br', '')
+        # Campo do angulo pode variar (angulo_catolico era o nome antigo)
+        angulo = (idea.get('angulo_perfil')
+                  or idea.get('angulo_catolico')
+                  or idea.get('angulo_br')
+                  or '')
         ideas_content += f"""## {i}. {idea.get('titulo', 'Ideia')}
 
 **Hook:** {idea.get('hook', '')[:200]}
 **Pilar:** {pilar}
 **Formato:** {formato}
-**Ângulo católico:** {angulo}
+**Ângulo do perfil:** {angulo}
 **Fonte:** {idea.get('fonte_autor', 'desconhecido')} ({idea.get('fonte_url', '')})
 **Pontos-chave:** {', '.join(idea.get('pontos', []))[:300]}
 
@@ -480,12 +517,17 @@ def _fallback_ideas(contents: list[dict], max_ideas: int = 5) -> list[dict]:
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Radagast - Curadoria de conteudo EN para Reels")
+    parser = argparse.ArgumentParser(description="Radagast - Curadoria de conteudo para OPB Sistema (multi-perfil)")
     parser.add_argument("--check", action="store_true", help="Valida .env e configs, sem rodar curadoria")
     parser.add_argument("--dry-run", action="store_true", help="Coleta conteudo mas nao gera ideias")
     parser.add_argument("--discover", action="store_true", help="Busca novos perfis de inspiracao")
     parser.add_argument("--days-back", type=int, default=None, help="Dias de historico (default: RADAGAST_SCAN_DAYS ou 3)")
+    parser.add_argument("--perfil", "-p", help="id do perfil (ex: paz-na-conta). Default: perfis.json > ativo")
     args = parser.parse_args()
+
+    # Tambem aceita --perfil via helper (--perfil=ID ou -p ID)
+    arg_pid, _ = parse_perfil_arg(sys.argv[1:])
+    pid = resolve_profile_id(args.perfil or arg_pid)
 
     if args.check:
         sys.exit(run_check())
@@ -505,19 +547,20 @@ def main():
         sys.exit(1)
 
     days_back = args.days_back or int(os.environ.get("RADAGAST_SCAN_DAYS", "3"))
-    inspiracoes = load_config("inspiracoes.json")
-    keywords = load_config("keywords.json")
+    # Carrega config com fallback por perfil (ex: keywords_paz-na-conta.json ou keywords.json)
+    inspiracoes = load_config("inspiracoes.json", profile_id=pid)
+    keywords = load_config("keywords.json", profile_id=pid)
     profiles = inspiracoes.get("profiles", [])
     search_terms = keywords.get("search_terms", [])
 
     logger.info("=" * 60)
-    logger.info(f"RADAGAST - {datetime.now().strftime('%Y-%m-%d %H:%M')}")
+    logger.info(f"RADAGAST [{pid}] - {datetime.now().strftime('%Y-%m-%d %H:%M')}")
     logger.info("=" * 60)
 
     if args.discover:
         run_discover(profiles, search_terms)
     else:
-        run_curadoria(profiles, search_terms, days_back, args.dry_run)
+        run_curadoria(profiles, search_terms, days_back, args.dry_run, profile_id=pid)
 
 
 if __name__ == "__main__":
