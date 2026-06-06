@@ -11,12 +11,19 @@ import json
 
 # Set UTF-8 encoding for output to handle emojis on Windows
 os.environ['PYTHONIOENCODING'] = 'utf-8'
+try:
+    sys.stdout.reconfigure(encoding='utf-8')
+    sys.stderr.reconfigure(encoding='utf-8')
+except Exception:
+    pass
 
 # Add utils to path
 sys.path.append(str(Path(__file__).parent.parent.parent / "utils"))
+sys.path.append(str(Path(__file__).parent.parent.parent))
 
 from context_loader import get_brain_context, get_business_value
 from llm_provider import generate_text
+from utils.multi_profile import resolve_profile_id, parse_perfil_arg
 
 def load_templates():
     """Load text templates for different post types."""
@@ -38,21 +45,23 @@ def load_templates():
     
     return templates
 
-def generate_instagram_post(objective: str, post_type: str = "educational") -> str:
+def generate_instagram_post(objective: str, post_type: str = "educational", profile_id: str = None) -> str:
     """
     Generate an Instagram post based on objective and context.
-    
+
     Args:
         objective: The goal/topic of the post (e.g., "educar sobre produtividade")
         post_type: Type of post (educational, inspirational, promotional, engagement)
-        
+        profile_id: id do perfil (multi-perfil). Se None, usa o perfil ativo.
+
     Returns:
         Generated Instagram post text
     """
-    brain = get_brain_context()
-    tone = get_business_value("tom_de_voz", "direto e inspirador")
-    audience = get_business_value("publico_alvo", "empreendedores")
-    values = get_business_value("valores", [])
+    pid = resolve_profile_id(profile_id)
+    brain = get_brain_context(pid)
+    tone = get_business_value("tom_de_voz", "direto e inspirador", pid)
+    audience = get_business_value("publico_alvo", "empreendedores", pid)
+    values = get_business_value("valores", [], pid)
     values_str = ", ".join(values) if values else "autenticidade e praticidade"
 
     templates = load_templates()
@@ -111,24 +120,30 @@ def save_post(text: str, filename: str = None) -> str:
 def main():
     """Main function for command-line usage."""
     if len(sys.argv) < 2:
-        print("Usage: python main.py \"<objective>\" [post_type]")
+        print("Usage: python main.py \"<objective>\" [post_type] [--perfil <id>]")
         print("Example: python main.py \"educar sobre organização de tempo\" educational")
         sys.exit(1)
-    
-    objective = sys.argv[1]
-    post_type = sys.argv[2] if len(sys.argv) > 2 else "educational"
-    
+
+    profile_id, args = parse_perfil_arg(sys.argv[1:])
+    pid = resolve_profile_id(profile_id)
+    if not args:
+        print("Erro: objetivo é obrigatório")
+        sys.exit(1)
+    objective = args[0]
+    post_type = args[1] if len(args) > 1 else "educational"
+
     print(f"Gerando post do Instagram...")
     print(f"Objetivo: {objective}")
     print(f"Tipo: {post_type}")
+    print(f"Perfil: {pid}")
     print("-" * 50)
-    
+
     try:
-        post_text = generate_instagram_post(objective, post_type)
+        post_text = generate_instagram_post(objective, post_type, pid)
         print("Post gerado:")
         print(post_text)
         print("-" * 50)
-        
+
         # Save post
         saved_path = save_post(post_text)
         print(f"Post salvo em: {saved_path}")

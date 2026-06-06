@@ -1487,9 +1487,57 @@ def serve_static(path):
 # API — SALVAR PERFIL
 # ============================================
 
+def _parse_perfil_md(content: str) -> dict:
+    """Parseia um arquivo .md de perfil em dict {chave: valor}."""
+    section = {}
+    current_key = None
+    for line in content.split('\n'):
+        if line.startswith('## '):
+            current_key = line[3:].strip().lower()
+            section[current_key] = ''
+        elif current_key and line.strip():
+            section[current_key] = (section.get(current_key, '') + line + '\n').strip()
+    return section
+
+
+# Aliases para normalizar headers entre formato global (manual) e formato do form
+PERFIL_ALIASES = {
+    'historia': 'história profissional',
+    'história': 'história profissional',
+    'experiencias': 'experiências',
+    'cliente': 'cliente ideal',
+    'crencas': 'crenças',
+    'frase': 'frase de posicionamento',
+    'proposta': 'proposta de valor',
+    'publico-alvo': 'público-alvo',
+    'publico alvo': 'público-alvo',
+}
+
+
+def _merge_perfil_sections(primary: dict, fallback: dict) -> dict:
+    """Mescla duas seções: primary tem prioridade; usa fallback para chaves ausentes ou vazias."""
+    merged = dict(fallback)
+    for k, v in primary.items():
+        if v:
+            merged[k] = v
+    return merged
+
+
+def _apply_perfil_aliases(section: dict) -> dict:
+    """Renomeia chaves para o formato canônico usado pelo form/JS."""
+    out = {}
+    for k, v in section.items():
+        canon = PERFIL_ALIASES.get(k, k)
+        if canon in out and v and not out[canon]:
+            out[canon] = v
+        else:
+            out.setdefault(canon, v)
+    return out
+
+
 @app.route('/api/save-profile', methods=['POST'])
 def api_save_profile():
-    """Salva conteúdo do perfil em arquivo .md"""
+    """Salva conteúdo do perfil em arquivo .md (perfil ativo + global)"""
     data = request.get_json()
     modulo = data.get('modulo', '')
     content = data.get('content', '')
@@ -1499,40 +1547,52 @@ def api_save_profile():
         return jsonify({"error": "Nome do arquivo não informado"}), 400
 
     perfil_path = get_perfil_path() / filename
+    global_path = PROJECT_PATH / "cerebro" / "perfil-empreendedor-solo" / filename
+
+    erros = []
+    try:
+        perfil_path.parent.mkdir(parents=True, exist_ok=True)
+        perfil_path.write_text(content, encoding='utf-8')
+    except Exception as e:
+        erros.append(f"perfil: {e}")
 
     try:
-        perfil_path.write_text(content, encoding='utf-8')
-        return jsonify({"sucesso": True, "mensagem": f"{filename} salvo com sucesso!"})
+        global_path.parent.mkdir(parents=True, exist_ok=True)
+        global_path.write_text(content, encoding='utf-8')
     except Exception as e:
-        return jsonify({"error": str(e)}), 500
+        erros.append(f"global: {e}")
+
+    if erros:
+        return jsonify({"error": "; ".join(erros)}), 500
+    return jsonify({"sucesso": True, "mensagem": f"{filename} salvo com sucesso!"})
 
 
 @app.route('/api/load-profile', methods=['GET'])
 def api_load_profile():
-    """Carrega dados do perfil salvos + concorrentes do quem-sou.md"""
+    """Carrega dados do perfil: prioriza perfil ativo, completa com global (cerebro/perfil-empreendedor-solo/)."""
     perfil_dir = get_perfil_path()
+    global_dir = PROJECT_PATH / "cerebro" / "perfil-empreendedor-solo"
+
     arquivos = {
-        'basico': perfil_dir / "PERFIL.md",
-        'habilidades': perfil_dir / "HABILIDADES.md",
-        'historias': perfil_dir / "HISTORIAS.md",
-        'cosmovisao': perfil_dir / "COSMOVISAO.md",
-        'publico': perfil_dir / "PUBLICO-ALVO.md",
-        'posicionamento': perfil_dir / "POSICIONAMENTO.md",
-        'narrativa': perfil_dir / "NARRATIVA.md",
+        'basico': "PERFIL.md",
+        'habilidades': "HABILIDADES.md",
+        'historias': "HISTORIAS.md",
+        'cosmovisao': "COSMOVISAO.md",
+        'publico': "PUBLICO-ALVO.md",
+        'posicionamento': "POSICIONAMENTO.md",
+        'narrativa': "NARRATIVA.md",
     }
     dados = {}
-    for modulo, path in arquivos.items():
-        if path.exists():
-            content = path.read_text(encoding='utf-8')
-            section = {}
-            current_key = None
-            for line in content.split('\n'):
-                if line.startswith('## '):
-                    current_key = line[3:].strip().lower()
-                    section[current_key] = ''
-                elif current_key and line.strip():
-                    section[current_key] = (section.get(current_key, '') + line + '\n').strip()
-            dados[modulo] = section
+    for modulo, fname in arquivos.items():
+        primary_path = perfil_dir / fname
+        fallback_path = global_dir / fname
+
+        primary = _parse_perfil_md(primary_path.read_text(encoding='utf-8')) if primary_path.exists() else {}
+        fallback = _parse_perfil_md(fallback_path.read_text(encoding='utf-8')) if fallback_path.exists() else {}
+
+        if primary or fallback:
+            merged = _merge_perfil_sections(primary, fallback)
+            dados[modulo] = _apply_perfil_aliases(merged)
 
     # Carrega concorrentes do quem-sou.md (seção Referências do Nicho)
     quem_sou_path = PROJECT_PATH / "negocio" / "governanca" / "quem-sou.md"
