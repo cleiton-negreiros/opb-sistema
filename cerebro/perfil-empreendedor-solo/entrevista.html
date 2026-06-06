@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>OPB — Entrevista de Perfil</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #8b5cf6;
+            --primary-dark: #7c3aed;
+            --primary-light: #a78bfa;
+            --bg: #0f172a;
+            --bg-2: #1e293b;
+            --card: #1e293b;
+            --text: #f1f5f9;
+            --text-light: #94a3b8;
+            --border: #334155;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
+            --radius: 16px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body { height: 100%; }
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.5;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .topbar {
+            padding: 16px 20px;
+            background: var(--bg-2);
+            border-bottom: 1px solid var(--border);
+            flex-shrink: 0;
+        }
+
+        .topbar-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .topbar-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .perfil-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            color: var(--text-light);
+        }
+
+        .perfil-pill .dot {
+            width: 6px; height: 6px; border-radius: 50%;
+            background: var(--success);
+        }
+
+        .progress-bar {
+            background: var(--bg);
+            border-radius: 10px;
+            height: 6px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--primary-light));
+            border-radius: 10px;
+            transition: width 0.5s ease;
+        }
+
+        .progress-label {
+            font-size: 0.75rem;
+            color: var(--text-light);
+            margin-top: 4px;
+            text-align: right;
+        }
+
+        .chat {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .msg {
+            max-width: 88%;
+            padding: 14px 18px;
+            border-radius: var(--radius);
+            font-size: 0.95rem;
+            line-height: 1.5;
+            animation: msgIn 0.3s ease;
+        }
+
+        @keyframes msgIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .msg-bot {
+            align-self: flex-start;
+            background: var(--bg-2);
+            border: 1px solid var(--border);
+            border-bottom-left-radius: 4px;
+        }
+
+        .msg-bot .helper {
+            margin-top: 8px;
+            font-size: 0.8rem;
+            color: var(--text-light);
+            font-style: italic;
+        }
+
+        .msg-user {
+            align-self: flex-end;
+            background: var(--primary);
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
+
+        .msg-system {
+            align-self: center;
+            background: transparent;
+            color: var(--text-light);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 4px 12px;
+        }
+
+        .msg-section {
+            align-self: center;
+            background: var(--bg-2);
+            color: var(--primary-light);
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 6px 14px;
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .input-area {
+            padding: 16px 20px;
+            background: var(--bg-2);
+            border-top: 1px solid var(--border);
+            flex-shrink: 0;
+        }
+
+        .input-wrap {
+            display: flex;
+            gap: 8px;
+            align-items: flex-end;
+        }
+
+        .input-field {
+            flex: 1;
+            background: var(--bg);
+            border: 2px solid var(--border);
+            border-radius: var(--radius);
+            padding: 12px 16px;
+            color: var(--text);
+            font-size: 1rem;
+            font-family: inherit;
+            resize: none;
+            outline: none;
+            min-height: 48px;
+            max-height: 160px;
+            transition: border-color 0.2s;
+        }
+
+        .input-field:focus { border-color: var(--primary); }
+        .input-field::placeholder { color: var(--text-light); }
+
+        .btn-send {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: background 0.2s, transform 0.1s;
+        }
+        .btn-send:hover { background: var(--primary-dark); }
+        .btn-send:active { transform: scale(0.95); }
+        .btn-send:disabled { background: var(--border); cursor: not-allowed; }
+
+        .save-status {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.7rem;
+            color: var(--text-light);
+            margin-top: 8px;
+            min-height: 16px;
+        }
+
+        .save-status .status-dot {
+            width: 6px; height: 6px; border-radius: 50%;
+        }
+
+        .save-status.saving .status-dot { background: var(--warning); animation: pulse 1s infinite; }
+        .save-status.saved .status-dot { background: var(--success); }
+        .save-status.error .status-dot { background: var(--error); }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        .completion {
+            text-align: center;
+            padding: 32px 20px;
+        }
+
+        .completion-icon {
+            font-size: 4rem;
+            margin-bottom: 16px;
+        }
+
+        .completion h2 {
+            font-size: 1.5rem;
+            color: var(--success);
+            margin-bottom: 8px;
+        }
+
+        .completion p {
+            color: var(--text-light);
+            margin-bottom: 20px;
+        }
+
+        .completion-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .btn-secondary {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 12px 20px;
+            border-radius: var(--radius);
+            font-size: 0.9rem;
+            cursor: pointer;
+            text-decoration: none;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .btn-secondary:hover { border-color: var(--primary); }
+
+        .skip-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-light);
+            font-size: 0.8rem;
+            margin-top: 8px;
+            cursor: pointer;
+            padding: 4px 8px;
+        }
+
+        .skip-btn:hover { color: var(--text); }
+
+        @media (max-width: 600px) {
+            .topbar { padding: 12px 16px; }
+            .chat { padding: 16px; }
+            .input-area { padding: 12px 16px; }
+            .msg { max-width: 92%; }
+        }
+    </style>
+    <link rel="manifest" href="manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#0f172a">
+</head>
+<body>
+
+<div class="topbar">
+    <div class="topbar-row">
+        <div class="topbar-title">🧠 Entrevista de Perfil</div>
+        <div class="perfil-pill">
+            <span class="dot"></span>
+            <span id="perfil-nome">Paz na Conta</span>
+        </div>
+    </div>
+    <div class="progress-bar">
+        <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+    </div>
+    <div class="progress-label" id="progress-label">0% • 0/0 perguntas</div>
+</div>
+
+<div class="chat" id="chat">
+    <div class="msg msg-system">Carregando entrevista...</div>
+</div>
+
+<div class="input-area">
+    <div class="input-wrap">
+        <textarea class="input-field" id="input" placeholder="Sua resposta..." rows="1" disabled></textarea>
+        <button class="btn-send" id="btn-send" disabled aria-label="Enviar">➤</button>
+    </div>
+    <div class="save-status" id="save-status"></div>
+</div>
+
+<script>
+const API_BASE = window.location.origin;
+const chat = document.getElementById('chat');
+const input = document.getElementById('input');
+const btnSend = document.getElementById('btn-send');
+const progressFill = document.getElementById('progress-fill');
+const progressLabel = document.getElementById('progress-label');
+const saveStatus = document.getElementById('save-status');
+const perfilNome = document.getElementById('perfil-nome');
+
+let state = null;
+let currentQuestion = null;
+let isSaving = false;
+let lastSection = null;
+
+// ==============================
+// API
+// ==============================
+async function api(endpoint, method = 'GET', body = null) {
+    const opts = { method, headers: { 'Content-Type': 'application/json' } };
+    if (body) opts.body = JSON.stringify(body);
+    const res = await fetch(API_BASE + endpoint, opts);
+    return await res.json();
+}
+
+// ==============================
+// UI
+// ==============================
+function addMessage(text, type = 'bot', helper = null) {
+    const div = document.createElement('div');
+    div.className = 'msg msg-' + type;
+    div.textContent = text;
+    if (helper) {
+        const h = document.createElement('div');
+        h.className = 'helper';
+        h.textContent = helper;
+        div.appendChild(h);
+    }
+    chat.appendChild(div);
+    chat.scrollTop = chat.scrollHeight;
+}
+
+function addSection(name) {
+    if (name === lastSection) return;
+    lastSection = name;
+    const div = document.createElement('div');
+    div.className = 'msg msg-section';
+    div.textContent = name;
+    chat.appendChild(div);
+    chat.scrollTop = chat.scrollHeight;
+}
+
+function showCompletion(state) {
+    chat.innerHTML = '';
+    const div = document.createElement('div');
+    div.className = 'completion';
+    div.innerHTML = `
+        <div class="completion-icon">🎉</div>
+        <h2>Perfil completo!</h2>
+        <p>Você respondeu <strong>${state.answered}/${state.total}</strong> perguntas.<br>
+        Seu perfil está pronto para gerar conteúdo.</p>
+        <div class="completion-actions">
+            <a class="btn-secondary" href="plataforma.html">← Voltar para Plataforma</a>
+            <a class="btn-secondary" href="formulario.html">📋 Ver formulário completo</a>
+        </div>
+    `;
+    chat.appendChild(div);
+    input.disabled = true;
+    btnSend.disabled = true;
+    input.placeholder = 'Entrevista finalizada!';
+}
+
+function setSaveStatus(text, kind) {
+    if (!text) {
+        saveStatus.innerHTML = '';
+        return;
+    }
+    saveStatus.className = 'save-status' + (kind ? ' ' + kind : '');
+    saveStatus.innerHTML = `<span class="status-dot"></span><span>${text}</span>`;
+}
+
+function updateProgress(state) {
+    progressFill.style.width = state.percent + '%';
+    progressLabel.textContent = `${state.percent}% • ${state.answered}/${state.total} perguntas`;
+}
+
+// ==============================
+// STATE MACHINE
+// ==============================
+async function loadState() {
+    state = await api('/api/perfil/quiz/state');
+    if (state.error) {
+        chat.innerHTML = `<div class="msg msg-bot">⚠️ Erro: ${state.error}</div>`;
+        return;
+    }
+    perfilNome.textContent = state.perfil_id;
+    updateProgress(state);
+
+    // Mensagem de boas-vindas
+    if (state.answered === 0) {
+        chat.innerHTML = '';
+        addMessage('Oi! 👋 Vamos montar seu perfil com perguntas simples. Responde uma por vez — sem pressão.', 'bot');
+        addMessage('Suas respostas ficam salvas em <strong>perfis/&lt;ativo&gt;/perfil/</strong> e são usadas por todos os agentes para gerar conteúdo.', 'bot');
+    } else if (state.percent === 100) {
+        showCompletion(state);
+        return;
+    } else {
+        chat.innerHTML = '';
+        addMessage(`Bem-vindo de volta! Você já tem <strong>${state.answered} de ${state.total}</strong> perguntas respondidas.`, 'bot');
+        addMessage('Vamos continuar de onde você parou.', 'bot');
+    }
+
+    // Pede a primeira pergunta
+    if (state.next_question) {
+        setTimeout(() => askQuestion(state.next_question), 800);
+    }
+}
+
+function askQuestion(q) {
+    if (!q) return;
+    currentQuestion = q;
+
+    // Section marker
+    addSection(q.section);
+
+    // Bot message
+    addMessage(q.prompt, 'bot', q.helper);
+
+    // Enable input
+    input.disabled = false;
+    btnSend.disabled = false;
+    input.placeholder = q.placeholder || 'Sua resposta...';
+    input.value = '';
+    input.focus();
+
+    // Auto-resize textarea
+    input.style.height = 'auto';
+    input.style.height = Math.min(input.scrollHeight, 160) + 'px';
+}
+
+async function submitAnswer() {
+    if (isSaving || !currentQuestion) return;
+    const value = input.value.trim();
+    if (!value) return;
+
+    isSaving = true;
+    input.disabled = true;
+    btnSend.disabled = true;
+
+    // Show user message
+    addMessage(value, 'user');
+    setSaveStatus('Salvando...', 'saving');
+
+    try {
+        const result = await api('/api/perfil/quiz/save', 'POST', {
+            question_id: currentQuestion.id,
+            value: value,
+        });
+
+        if (result.error) {
+            addMessage('⚠️ Erro: ' + result.error, 'bot');
+            setSaveStatus('Erro ao salvar', 'error');
+            return;
+        }
+
+        setSaveStatus('Salvo ✓', 'saved');
+        state = {
+            ...state,
+            percent: result.percent,
+            answered: result.answered,
+            total: result.total,
+            next_question: result.next_question,
+        };
+        updateProgress(state);
+
+        // Next question (or completion)
+        setTimeout(() => {
+            setSaveStatus('');
+            if (result.next_question) {
+                askQuestion(result.next_question);
+            } else {
+                showCompletion(state);
+            }
+        }, 600);
+
+    } catch (e) {
+        addMessage('⚠️ Erro de conexão: ' + e.message, 'bot');
+        setSaveStatus('Erro', 'error');
+    } finally {
+        isSaving = false;
+    }
+}
+
+// ==============================
+// EVENTS
+// ==============================
+btnSend.addEventListener('click', submitAnswer);
+
+input.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        submitAnswer();
+    }
+});
+
+input.addEventListener('input', () => {
+    input.style.height = 'auto';
+    input.style.height = Math.min(input.scrollHeight, 160) + 'px';
+});
+
+// ==============================
+// INIT
+// ==============================
+window.addEventListener('DOMContentLoaded', () => {
+    loadState();
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('sw.js').catch(() => {});
+    }
+});
+</script>
+</body>
+</html>

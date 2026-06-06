@@ -1655,6 +1655,81 @@ def api_load_profile():
 
 
 # ============================================
+# API — PERFIL QUIZ (entrevista guiada)
+# ============================================
+@app.route('/api/perfil/quiz/state', methods=['GET'])
+def api_perfil_quiz_state():
+    """
+    Retorna o estado atual do quiz para o perfil ativo.
+    Inclui perguntas respondidas, faltantes, progresso % e próxima pergunta.
+    """
+    sys.path.insert(0, str(PROJECT_PATH / "utils"))
+    try:
+        from perfil_quiz import compute_progress
+    except ImportError:
+        return jsonify({"error": "perfil_quiz não disponível"}), 500
+
+    perfil_id = get_active_profile()
+    state = compute_progress(perfil_id)
+    return jsonify({
+        "perfil_id": perfil_id,
+        "answered": state["answered"],
+        "total": state["total"],
+        "percent": state["percent"],
+        "answered_ids": state["answered_ids"],
+        "missing_ids": state["missing_ids"],
+        "next_question": state["next_question"],
+    })
+
+
+@app.route('/api/perfil/quiz/save', methods=['POST'])
+def api_perfil_quiz_save():
+    """
+    Salva resposta de uma pergunta do quiz no MD file do perfil.
+    Body: {question_id: str, value: str, perfil_id?: str}
+    """
+    data = request.get_json() or {}
+    question_id = data.get("question_id", "").strip()
+    value = data.get("value", "").strip()
+    perfil_id = data.get("perfil_id") or get_active_profile()
+
+    if not question_id or not value:
+        return jsonify({"error": "question_id e value são obrigatórios"}), 400
+
+    sys.path.insert(0, str(PROJECT_PATH / "utils"))
+    try:
+        from perfil_quiz import save_answer, compute_progress
+    except ImportError:
+        return jsonify({"error": "perfil_quiz não disponível"}), 500
+
+    result = save_answer(perfil_id, question_id, value)
+    if not result.get("success"):
+        return jsonify(result), 400
+
+    # Retorna o novo estado também (próxima pergunta já calculada)
+    new_state = compute_progress(perfil_id)
+    return jsonify({
+        "success": True,
+        "saved": result,
+        "next_question": new_state["next_question"],
+        "percent": new_state["percent"],
+        "answered": new_state["answered"],
+        "total": new_state["total"],
+    })
+
+
+@app.route('/api/perfil/quiz/schema', methods=['GET'])
+def api_perfil_quiz_schema():
+    """Retorna o schema completo do quiz (todas as perguntas)."""
+    sys.path.insert(0, str(PROJECT_PATH / "utils"))
+    try:
+        from perfil_quiz import get_quiz_schema
+    except ImportError:
+        return jsonify({"error": "perfil_quiz não disponível"}), 500
+    return jsonify({"questions": get_quiz_schema()})
+
+
+# ============================================
 # API — OBSIDIAN
 # ============================================
 @app.route('/api/obsidian/abrir', methods=['POST'])

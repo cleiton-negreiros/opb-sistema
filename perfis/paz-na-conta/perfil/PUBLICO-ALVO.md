@@ -1,6 +1,6 @@
 ## Cliente Ideal
 
-Pessoas endividadas e desorganizadas financeiramente.
+Católicos endividados e desorganizados financeiramente, que querem paz nas contas.
 
 ## Problemas
 

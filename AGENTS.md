@@ -338,11 +338,21 @@ Ou executar:
   - `negocio/governanca/quem-sou.md` marcado como LEGADO.
 
 ### Pendente (próximas fases)
-- [ ] **Fase 2 — UX gulosa:** Chat de perfil com IA, indicador % completo, mobile-first review
+- [x] **Fase 2 — UX gulosa:** Chat de perfil, indicador % completo, mobile-first review ✅
 - [ ] **Fase 3 — Conteúdo:** "Gerar conteúdo com base no perfil", detector de lacunas, análise de consistência
 - [ ] **Fase 4 — Sincronização:** Banner "Atualizar do celular?", sync silencioso, dropdown de perfil no form
 - [ ] Preencher perfis `toque-de-paz` e `caminho-vida` (atualmente vazios)
 - [ ] Corrigir PUBLICO-ALVO de caminho-vida ("emagrecer" — copiou do projeto antigo)
+
+### Feito (Fase 2 — 2026-06-06)
+- **Schema do quiz guiado** (`utils/perfil_quiz.py`): 21 perguntas em 8 seções, com pesos (essencial=1.0, nice-to-have=0.5). `compute_progress(profile_id)` retorna `{answered, total, percent, answered_ids, missing_ids, next_question}`. `save_answer(profile_id, question_id, value)` escreve/substitui seção no MD correto, atualiza `updated_at` no frontmatter, encoding UTF-8.
+- **3 endpoints REST** em `api_server.py`:
+  - `GET /api/perfil/quiz/state` — estado do quiz (perfil ativo).
+  - `POST /api/perfil/quiz/save` — body `{question_id, value, perfil_id?}`, retorna novo estado + próxima pergunta.
+  - `GET /api/perfil/quiz/schema` — schema completo (todas as 21 perguntas).
+- **Chat UI mobile-first** (`cerebro/.../entrevista.html`): uma pergunta por vez, auto-save, progress bar, PWA, big input, design leve. State machine puro JS (sem framework). Resolve bug "fardo de formulário" — usuário responde 1 por vez, vê progresso, sai e volta de onde parou.
+- **Botão "Modo Chat"** no `formulario.html` (link direto para `entrevista.html`).
+- **Tests E2E**: 100% (21/21) com 1 missing (frase), save idempotente, save com acentos UTF-8, clear section → detecta como missing, save restaura → 100%. Endpoints testados via HTTP (200/400/404) + LAN IP `192.168.1.106:5000` para mobile.
 
 ---
 
@@ -363,4 +373,4 @@ Ou executar:
 
 ---
 
-_Last updated: 2026-05-22_
+_Last updated: 2026-06-06 (Fase 2 entregue)_
