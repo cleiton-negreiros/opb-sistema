@@ -159,16 +159,38 @@ def resolve_cerebro_path(caminho: str) -> Path:
 # UTILIDADES
 # ============================================
 
+# Agentes que aceitam --perfil/-p e devem recebê-lo automaticamente
+AGENTS_WITH_PERFIL = {
+    "agents/radagast/radagast.py",
+    "agents/text_generator/main.py",
+    "agents/carrossel/main.py",
+    "agents/capa_video/main.py",
+}
+
+
 def run_agent(agent_path: str, args: list = None, cwd: str = None) -> dict:
-    """Executa um agente Python e retorna stdout/stderr."""
+    """Executa um agente Python e retorna stdout/stderr.
+
+    Para agentes em AGENTS_WITH_PERFIL, injeta --perfil <ativo> automaticamente
+    se já não estiver presente nos args.
+    """
     full_path = PROJECT_PATH / agent_path
     if not full_path.exists():
         return {"error": f"Agente não encontrado: {agent_path}", "code": 404}
 
     working_dir = cwd if cwd else str(PROJECT_PATH)
+    args = list(args or [])
+
+    # Auto-inject --perfil <ativo> para agentes que suportam
+    if agent_path in AGENTS_WITH_PERFIL:
+        if "--perfil" not in args and "-p" not in args:
+            try:
+                args.extend(["--perfil", get_active_profile()])
+            except Exception:
+                pass
 
     try:
-        cmd = [sys.executable, str(full_path)] + (args or [])
+        cmd = [sys.executable, str(full_path)] + args
         result = subprocess.run(
             cmd,
             capture_output=True,
@@ -788,8 +810,9 @@ def api_carrossel():
      """Gera carrossel para Instagram."""
      data = request.get_json()
      tema = data.get('tema', data.get('texto', ''))
-     tipo = data.get('tipo', 'educational')
+     tipo = _carrossel_tipo_normalize(data.get('tipo', 'educacional'))
      slides = data.get('slides', None)
+     formato = data.get('formato', 'carrossel').lower().strip()
 
      if not tema:
          return jsonify({"error": "Tema ou texto não informado"}), 400
@@ -798,7 +821,9 @@ def api_carrossel():
      if len(tema) > 60:
          tema = tema[:57] + '...'
 
-     args = [tema, tipo]
+     args = [tema, '--tipo', tipo, '--perfil', get_active_profile()]
+     if formato and formato != 'carrossel':
+         args.extend(['--formato', formato])
      if slides:
          args.append(str(slides))
 
@@ -1002,27 +1027,230 @@ def api_alimentar():
 
 @app.route('/api/ideias', methods=['GET'])
 def api_ideias():
-    """Lista ideias salvas."""
-    ideias_path = get_acervo_path_for_user() / "ideias"
-    ideias = []
+    """Lista ideias salvas (perfil ativo). Backward-compat: top 20."""
+    limit = int(request.args.get('limit', 20))
+    return _list_ideias(perfil_id=None, limit=limit)
 
+
+@app.route('/api/ideias/lista', methods=['GET'])
+def api_ideias_lista():
+    """Lista ideias salvas com filtro opcional por perfil."""
+    perfil_id = request.args.get('perfil') or None
+    limit = int(request.args.get('limit', 50))
+    return _list_ideias(perfil_id=perfil_id, limit=limit)
+
+
+def _list_ideias(perfil_id: str = None, limit: int = 20):
+    """Helper: lista ideias, opcionalmente filtrado por perfil."""
+    if perfil_id:
+        try:
+            ideias_path = get_acervo_path(perfil_id) / "ideias"
+            perfil_resolvido = perfil_id
+        except Exception:
+            return jsonify({"error": f"Perfil inválido: {perfil_id}"}), 400
+    else:
+        ideias_path = get_acervo_path_for_user() / "ideias"
+        perfil_resolvido = get_active_profile()
+
+    ideias = []
     if ideias_path.exists():
-        for f in sorted(ideias_path.glob("*.md"), reverse=True)[:20]:
+        for f in sorted(ideias_path.glob("*.md"), reverse=True)[:limit]:
             content = read_file_safe(f)
             # Extrair título
             titulo = f.stem
+            hook = ""
+            pilar = ""
             linhas = content.split('\n')
             for linha in linhas:
-                if linha.startswith('# '):
-                    titulo = linha[2:]
-                    break
+                if linha.startswith('# ') and titulo == f.stem:
+                    titulo = linha[2:].strip()
+                if linha.lower().startswith('hook:'):
+                    hook = linha.split(':', 1)[1].strip().strip('"').strip("'")
+                if linha.lower().startswith('pilar:'):
+                    pilar = linha.split(':', 1)[1].strip()
             ideias.append({
                 "titulo": titulo[:80],
                 "arquivo": f.name,
-                "data": f.stem[:16] if len(f.stem) > 16 else f.stem
+                "data": f.stem[:16] if len(f.stem) > 16 else f.stem,
+                "hook": hook[:100],
+                "pilar": pilar,
+                "perfil": perfil_resolvido,
             })
 
-    return jsonify({"ideias": ideias, "total": len(ideias)})
+    return jsonify({"ideias": ideias, "total": len(ideias), "perfil": perfil_resolvido})
+
+
+@app.route('/api/ideias/<filename>', methods=['GET'])
+def api_ideia_get(filename):
+    """Retorna conteúdo completo de uma ideia salva."""
+    ideias_path = get_acervo_path_for_user() / "ideias"
+    filepath = ideias_path / filename
+    if not filepath.exists() or not filename.endswith('.md'):
+        return jsonify({"error": "Ideia não encontrada"}), 404
+    content = read_file_safe(filepath)
+    return jsonify({"filename": filename, "conteudo": content, "perfil": get_active_profile()})
+
+
+# ============================================
+# API — GERAR CONTEÚDO A PARTIR DE IDEIA
+# ============================================
+
+def _resolve_ideia_path(arquivo: str, perfil_id: str = None):
+    """Resolve o path de uma ideia. Aceita só filename (sem traversal)."""
+    if '/' in arquivo or '\\' in arquivo or '..' in arquivo:
+        return None
+    if not arquivo.endswith('.md'):
+        arquivo = arquivo + '.md'
+    if perfil_id:
+        try:
+            base = get_acervo_path(perfil_id) / "ideias"
+        except Exception:
+            return None
+    else:
+        base = get_acervo_path_for_user() / "ideias"
+    path = base / arquivo
+    return path if path.exists() else None
+
+
+def _carrossel_tipo_normalize(tipo: str) -> str:
+    """Aceita tipo em inglês ou português. Retorna o formato do CLI."""
+    if not tipo:
+        return 'educacional'
+    tipo_lower = tipo.lower().strip()
+    # Inglês -> Português
+    mapa_en_pt = {
+        'educational': 'educacional',
+        'inspirational': 'inspiracional',
+        'promotional': 'promocional',
+        'engagement': 'engajamento',
+        'contraste': 'contraste',
+    }
+    return mapa_en_pt.get(tipo_lower, tipo_lower)
+
+
+@app.route('/api/carrossel/ideia', methods=['POST'])
+def api_carrossel_ideia():
+    """
+    Gera carrossel a partir de uma ideia salva.
+    Body: {arquivo_ideia: str, tipo?: str, formato?: str, perfil_id?: str}
+    """
+    data = request.get_json() or {}
+    arquivo_ideia = data.get('arquivo_ideia', '').strip()
+    tipo = _carrossel_tipo_normalize(data.get('tipo', 'educacional'))
+    formato = data.get('formato', 'carrossel').strip().lower()
+    perfil_id = data.get('perfil_id') or get_active_profile()
+
+    if not arquivo_ideia:
+        return jsonify({"error": "arquivo_ideia é obrigatório"}), 400
+
+    ideia_path = _resolve_ideia_path(arquivo_ideia, perfil_id)
+    if not ideia_path:
+        return jsonify({"error": f"Ideia não encontrada: {arquivo_ideia}"}), 404
+
+    args = ['--ideia', str(ideia_path), '--tipo', tipo, '--perfil', perfil_id]
+    if formato and formato != 'carrossel':
+        args.extend(['--formato', formato])
+
+    result = run_agent("agents/carrossel/main.py", args)
+
+    # Pega o arquivo gerado mais recente do perfil
+    try:
+        carrossel_path = get_acervo_path(perfil_id) / "carrossel"
+    except Exception:
+        carrossel_path = get_acervo_path_for_user() / "carrossel"
+
+    conteudo = ""
+    filename = ""
+    if result.get("success", False) and carrossel_path.exists():
+        files = sorted(carrossel_path.glob("*.md"), key=lambda f: f.stat().st_mtime, reverse=True)
+        files = [f for f in files if f.name != "index.md"]
+        if files:
+            filename = files[0].name
+            conteudo = read_file_safe(files[0])
+
+    return jsonify({
+        "sucesso": result.get("success", False),
+        "saida": result.get("stdout", ""),
+        "conteudo": conteudo,
+        "filename": filename,
+        "erro": result.get("stderr", result.get("error", "")),
+        "ideia_usada": arquivo_ideia,
+        "perfil": perfil_id,
+        "tipo": tipo,
+        "formato": formato,
+        "mensagem": f"Carrossel gerado da ideia: {arquivo_ideia}" if result.get("success", False) else f"Erro: {result.get('error', result.get('stderr', 'desconhecido'))}",
+    })
+
+
+@app.route('/api/text-generator/ideia', methods=['POST'])
+def api_text_generator_ideia():
+    """
+    Gera post a partir de uma ideia salva.
+    Body: {arquivo_ideia: str, tipo?: str, perfil_id?: str}
+    """
+    data = request.get_json() or {}
+    arquivo_ideia = data.get('arquivo_ideia', '').strip()
+    tipo = data.get('tipo', 'educational').lower().strip()
+    perfil_id = data.get('perfil_id') or get_active_profile()
+
+    if not arquivo_ideia:
+        return jsonify({"error": "arquivo_ideia é obrigatório"}), 400
+
+    ideia_path = _resolve_ideia_path(arquivo_ideia, perfil_id)
+    if not ideia_path:
+        return jsonify({"error": f"Ideia não encontrada: {arquivo_ideia}"}), 404
+
+    # Extrai o tema/título da ideia para passar como objetivo
+    content = read_file_safe(ideia_path)
+    titulo = ideia_path.stem
+    for linha in content.split('\n'):
+        if linha.startswith('# '):
+            titulo = linha[2:].strip()
+            break
+        if linha.startswith('name:'):
+            titulo = linha.split(':', 1)[1].strip().strip('"').strip("'")
+            break
+
+    # Pega o primeiro parágrafo como contexto adicional
+    objetivo = titulo
+    in_body = False
+    for linha in content.split('\n'):
+        if linha.strip() == '---' and not in_body:
+            in_body = True
+            continue
+        if in_body and linha.strip() and not linha.startswith('#') and not linha.startswith('**'):
+            objetivo += ' — ' + linha.strip()[:200]
+            break
+
+    args = [objetivo, tipo, '--perfil', perfil_id]
+    result = run_agent("agents/text_generator/main.py", args)
+
+    # Pega o post gerado mais recente (profile-aware)
+    try:
+        posts_path = get_output_path(perfil_id) / "text_posts"
+    except Exception:
+        posts_path = PROJECT_PATH / "output" / "text_posts"
+
+    conteudo = ""
+    filename = ""
+    if result.get("success", False) and posts_path.exists():
+        files = sorted(posts_path.glob("*.txt"), key=lambda f: f.stat().st_mtime, reverse=True)
+        if files:
+            filename = files[0].name
+            conteudo = read_file_safe(files[0])
+
+    return jsonify({
+        "sucesso": result.get("success", False),
+        "saida": result.get("stdout", ""),
+        "conteudo": conteudo,
+        "filename": filename,
+        "erro": result.get("stderr", result.get("error", "")),
+        "ideia_usada": arquivo_ideia,
+        "perfil": perfil_id,
+        "tipo": tipo,
+        "objetivo": objetivo[:120],
+        "mensagem": f"Post gerado da ideia: {arquivo_ideia}" if result.get("success", False) else f"Erro: {result.get('error', result.get('stderr', 'desconhecido'))}",
+    })
 
 
 # ============================================

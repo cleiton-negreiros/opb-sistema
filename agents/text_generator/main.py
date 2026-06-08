@@ -96,30 +96,33 @@ Como isso se aplica à sua vida? Compartilhe nos comentários! 👇
 
 #dicas #{publico_curto.split()[0].lower() if publico_curto else "dica"}"""
 
-def save_post(text: str, filename: str = None) -> str:
+def save_post(text: str, filename: str = None, profile_id: str = None) -> str:
     """
-    Save generated post to output directory.
-    
+    Save generated post to profile-aware output directory.
+
     Args:
         text: The generated post text
         filename: Optional filename (defaults to timestamp-based)
-        
+        profile_id: Optional profile id (uses active if None)
+
     Returns:
         Path to saved file
     """
-    output_dir = Path(__file__).parent.parent.parent / "output" / "text_posts"
+    from utils.multi_profile import get_output_path, resolve_profile_id
+    pid = resolve_profile_id(profile_id)
+    output_dir = get_output_path(pid) / "text_posts"
     output_dir.mkdir(parents=True, exist_ok=True)
-    
+
     if filename is None:
         from datetime import datetime
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         filename = f"post_{timestamp}.txt"
-    
+
     output_path = output_dir / filename
-    
+
     with open(output_path, 'w', encoding='utf-8') as f:
         f.write(text)
-    
+
     return str(output_path)
 
 def main():
@@ -149,8 +152,8 @@ def main():
         print(post_text)
         print("-" * 50)
 
-        # Save post
-        saved_path = save_post(post_text)
+        # Save post (profile-aware)
+        saved_path = save_post(post_text, profile_id=pid)
         print(f"Post salvo em: {saved_path}")
         
     except Exception as e:
