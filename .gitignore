@@ -1,9 +1,12 @@
 # Output generated files
 output/
 
-# Obsidian (local settings)
-.obsidian/
-*.obsidian
+# Obsidian — track config, ignore workspace
+.obsidian/*
+!.obsidian/app.json
+!.obsidian/appearance.json
+!.obsidian/core-plugins.json
+!.obsidian/community-plugins.json
 
 # Python
 __pycache__/
@@ -30,8 +33,10 @@ Thumbs.db
 *.bak
 * - new.*
 
-# Generated content (acervo)
-acervo/
+# Generated content (acervo) — ignore subdirs gerados, mas track ideias
+acervo/capas/
+acervo/carrossel/
+acervo/conhecimento/
 
 # Context brain (generated)
 context-brain/
