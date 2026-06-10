@@ -146,9 +146,12 @@ def gerar_roteiro(tema, versiculo="", variacao=0):
     return "\n".join(linhas)
 
 
+OUTPUT_DIR2 = SCRIPT_DIR.parent.parent / "_conteudo" / "video"
+
 def salvar_roteiro(conteudo, tema, filename=None):
-    """Salva roteiro em arquivo."""
+    """Salva roteiro em arquivo (acervo/video/ + _conteudo/video/)."""
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+    OUTPUT_DIR2.mkdir(parents=True, exist_ok=True)
 
     if not filename:
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -157,6 +160,10 @@ def salvar_roteiro(conteudo, tema, filename=None):
 
     output_path = OUTPUT_DIR / filename
     output_path.write_text(conteudo, encoding="utf-8")
+
+    output_path2 = OUTPUT_DIR2 / filename
+    output_path2.write_text(conteudo, encoding="utf-8")
+
     return output_path
 
 

@@ -2,7 +2,8 @@
 # ============================================
 # pipeline-conteudo.sh — Pipeline de Conteudo Diario (Termux/Linux)
 # Uso: bash pipeline-conteudo.sh [arquivo_ideia]
-# Se sem argumento, pega o arquivo mais recente de inbox/
+# Se sem argumento, pega o arquivo mais recente de:
+#   _conteudo/email-diario/ > inbox/ > acervo/ideias/
 # ============================================
 
 set -e
@@ -15,13 +16,15 @@ cd "$(dirname "$0")"
 IDEIA="$1"
 
 if [ -z "$IDEIA" ]; then
-    # Pega o arquivo mais recente de inbox/ ou acervo/ideias/
-    IDEIA=$(ls -t inbox/*.md 2>/dev/null | head -1)
+    IDEIA=$(ls -t _conteudo/email-diario/*.md 2>/dev/null | head -1)
+    if [ -z "$IDEIA" ]; then
+        IDEIA=$(ls -t inbox/*.md 2>/dev/null | head -1)
+    fi
     if [ -z "$IDEIA" ]; then
         IDEIA=$(ls -t acervo/ideias/*.md 2>/dev/null | head -1)
     fi
     if [ -z "$IDEIA" ]; then
-        echo -e "${RED}Nenhum arquivo encontrado em inbox/ ou acervo/ideias/${NC}"
+        echo -e "${RED}Nenhum arquivo encontrado${NC}"
         exit 1
     fi
 fi
@@ -35,22 +38,37 @@ echo ""
 echo -e "Ideia: ${YELLOW}$IDEIA${NC}"
 echo ""
 
+# Garante pastas _conteudo
+mkdir -p _conteudo/carrossel _conteudo/reels _conteudo/video
+
 # 1) Gerar Carrossel
 echo -e "[1/4] ${CYAN}🎠 Gerando Carrossel...${NC}"
 python agents/carrossel/main.py --ideia "$ABSOLUTE_PATH" --tipo educacional --formato carrossel --exportar
-echo -e "${GREEN}  ✅ Carrossel gerado!${NC}"
+CAR_FILE=$(ls -t acervo/carrossel/*.md 2>/dev/null | head -1)
+if [ -n "$CAR_FILE" ]; then
+    cp "$CAR_FILE" _conteudo/carrossel/
+    echo -e "${GREEN}  ✅ Carrossel gerado!${NC}"
+fi
 echo ""
 
 # 2) Gerar Reels Script
 echo -e "[2/4] ${CYAN}📱 Gerando roteiro Reels...${NC}"
 python agents/reels_script/main.py "$ABSOLUTE_PATH" --duracao 60 --formato reels --exportar
-echo -e "${GREEN}  ✅ Reels gerado!${NC}"
+REEL_FILE=$(ls -t acervo/ideias/script_*.txt 2>/dev/null | head -1)
+if [ -n "$REEL_FILE" ]; then
+    cp "$REEL_FILE" _conteudo/reels/
+    echo -e "${GREEN}  ✅ Reels gerado!${NC}"
+fi
 echo ""
 
 # 3) Gerar Video 10min
 echo -e "[3/4] ${CYAN}🎬 Gerando roteiro Video Semanal...${NC}"
 python agents/video_10min/main.py --ideia "$ABSOLUTE_PATH" --exportar
-echo -e "${GREEN}  ✅ Video gerado!${NC}"
+VID_FILE=$(ls -t acervo/video/*.txt 2>/dev/null | head -1)
+if [ -n "$VID_FILE" ]; then
+    cp "$VID_FILE" _conteudo/video/
+    echo -e "${GREEN}  ✅ Video gerado!${NC}"
+fi
 echo ""
 
 # 4) Gerar Post Instagram
@@ -63,9 +81,12 @@ echo -e "${GREEN}============================================${NC}"
 echo -e "${BOLD}  ✅ Pipeline Concluido!${NC}"
 echo -e "${GREEN}============================================${NC}"
 echo ""
-echo "📂 Outputs:"
-echo "  🎠 Carrossel:    acervo/carrossel/"
-echo "  📱 Reels:        acervo/ideias/"
-echo "  🎬 Video 10min:  acervo/video/"
-echo "  📝 Post:         perfis/paz-na-conta/output/text_posts/"
+echo "📂 Outputs (Obsidian):"
+echo "  📧 Email original: _conteudo/email-diario/"
+echo "  🎠 Carrossel:      _conteudo/carrossel/"
+echo "  📱 Reels:          _conteudo/reels/"
+echo "  🎬 Video 10min:    _conteudo/video/"
+echo "  ✅ Publicar em:    _conteudo/publicados/"
+echo ""
+echo "🔗 Abra _home.md no Obsidian para ver tudo."
 echo ""

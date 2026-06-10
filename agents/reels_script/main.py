@@ -29,6 +29,7 @@ except ImportError:
 SCRIPT_DIR = Path(__file__).parent
 OUTPUT_DIR = SCRIPT_DIR / "output"
 IDEIAS_DIR = SCRIPT_DIR.parent.parent / "acervo" / "ideias"
+CONTEUDO_DIR = SCRIPT_DIR.parent.parent / "_conteudo" / "reels"
 
 DURATION_CONFIG = {
     30: {"gancho": 3, "conteudo": 20, "cta": 7},
@@ -255,9 +256,10 @@ def format_script_output(script, variation_num=None):
 
 
 def save_output(content, filename=None):
-    """Save output to file."""
+    """Save output to file (acervo + _conteudo/reels)."""
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
     IDEIAS_DIR.mkdir(parents=True, exist_ok=True)
+    CONTEUDO_DIR.mkdir(parents=True, exist_ok=True)
 
     if not filename:
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -265,11 +267,15 @@ def save_output(content, filename=None):
 
     output_path = OUTPUT_DIR / filename
     ideias_path = IDEIAS_DIR / filename
+    conteudo_path = CONTEUDO_DIR / filename
 
     with open(output_path, "w", encoding="utf-8") as f:
         f.write(content)
 
     with open(ideias_path, "w", encoding="utf-8") as f:
+        f.write(content)
+
+    with open(conteudo_path, "w", encoding="utf-8") as f:
         f.write(content)
 
     return output_path, ideias_path
