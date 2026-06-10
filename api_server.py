@@ -165,6 +165,8 @@ AGENTS_WITH_PERFIL = {
     "agents/text_generator/main.py",
     "agents/carrossel/main.py",
     "agents/capa_video/main.py",
+    "agents/reels_script/main.py",
+    "agents/video_10min/main.py",
 }
 
 
@@ -1656,6 +1658,79 @@ def api_agentes_executar():
         "stderr": result["stderr"][:1000] if result["stderr"] else "",
         "agente": agente,
         "mensagem": f"✅ {agente} executado com sucesso!" if result["success"] else f"❌ {agente} falhou."
+    })
+
+
+@app.route('/api/pipeline/diario', methods=['POST'])
+def api_pipeline_diario():
+    """
+    Pipeline de Conteudo Diario: processa uma ideia em 4 formatos.
+    Body: {arquivo_ideia?: str, perfil_id?: str}
+    Se sem arquivo, pega o mais recente de inbox/ ou acervo/ideias/
+    """
+    data = request.get_json() or {}
+    arquivo_ideia = data.get('arquivo_ideia', '').strip()
+    perfil_id = data.get('perfil_id') or get_active_profile()
+
+    # Se nao especificou arquivo, busca o mais recente
+    if not arquivo_ideia:
+        inbox_dir = PROJECT_PATH / "inbox"
+        ideias_dir = get_acervo_path(perfil_id) / "ideias"
+
+        mais_recente = None
+        if inbox_dir.exists():
+            files = sorted(inbox_dir.glob("*.md"), key=lambda f: f.stat().st_mtime, reverse=True)
+            if files:
+                mais_recente = files[0]
+        if not mais_recente and ideias_dir.exists():
+            files = sorted(ideias_dir.glob("*.md"), key=lambda f: f.stat().st_mtime, reverse=True)
+            if files:
+                mais_recente = files[0]
+
+        if not mais_recente:
+            return jsonify({"error": "Nenhum arquivo encontrado em inbox/ ou acervo/ideias/"}), 404
+        arquivo_ideia = str(mais_recente.relative_to(PROJECT_PATH))
+
+    ideia_path = _resolve_ideia_path(arquivo_ideia, perfil_id)
+    if not ideia_path:
+        return jsonify({"error": f"Ideia nao encontrada: {arquivo_ideia}"}), 404
+
+    resultados = {}
+
+    # 1) Carrossel
+    args_car = ['--ideia', str(ideia_path), '--tipo', 'educacional', '--formato', 'carrossel', '--perfil', perfil_id]
+    resultados['carrossel'] = run_agent("agents/carrossel/main.py", args_car)
+
+    # 2) Reels
+    args_reels = [str(ideia_path), '--duracao', '60', '--formato', 'reels', '--exportar']
+    resultados['reels'] = run_agent("agents/reels_script/main.py", args_reels)
+
+    # 3) Video 10min
+    args_video = ['--ideia', str(ideia_path), '--exportar']
+    resultados['video_10min'] = run_agent("agents/video_10min/main.py", args_video)
+
+    # 4) Text Post
+    args_text = [str(ideia_path), 'educational', '--perfil', perfil_id]
+    resultados['text_post'] = run_agent("agents/text_generator/main.py", args_text)
+
+    sucesso = all(r.get("success", False) for r in resultados.values())
+    resumo = {
+        "carrossel": "✅" if resultados["carrossel"].get("success") else "❌",
+        "reels": "✅" if resultados["reels"].get("success") else "❌",
+        "video_10min": "✅" if resultados["video_10min"].get("success") else "❌",
+        "text_post": "✅" if resultados["text_post"].get("success") else "❌",
+    }
+
+    return jsonify({
+        "sucesso": sucesso,
+        "resumo": resumo,
+        "ideia_usada": arquivo_ideia,
+        "perfil": perfil_id,
+        "resultados": {
+            k: {"stdout": v.get("stdout", "")[:500], "stderr": v.get("stderr", "")[:500]}
+            for k, v in resultados.items()
+        },
+        "mensagem": "✅ Pipeline concluido!" if sucesso else "⚠️ Pipeline com falhas parciais"
     })
 
 
