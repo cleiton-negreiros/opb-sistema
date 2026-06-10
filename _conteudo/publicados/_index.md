@@ -6,19 +6,16 @@ tags: publicados/navegacao
 
 # ✅ Conteúdos Publicados
 
+> [[_home.md|🏠 Home]] → [[_conteudo/_index.md|🎬 Conteúdo]] → Publicados
+
 Mova os conteúdos para cá depois de publicar.
 
-## Instagram
+| Data | Tipo | Link | Tema |
+|------|------|------|------|
+| - | - | - | - |
 
-| Data | Tipo | Link |
-|------|------|------|
+Ver também: [[_conteudo/carrossel/_index.md|🎠]] • [[_conteudo/reels/_index.md|📱]] • [[_conteudo/video/_index.md|🎬]]
 
-## YouTube
+---
 
-| Data | Título | Link |
-|------|--------|------|
-
-## Reels
-
-| Data | Tema | Link |
-|------|------|------|
+_[[_home.md|🏠 Home]] • [[_conteudo/_index.md|🎬 Conteúdo]]_

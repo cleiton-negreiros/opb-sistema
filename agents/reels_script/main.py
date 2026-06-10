@@ -255,7 +255,7 @@ def format_script_output(script, variation_num=None):
     return "\n".join(lines)
 
 
-def save_output(content, filename=None):
+def save_output(content, filename=None, source_idea=""):
     """Save output to file (acervo + _conteudo/reels)."""
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
     IDEIAS_DIR.mkdir(parents=True, exist_ok=True)
@@ -265,25 +265,34 @@ def save_output(content, filename=None):
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         filename = f"script_{timestamp}.txt"
 
+    # Add Obsidian frontmatter with source backlink
+    header = "---\ntags: reels/script\ntipo: reels\n"
+    if source_idea:
+        source_rel = source_idea.replace("\\", "/")
+        header += "fonte: [[" + source_rel + "]]\n"
+    header += "---\n\n"
+    content_with_header = header + content
+
     output_path = OUTPUT_DIR / filename
     ideias_path = IDEIAS_DIR / filename
     conteudo_path = CONTEUDO_DIR / filename
 
     with open(output_path, "w", encoding="utf-8") as f:
-        f.write(content)
+        f.write(content_with_header)
 
     with open(ideias_path, "w", encoding="utf-8") as f:
-        f.write(content)
+        f.write(content_with_header)
 
     with open(conteudo_path, "w", encoding="utf-8") as f:
-        f.write(content)
+        f.write(content_with_header)
 
     return output_path, ideias_path
 
 
 def main():
     parser = argparse.ArgumentParser(description="OPB Reels Script Generator")
-    parser.add_argument("tema", help="Tema do video")
+    parser.add_argument("tema", help="Tema do video ou caminho da ideia")
+    parser.add_argument("--ideia", help="Caminho do arquivo de ideia (para backlink no grafo)")
     parser.add_argument("--duracao", type=int, default=30, choices=[30, 60, 90], help="Duracao em segundos")
     parser.add_argument("--formato", default="reels", choices=["reels", "shorts", "tiktok"], help="Formato do video")
     parser.add_argument("--variacoes", type=int, default=1, help="Numero de variacoes")
@@ -292,6 +301,7 @@ def main():
     parser.add_argument("--modelo", default="llama3.2", help="Modelo Ollama a usar")
 
     args = parser.parse_args()
+    source_idea = args.ideia or ""
 
     use_ollama = not args.sem_ollama
 
@@ -314,7 +324,7 @@ def main():
         tema_clean = args.tema.replace(" ", "_")[:30]
         filename = f"script_{tema_clean}_{args.duracao}s_{timestamp}.txt"
 
-        out_path, ideias_path = save_output(full_output, filename)
+        out_path, ideias_path = save_output(full_output, filename, source_idea)
         print(f"\nSalvo em: {out_path}")
         print(f"Salvo em: {ideias_path}")
 

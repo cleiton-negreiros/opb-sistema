@@ -347,18 +347,28 @@ def salvar_saida(tema: str, texto: str, formato: str, perfil_id: str) -> str:
     filename = f"{tema_seguro}_{formato}_{timestamp}.md"
     filepath = _output_path(perfil_id) / filename
 
-    # Adiciona frontmatter
+    # Adiciona frontmatter com tags e espacos
     conteudo = f"""---
 tema: {tema}
 formato: {formato}
 perfil: {perfil_id}
 data: {datetime.now().strftime("%Y-%m-%d %H:%M")}
 gerado_por: carrossel-v3.0
+tags: carrossel/gerado
+tipo: carrossel
 ---
 
 {texto}
 """
     filepath.write_text(conteudo, encoding="utf-8")
+
+    # Salva copia em _conteudo/carrossel/ para o Obsidian
+    try:
+        conteudo_dir = PROJECT_PATH / "_conteudo" / "carrossel"
+        conteudo_dir.mkdir(parents=True, exist_ok=True)
+        (conteudo_dir / filename).write_text(conteudo, encoding="utf-8")
+    except Exception:
+        pass
 
     # Atualiza index
     try:

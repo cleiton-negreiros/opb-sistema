@@ -53,7 +53,7 @@ echo ""
 
 # 2) Gerar Reels Script
 echo -e "[2/4] ${CYAN}📱 Gerando roteiro Reels...${NC}"
-python agents/reels_script/main.py "$ABSOLUTE_PATH" --duracao 60 --formato reels --exportar
+python agents/reels_script/main.py "$IDEIA" --ideia "$ABSOLUTE_PATH" --duracao 60 --formato reels --exportar
 REEL_FILE=$(ls -t acervo/ideias/script_*.txt 2>/dev/null | head -1)
 if [ -n "$REEL_FILE" ]; then
     cp "$REEL_FILE" _conteudo/reels/

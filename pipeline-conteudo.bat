@@ -59,7 +59,7 @@ echo.
 
 :: 2) Gerar Reels Script
 echo [2/4] 📱 Gerando roteiro Reels...
-python agents/reels_script/main.py --ideia "%ABSOLUTE_PATH%" --duracao 60 --formato reels --exportar
+python agents/reels_script/main.py "%IDEIA%" --ideia "%ABSOLUTE_PATH%" --duracao 60 --formato reels --exportar
 if %errorlevel% equ 0 (
     echo   ✅ Reels gerado!
     for /f "delims=" %%f in ('dir /b /o-d /a-d "acervo\ideias\script_*.txt" 2^>nul') do (

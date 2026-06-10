@@ -103,7 +103,7 @@ def carregar_ideia(caminho_arquivo):
     return tema, versiculo, conteudo
 
 
-def gerar_roteiro(tema, versiculo="", variacao=0):
+def gerar_roteiro(tema, versiculo="", variacao=0, ideia_path=""):
     """Gera roteiro completo de 10 minutos."""
     idx = variacao % len(PONTOS_REFLEXAO)
     pontos = PONTOS_REFLEXAO[idx]
@@ -114,6 +114,19 @@ def gerar_roteiro(tema, versiculo="", variacao=0):
         versiculo = random.choice(versiculos)
 
     linhas = []
+    linhas.append("---")
+    linhas.append("tags: video/roteiro")
+    linhas.append("tipo: video")
+    linhas.append("tema: \"" + tema + "\"")
+    linhas.append("versiculo: \"" + versiculo + "\"")
+    if ideia_path:
+        source_rel = ideia_path.replace("\\", "/")
+        linhas.append("---")
+        linhas.append("")
+        linhas.append("Fonte: [[" + source_rel + "]]")
+        linhas.append("")
+    linhas.append("---")
+    linhas.append("")
     linhas.append("=" * 60)
     linhas.append(f"ROTEIRO — Video Semanal (~10 min)")
     linhas.append(f"Tema: {tema}")
@@ -178,6 +191,7 @@ def main():
 
     tema = args.tema
     versiculo = ""
+    ideia_path = args.ideia or ""
 
     if args.ideia:
         tema, versiculo, _ = carregar_ideia(args.ideia)
@@ -186,7 +200,7 @@ def main():
         print("Erro: Informe um tema ou use --ideia", file=sys.stderr)
         sys.exit(1)
 
-    roteiro = gerar_roteiro(tema, versiculo, args.variacao)
+    roteiro = gerar_roteiro(tema, versiculo, args.variacao, ideia_path)
     print(roteiro)
 
     if args.exportar:

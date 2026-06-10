@@ -6,63 +6,58 @@ tags: home/navegacao
 
 # 🏠 OPB Sistema — Central
 
-Bem-vindo ao seu cérebro digital. Use os links abaixo para navegar.
+Bem-vindo ao seu cérebro digital.
+
+[[_conteudo/_index.md|🎬 Conteúdo]] • [[inbox/_index.md|📥 Inbox]] • [[negocio/governanca/_index.md|🧠 Cérebro]] • [[_templates/email-diario.md|✏️ Novo Email]] • [[acervo/ideias/_index.md|💡 Ideias]]
 
 ---
 
-## 📥 HOJE — Captura e Produção
+## 📥 HOJE
 
-| Ação | Onde |
-|------|------|
-| ✏️ Escrever email diário | [[_templates/email-diario.md\|Criar novo email]] |
-| 📥 Capturar ideia rápida | [[inbox/inbox.md\|Inbox]] |
-| 🎬 Ver conteúdos gerados | [[_conteudo/_index.md\|Conteúdo]] |
-| ▶️ Rodar pipeline | `pipeline-conteudo.bat` (PC) |
+- ✏️ [[_templates/email-diario.md|Criar email diário]] → [[_conteudo/email-diario/_index.md|📧 emails]]
+- 📥 [[inbox/inbox.md|Capturar ideia rápida]]
+- 🎬 [[_conteudo/_index.md|Ver conteúdos gerados]]
+- ▶️ `pipeline-conteudo.bat` (roda o pipeline)
 
 ---
 
-## 🧠 CÉREBRO — Documentos do Sistema
+## 🧠 CÉREBRO
 
-| Área | Descrição |
-|------|-----------|
-| [[MAPA.md]] | Mapa geral do sistema |
-| [[negocio/governanca/regras/quem-sou.md\|Quem Sou]] | Sua identidade e propósito |
-| [[negocio/governanca/linha-editorial.md\|Linha Editorial]] | Tom de voz, pilares, cronograma |
-| [[negocio/projetos/ativos.md\|Projetos Ativos]] | O que está em andamento |
-| [[negocio/governanca/regras/linguagem-escrita.md\|Regras de Escrita]] | Como escrever |
-| [[AGENTS.md]] | Documentação dos agentes |
-| [[TODO.md]] | Tarefas pendentes |
+- [[MAPA.md|🗺️ Mapa do Sistema]]
+- [[negocio/governanca/_index.md|📋 Governança]]
+- [[negocio/governanca/regras/quem-sou.md|👤 Quem Sou]]
+- [[negocio/governanca/linha-editorial.md|📰 Linha Editorial]]
+- [[negocio/projetos/ativos.md|📌 Projetos Ativos]]
+- [[AGENTS.md|🤖 Agentes]]
+- [[TODO.md|📝 Tarefas]]
 
 ---
 
-## 📋 PERFIS DE CONTEÚDO
+## 🎬 CONTEÚDO
 
-| Perfil | Foco |
-|--------|------|
-| [[perfis/paz-na-conta/perfil/PERFIL.md\|Paz na Conta]] | Finanças Católicas ✅ **Ativo** |
-| [[perfis/toque-de-paz/perfil/PERFIL.md\|Toque de Paz]] | Música Católica |
-| [[perfis/caminho-vida/perfil/PERFIL.md\|Caminho Vida]] | Vida Cristã |
+- [[_conteudo/email-diario/_index.md|📧 Email Diário]]
+- [[_conteudo/carrossel/_index.md|🎠 Carrosséis]]
+- [[_conteudo/reels/_index.md|📱 Reels]]
+- [[_conteudo/video/_index.md|🎬 Vídeos]]
+- [[_conteudo/publicados/_index.md|✅ Publicados]]
 
 ---
 
 ## 📚 REFERÊNCIA
 
-| Pasta | Conteúdo |
-|-------|----------|
-| [[acervo/transcricoes/_index.md\|Transcrições]] | Transcrições de vídeos |
-| [[acervo/pesquisas/_index.md\|Pesquisas]] | Pesquisas de mercado |
-| [[acervo/conhecimento/_index.md\|Conhecimento]] | Base de conhecimento |
-| [[docs/_index.md\|Documentação]] | Documentos do projeto |
+- [[acervo/ideias/_index.md|💡 Ideias]]
+- [[acervo/transcricoes/_index.md|🎙️ Transcrições]]
+- [[acervo/pesquisas/_index.md|🔬 Pesquisas]]
+- [[acervo/conhecimento/_index.md|📚 Conhecimento]]
 
 ---
 
-## ▶️ ATALHOS RÁPIDOS
+## 📋 PERFIS
 
-- `Ctrl+P` → Paleta de comandos
-- `Ctrl+O` → Navegar entre arquivos
-- `Ctrl+Shift+F` → Buscar em todos os arquivos
-- `Ctrl+E` → Alternar edição/visualização
+- [[perfis/paz-na-conta/perfil/PERFIL.md|🙏 Paz na Conta]] (ativo)
+- [[perfis/toque-de-paz/perfil/PERFIL.md|🎵 Toque de Paz]]
+- [[perfis/caminho-vida/perfil/PERFIL.md|✝️ Caminho Vida]]
 
 ---
 
-_Última atualização: 2026-06-10_
+_[[_home.md|🏠 Home]] • atualizado 2026-06-10_

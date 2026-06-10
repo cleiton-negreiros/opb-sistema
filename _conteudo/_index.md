@@ -6,53 +6,46 @@ tags: conteudo/navegacao
 
 # 🎬 Central de Conteúdo
 
-Conteúdos gerados pelo pipeline a partir dos seus emails diários.
+> [[_home.md|🏠 Home]] → Conteúdo
+
+Conteúdos gerados pelo pipeline a partir dos [[_conteudo/email-diario/_index.md|emails diários]].
 
 ---
 
-## 📊 Status da Semana
+## 🔄 Status da Semana
 
-- [ ] Email de hoje escrito
-- [ ] Pipeline rodado
-- [ ] Carrossel publicado
-- [ ] Reels gravado
-- [ ] Vídeo semanal publicado
-
----
-
-## 📁 Pastas
-
-| Pasta | Conteúdo | Última atualização |
-|-------|----------|-------------------|
-| [[_conteudo/email-diario/_index.md\|📧 Email Diário]] | Textos originais escritos no celular | `{{date}}` |
-| [[_conteudo/carrossel/_index.md\|🎠 Carrosséis]] | Gerados para Instagram | - |
-| [[_conteudo/reels/_index.md\|📱 Reels]] | Roteiros para Reels/Shorts | - |
-| [[_conteudo/video/_index.md\|🎬 Vídeos]] | Roteiros para YouTube 10min | - |
-| [[_conteudo/publicados/_index.md\|✅ Publicados]] | Conteúdos já postados | - |
+- [ ] Email de hoje escrito → [[_conteudo/email-diario/_index.md|📧 escrever]]
+- [ ] Pipeline rodado → `pipeline-conteudo.bat`
+- [ ] [[_conteudo/carrossel/_index.md|🎠 Carrossel]] publicado
+- [ ] [[_conteudo/reels/_index.md|📱 Reels]] gravado
+- [ ] [[_conteudo/video/_index.md|🎬 Vídeo semanal]] publicado
 
 ---
 
-## 🔄 Pipeline de Conteúdo
+## 📁 Conteúdos
 
-1. ✏️ Escreva email em `_conteudo/email-diario/`
-2. 🔄 Rode `pipeline-conteudo.bat` (PC) ou `bash pipeline-conteudo.sh` (Termux)
-3. 📦 Resultados aparecem nas pastas acima
-4. ✅ Mova para `publicados/` quando postar
-
----
-
-## 📈 Calendário Semanal
-
-| Dia | Formato | Status |
-|-----|---------|--------|
-| Seg | Email diário + Reels | ⏳ |
-| Ter | Email diário | ⏳ |
-| Qua | Carrossel Instagram | ⏳ |
-| Qui | Email diário | ⏳ |
-| Sex | Email diário + Reels | ⏳ |
-| Sáb | Email diário | ⏳ |
-| Dom | 🎬 **Vídeo Semanal YouTube** | ⏳ |
+| Pasta | Origem | Próximo passo |
+|-------|--------|---------------|
+| [[_conteudo/email-diario/_index.md|📧 Email Diário]] | Escrito no celular | Rodar pipeline |
+| [[_conteudo/carrossel/_index.md|🎠 Carrosséis]] | Pipeline → email | Publicar Instagram |
+| [[_conteudo/reels/_index.md|📱 Reels]] | Pipeline → email | Gravar Reels |
+| [[_conteudo/video/_index.md|🎬 Vídeos]] | Pipeline → email | Gravar YouTube |
+| [[_conteudo/publicados/_index.md|✅ Publicados]] | Movido após postar | Arquivar |
 
 ---
 
-_Última atualização: 2026-06-10_
+## 📈 Calendário
+
+| Dia | Formato | Pipeline |
+|-----|---------|----------|
+| Seg | Email + Reels | [[_conteudo/carrossel/_index.md|🎠]] [[_conteudo/reels/_index.md|📱]] |
+| Ter | Email | [[_conteudo/carrossel/_index.md|🎠]] |
+| Qua | Carrossel | Publicar |
+| Qui | Email | [[_conteudo/reels/_index.md|📱]] |
+| Sex | Email + Reels | [[_conteudo/carrossel/_index.md|🎠]] [[_conteudo/reels/_index.md|📱]] |
+| Sáb | Email | [[_conteudo/video/_index.md|🎬]] |
+| Dom | **Vídeo YouTube** | Publicar |
+
+---
+
+_[[_home.md|🏠 Home]] • [[_conteudo/_index.md|🎬 Conteúdo]] • atualizado 2026-06-10_

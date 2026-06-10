@@ -6,13 +6,26 @@ tags: inbox/navegacao
 
 # 📥 Inbox — Captura Rápida
 
-> Anote qualquer ideia aqui. Depois organizamos.
+> [[_home.md|🏠 Home]] → Inbox
 
-## Como usar
-1. Escreva a ideia em [[inbox/inbox.md]]
-2. Quando for usar, mova para `acervo/ideias/` usando o [[_templates/idea.md|template]]
-3. Ou use direto no [[_templates/email-diario.md|template de email diário]]
+Anote qualquer ideia aqui. Depois organizamos.
 
-## Próximo passo
-- [[_conteudo/email-diario/_index.md|📧 Escrever email diário]]
-- [[_home.md|🏠 Voltar ao início]]
+---
+
+## ⚡ Use Agora
+
+- [[inbox/inbox.md|✏️ Abrir inbox]] — escreva qualquer ideia
+- [[_templates/idea.md|💡 Template Idea]] — para ideias estruturadas
+- [[_templates/email-diario.md|📧 Template Email Diário]] → vai pra [[_conteudo/email-diario/_index.md]]
+- [[_conteudo/_index.md|🎬 Ver conteúdo gerado]]
+
+## 📦 Depois de Capturar
+
+1. Organize em [[acervo/ideias/_index.md|💡 Ideias]]
+2. Ou escreva direto como [[_conteudo/email-diario/_index.md|📧 email diário]]
+3. Rode o pipeline → vira [[_conteudo/carrossel/_index.md|🎠]] [[_conteudo/reels/_index.md|📱]] [[_conteudo/video/_index.md|🎬]]
+4. Publique → [[_conteudo/publicados/_index.md|✅]]
+
+---
+
+_[[_home.md|🏠 Home]] • [[inbox/_index.md|📥 Inbox]]_
