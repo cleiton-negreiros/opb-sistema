@@ -49,6 +49,10 @@ echo -e "${GREEN}[OK] Git configurado${NC}"
 
 # 5) Clonar repositorio
 OBSIDIAN_VAULT="$HOME/storage/shared/Obsidian/opb-sistema"
+
+# Evita erro "dubious ownership" no Termux
+git config --global --add safe.directory "$OBSIDIAN_VAULT" 2>/dev/null
+
 if [ -d "$OBSIDIAN_VAULT/.git" ]; then
     echo -e "${YELLOW}Repositorio ja existe. Atualizando...${NC}"
     cd "$OBSIDIAN_VAULT"
