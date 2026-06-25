@@ -105,7 +105,7 @@ async function loadPageData(page) {
             document.getElementById('kpi-ideas').textContent = stats.ideias_salvas || 0;
             document.getElementById('kpi-agents').textContent = stats.agentes_ativos || 0;
             document.getElementById('kpi-conhecimento').textContent = stats.conhecimento_salvo || 0;
-            document.getElementById('kpi-arquivos').textContent = stats.agentes_total || 0;
+            document.getElementById('kpi-carrosseis').textContent = stats.carrossel_gerados || 0;
         }
         const ideas = await apiCall('/api/ideias');
         const el = document.getElementById('recent-activity');
@@ -119,6 +119,14 @@ async function loadPageData(page) {
                 </div>`).join('');
         } else {
             el.innerHTML = '<div style="text-align:center;padding:20px;color:var(--text-muted)">Nenhuma atividade recente</div>';
+        }
+        const activity = await apiCall('/api/activity');
+        if (activity && activity.dates) {
+            renderHeatmap(activity.dates);
+            renderStreak(activity.dates);
+        } else {
+            renderHeatmap({});
+            renderStreak({});
         }
         const health = await apiCall('/api/health');
         const si = document.getElementById('statusIndicator');
@@ -606,6 +614,18 @@ async function runAlimentarFromModal() {
     showToast(r.sucesso?'🧠 Cérebro alimentado!':'Erro', r.sucesso?'success':'error');
 }
 
+function showPerfilTab(tab, el) {
+    document.querySelectorAll('#page-perfil .tab-inline').forEach(t => t.classList.remove('active'));
+    if (el) el.classList.add('active');
+    const sections = ['basico', 'habilidades', 'historias', 'cosmovisao', 'publico', 'posicionamento', 'narrativa'];
+    sections.forEach(s => {
+        const sec = document.getElementById('perfil-tab-' + s);
+        if (sec) sec.style.display = (s === tab) ? 'block' : 'none';
+    });
+    const modulos = document.getElementById('perfil-modulos');
+    if (modulos) modulos.style.display = (tab === 'basico') ? 'block' : 'none';
+}
+
 async function savePerfil(){
     const n=document.getElementById('perfil-nome').value;
     if(!n){showToast('Preencha seu nome','error');return}
@@ -904,36 +924,46 @@ function updateGreeting() {
     }
 }
 
-function renderHeatmap() {
+function renderHeatmap(dates) {
     const container = document.getElementById('heatmap');
     if (!container) return;
     container.innerHTML = '';
     const today = new Date();
+    const maxCount = Math.max(1, ...Object.values(dates || {}));
     for (let i = 89; i >= 0; i--) {
         const d = new Date(today);
         d.setDate(d.getDate() - i);
-        const day = d.getDay();
-        const isWeekend = day === 0 || day === 6;
-        const level = isWeekend ? 0 : Math.floor(Math.random() * 5);
+        const dateStr = d.toISOString().split('T')[0];
+        const count = (dates || {})[dateStr] || 0;
+        const level = count === 0 ? 0 : Math.min(4, Math.ceil((count / maxCount) * 4));
         const cell = document.createElement('div');
         cell.className = 'heatmap-cell' + (level > 0 ? ' l' + level : '');
-        cell.title = d.toLocaleDateString('pt-BR');
+        cell.title = d.toLocaleDateString('pt-BR') + (count > 0 ? ` (${count} arquivos)` : '');
         container.appendChild(cell);
     }
 }
 
-function renderStreak() {
+function renderStreak(dates) {
     const bar = document.getElementById('streak-bar');
     if (!bar) return;
     bar.innerHTML = '';
     const dias = ['D','S','T','Q','Q','S','S'];
-    const today = new Date().getDay();
-    const activeDays = [1,2,3,4,5];
+    const today = new Date();
+    const todayIdx = today.getDay();
+
+    const activeDays = [];
+    for (let i = 0; i < 7; i++) {
+        const d = new Date(today);
+        d.setDate(d.getDate() - todayIdx + i);
+        const dateStr = d.toISOString().split('T')[0];
+        if ((dates || {})[dateStr]) activeDays.push(i);
+    }
+
     for (let i = 0; i < 7; i++) {
         const d = document.createElement('div');
         d.className = 'streak-day';
         if (activeDays.includes(i)) d.classList.add('active');
-        if (i === today) d.classList.add('today');
+        if (i === todayIdx) d.classList.add('today');
         d.textContent = dias[i];
         bar.appendChild(d);
     }

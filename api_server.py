@@ -548,6 +548,43 @@ def api_stats():
     return jsonify(get_project_stats())
 
 
+@app.route('/api/activity', methods=['GET'])
+def api_activity():
+    """Retorna datas de atividade (arquivos criados/modificados) para heatmap e streak."""
+    from collections import Counter
+    acervo_path = get_acervo_path_for_user()
+    output_path = get_output_path_for_user()
+
+    date_counts = Counter()
+    search_dirs = [
+        acervo_path / "carrossel",
+        acervo_path / "ideias",
+        acervo_path / "transcricoes",
+        acervo_path / "conhecimento",
+        output_path / "text_posts",
+        PROJECT_PATH / "perfis" / get_active_profile() / "acervo" / "carrossel",
+        PROJECT_PATH / "perfis" / get_active_profile() / "acervo" / "ideias",
+    ]
+
+    for d in search_dirs:
+        if not d.exists():
+            continue
+        for f in d.glob("*"):
+            if f.name == "index.md":
+                continue
+            try:
+                ts = f.stat().st_mtime
+                date_str = datetime.fromtimestamp(ts).strftime("%Y-%m-%d")
+                date_counts[date_str] += 1
+            except Exception:
+                pass
+
+    return jsonify({
+        "dates": dict(date_counts),
+        "total_files": sum(date_counts.values()),
+    })
+
+
 @app.route('/api/agentes', methods=['GET'])
 def api_agentes():
     """Lista todos os agentes disponíveis."""
