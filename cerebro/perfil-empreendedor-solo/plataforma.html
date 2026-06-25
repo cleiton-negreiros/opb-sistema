@@ -373,34 +373,115 @@
 </div>
 
 <!-- ==============================================
-     CARROSSEL
+     CARROSSEL v4.0
      ============================================== -->
 <div class="page" id="page-carrossel">
-<div class="grid-2">
-<div class="card"><div class="card-header"><div class="card-title"><i class="fas fa-layer-group" style="color:var(--accent-light)"></i> Gerar Carrossel</div><span style="font-size:0.7rem;color:var(--text-muted)">de uma ideia curta</span></div>
-<div class="form-group"><label class="form-label">Sua Ideia</label><textarea class="form-textarea" id="carrossel-ideia" rows="4" placeholder="Descreva sua ideia em algumas linhas...&#10;Ex: Dízimo e organização financeira à luz da fé católica"></textarea></div>
-<div class="grid-2" style="margin-bottom:16px">
-<div class="form-group"><label class="form-label">Slides</label><input type="number" class="form-input" id="carrossel-slides" value="9" min="4" max="12"></div>
-<div class="form-group"><label class="form-label">Tipo</label><select class="form-select" id="carrossel-tipo"><option value="educational">📚 Educativo</option><option value="inspirational">✨ Inspiracional</option><option value="promotional">🚀 Promocional</option><option value="engagement">💬 Engajamento</option></select></div>
+
+<!-- Tabs do fluxo -->
+<div class="tabs-carrossel" id="carrossel-tabs">
+  <button class="tab-carrossel active" onclick="switchCarrosselTab('criar')" data-tab="criar">
+    <i class="fas fa-pen"></i> Do Zero
+  </button>
+  <button class="tab-carrossel" onclick="switchCarrosselTab('carregar')" data-tab="carregar">
+    <i class="fas fa-folder-open"></i> Carregar Ideia
+  </button>
+  <button class="tab-carrossel" onclick="switchCarrosselTab('gerar')" data-tab="gerar">
+    <i class="fas fa-robot"></i> Gerar Ideia
+  </button>
 </div>
-<button class="btn btn-primary btn-block" onclick="gerarCarrossel()"><i class="fas fa-layer-group"></i> Gerar Carrossel</button>
-<div class="console-output" id="carrossel-output" style="margin-top:16px;display:none"></div>
-<button class="btn btn-sm btn-outline" id="carrossel-copy-btn" style="display:none;margin-top:8px" onclick="copyResult('carrossel-output-editor')"><i class="fas fa-copy"></i> Copiar</button>
+
+<!-- ABACAR: DO ZERO -->
+<div class="carrossel-tab-content active" id="tab-carrossel-criar">
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title"><i class="fas fa-pen-fancy" style="color:var(--accent-light)"></i> Criar Carrossel</div>
+        <span style="font-size:0.7rem;color:var(--text-muted)">descreva e gere</span>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Sua Ideia</label>
+        <textarea class="form-textarea" id="carrossel-ideia" rows="4" placeholder="Descreva sua ideia em algumas linhas...&#10;Ex: Dízimo e organização financeira à luz da fé católica"></textarea>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Tipo</label>
+        <select class="form-select" id="carrossel-tipo">
+          <option value="educacional">📚 Educativo</option>
+          <option value="inspiracional">✨ Inspiracional</option>
+          <option value="contraste">⚖️ Contraste</option>
+          <option value="engajamento">💬 Engajamento</option>
+        </select>
+      </div>
+      <button class="btn btn-primary btn-block" onclick="gerarCarrossel()">
+        <i class="fas fa-magic"></i> Gerar Carrossel
+      </button>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title"><i class="fas fa-layer-group" style="color:var(--success)"></i> Resultado</div>
+        <span id="carrossel-count" style="font-size:0.7rem;color:var(--text-muted)">0 slides</span>
+      </div>
+      <div id="carrossel-output-area">
+        <div class="empty-state"><i class="fas fa-layer-group"></i><h3>Nenhum carrossel gerado</h3><p>Descreva uma ideia e clique em gerar</p></div>
+      </div>
+    </div>
+  </div>
 </div>
-<div class="card"><div class="card-header"><div class="card-title"><i class="fas fa-history" style="color:var(--success)"></i> Meus Resultados</div></div>
-<div class="saved-results"><div class="empty-state"><i class="fas fa-inbox"></i><h3>Nenhum resultado salvo</h3><p>Os carrosséis gerados aparecem aqui</p></div></div>
+
+<!-- ABA: CARREGAR IDEIA -->
+<div class="carrossel-tab-content" id="tab-carrossel-carregar" style="display:none">
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title"><i class="fas fa-folder-open" style="color:var(--warning)"></i> Ideias Salvas</div>
+      <button class="btn btn-sm btn-outline" onclick="loadCarrosselIdeias()"><i class="fas fa-sync"></i> Atualizar</button>
+    </div>
+    <div id="carrossel-ideias-lista">
+      <div class="empty-state"><i class="fas fa-spinner fa-spin"></i><h3>Carregando ideias...</h3></div>
+    </div>
+  </div>
 </div>
+
+<!-- ABA: GERAR IDEIA COM LLM -->
+<div class="carrossel-tab-content" id="tab-carrossel-gerar" style="display:none">
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title"><i class="fas fa-robot" style="color:var(--accent-light)"></i> Gerar Ideias com IA</div>
+        <span style="font-size:0.7rem;color:var(--text-muted)">baseado no seu perfil</span>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Tema ou palavra-chave (opcional)</label>
+        <input type="text" class="form-input" id="carrossel-tema-llm" placeholder="Ex: dízimo, oração, música litúrgica...">
+      </div>
+      <button class="btn btn-primary btn-block" onclick="gerarIdeiasLLM()">
+        <i class="fas fa-lightbulb"></i> Sugerir 5 Ideias
+      </button>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title"><i class="fas fa-list" style="color:var(--success)"></i> Ideias Sugeridas</div>
+      </div>
+      <div id="carrossel-ideias-llm">
+        <div class="empty-state"><i class="fas fa-lightbulb"></i><h3> clique pra gerar ideias</h3><p>A IA usa seu perfil pra sugerir conteúdos alinhados</p></div>
+      </div>
+    </div>
+  </div>
 </div>
-<div class="card" style="margin-top:20px"><div class="card-header"><div class="card-title"><i class="fas fa-bolt" style="color:var(--warning)"></i> Ideias Rápidas</div></div>
-<div style="display:flex;flex-wrap:wrap;gap:10px;">
-<button class="btn btn-outline btn-sm" onclick="quickIdeia('Dízimo e organização financeira à luz da fé católica')">🙏 Dízimo</button>
-<button class="btn btn-outline btn-sm" onclick="quickIdeia('O Segredo da Divina Providência na prática')">📖 Providência</button>
-<button class="btn btn-outline btn-sm" onclick="quickIdeia('Como sair das dívidas sem culpa')">💳 Sair das Dívidas</button>
-<button class="btn btn-outline btn-sm" onclick="quickIdeia('Investimento ético para católicos')">📈 Investimento Ético</button>
-<button class="btn btn-outline btn-sm" onclick="quickIdeia('O que a DSI ensina sobre dinheiro')">📜 DSI e Dinheiro</button>
-<button class="btn btn-outline btn-sm" onclick="quickIdeia('Orçamento familiar com propósito cristão')">👨‍👩‍👧‍👦 Orçamento</button>
+
+<!-- Resultado compartilhado entre abas -->
+<div class="card" style="margin-top:20px" id="carrossel-quick-ideas">
+  <div class="card-header">
+    <div class="card-title"><i class="fas fa-bolt" style="color:var(--warning)"></i> Ideias Rápidas</div>
+  </div>
+  <div style="display:flex;flex-wrap:wrap;gap:10px;">
+    <button class="btn btn-outline btn-sm" onclick="quickIdeia('Dízimo e organização financeira à luz da fé católica')">🙏 Dízimo</button>
+    <button class="btn btn-outline btn-sm" onclick="quickIdeia('O Segredo da Divina Providência na prática')">📖 Providência</button>
+    <button class="btn btn-outline btn-sm" onclick="quickIdeia('Como sair das dívidas sem culpa')">💳 Sair das Dívidas</button>
+    <button class="btn btn-outline btn-sm" onclick="quickIdeia('Investimento ético para católicos')">📈 Investimento Ético</button>
+    <button class="btn btn-outline btn-sm" onclick="quickIdeia('O que a DSI ensina sobre dinheiro')">📜 DSI e Dinheiro</button>
+    <button class="btn btn-outline btn-sm" onclick="quickIdeia('Orçamento familiar com propósito cristão')">👨‍👩‍👧‍👦 Orçamento</button>
+  </div>
 </div>
-</div>
+
 </div>
 
 <!-- ==============================================

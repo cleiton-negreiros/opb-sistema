@@ -1,11 +1,10 @@
 #!/usr/bin/env python3
 """
-🎠 Agente Carrossel — OPB Sistema (v3.0: Templates paste-ready)
+🎠 Agente Carrossel — OPB Sistema (v4.0: Layout + Edição + Ideias)
 
 Gera texto pronto pra colar no Canva/Twitter/Instagram, alinhado com
 cada perfil (Paz na Conta, Toque de Paz, Caminho Vida). Estrutura é
-determinística (templates); LLM só enricher opcional pra preencher
-slots específicos.
+determinística (templates); LLM enriquece automaticamente os slots.
 
 Uso:
     python main.py "Moda, consumismo, sobriedade"
@@ -13,7 +12,7 @@ Uso:
     python main.py "Moda, consumismo, sobriedade" --formato legenda
     python main.py --ideia acervo/ideias/radagast_2026-06-06_10-08-22.md
     python main.py "ideia" --perfil paz-na-conta --tipo contraste
-    python main.py "ideia" --enriquecer       # LLM preenche os slots
+    python main.py "ideia" --sem-llm            # sem enriquecimento LLM
     python main.py --listar
     python main.py --ler "nome-do-carrossel"
 
@@ -445,6 +444,11 @@ def main():
             tipos = T.listar_tipos(perfil)
             print(f"  {perfil}: {', '.join(tipos)}")
         print("\nFormatos: carrossel (default) | twitter | legenda")
+        print("\nFlags:")
+        print("  --sem-llm      Não usar LLM pra enriquecer os slides")
+        print("  --listar       Listar carrosséis salvos")
+        print("  --ler <nome>   Ler um carrossel salvo")
+        print("  --ideia <arq>  Carregar ideia de um arquivo .md")
         return
 
     # Parse tema (ideia principal)
@@ -498,7 +502,7 @@ def main():
     if formato not in T.FORMATOS_DISPONIVEIS:
         print(f"⚠️  Formato '{formato}' desconhecido. Usando 'carrossel'.")
 
-    use_llm = "--enriquecer" in args
+    use_llm = "--sem-llm" not in args
 
     # Carrega contexto
     contexto = carregar_contexto(pid)
@@ -511,7 +515,7 @@ def main():
         print(f"❌ Sem slides definidos para {pid}/{tipo}/{formato}.")
         return
 
-    # LLM enrichment (opcional)
+    # LLM enrichment (automático, exceto com --sem-llm)
     enrichments = {}
     if use_llm:
         print(f"🤖 LLM: enriquecendo {len(slides)} slots...")
@@ -519,7 +523,7 @@ def main():
         if enrichments:
             print(f"   ✅ {len(enrichments)} slots preenchidos")
         else:
-            print(f"   ⚠️  LLM nao retornou nada usável — saida em branco")
+            print(f"   ⚠️  LLM nao retornou nada usável — usando template puro")
 
     # Formata
     if formato == "carrossel":

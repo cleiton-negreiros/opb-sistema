@@ -490,6 +490,38 @@ animation: modalIn 0.25s var(--ease-premium) forwards;
 .carrossel-slide-card .slide-tipo { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; font-weight: 600; text-transform: uppercase; color: var(--accent); }
 .carrossel-slide-card .slide-titulo { font-weight: 600; font-size: 0.85rem; color: var(--text-heading); }
 .carrossel-slide-card .slide-texto { font-size: 0.78rem; color: var(--text-body); margin-top: 4px; white-space: pre-wrap; }
+
+/* === CARROSSEL v4.0 — Tabs === */
+.tabs-carrossel { display: flex; gap: 4px; background: var(--bg-input); padding: 4px; border-radius: var(--radius-input); margin-bottom: 20px; border: 1px solid var(--border-subtle); }
+.tab-carrossel { flex: 1; padding: 10px 8px; text-align: center; border-radius: 6px; font-size: 0.82rem; font-weight: 500; cursor: pointer; color: var(--text-muted); transition: all 0.2s ease; border: none; background: transparent; }
+.tab-carrossel:hover { color: var(--text-heading); background: rgba(255,255,255,0.04); }
+.tab-carrossel.active { background: var(--accent); color: #fff; font-weight: 600; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+.tab-carrossel i { margin-right: 6px; }
+
+/* === Slide cards (resultado) === */
+.slide-card-editor { background: var(--bg-input); border: 1px solid var(--border-subtle); border-radius: 10px; padding: 16px; margin-bottom: 12px; transition: border-color 0.2s; }
+.slide-card-editor:hover { border-color: var(--accent); }
+.slide-card-editor .slide-num { display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 50%; background: var(--accent); color: #fff; font-size: 0.75rem; font-weight: 700; margin-right: 10px; flex-shrink: 0; }
+.slide-card-editor .slide-header { display: flex; align-items: center; margin-bottom: 10px; }
+.slide-card-editor .slide-label { font-weight: 600; font-size: 0.85rem; color: var(--text-heading); }
+.slide-card-editor .slide-body { font-size: 0.82rem; line-height: 1.7; color: var(--text-body); white-space: pre-wrap; min-height: 40px; padding: 8px 10px; border-radius: 6px; border: 1px solid transparent; transition: border-color 0.2s; }
+.slide-card-editor .slide-body:focus { border-color: var(--accent); outline: none; background: rgba(255,255,255,0.02); }
+.slide-card-editor .slide-actions { display: flex; gap: 6px; margin-top: 8px; }
+
+/* === Ideia cards (LLM + salvas) === */
+.ideia-card { background: var(--bg-input); border: 1px solid var(--border-subtle); border-radius: 10px; padding: 14px; margin-bottom: 10px; cursor: pointer; transition: all 0.2s; }
+.ideia-card:hover { border-color: var(--accent); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+.ideia-card .ideia-titulo { font-weight: 600; font-size: 0.9rem; color: var(--text-heading); margin-bottom: 4px; }
+.ideia-card .ideia-hook { font-size: 0.8rem; color: var(--text-body); margin-bottom: 6px; }
+.ideia-card .ideia-meta { display: flex; gap: 8px; flex-wrap: wrap; }
+.ideia-card .ideia-tag { font-size: 0.65rem; padding: 2px 8px; border-radius: 20px; background: rgba(255,255,255,0.06); color: var(--text-muted); border: 1px solid var(--border-subtle); }
+.ideia-card .ideia-tag.pilar { border-color: var(--accent); color: var(--accent-light); }
+.ideia-card .ideia-tag.tipo { border-color: var(--success); color: var(--success); }
+
+/* === Output area === */
+#carrossel-output-area .slide-card-editor + .slide-card-editor { margin-top: 0; }
+.carrossel-output-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 16px; padding-top: 12px; border-top: 1px solid var(--border-subtle); }
+
 .modal-wide { max-width: 800px; width: 95%; }
 
 .toast-container { position: fixed; bottom: 20px; right: 20px; z-index: 999; display: flex; flex-direction: column; gap: 8px; }

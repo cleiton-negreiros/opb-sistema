@@ -197,28 +197,176 @@ async function checkIntegrity() {
 }
 
 // ============================================
-// CARROSSEL
+// CARROSSEL v4.0
 // ============================================
+
+// --- Tab switching ---
+function switchCarrosselTab(tab) {
+    document.querySelectorAll('.tab-carrossel').forEach(t => t.classList.remove('active'));
+    document.querySelector(`.tab-carrossel[data-tab="${tab}"]`).classList.add('active');
+    document.querySelectorAll('.carrossel-tab-content').forEach(c => { c.style.display = 'none'; c.classList.remove('active'); });
+    const target = document.getElementById('tab-carrossel-' + tab);
+    if (target) { target.style.display = 'block'; target.classList.add('active'); }
+    if (tab === 'carregar') loadCarrosselIdeias();
+}
+
+// --- Gerar carrossel ---
 async function gerarCarrossel() {
     const tema = document.getElementById('carrossel-ideia').value;
     if (!tema.trim()) { showToast('Descreva sua ideia', 'error'); return; }
-    const out = document.getElementById('carrossel-output');
-    out.style.display = 'block';
-    out.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Gerando carrossel...`;
-    const slides = document.getElementById('carrossel-slides').value;
+    const area = document.getElementById('carrossel-output-area');
+    area.innerHTML = `<div style="text-align:center;padding:40px"><i class="fas fa-spinner fa-spin" style="font-size:1.5rem;color:var(--accent)"></i><p style="margin-top:12px;color:var(--text-muted)">Gerando carrossel com IA...</p></div>`;
     const tipo = document.getElementById('carrossel-tipo').value;
-    const r = await apiCall('/api/carrossel','POST',{tema, tipo, slides:parseInt(slides)});
+    const r = await apiCall('/api/carrossel', 'POST', { tema, tipo });
     if (r.sucesso) {
         const texto = r.saida || r.mensagem || r.stdout || '';
-        showResult('carrossel-output', 'carrossel-copy-btn', texto, 'carrossel');
-        const saved = JSON.parse(localStorage.getItem('opb_resultados') || '[]');
-        saved.unshift({id:Date.now(), texto, tag:'carrossel', data:new Date().toLocaleString('pt-BR')});
-        localStorage.setItem('opb_resultados', JSON.stringify(saved.slice(0,50)));
-        renderSavedResults();
+        renderCarrosselSlides(texto, area);
+        showToast('Carrossel gerado!', 'success');
     } else {
-        out.innerHTML = `<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><h3>Erro</h3><p>${escapeHtml(r.erro||r.mensagem||'Tente novamente')}</p></div>`;
+        area.innerHTML = `<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><h3>Erro</h3><p>${escapeHtml(r.erro || r.mensagem || 'Tente novamente')}</p></div>`;
+        showToast('Erro ao gerar', 'error');
     }
-    showToast(r.sucesso ? 'Carrossel gerado!' : 'Erro', r.sucesso ? 'success' : 'error');
+}
+
+// --- Renderizar slides como cards ---
+function renderCarrosselSlides(texto, area) {
+    const slides = parseCarrosselSlides(texto);
+    if (!slides.length) {
+        area.innerHTML = `<textarea class="result-editor" id="carrossel-output-editor" rows="10" style="width:100%;padding:12px;border:2px solid var(--border);border-radius:8px;font-family:'JetBrains Mono',monospace;font-size:0.85rem;line-height:1.6;resize:vertical;background:var(--bg-card);color:var(--text)">${escapeHtml(texto)}</textarea>
+        <div class="carrossel-output-actions">
+            <button class="btn btn-sm" style="background:var(--primary);color:white;border:none" onclick="copyResult('carrossel-output-editor')"><i class="fas fa-copy"></i> Copiar Tudo</button>
+        </div>`;
+        return;
+    }
+    let html = '';
+    slides.forEach((s, i) => {
+        html += `<div class="slide-card-editor" data-slide="${i}">
+            <div class="slide-header">
+                <span class="slide-num">${i + 1}</span>
+                <span class="slide-label">${escapeHtml(s.titulo)}</span>
+                <button class="btn btn-sm btn-outline" style="margin-left:auto" onclick="copySlideText(${i})" title="Copiar slide"><i class="fas fa-copy"></i></button>
+            </div>
+            <div class="slide-body" contenteditable="true" data-slide-idx="${i}" oninput="onSlideEdit(${i})">${escapeHtml(s.texto)}</div>
+        </div>`;
+    });
+    html += `<div class="carrossel-output-actions">
+        <button class="btn btn-sm" style="background:var(--primary);color:white;border:none" onclick="copyAllSlides()"><i class="fas fa-copy"></i> Copiar Todos</button>
+        <button class="btn btn-sm" style="background:#0A66C2;color:white;border:none" onclick="shareResult('carrossel-output-editor','linkedin','carrossel')"><i class="fab fa-linkedin"></i> LinkedIn</button>
+        <button class="btn btn-sm" style="background:#1DA1F2;color:white;border:none" onclick="shareResult('carrossel-output-editor','twitter','carrossel')"><i class="fab fa-x-twitter"></i> Twitter/X</button>
+        <button class="btn btn-sm btn-outline" onclick="saveCarrosselLocal()"><i class="fas fa-save"></i> Salvar</button>
+        <textarea id="carrossel-output-editor" style="display:none">${escapeHtml(texto)}</textarea>
+    </div>`;
+    area.innerHTML = html;
+    document.getElementById('carrossel-count').textContent = slides.length + ' slides';
+    window._carrosselSlides = slides;
+}
+
+function parseCarrosselSlides(texto) {
+    const slides = [];
+    const parts = texto.split(/─{3,}/);
+    for (const part of parts) {
+        const trimmed = part.trim();
+        const match = trimmed.match(/^SLIDE\s+(\d+)\/(\d+)\s*[—–-]\s*(.+?)$/m);
+        if (match) {
+            const body = trimmed.replace(/^.*?\n/m, '').replace(/^═.*$/gm, '').trim();
+            slides.push({ num: parseInt(match[1]), titulo: match[3].trim(), texto: body });
+        }
+    }
+    return slides;
+}
+
+function onSlideEdit(idx) {
+    if (!window._carrosselSlides) return;
+    const el = document.querySelector(`[data-slide-idx="${idx}"]`);
+    if (el) window._carrosselSlides[idx].texto = el.innerText;
+}
+
+function copySlideText(idx) {
+    if (!window._carrosselSlides || !window._carrosselSlides[idx]) return;
+    navigator.clipboard.writeText(window._carrosselSlides[idx].texto);
+    showToast('Slide copiado!', 'success');
+}
+
+function copyAllSlides() {
+    if (!window._carrosselSlides) return;
+    const text = window._carrosselSlides.map((s, i) => `SLIDE ${i + 1}/${window._carrosselSlides.length}\n${s.texto}`).join('\n\n');
+    navigator.clipboard.writeText(text);
+    showToast('Todos os slides copiados!', 'success');
+}
+
+function saveCarrosselLocal() {
+    const editor = document.getElementById('carrossel-output-editor');
+    if (!editor) return;
+    const texto = editor.value;
+    const saved = JSON.parse(localStorage.getItem('opb_resultados') || '[]');
+    saved.unshift({ id: Date.now(), texto, tag: 'carrossel', data: new Date().toLocaleString('pt-BR') });
+    localStorage.setItem('opb_resultados', JSON.stringify(saved.slice(0, 50)));
+    showToast('Salvo localmente!', 'success');
+}
+
+// --- Carregar ideias salvas ---
+async function loadCarrosselIdeias() {
+    const container = document.getElementById('carrossel-ideias-lista');
+    container.innerHTML = `<div style="text-align:center;padding:20px"><i class="fas fa-spinner fa-spin" style="color:var(--accent)"></i></div>`;
+    const r = await apiCall('/api/ideias', 'GET');
+    if (!r || !r.ideias || !r.ideias.length) {
+        container.innerHTML = `<div class="empty-state"><i class="fas fa-folder-open"></i><h3>Nenhuma ideia salva</h3><p>Salve ideias no Radagast ou crie novas</p></div>`;
+        return;
+    }
+    container.innerHTML = r.ideias.map(ideia => `
+        <div class="ideia-card" onclick="usarIdeiaSalva('${escapeHtml(ideia.arquivo)}', '${escapeHtml(ideia.titulo)}')">
+            <div class="ideia-titulo">${escapeHtml(ideia.titulo)}</div>
+            ${ideia.hook ? `<div class="ideia-hook">${escapeHtml(ideia.hook)}</div>` : ''}
+            <div class="ideia-meta">
+                ${ideia.pilar ? `<span class="ideia-tag pilar">${escapeHtml(ideia.pilar)}</span>` : ''}
+                ${ideia.data ? `<span class="ideia-tag">${escapeHtml(ideia.data)}</span>` : ''}
+            </div>
+        </div>
+    `).join('');
+}
+
+async function usarIdeiaSalva(arquivo, titulo) {
+    document.getElementById('carrossel-ideia').value = titulo;
+    switchCarrosselTab('criar');
+    showToast(`Ideia carregada: ${titulo}`, 'info');
+    await gerarCarrossel();
+}
+
+// --- Gerar ideias com LLM ---
+async function gerarIdeiasLLM() {
+    const tema = document.getElementById('carrossel-tema-llm').value;
+    const container = document.getElementById('carrossel-ideias-llm');
+    container.innerHTML = `<div style="text-align:center;padding:30px"><i class="fas fa-spinner fa-spin" style="font-size:1.5rem;color:var(--accent)"></i><p style="margin-top:12px;color:var(--text-muted)">IA analisando seu perfil e gerando ideias...</p></div>`;
+    const r = await apiCall('/api/carrossel/gerar-ideias', 'POST', { tema });
+    if (!r || !r.ideias || !r.ideias.length) {
+        container.innerHTML = `<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><h3>Sem ideias</h3><p>${escapeHtml(r?.error || 'Tente novamente')}</p></div>`;
+        return;
+    }
+    container.innerHTML = r.ideias.map(ideia => `
+        <div class="ideia-card" onclick="usarIdeiaLLM('${escapeHtml(ideia.titulo)}', '${escapeHtml(ideia.tipo_sugerido || 'educacional')}')">
+            <div class="ideia-titulo">${escapeHtml(ideia.titulo)}</div>
+            ${ideia.hook ? `<div class="ideia-hook">${escapeHtml(ideia.hook)}</div>` : ''}
+            <div class="ideia-meta">
+                ${ideia.pilar ? `<span class="ideia-tag pilar">${escapeHtml(ideia.pilar)}</span>` : ''}
+                <span class="ideia-tag tipo">${escapeHtml(ideia.tipo_sugerido || 'educacional')}</span>
+                ${ideia.angulo ? `<span class="ideia-tag">${escapeHtml(ideia.angulo)}</span>` : ''}
+            </div>
+        </div>
+    `).join('');
+}
+
+function usarIdeiaLLM(titulo, tipo) {
+    document.getElementById('carrossel-ideia').value = titulo;
+    const tipoSelect = document.getElementById('carrossel-tipo');
+    if (tipoSelect) tipoSelect.value = tipo;
+    switchCarrosselTab('criar');
+    showToast(`Ideia selecionada. Clique em Gerar!`, 'info');
+}
+
+function quickIdeia(texto) {
+    document.getElementById('carrossel-ideia').value = texto;
+    switchCarrosselTab('criar');
+    gerarCarrossel();
 }
 
 async function runTranscricao() {
@@ -1206,11 +1354,6 @@ function startRoutine(tipo) {
     checkNext();
 }
 
-function quickIdeia(texto) {
-    document.getElementById('carrossel-ideia').value = texto;
-    gerarCarrossel();
-}
-
 function quickPost(obj, tipo) {
     document.getElementById('text-gen-objetivo').value = obj;
     document.getElementById('text-gen-tipo').value = tipo;
@@ -1223,21 +1366,8 @@ function showAlimentarModal() {
 }
 
 function loadCarrosseis() {
-    const container = document.getElementById('carrossel-lista');
-    if (!container) return;
-    apiCall('/api/carrossel/lista').then(r => {
-        if (!r || !r.carrosseis || !r.carrosseis.length) {
-            container.innerHTML = '<div class="empty-state"><i class="fas fa-layer-group"></i><h3>Nenhum carrossel gerado</h3></div>';
-            return;
-        }
-        container.innerHTML = r.carrosseis.map(c => `
-        <div style="padding:12px;background:var(--bg-overlay);border-radius:8px;margin-bottom:8px;border-left:3px solid var(--primary)">
-            <div style="font-size:0.85rem;white-space:pre-wrap;max-height:80px;overflow:hidden">${escapeHtml(c.tema)}</div>
-            <div style="font-size:0.75rem;color:var(--text-muted);margin-top:4px">${c.data || ''}</div>
-        </div>`).join('');
-        const count = document.getElementById('carrossel-count');
-        if (count) count.textContent = r.carrosseis.length;
-    }).catch(() => {});
+    // v4.0: redireciona para loadCarrosselIdeias
+    loadCarrosselIdeias();
 }
 
 function loadKnowledge() {

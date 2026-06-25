@@ -11,6 +11,7 @@ Uso:
 import os
 import sys
 import json
+import re as _re
 import subprocess
 from pathlib import Path
 from datetime import datetime
@@ -917,6 +918,146 @@ def api_carrossel_delete(filename):
         return jsonify({"error": "Carrossel não encontrado"}), 404
     filepath.unlink()
     return jsonify({"sucesso": True, "mensagem": "Carrossel deletado"})
+
+
+@app.route('/api/carrossel/gerar-ideias', methods=['POST'])
+def api_carrossel_gerar_ideias():
+    """Gera 3-5 ideias de carrossel baseadas no perfil ativo usando LLM."""
+    data = request.get_json() or {}
+    tema_curto = data.get('tema', '')
+    perfil_id = data.get('perfil_id') or get_active_profile()
+
+    sys.path.insert(0, str(PROJECT_PATH / "utils"))
+    try:
+        from utils.profile_loader import load_profile
+        from utils.multi_profile import get_profile_config
+    except ImportError:
+        return jsonify({"error": "profile_loader não disponível"}), 500
+
+    try:
+        perfil = load_profile(perfil_id) or {}
+    except Exception:
+        perfil = {}
+    try:
+        cfg = get_profile_config(perfil_id) or {}
+    except Exception:
+        cfg = {}
+
+    nome = cfg.get("nome") or perfil.get("nome") or perfil_id
+    nicho = cfg.get("nicho") or perfil.get("nicho") or ""
+    problema = cfg.get("problema") or perfil.get("problema") or ""
+    tom = ", ".join(perfil.get("tom_de_voz") or []) or "leve, direto, próximo"
+    publico = perfil.get("publico_alvo") or ""
+    pilares = cfg.get("pilares") or perfil.get("pilares") or []
+
+    prompt = (
+        f"Você é um criador de conteúdo especializado no perfil '{nome}'.\n"
+        f"Nicho: {nicho}\n"
+        f"Problema que resolve: {problema}\n"
+        f"Tom de voz: {tom}\n"
+        f"Público: {publico}\n"
+        f"Pilares de conteúdo: {', '.join(pilares) if isinstance(pilares, list) else pilares}\n\n"
+    )
+    if tema_curto:
+        prompt += f"Tema/sugestão do usuário: {tema_curto}\n\n"
+
+    prompt += (
+        "Gere 5 ideias de carrossel para Instagram. Cada ideia deve ter:\n"
+        "- titulo: frase curta e chamativa (máx 60 chars)\n"
+        "- hook: gancho que prende (1 frase)\n"
+        "- pilar: qual pilar do perfil se encaixa\n"
+        "- angulo: ângulo abordado (1 frase)\n"
+        "- tipo_sugerido: educacional|inspiracional|contraste|engajamento\n\n"
+        "Responda APENAS no formato JSON (lista de objetos), sem markdown:\n"
+        '[{"titulo":"...","hook":"...","pilar":"...","angulo":"...","tipo_sugerido":"educacional"},...]\n'
+    )
+
+    try:
+        from utils.llm_provider import generate_text
+        raw = generate_text(prompt)
+    except Exception as e:
+        return jsonify({"error": f"LLM falhou: {str(e)}"}), 500
+
+    if not raw or len(raw) < 20:
+        return jsonify({"error": "LLM não retornou ideias válidas"}), 500
+
+    import json as _json
+    try:
+        ideias = _json.loads(raw.strip())
+        if not isinstance(ideias, list):
+            ideias = []
+    except _json.JSONDecodeError:
+        ideias = []
+        # Tenta extrair JSON de dentro do texto (LLM às vezes envolve em ```json)
+        json_match = _re.search(r'\[.*\]', raw, _re.DOTALL)
+        if json_match:
+            try:
+                ideias = _json.loads(json_match.group())
+            except _json.JSONDecodeError:
+                pass
+
+    # Fallback: se LLM não retornou JSON, gera ideias genéricas baseadas no perfil
+    if not ideias:
+        fallback_tipo = "educacional"
+        ideias = [
+            {"titulo": f"O que a fé ensina sobre {tema_curto or 'esse tema'}", "hook": "Uma perspectiva que poucos consideram", "pilar": "fé", "angulo": "Visão católica", "tipo_sugerido": fallback_tipo},
+            {"titulo": f"3 erros comuns em {tema_curto or 'esse assunto'}", "hook": "O que a maioria faz de errado", "pilar": "dica-pratica", "angulo": "Erros e acertos", "tipo_sugerido": "contraste"},
+            {"titulo": f"Como aplicar na prática: {tema_curto or 'esse tema'}", "hook": "Passos concretos pra começar hoje", "pilar": "dica-pratica", "angulo": "Aplicação prática", "tipo_sugerido": fallback_tipo},
+            {"titulo": f"A história por trás de {tema_curto or 'isso'}", "hook": "O que ninguém te contou", "pilar": "comunidade", "angulo": "Narrativa pessoal", "tipo_sugerido": "inspiracional"},
+            {"titulo": f"Reflexão: {tema_curto or 'esse tema'} e a vida", "hook": "Pra pensar com calma", "pilar": "fé", "angulo": "Reflexão espiritual", "tipo_sugerido": "engajamento"},
+        ]
+
+    return jsonify({"ideias": ideias[:5], "perfil": perfil_id})
+
+
+@app.route('/api/ideias', methods=['GET'])
+def api_listar_ideias():
+    """Lista ideias salvas de todos os perfis (acervo/ideias/ + perfis/*/acervo/ideias/)."""
+    perfil_id = request.args.get('perfil_id') or get_active_profile()
+    ideias = []
+
+    search_dirs = [
+        PROJECT_PATH / "acervo" / "ideias",
+        PROJECT_PATH / "perfis" / perfil_id / "acervo" / "ideias",
+    ]
+
+    for d in search_dirs:
+        if not d.exists():
+            continue
+        for f in sorted(d.glob("*.md"), reverse=True):
+            if f.name == "index.md":
+                continue
+            try:
+                text = f.read_text(encoding="utf-8")
+            except Exception:
+                continue
+
+            fm = {}
+            m = _re.match(r"^---\s*\n(.*?)\n---\s*\n", text, _re.DOTALL)
+            if m:
+                for line in m.group(1).splitlines():
+                    if ":" in line:
+                        k, v = line.split(":", 1)
+                        fm[k.strip()] = v.strip()
+
+            body = _re.sub(r"^---\s*\n.*?\n---\s*\n", "", text, flags=_re.DOTALL).strip()
+            h1 = ""
+            h1_match = _re.search(r"^#\s+(.+?)$", body, _re.MULTILINE)
+            if h1_match:
+                h1 = h1_match.group(1).strip()
+
+            ideias.append({
+                "arquivo": str(f.relative_to(PROJECT_PATH)),
+                "titulo": fm.get("name") or h1 or f.stem,
+                "hook": fm.get("hook", "") or fm.get("description", ""),
+                "pilar": fm.get("pilar", ""),
+                "tags": fm.get("tags", ""),
+                "data": fm.get("data", "") or fm.get("date", ""),
+                "fonte": str(d.relative_to(PROJECT_PATH)),
+            })
+
+    ideias.sort(key=lambda x: x.get("data", ""), reverse=True)
+    return jsonify({"ideias": ideias, "perfil": perfil_id, "total": len(ideias)})
 
 
 # ============================================
