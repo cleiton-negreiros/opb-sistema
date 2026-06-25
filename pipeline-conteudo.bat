@@ -44,9 +44,14 @@ set "ABSOLUTE_PATH=%CD%\%IDEIA%"
 set "TIMESTAMP=%DATE:/=%_%TIME::=%"
 set "TIMESTAMP=%TIMESTAMP: =0%
 
+:: Ler perfil ativo de perfis.json
+for /f "delims=" %%p in ('powershell -NoProfile -Command "(Get-Content 'perfis\perfis.json' -Raw | ConvertFrom-Json).ativo"') do set "PERFIL_ATIVO=%%p"
+if "%PERFIL_ATIVO%"=="" set "PERFIL_ATIVO=paz-na-conta"
+echo Perfil ativo: %PERFIL_ATIVO%
+
 :: 1) Gerar Carrossel
 echo [1/4] 🎠 Gerando Carrossel...
-python agents/carrossel/main.py --ideia "%ABSOLUTE_PATH%" --tipo educacional --formato carrossel --exportar
+python agents/carrossel/main.py --ideia "%ABSOLUTE_PATH%" --tipo educacional --formato carrossel --exportar --perfil %PERFIL_ATIVO%
 if %errorlevel% equ 0 (
     echo   ✅ Carrossel gerado!
     for /f "delims=" %%f in ('dir /b /o-d /a-d "acervo\carrossel\*.md" 2^>nul') do (
@@ -59,7 +64,7 @@ echo.
 
 :: 2) Gerar Reels Script
 echo [2/4] 📱 Gerando roteiro Reels...
-python agents/reels_script/main.py "%IDEIA%" --ideia "%ABSOLUTE_PATH%" --duracao 60 --formato reels --exportar
+python agents/reels_script/main.py "%IDEIA%" --ideia "%ABSOLUTE_PATH%" --duracao 60 --formato reels --exportar --perfil %PERFIL_ATIVO%
 if %errorlevel% equ 0 (
     echo   ✅ Reels gerado!
     for /f "delims=" %%f in ('dir /b /o-d /a-d "acervo\ideias\script_*.txt" 2^>nul') do (
@@ -72,7 +77,7 @@ echo.
 
 :: 3) Gerar Video 10min
 echo [3/4] 🎬 Gerando roteiro Video Semanal...
-python agents/video_10min/main.py --ideia "%ABSOLUTE_PATH%" --exportar
+python agents/video_10min/main.py --ideia "%ABSOLUTE_PATH%" --exportar --perfil %PERFIL_ATIVO%
 if %errorlevel% equ 0 (
     echo   ✅ Video gerado!
     for /f "delims=" %%f in ('dir /b /o-d /a-d "acervo\video\*.txt" 2^>nul') do (
@@ -85,7 +90,7 @@ echo.
 
 :: 4) Gerar Post Instagram
 echo [4/4] 📝 Gerando Post Instagram...
-python agents/text_generator/main.py "%IDEIA%" educational --perfil paz-na-conta
+python agents/text_generator/main.py "%IDEIA%" educational --perfil %PERFIL_ATIVO%
 if %errorlevel% equ 0 (echo   ✅ Post gerado!) else (echo   ⚠️ Falha no post)
 echo.
 

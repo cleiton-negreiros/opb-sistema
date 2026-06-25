@@ -31,11 +31,15 @@ fi
 
 ABSOLUTE_PATH="$(pwd)/$IDEIA"
 
+# Ler perfil ativo de perfis.json
+PERFIL_ATIVO=$(python -c "import json; print(json.load(open('perfis/perfis.json'))['ativo'])" 2>/dev/null || echo "paz-na-conta")
+
 echo -e "${CYAN}============================================${NC}"
 echo -e "${BOLD}  📦 Pipeline de Conteudo Diario${NC}"
 echo -e "${CYAN}============================================${NC}"
 echo ""
 echo -e "Ideia: ${YELLOW}$IDEIA${NC}"
+echo -e "Perfil: ${YELLOW}$PERFIL_ATIVO${NC}"
 echo ""
 
 # Garante pastas _conteudo
@@ -43,7 +47,7 @@ mkdir -p _conteudo/carrossel _conteudo/reels _conteudo/video
 
 # 1) Gerar Carrossel
 echo -e "[1/4] ${CYAN}🎠 Gerando Carrossel...${NC}"
-python agents/carrossel/main.py --ideia "$ABSOLUTE_PATH" --tipo educacional --formato carrossel --exportar
+python agents/carrossel/main.py --ideia "$ABSOLUTE_PATH" --tipo educacional --formato carrossel --exportar --perfil "$PERFIL_ATIVO"
 CAR_FILE=$(ls -t acervo/carrossel/*.md 2>/dev/null | head -1)
 if [ -n "$CAR_FILE" ]; then
     cp "$CAR_FILE" _conteudo/carrossel/
@@ -53,7 +57,7 @@ echo ""
 
 # 2) Gerar Reels Script
 echo -e "[2/4] ${CYAN}📱 Gerando roteiro Reels...${NC}"
-python agents/reels_script/main.py "$IDEIA" --ideia "$ABSOLUTE_PATH" --duracao 60 --formato reels --exportar
+python agents/reels_script/main.py "$IDEIA" --ideia "$ABSOLUTE_PATH" --duracao 60 --formato reels --exportar --perfil "$PERFIL_ATIVO"
 REEL_FILE=$(ls -t acervo/ideias/script_*.txt 2>/dev/null | head -1)
 if [ -n "$REEL_FILE" ]; then
     cp "$REEL_FILE" _conteudo/reels/
@@ -63,7 +67,7 @@ echo ""
 
 # 3) Gerar Video 10min
 echo -e "[3/4] ${CYAN}🎬 Gerando roteiro Video Semanal...${NC}"
-python agents/video_10min/main.py --ideia "$ABSOLUTE_PATH" --exportar
+python agents/video_10min/main.py --ideia "$ABSOLUTE_PATH" --exportar --perfil "$PERFIL_ATIVO"
 VID_FILE=$(ls -t acervo/video/*.txt 2>/dev/null | head -1)
 if [ -n "$VID_FILE" ]; then
     cp "$VID_FILE" _conteudo/video/
@@ -73,7 +77,7 @@ echo ""
 
 # 4) Gerar Post Instagram
 echo -e "[4/4] ${CYAN}📝 Gerando Post Instagram...${NC}"
-python agents/text_generator/main.py "$IDEIA" educational --perfil paz-na-conta
+python agents/text_generator/main.py "$IDEIA" educational --perfil "$PERFIL_ATIVO"
 echo -e "${GREEN}  ✅ Post gerado!${NC}"
 echo ""
 

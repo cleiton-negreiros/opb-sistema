@@ -316,8 +316,8 @@ Ou executar:
 - [ ] Carrossel: implementar `--ideia <arquivo>` (carrossel a partir de ideia salva)
 - [ ] Endpoint `/api/ideias/lista` filtrado por perfil ativo
 - [ ] UI da plataforma: dropdown de ideias salvas no formulário de carrossel
-- [ ] D-02: corrigir bug de encoding em `utils/profile_loader.py` (Público/Missão sem match)
-- [ ] `api_server.py:run_agent()` injeta `--perfil <ativo>` automaticamente
+- [x] D-02: corrigir bug de encoding em `utils/profile_loader.py` (Público/Missão sem match) ✅
+- [x] `api_server.py:run_agent()` injeta `--perfil <ativo>` automaticamente ✅
 
 ---
 
@@ -339,10 +339,10 @@ Ou executar:
 
 ### Pendente (próximas fases)
 - [x] **Fase 2 — UX gulosa:** Chat de perfil, indicador % completo, mobile-first review ✅
-- [ ] **Fase 3 — Conteúdo:** "Gerar conteúdo com base no perfil", detector de lacunas, análise de consistência
+- [x] **Fase 3 — Conteúdo:** "Gerar conteúdo com base no perfil", detector de lacunas, análise de consistência ✅
 - [ ] **Fase 4 — Sincronização:** Banner "Atualizar do celular?", sync silencioso, dropdown de perfil no form
-- [ ] Preencher perfis `toque-de-paz` e `caminho-vida` (atualmente vazios)
-- [ ] Corrigir PUBLICO-ALVO de caminho-vida ("emagrecer" — copiou do projeto antigo)
+- [x] Preencher perfis `toque-de-paz` e `caminho-vida` ✅
+- [x] Corrigir PUBLICO-ALVO de caminho-vida ("emagrecer" — copiou do projeto antigo) ✅
 
 ### Feito (Fase 2 — 2026-06-06)
 - **Schema do quiz guiado** (`utils/perfil_quiz.py`): 21 perguntas em 8 seções, com pesos (essencial=1.0, nice-to-have=0.5). `compute_progress(profile_id)` retorna `{answered, total, percent, answered_ids, missing_ids, next_question}`. `save_answer(profile_id, question_id, value)` escreve/substitui seção no MD correto, atualiza `updated_at` no frontmatter, encoding UTF-8.
@@ -353,6 +353,31 @@ Ou executar:
 - **Chat UI mobile-first** (`cerebro/.../entrevista.html`): uma pergunta por vez, auto-save, progress bar, PWA, big input, design leve. State machine puro JS (sem framework). Resolve bug "fardo de formulário" — usuário responde 1 por vez, vê progresso, sai e volta de onde parou.
 - **Botão "Modo Chat"** no `formulario.html` (link direto para `entrevista.html`).
 - **Tests E2E**: 100% (21/21) com 1 missing (frase), save idempotente, save com acentos UTF-8, clear section → detecta como missing, save restaura → 100%. Endpoints testados via HTTP (200/400/404) + LAN IP `192.168.1.106:5000` para mobile.
+
+---
+
+## 🗓️ Progresso — 25/06/2026 (Quarta)
+
+### Feito hoje
+- **Caminho Vida — perfil corrigido**: PUBLICO-ALVO tinha conteúdo errado sobre "emagrecer" (copiado do projeto Macminho Vida). Reescrito para "Formação e espiritualidade católica". Config.json atualizado com nicho, problema e pilares.
+- **Toque de Paz — perfil completo**: REGRAS-ESCRITA.md criado (tom acolhedor, técnico, comunitário). NARRATIVA, PUBLICO-ALVO, POSICIONAMENTO, PERFIL.md expandidos com conteúdo real. Config.json atualizado.
+- **Pipeline de conteúdo multi-perfil**: `pipeline-conteudo.bat` e `pipeline-conteudo.sh` agora leem perfil ativo de `perfis.json` via PowerShell/Python. Todos os agentes (carrossel, reels, video, text_generator) recebem `--perfil` dinâmico.
+- **Profile Analyzer** (`utils/profile_analyzer.py`): detector de lacunas (placeholders, campos ausentes) + análise de consistência cross-seção (nicho↔posicionamento, problema↔público, missão). Score 0-100%. Testado nos 3 perfis (todos 100%).
+- **Endpoints REST**: `GET /api/perfil/analyze` e `GET /api/perfil/analyze/all` para análise de perfil via API.
+
+### Arquivos alterados
+- `perfis/caminho-vida/perfil/*` — 6 arquivos reescritos (PERFIL, NARRATIVA, PUBLICO-ALVO, POSICIONAMENTO, REGRAS-ESCRITA, config.json)
+- `perfis/toque-de-paz/perfil/*` — 6 arquivos reescritos/criados
+- `utils/profile_analyzer.py` — NOVO: análise de consistência e lacunas
+- `api_server.py` — novos endpoints `/api/perfil/analyze` e `/api/perfil/analyze/all`
+- `pipeline-conteudo.bat` — lê perfil ativo de perfis.json
+- `pipeline-conteudo.sh` — lê perfil ativo de perfis.json
+
+### Pendente
+- [ ] **Fase 4 — Sincronização:** Banner "Atualizar do celular?", sync silencioso, dropdown de perfil no form
+- [ ] Carrossel: implementar `--ideia <arquivo>` (carrossel a partir de ideia salva)
+- [ ] Endpoint `/api/ideias/lista` filtrado por perfil ativo
+- [ ] UI da plataforma: dropdown de ideias salvas no formulário de carrossel
 
 ---
 
@@ -373,4 +398,4 @@ Ou executar:
 
 ---
 
-_Last updated: 2026-06-06 (Fase 2 entregue)_
+_Last updated: 2026-06-25 (Fase 3 entregue)_

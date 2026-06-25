@@ -2032,6 +2032,31 @@ def api_perfil_quiz_schema():
     return jsonify({"questions": get_quiz_schema()})
 
 
+@app.route('/api/perfil/analyze', methods=['GET'])
+def api_perfil_analyze():
+    """Analisa consistência e lacunas do perfil ativo (ou especificado)."""
+    perfil_id = request.args.get('perfil_id') or get_active_profile()
+    sys.path.insert(0, str(PROJECT_PATH / "utils"))
+    try:
+        from profile_analyzer import analyze_profile
+    except ImportError:
+        return jsonify({"error": "profile_analyzer não disponível"}), 500
+    report = analyze_profile(perfil_id)
+    return jsonify(report)
+
+
+@app.route('/api/perfil/analyze/all', methods=['GET'])
+def api_perfil_analyze_all():
+    """Analisa todos os perfis ativos e compara."""
+    sys.path.insert(0, str(PROJECT_PATH / "utils"))
+    try:
+        from profile_analyzer import analyze_all_profiles
+    except ImportError:
+        return jsonify({"error": "profile_analyzer não disponível"}), 500
+    report = analyze_all_profiles()
+    return jsonify(report)
+
+
 # ============================================
 # API — OBSIDIAN
 # ============================================
