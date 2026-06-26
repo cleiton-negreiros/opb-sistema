@@ -257,6 +257,7 @@ cd agents/gimli && python gimli.py --sync-listas
 - Deploy Vercel + CI/CD
 
 ### 🔜 Backlog
+- [ ] **Telegram Carrossel Interativo** — `/carrossel [ideia]` com botões inline para perfil/tipo (`inbox/2026-06-25_telegram-carrossel-interativo.md`)
 - Preencher perfil do empreendedor com conteúdo real
 - Gerar primeiros carrosséis e posts via plataforma
 - Pesquisar solução para acessar iniciar-dia.bat remotamente (SSH ou /api/start)
