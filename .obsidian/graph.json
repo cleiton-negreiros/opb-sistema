@@ -9,43 +9,59 @@
   "colorGroups": [
     {
       "query": "tag:#email/diario",
-      "color": {"a": 1, "rgb": 5963244},
-      "label": "Emails"
+      "color": {
+        "a": 1,
+        "rgb": 5963244
+      }
     },
     {
       "query": "tag:#conteudo/navegacao",
-      "color": {"a": 1, "rgb": 16743936},
-      "label": "Navegação"
+      "color": {
+        "a": 1,
+        "rgb": 16743936
+      }
     },
     {
       "query": "tag:#carrossel",
-      "color": {"a": 1, "rgb": 16724787},
-      "label": "Carrosséis"
+      "color": {
+        "a": 1,
+        "rgb": 16724787
+      }
     },
     {
       "query": "tag:#reels",
-      "color": {"a": 1, "rgb": 10181046},
-      "label": "Reels"
+      "color": {
+        "a": 1,
+        "rgb": 10181046
+      }
     },
     {
       "query": "tag:#video",
-      "color": {"a": 1, "rgb": 16729370},
-      "label": "Vídeos"
+      "color": {
+        "a": 1,
+        "rgb": 16729370
+      }
     },
     {
       "query": "tag:#home/navegacao",
-      "color": {"a": 1, "rgb": 16711680},
-      "label": "Home"
+      "color": {
+        "a": 1,
+        "rgb": 16711680
+      }
     },
     {
       "query": "tag:#governanca",
-      "color": {"a": 1, "rgb": 3684408},
-      "label": "Governança"
+      "color": {
+        "a": 1,
+        "rgb": 3684408
+      }
     },
     {
       "query": "tag:#ideia",
-      "color": {"a": 1, "rgb": 16766421},
-      "label": "Ideias"
+      "color": {
+        "a": 1,
+        "rgb": 16766421
+      }
     }
   ],
   "collapse-display": false,
@@ -58,6 +74,6 @@
   "repelStrength": 12,
   "linkStrength": 0.8,
   "linkDistance": 200,
-  "scale": 0.8,
-  "close": false
+  "scale": 0.2070709249745298,
+  "close": true
 }

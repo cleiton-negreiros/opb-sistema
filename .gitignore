@@ -1,12 +1,13 @@
 # Output generated files
 output/
 
-# Obsidian — track config, ignore workspace
+# Obsidian — track config/graph, ignore workspace
 .obsidian/*
 !.obsidian/app.json
 !.obsidian/appearance.json
 !.obsidian/core-plugins.json
 !.obsidian/community-plugins.json
+!.obsidian/graph.json
 
 # Python
 __pycache__/
