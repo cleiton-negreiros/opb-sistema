@@ -1043,12 +1043,81 @@ async function viewTranscricao(nome) {
     if (r && r.sucesso) {
         const out = document.getElementById('transcricao-output');
         const copyBtn = document.getElementById('transcricao-copy-btn');
+        const analyzeBtn = document.getElementById('transcricao-analisar-btn');
+        const insightsEl = document.getElementById('transcricao-insights');
         out.style.display = 'block';
-        out.innerHTML = `<pre style="white-space:pre-wrap;font-family:'JetBrains Mono',monospace;font-size:0.85rem;line-height:1.5">${escapeHtml(r.conteudo)}</pre>`;
         copyBtn.style.display = 'inline-flex';
+        if (analyzeBtn) analyzeBtn.style.display = 'inline-flex';
+        if (insightsEl) { insightsEl.style.display = 'none'; insightsEl.innerHTML = ''; }
+        const conteudo = r.conteudo;
+        out.innerHTML = `<pre style="white-space:pre-wrap;font-family:'JetBrains Mono',monospace;font-size:0.85rem;line-height:1.5">${escapeHtml(conteudo)}</pre>`;
         navigateTo('transcricao');
+        window._transcricaoAtual = { nome: nome, conteudo: conteudo };
     } else {
         showToast('Erro ao carregar transcrição', 'error');
+    }
+}
+
+async function analisarTranscricao() {
+    const dados = window._transcricaoAtual;
+    if (!dados) { showToast('Nenhuma transcrição carregada', 'error'); return; }
+    const el = document.getElementById('transcricao-insights');
+    const btn = document.getElementById('transcricao-analisar-btn');
+    if (!el) return;
+    el.style.display = 'block';
+    el.innerHTML = '<div class="empty-state"><i class="fas fa-spinner fa-spin"></i><h3>Analisando...</h3></div>';
+
+    const r = await apiCall('/api/transcricao/analisar','POST',{nome: dados.nome, texto: dados.conteudo});
+    if (r && r.sucesso && r.analise) {
+        const a = r.analise;
+        const tonsHtml = Object.entries(a.analise_tons || {})
+            .map(([tom, count]) => `<span class="tag" style="font-size:0.75rem">${tom} (${count})</span>`).join(' ');
+        const insightsHtml = (a.insights || []).map((ins, i) =>
+            `<div class="activity-item" style="border-left:3px solid var(--primary);margin-bottom:6px;padding:8px 12px">
+                <strong style="color:var(--primary);font-size:0.75rem">#${i+1}</strong>
+                <span style="font-size:0.85rem">${escapeHtml(ins)}</span>
+             </div>`
+        ).join('') || '<em style="color:var(--text-muted)">Nenhum insight automático encontrado</em>';
+
+        el.innerHTML = `
+            <div style="display:flex;flex-wrap:wrap;gap:12px;margin-bottom:16px">
+                <div class="card" style="flex:1;min-width:120px;text-align:center;padding:16px">
+                    <div style="font-size:1.8rem;font-weight:700;color:var(--primary)">${escapeHtml(a.tom||'neutro')}</div>
+                    <div style="font-size:0.7rem;color:var(--text-muted);text-transform:uppercase">Tom do Vídeo</div>
+                </div>
+                <div class="card" style="flex:1;min-width:120px;text-align:center;padding:16px">
+                    <div style="font-size:1.8rem;font-weight:700;color:var(--primary)">${a.total_palavras||0}</div>
+                    <div style="font-size:0.7rem;color:var(--text-muted);text-transform:uppercase">Palavras</div>
+                </div>
+                <div class="card" style="flex:1;min-width:120px;text-align:center;padding:16px">
+                    <div style="font-size:1.8rem;font-weight:700;color:var(--primary)">${a.tempo_leitura_min||0} min</div>
+                    <div style="font-size:0.7rem;color:var(--text-muted);text-transform:uppercase">Leitura</div>
+                </div>
+            </div>
+            <div style="margin-bottom:12px">
+                <strong style="font-size:0.8rem;color:var(--text-muted)">Tons detectados:</strong>
+                <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:6px">${tonsHtml}</div>
+            </div>
+            ${a.resumo ? `<div class="card" style="padding:12px;margin-bottom:12px">
+                <strong><i class="fas fa-align-left" style="margin-right:6px"></i>Resumo</strong>
+                <p style="font-size:0.85rem;margin:8px 0 0;color:var(--text-secondary)">${escapeHtml(a.resumo)}</p>
+            </div>` : ''}
+            <div style="margin-bottom:12px">
+                <strong><i class="fas fa-lightbulb" style="margin-right:6px"></i>Insights (${a.insights?.length||0})</strong>
+                <div style="margin-top:8px">${insightsHtml}</div>
+            </div>
+            <div>
+                <strong style="font-size:0.8rem;color:var(--text-muted)">Palavras-chave:</strong>
+                <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:6px">
+                    ${(a.keywords||[]).map(k => `<span class="tag tag-blue">${escapeHtml(k)}</span>`).join('')}
+                </div>
+            </div>
+        `;
+        if (btn) btn.innerHTML = '<i class="fas fa-sync"></i> Reanalisar';
+        showToast('Análise concluída!', 'success');
+    } else {
+        el.innerHTML = `<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><h3>Erro na análise</h3><p>${escapeHtml(r?.error||'Tente novamente')}</p></div>`;
+        showToast('Erro na análise', 'error');
     }
 }
 

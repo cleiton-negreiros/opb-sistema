@@ -372,7 +372,11 @@
 <div class="form-group"><label class="form-label">Idioma</label><select class="form-select" id="transcricao-idioma"><option value="pt">Português (BR)</option><option value="en">Inglês</option><option value="es">Espanhol</option></select></div>
 <button class="btn btn-primary btn-block" onclick="runTranscricao()"><i class="fas fa-microphone-alt"></i> Transcrever</button>
 <div class="console-output" id="transcricao-output" style="margin-top:16px;display:none;"></div>
-<button class="btn btn-sm btn-outline" id="transcricao-copy-btn" style="display:none;margin-top:8px" onclick="copyOutput('transcricao-output')"><i class="fas fa-copy"></i> Copiar Transcrição</button>
+<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">
+<button class="btn btn-sm btn-outline" id="transcricao-copy-btn" style="display:none" onclick="copyOutput('transcricao-output')"><i class="fas fa-copy"></i> Copiar</button>
+<button class="btn btn-sm" id="transcricao-analisar-btn" style="display:none;background:var(--primary);color:white;border:none" onclick="analisarTranscricao()"><i class="fas fa-lightbulb"></i> Analisar</button>
+</div>
+<div id="transcricao-insights" style="display:none;margin-top:16px"></div>
 </div>
 <div class="card"><div class="card-header"><div class="card-title"><i class="fas fa-file-alt" style="color:var(--success)"></i> Transcrições Recentes</div></div>
 <div id="transcricoes-lista"><div class="empty-state"><i class="fas fa-microphone-slash"></i><h3>Nenhuma transcrição</h3><p>Transcreva vídeos do YouTube</p></div></div>

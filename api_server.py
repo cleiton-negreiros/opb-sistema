@@ -1550,18 +1550,45 @@ def api_radagast():
 
 
 # ============================================
+# Helper — encontrar transcrição (profile + fallback global)
+# ============================================
+
+GLOBAL_TRANS_PATH = PROJECT_PATH / "acervo" / "transcricoes"
+
+def _encontrar_transcricao(nome):
+    """Busca transcrição no path do perfil ativo, com fallback global."""
+    caminhos = [get_acervo_path_for_user() / "transcricoes"]
+    if PROFILE_ENABLED:
+        caminhos.append(GLOBAL_TRANS_PATH)
+    for base in caminhos:
+        path = base / nome
+        if path.exists():
+            return path
+        arquivos = list(base.glob(f"*{nome}*.md"))
+        if arquivos:
+            return arquivos[0]
+    return None
+
+
+# ============================================
 # API — LISTAR TRANSCRIÇÕES
 # ============================================
 
 @app.route('/api/transcricoes', methods=['GET'])
 def api_listar_transcricoes():
-    """Lista transcrições salvas."""
-    transc_path = get_acervo_path_for_user() / "transcricoes"
+    """Lista transcrições salvas (profile + global)."""
     arquivos = []
-    if transc_path.exists():
+    caminhos = [get_acervo_path_for_user() / "transcricoes"]
+    if PROFILE_ENABLED:
+        caminhos.append(GLOBAL_TRANS_PATH)
+    vistos = set()
+    for transc_path in caminhos:
+        if not transc_path.exists():
+            continue
         for f in sorted(transc_path.glob("*.md"), reverse=True):
-            if f.name == "index.md":
+            if f.name == "index.md" or f.name in vistos:
                 continue
+            vistos.add(f.name)
             metadata = {}
             content = f.read_text(encoding='utf-8', errors='replace')
             for line in content.split('\n'):
@@ -1594,19 +1621,80 @@ def api_ler_transcricao():
     nome = data.get('nome', '')
     if not nome:
         return jsonify({"error": "Nome não informado"}), 400
-    # Sanitize - prevent path traversal
     if '..' in nome or '/' in nome or '\\' in nome:
         return jsonify({"error": "Nome inválido"}), 400
-    path = get_acervo_path_for_user() / "transcricoes" / nome
-    if not path.exists():
-        arquivos = list((get_acervo_path_for_user() / "transcricoes").glob(f"*{nome}*.md"))
-        if arquivos:
-            path = arquivos[0]
-        else:
-            return jsonify({"error": "Transcrição não encontrada"}), 404
+    path = _encontrar_transcricao(nome)
+    if not path:
+        return jsonify({"error": "Transcrição não encontrada"}), 404
     return jsonify({
         "sucesso": True,
         "conteudo": path.read_text(encoding='utf-8', errors='replace'),
+        "arquivo": path.name
+    })
+
+
+# ============================================
+# API — ANALISAR TRANSCRIÇÃO (insights + tom)
+# ============================================
+
+@app.route('/api/transcricao/analisar', methods=['POST'])
+def api_analisar_transcricao():
+    """Extrai insights e tom de uma transcrição."""
+    data = request.get_json()
+    nome = data.get('nome', '')
+    texto = data.get('texto', '')
+
+    # Se recebeu texto direto, analisa na hora
+    if texto:
+        from utils.insight_extractor import extract_insights, extract_timestamps
+        return jsonify({
+            "sucesso": True,
+            "analise": extract_insights(texto),
+            "timestamps": extract_timestamps(texto),
+            "fonte": "texto_direto"
+        })
+
+    # Se recebeu nome de arquivo, lê primeiro
+    if not nome:
+        return jsonify({"error": "Informe 'nome' do arquivo ou 'texto' para analisar"}), 400
+
+    if '..' in nome or '/' in nome or '\\' in nome:
+        return jsonify({"error": "Nome inválido"}), 400
+
+    path = _encontrar_transcricao(nome)
+    if not path:
+        return jsonify({"error": "Transcrição não encontrada"}), 404
+
+    conteudo = path.read_text(encoding='utf-8', errors='replace')
+
+    # Extrair apenas o texto da transcrição (ignorar frontmatter e metadados)
+    from utils.insight_extractor import extract_insights, extract_timestamps
+
+    # Pular frontmatter YAML (--- ... ---)
+    texto_limpo = conteudo
+    if conteudo.startswith('---'):
+        partes = conteudo.split('---', 2)
+        if len(partes) >= 3:
+            texto_limpo = partes[2]
+
+    # Pular cabeçalho markdown
+    linhas = texto_limpo.split('\n')
+    linhas_filtradas = []
+    for linha in linhas:
+        linha_strip = linha.strip()
+        if linha_strip and not linha_strip.startswith('|') and not linha_strip.startswith('#') and not linha_strip.startswith('*') and not linha_strip.startswith('---'):
+            # Remover timestamps [MM:SS] para análise limpa
+            linha_sem_timestamp = _re.sub(r'\[\d{1,2}:\d{2}(?::\d{2})?\]\s*', '', linha_strip)
+            if linha_sem_timestamp:
+                linhas_filtradas.append(linha_sem_timestamp)
+
+    texto_analise = ' '.join(linhas_filtradas)
+
+    return jsonify({
+        "sucesso": True,
+        "analise": extract_insights(texto_analise),
+        "timestamps": extract_timestamps(conteudo),
+        "fonte": "arquivo",
         "arquivo": path.name
     })
 

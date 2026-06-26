@@ -18,7 +18,14 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 PROJECT_PATH = Path(__file__).parent.parent.parent
-ACERVO_PATH = PROJECT_PATH / "acervo" / "transcricoes"
+
+# Profile-aware path: tenta usar perfil ativo, fallback para global
+try:
+    sys.path.insert(0, str(PROJECT_PATH))
+    from profile_manager import get_acervo_path
+    ACERVO_PATH = get_acervo_path() / "transcricoes"
+except Exception:
+    ACERVO_PATH = PROJECT_PATH / "acervo" / "transcricoes"
 
 def ensure_pastas():
     ACERVO_PATH.mkdir(parents=True, exist_ok=True)
