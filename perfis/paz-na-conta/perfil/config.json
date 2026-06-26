@@ -3,9 +3,43 @@
   "nome": "Paz na Conta",
   "icone": "✝️",
   "cor": "#8b5cf6",
-  "descricao": "Mentoria de Finanças Católicas",
+  "descricao": "Finanças à luz da fé católica",
   "instagram": "@paznaconta",
   "telegram": "@NegreirosBot",
   "versiculo": "Buscai primeiro o Reino de Deus (Mt 6,33)",
-  "ativo": true
+  "ativo": true,
+  "estrategia_conteudo": {
+    "frequencia": "1 carrossel/dia",
+    "horario": "18h-20h",
+    "formula": "Liturgia do dia + Administração de bens",
+    "fonte_liturgica": "Leituras diárias (Catholic API / Lecionário)",
+    "formato_padrao": 6,
+    "tipos_conteudo": {
+      "educacional": 0.6,
+      "inspiracional": 0.2,
+      "contraste": 0.1,
+      "engajamento": 0.1
+    },
+    "pilares": [
+      "Liturgia + Finanças (5x/semana)",
+      "Dica Prática (3x/semana)",
+      "História/Depoimento (1x/semana)",
+      "Engajamento (2x/semana)"
+    ],
+    "hashtags_padrao": [
+      "paznaconta",
+      "financascaticas",
+      "féedfinanças",
+      "dsi",
+      "divinaprovidencia",
+      "organizacaofinanceira",
+      "catolicos",
+      "vidacrista",
+      "liturgiadiaria",
+      "administracaodebens",
+      "dizimo",
+      "caridade",
+      "sobriedade"
+    ]
+  }
 }

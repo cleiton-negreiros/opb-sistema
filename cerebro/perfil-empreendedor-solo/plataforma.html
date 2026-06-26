@@ -24,6 +24,7 @@
     <button class="bottom-nav-item active" onclick="navigateTo('dashboard')"><i class="fas fa-th-large"></i><span>Início</span></button>
     <button class="bottom-nav-item" onclick="navigateTo('cerebro')"><i class="fas fa-brain"></i><span>Cérebro</span></button>
     <button class="bottom-nav-item" onclick="navigateTo('carrossel')"><i class="fas fa-layer-group"></i><span>Carrossel</span></button>
+    <button class="bottom-nav-item" onclick="navigateTo('pipeline')"><i class="fas fa-stream"></i><span>Pipeline</span></button>
     <button class="bottom-nav-item" onclick="navigateTo('quadro-avisos')"><i class="fas fa-clipboard-list"></i><span>Tarefas</span></button>
     <button class="bottom-nav-item" onclick="navigateTo('jornada-ia')"><i class="fas fa-book-open"></i><span>Jornada</span></button>
     <button class="bottom-nav-item" onclick="navigateTo('aprendizados')"><i class="fas fa-graduation-cap"></i><span>Vibe</span></button>
@@ -50,6 +51,7 @@
                 <div class="nav-item" onclick="navigateTo('transcricao')"><i class="fas fa-microphone-alt"></i><span>Transcrição</span><span class="badge">IA</span></div>
                 <div class="nav-item" onclick="navigateTo('capa-video')"><i class="fas fa-image"></i><span>Capa Vídeo</span><span class="badge">IA</span></div>
                 <div class="nav-item" onclick="navigateTo('carrossel')"><i class="fas fa-layer-group"></i><span>Carrossel</span><span class="badge">IA</span></div>
+                <div class="nav-item" onclick="navigateTo('pipeline')"><i class="fas fa-stream"></i><span>Pipeline</span><span class="badge">4x</span></div>
                 <div class="nav-item" onclick="navigateTo('consumo')"><i class="fas fa-book-reader"></i><span>Consumo</span><span class="badge">IA</span></div>
                 <div class="nav-item" onclick="navigateTo('posicionamento')"><i class="fas fa-crosshairs"></i><span>Posicionamento</span><span class="badge">IA</span></div>
                 <div class="nav-item" onclick="navigateTo('text-generator')"><i class="fas fa-pen-fancy"></i><span>Text Generator</span><span class="badge">IA</span></div>
@@ -169,6 +171,27 @@
             <div class="qa-btn" onclick="navigateTo('radagast')"><span class="qa-icon">📡</span><span class="qa-label">Radagast</span></div>
             <div class="qa-btn" onclick="navigateTo('audio-transcriber')"><span class="qa-icon">🎤</span><span class="qa-label">Audio</span></div>
         </div>
+    </div>
+</div>
+
+<!-- Profile Health Widget -->
+<div class="card" style="margin-top:20px">
+    <div class="card-header">
+        <div class="card-title"><i class="fas fa-heartbeat" style="color:var(--danger)"></i> Saúde do Perfil</div>
+        <button class="btn btn-sm btn-outline" onclick="loadProfileHealth()"><i class="fas fa-sync"></i></button>
+    </div>
+    <div id="profile-health">
+        <div style="text-align:center;padding:20px"><i class="fas fa-spinner fa-spin" style="color:var(--accent)"></i></div>
+    </div>
+</div>
+
+<!-- Production Stats -->
+<div class="card" style="margin-top:20px">
+    <div class="card-header">
+        <div class="card-title"><i class="fas fa-chart-line" style="color:var(--success)"></i> Produção</div>
+    </div>
+    <div id="production-stats">
+        <div style="text-align:center;padding:20px"><i class="fas fa-spinner fa-spin" style="color:var(--accent)"></i></div>
     </div>
 </div>
 
@@ -299,6 +322,47 @@
 </div></div></div>
 
 <!-- ==============================================
+     PIPELINE DIÁRIO
+     ============================================== -->
+<div class="page" id="page-pipeline">
+<div class="grid-2">
+<div class="card">
+    <div class="card-header">
+        <div class="card-title"><i class="fas fa-stream" style="color:var(--accent-light)"></i> Pipeline Diário</div>
+        <span style="font-size:0.7rem;color:var(--text-muted)">1 ideia → 4 formatos</span>
+    </div>
+    <div class="form-group">
+        <label class="form-label">Ideia ou tema</label>
+        <textarea class="form-textarea" id="pipeline-ideia" rows="4" placeholder="Descreva a ideia... ou deixe vazio pra usar a ideia mais recente do inbox"></textarea>
+    </div>
+    <button class="btn btn-primary btn-block" onclick="runPipeline()" id="pipeline-btn">
+        <i class="fas fa-play"></i> Rodar Pipeline Completo
+    </button>
+    <div id="pipeline-output" style="margin-top:16px;display:none"></div>
+</div>
+<div class="card">
+    <div class="card-header">
+        <div class="card-title"><i class="fas fa-check-double" style="color:var(--success)"></i> Resultado</div>
+    </div>
+    <div id="pipeline-result">
+        <div class="empty-state"><i class="fas fa-stream"></i><h3>Aguardando execução</h3><p>O pipeline gera: Carrossel + Reels + Vídeo + Post</p></div>
+    </div>
+</div>
+</div>
+<div class="card" style="margin-top:20px">
+    <div class="card-header">
+        <div class="card-title"><i class="fas fa-info-circle" style="color:var(--info)"></i> Como funciona</div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;padding:8px 0">
+        <div style="text-align:center"><div style="font-size:1.5rem;margin-bottom:8px">🎠</div><div style="font-weight:600;font-size:0.85rem">Carrossel</div><div style="font-size:0.75rem;color:var(--text-muted)">6 slides Canva</div></div>
+        <div style="text-align:center"><div style="font-size:1.5rem;margin-bottom:8px">📱</div><div style="font-weight:600;font-size:0.85rem">Reels</div><div style="font-size:0.75rem;color:var(--text-muted)">Roteiro 60s</div></div>
+        <div style="text-align:center"><div style="font-size:1.5rem;margin-bottom:8px">🎬</div><div style="font-weight:600;font-size:0.85rem">Vídeo</div><div style="font-size:0.75rem;color:var(--text-muted)">Roteiro 10min</div></div>
+        <div style="text-align:center"><div style="font-size:1.5rem;margin-bottom:8px">📝</div><div style="font-weight:600;font-size:0.85rem">Post</div><div style="font-size:0.75rem;color:var(--text-muted)">Caption Instagram</div></div>
+    </div>
+</div>
+</div>
+
+<!-- ==============================================
      TRANSCRIÇÃO
      ============================================== -->
 <div class="page" id="page-transcricao">
@@ -400,7 +464,7 @@
       </div>
       <div class="form-group">
         <label class="form-label">Sua Ideia</label>
-        <textarea class="form-textarea" id="carrossel-ideia" rows="4" placeholder="Descreva sua ideia em algumas linhas...&#10;Ex: Dízimo e organização financeira à luz da fé católica"></textarea>
+        <textarea class="form-textarea" id="carrossel-ideia" rows="8" placeholder="Descreva sua ideia em algumas linhas...&#10;&#10;Quanto mais detalhar, melhor o resultado.&#10;Ex: Dízimo e organização financeira à luz da fé católica — como a Igreja ensina, erros comuns, passos práticos."></textarea>
       </div>
       <div class="form-group">
         <label class="form-label">Tipo</label>
@@ -414,6 +478,14 @@
       <button class="btn btn-primary btn-block" onclick="gerarCarrossel()">
         <i class="fas fa-magic"></i> Gerar Carrossel
       </button>
+      <div style="display:flex;gap:8px;margin-top:8px">
+        <button class="btn btn-sm btn-outline" onclick="gerarVariacoes()" style="flex:1">
+          <i class="fas fa-copy"></i> 3 Variações
+        </button>
+        <button class="btn btn-sm btn-outline btn-export-png" onclick="exportarSlidesPNG()" style="flex:1">
+          <i class="fas fa-image"></i> Exportar PNG
+        </button>
+      </div>
     </div>
     <div class="card">
       <div class="card-header">
@@ -423,6 +495,30 @@
       <div id="carrossel-output-area">
         <div class="empty-state"><i class="fas fa-layer-group"></i><h3>Nenhum carrossel gerado</h3><p>Descreva uma ideia e clique em gerar</p></div>
       </div>
+      <!-- Preview Swipeável (após gerar) -->
+      <div id="carrossel-preview-container" style="display:none;margin-top:16px">
+        <div style="font-size:0.75rem;color:var(--text-muted);margin-bottom:8px;font-weight:600">PREVIEW — Deslize para ver</div>
+        <div class="swipe-preview" id="swipe-preview">
+          <div class="swipe-arrow left" onclick="swipePreview(-1)"><i class="fas fa-chevron-left"></i></div>
+          <div class="swipe-preview-track" id="swipe-track"></div>
+          <div class="swipe-arrow right" onclick="swipePreview(1)"><i class="fas fa-chevron-right"></i></div>
+        </div>
+        <div class="swipe-dots" id="swipe-dots"></div>
+      </div>
+      <!-- Timeline Editor (após gerar) -->
+      <div id="carrossel-timeline-container" style="display:none;margin-top:16px">
+        <div style="font-size:0.75rem;color:var(--text-muted);margin-bottom:8px;font-weight:600">ORDENAR SLIDES — Arraste para reordenar</div>
+        <div class="timeline-editor" id="timeline-editor"></div>
+      </div>
+    </div>
+  </div>
+  <!-- Variações Geradas -->
+  <div id="carrossel-variations-container" style="display:none;margin-top:16px">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title"><i class="fas fa-code-branch" style="color:var(--accent-light)"></i> Variações</div>
+      </div>
+      <div class="variations-grid" id="variations-grid"></div>
     </div>
   </div>
 </div>
@@ -568,6 +664,18 @@
      PERFIL
      ============================================== -->
 <div class="page" id="page-perfil">
+
+<!-- Quiz Progress Widget -->
+<div class="card" style="margin-bottom:20px">
+    <div class="card-header">
+        <div class="card-title"><i class="fas fa-tasks" style="color:var(--accent-light)"></i> Progresso do Quiz</div>
+        <a href="entrevista.html" target="_blank" class="btn btn-sm btn-outline"><i class="fas fa-external-link-alt"></i> Modo Chat</a>
+    </div>
+    <div id="quiz-progress">
+        <div style="text-align:center;padding:16px"><i class="fas fa-spinner fa-spin" style="color:var(--accent)"></i></div>
+    </div>
+</div>
+
 <div class="tabs-inline" style="margin-bottom:20px">
 <div class="tab-inline active" onclick="showPerfilTab('basico',this)">Dados Básicos</div>
 <div class="tab-inline" onclick="showPerfilTab('habilidades',this)">Habilidades</div>
@@ -1272,6 +1380,32 @@
 </div>
 
 <div id="toastContainer" class="toast-container"></div>
+
+<!-- FLOATING ACTION BUTTON -->
+<button class="fab" id="fab" onclick="toggleFabMenu()">
+    <i class="fas fa-plus"></i>
+</button>
+<div class="fab-menu" id="fab-menu">
+    <div class="fab-menu-item" onclick="fabAction('carrossel')"><i class="fas fa-layer-group"></i> Novo Carrossel</div>
+    <div class="fab-menu-item" onclick="fabAction('pipeline')"><i class="fas fa-play"></i> Rodar Pipeline</div>
+    <div class="fab-menu-item" onclick="fabAction('consumo')"><i class="fas fa-book"></i> Consumir Conteúdo</div>
+    <div class="fab-menu-item" onclick="fabAction('radagast')"><i class="fas fa-satellite"></i> Curadoria Radagast</div>
+</div>
+
+<!-- BOTTOM SHEET -->
+<div class="bottom-sheet-overlay" id="bottomSheetOverlay" onclick="closeBottomSheet()">
+    <div class="bottom-sheet" onclick="event.stopPropagation()">
+        <div class="bottom-sheet-handle"></div>
+        <div class="bottom-sheet-title" id="bottomSheetTitle">Ação</div>
+        <div id="bottomSheetContent"></div>
+    </div>
+</div>
+
+<!-- PULL TO REFRESH INDICATOR -->
+<div class="ptr-indicator" id="ptrIndicator">
+    <i class="fas fa-sync ptr-spinner"></i>
+    <span id="ptrText">Puxe para atualizar</span>
+</div>
 
     <script src="js/api.js"></script>
     <script src="js/toast.js"></script>

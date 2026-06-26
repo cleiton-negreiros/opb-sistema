@@ -74,6 +74,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const startPage = (hash && document.getElementById('page-' + hash)) ? hash : 'dashboard';
     navigateTo(startPage);
     
+    // v5.0: Initialize new features
+    setupAutoSave();
+    loadDraft();
+    setupPullToRefresh();
+    
     // Registra Service Worker para PWA offline
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('/sw.js').catch((err) => {

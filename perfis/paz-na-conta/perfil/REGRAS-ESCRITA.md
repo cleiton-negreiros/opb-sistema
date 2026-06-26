@@ -1,7 +1,7 @@
 ---
 name: "Regras de Escrita"
 description: "Tom de voz, valores, marca visual e regras — fonte de verdade para todo texto gerado por IA"
-updated_at: 2026-06-06
+updated_at: 2026-06-25
 ---
 
 # Regras de Escrita — Paz na Conta
@@ -42,6 +42,41 @@ updated_at: 2026-06-06
 - A história pessoal (CLT → empreendedor, João Pessoa, família) aparece como testemunho, não como autoajuda
 - Conectam cada dica financeira a um "para quê" — propósito maior que dinheiro
 - Falam de independência financeira como meio, não como fim: independência para servir melhor
+
+---
+
+## Regras para Carrosséis Diários (Liturgia + Finanças)
+
+### Estrutura Obrigatória (6 slides)
+
+1. **Slide 1 (Capa)**: Título chamativo + referência litúrgica. NUNCA comece com "Slide 1" — comece com impacto visual.
+
+2. **Slide 2 (Liturgia)**: Trecho REAL da leitura do dia. Cite a referência completa (ex: "Mt 25,14-30"). NUNCA invente versículos.
+
+3. **Slide 3 (Conexão)**: Explique como o texto se liga a finanças. Use linguagem simples. Ex: "Os talentos que Jesus fala são os recursos que Deus confia a cada um — dinheiro, tempo, habilidades."
+
+4. **Slide 4 (Ensino da Igreja)**: Citação REAL de documento magisterial. Fontes confiáveis: DSI, Catecismo, Exortações Apostólicas. NUNCA invente citações.
+
+5. **Slide 5 (Aplicação Prática)**: 3 dicas CONCRETAS e acionáveis HOJE. Não generalize. Ex: "Abra seu app bancário e anote quanto sobra no final do mês."
+
+6. **Slide 6 (Chamada)**: Pergunta ou convite à ação. Ex: "Qual versículo te ajuda a gastar com consciência? Comenta 👇"
+
+### Regras de Conteúdo
+
+- NUNCA invente versículos bíblicos — sempre cite a referência real
+- NUNCA invente citações de documentos da Igreja — use fontes verificáveis
+- NUNCA use Prosperidade Gospel — a DSI é clara: dinheiro é meio, não fim
+- NUNCA use tom de culpa — acolha, não julgue
+- SEMPRE cite a fonte litúrgica (leituras do dia)
+- SEMPRE termine com aplicação prática
+- SEMPRE use linguagem acessível (nivelamento para leigo)
+
+### Tom para Liturgia + Finanças
+
+- **Reverente** — a Palavra de Deus é sagrada, trate com respeito
+- **Conectivo** — sempre mostre a ponte entre fé e vida prática
+- **Esperançoso** — o Evangelho é boa notícia, não lista de proibições
+- **Prático** — fé sem obras está morta (Tg 2,17)
 
 ---
 

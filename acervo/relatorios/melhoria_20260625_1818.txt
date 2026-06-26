@@ -1,0 +1,2540 @@
+============================================================
+  RELATORIO DE MELHORIA CONTINUA
+  2026-06-25 18:18
+============================================================
+
+  Total de problemas: 492
+  Criticos: 25
+  Altos: 32
+  Medios: 51
+  Baixos: 384
+
+
+────────────────────────────────────────────────────────────
+  [CRITICO] CRITICAL (25)
+────────────────────────────────────────────────────────────
+
+  >> Path traversal
+     Arquivo: api_server.py:734
+     Codigo: full_path = PROJECT_PATH / caminho...
+     Solucao: Adicionar validação: if '..' in caminho: return 400
+
+  >> Path traversal
+     Arquivo: agents\carrossel\main.py:95
+     Codigo: candidates = [PROJECT_PATH / caminho, Path.home() / caminho,...
+     Solucao: Adicionar validação: if '..' in caminho: return 400
+
+  >> DEBUG=True em produção
+     Arquivo: agents\melhoria-continua\main.py:35
+     Codigo: "name": "DEBUG=True em produção",...
+     Solucao: Alterar para DEBUG = False
+
+  >> XSS via onclick
+     Arquivo: perfis\toque-de-paz\cerebro\perfil-empreendedor-solo\js\pages.js:145
+     Codigo: <tr><td><i class="fas fa-map" style="color:var(--accent);mar...
+     Solucao: Usar escapeAttr() ou data-* attributes
+
+  >> XSS via onclick
+     Arquivo: perfis\toque-de-paz\cerebro\perfil-empreendedor-solo\js\pages.js:186
+     Codigo: <div class="activity-item" onclick="viewTranscricao('${escap...
+     Solucao: Usar escapeAttr() ou data-* attributes
+
+  >> XSS via onclick
+     Arquivo: perfis\toque-de-paz\cerebro\perfil-empreendedor-solo\js\pages.js:226
+     Codigo: return `<div class="activity-item" style="cursor:pointer" on...
+     Solucao: Usar escapeAttr() ou data-* attributes
+
+  >> XSS via onclick
+     Arquivo: perfis\toque-de-paz\cerebro\perfil-empreendedor-solo\js\pages.js:233
+     Codigo: el.innerHTML = `<div class="activity-item" style="cursor:poi...
+     Solucao: Usar escapeAttr() ou data-* attributes
+
+  >> XSS via onclick
+     Arquivo: perfis\paz-na-conta\cerebro\perfil-empreendedor-solo\js\pages.js:145
+     Codigo: <tr><td><i class="fas fa-map" style="color:var(--accent);mar...
+     Solucao: Usar escapeAttr() ou data-* attributes
+
+  >> XSS via onclick
+     Arquivo: perfis\paz-na-conta\cerebro\perfil-empreendedor-solo\js\pages.js:186
+     Codigo: <div class="activity-item" onclick="viewTranscricao('${escap...
+     Solucao: Usar escapeAttr() ou data-* attributes
+
+  >> XSS via onclick
+     Arquivo: perfis\paz-na-conta\cerebro\perfil-empreendedor-solo\js\pages.js:226
+     Codigo: return `<div class="activity-item" style="cursor:pointer" on...
+     Solucao: Usar escapeAttr() ou data-* attributes
+
+  >> XSS via onclick
+     Arquivo: perfis\paz-na-conta\cerebro\perfil-empreendedor-solo\js\pages.js:233
+     Codigo: el.innerHTML = `<div class="activity-item" style="cursor:poi...
+     Solucao: Usar escapeAttr() ou data-* attributes
+
+  >> XSS via onclick
+     Arquivo: perfis\caminho-vida\cerebro\perfil-empreendedor-solo\js\pages.js:145
+     Codigo: <tr><td><i class="fas fa-map" style="color:var(--accent);mar...
+     Solucao: Usar escapeAttr() ou data-* attributes
+
+  >> XSS via onclick
+     Arquivo: perfis\caminho-vida\cerebro\perfil-empreendedor-solo\js\pages.js:186
+     Codigo: <div class="activity-item" onclick="viewTranscricao('${escap...
+     Solucao: Usar escapeAttr() ou data-* attributes
+
+  >> XSS via onclick
+     Arquivo: perfis\caminho-vida\cerebro\perfil-empreendedor-solo\js\pages.js:226
+     Codigo: return `<div class="activity-item" style="cursor:pointer" on...
+     Solucao: Usar escapeAttr() ou data-* attributes
+
+  >> XSS via onclick
+     Arquivo: perfis\caminho-vida\cerebro\perfil-empreendedor-solo\js\pages.js:233
+     Codigo: el.innerHTML = `<div class="activity-item" style="cursor:poi...
+     Solucao: Usar escapeAttr() ou data-* attributes
+
+  >> XSS via onclick
+     Arquivo: cerebro\perfil-empreendedor-solo\js\pages.js:191
+     Codigo: <tr><td><i class="fas fa-map" style="color:var(--accent);mar...
+     Solucao: Usar escapeAttr() ou data-* attributes
+
+  >> XSS via onclick
+     Arquivo: cerebro\perfil-empreendedor-solo\js\pages.js:342
+     Codigo: <div class="ideia-card" onclick="usarIdeiaSalva('${escapeHtm...
+     Solucao: Usar escapeAttr() ou data-* attributes
+
+  >> XSS via onclick
+     Arquivo: cerebro\perfil-empreendedor-solo\js\pages.js:375
+     Codigo: <div class="ideia-card" onclick="usarIdeiaLLM('${escapeHtml(...
+     Solucao: Usar escapeAttr() ou data-* attributes
+
+  >> XSS via onclick
+     Arquivo: cerebro\perfil-empreendedor-solo\js\pages.js:577
+     Codigo: <div class="activity-item" onclick="viewTranscricao('${escap...
+     Solucao: Usar escapeAttr() ou data-* attributes
+
+  >> XSS via onclick
+     Arquivo: cerebro\perfil-empreendedor-solo\js\pages.js:617
+     Codigo: return `<div class="activity-item" style="cursor:pointer" on...
+     Solucao: Usar escapeAttr() ou data-* attributes
+
+  >> XSS via onclick
+     Arquivo: cerebro\perfil-empreendedor-solo\js\pages.js:624
+     Codigo: el.innerHTML = `<div class="activity-item" style="cursor:poi...
+     Solucao: Usar escapeAttr() ou data-* attributes
+
+  >> XSS via onclick
+     Arquivo: cerebro\perfil-empreendedor-solo\js\pages.js:1446
+     Codigo: <button class="btn btn-sm" style="background:#0A66C2;color:w...
+     Solucao: Usar escapeAttr() ou data-* attributes
+
+  >> XSS via onclick
+     Arquivo: cerebro\perfil-empreendedor-solo\js\pages.js:1447
+     Codigo: <button class="btn btn-sm" style="background:#1DA1F2;color:w...
+     Solucao: Usar escapeAttr() ou data-* attributes
+
+  >> XSS via onclick
+     Arquivo: cerebro\perfil-empreendedor-solo\js\pages.js:1448
+     Codigo: <button class="btn btn-sm" style="background:linear-gradient...
+     Solucao: Usar escapeAttr() ou data-* attributes
+
+  >> XSS via onclick
+     Arquivo: cerebro\perfil-empreendedor-solo\js\pages.js:1449
+     Codigo: <button class="btn btn-sm btn-outline" onclick="saveResult('...
+     Solucao: Usar escapeAttr() ou data-* attributes
+
+────────────────────────────────────────────────────────────
+  [ALTO] HIGH (32)
+────────────────────────────────────────────────────────────
+
+  >> int() sem validação
+     Arquivo: api_server.py:1220
+     Codigo: limit = int(request.args.get('limit', 20))...
+     Solucao: Envolver em try-except ValueError
+
+  >> int() sem validação
+     Arquivo: api_server.py:1228
+     Codigo: limit = int(request.args.get('limit', 50))...
+     Solucao: Envolver em try-except ValueError
+
+  >> JSON.parse sem try-catch
+     Arquivo: perfis\toque-de-paz\cerebro\perfil-empreendedor-solo\js\app.js:252
+     Codigo: const user = JSON.parse(localStorage.getItem('opb_user') || ...
+     Solucao: Envolver em try-catch
+
+  >> async sem await
+     Arquivo: perfis\toque-de-paz\cerebro\perfil-empreendedor-solo\js\pages.js:287
+     Codigo: async function runTextGenerator() {...
+     Solucao: Adicionar await ou .catch()
+
+  >> clipboard sem catch
+     Arquivo: perfis\toque-de-paz\cerebro\perfil-empreendedor-solo\js\pages.js:533
+     Codigo: navigator.clipboard.writeText(text).then(() => {...
+     Solucao: Adicionar .catch() com fallback
+
+  >> JSON.parse sem try-catch
+     Arquivo: perfis\paz-na-conta\cerebro\perfil-empreendedor-solo\js\app.js:252
+     Codigo: const user = JSON.parse(localStorage.getItem('opb_user') || ...
+     Solucao: Envolver em try-catch
+
+  >> async sem await
+     Arquivo: perfis\paz-na-conta\cerebro\perfil-empreendedor-solo\js\pages.js:287
+     Codigo: async function runTextGenerator() {...
+     Solucao: Adicionar await ou .catch()
+
+  >> clipboard sem catch
+     Arquivo: perfis\paz-na-conta\cerebro\perfil-empreendedor-solo\js\pages.js:533
+     Codigo: navigator.clipboard.writeText(text).then(() => {...
+     Solucao: Adicionar .catch() com fallback
+
+  >> JSON.parse sem try-catch
+     Arquivo: perfis\caminho-vida\cerebro\perfil-empreendedor-solo\js\app.js:252
+     Codigo: const user = JSON.parse(localStorage.getItem('opb_user') || ...
+     Solucao: Envolver em try-catch
+
+  >> async sem await
+     Arquivo: perfis\caminho-vida\cerebro\perfil-empreendedor-solo\js\pages.js:287
+     Codigo: async function runTextGenerator() {...
+     Solucao: Adicionar await ou .catch()
+
+  >> clipboard sem catch
+     Arquivo: perfis\caminho-vida\cerebro\perfil-empreendedor-solo\js\pages.js:533
+     Codigo: navigator.clipboard.writeText(text).then(() => {...
+     Solucao: Adicionar .catch() com fallback
+
+  >> JSON.parse sem try-catch
+     Arquivo: cerebro\perfil-empreendedor-solo\js\app.js:89
+     Codigo: const user = JSON.parse(localStorage.getItem('opb_user') || ...
+     Solucao: Envolver em try-catch
+
+  >> JSON.parse sem try-catch
+     Arquivo: cerebro\perfil-empreendedor-solo\js\pages.js:326
+     Codigo: const saved = JSON.parse(localStorage.getItem('opb_resultado...
+     Solucao: Envolver em try-catch
+
+  >> JSON.parse sem try-catch
+     Arquivo: cerebro\perfil-empreendedor-solo\js\pages.js:1175
+     Codigo: const saved = JSON.parse(localStorage.getItem('opb_resultado...
+     Solucao: Envolver em try-catch
+
+  >> JSON.parse sem try-catch
+     Arquivo: cerebro\perfil-empreendedor-solo\js\pages.js:1478
+     Codigo: const saved = JSON.parse(localStorage.getItem('opb_resultado...
+     Solucao: Envolver em try-catch
+
+  >> JSON.parse sem try-catch
+     Arquivo: cerebro\perfil-empreendedor-solo\js\pages.js:1494
+     Codigo: const saved = JSON.parse(localStorage.getItem('opb_resultado...
+     Solucao: Envolver em try-catch
+
+  >> JSON.parse sem try-catch
+     Arquivo: cerebro\perfil-empreendedor-solo\js\pages.js:1511
+     Codigo: const full = JSON.parse(localStorage.getItem('opb_resultados...
+     Solucao: Envolver em try-catch
+
+  >> JSON.parse sem try-catch
+     Arquivo: cerebro\perfil-empreendedor-solo\js\pages.js:1522
+     Codigo: const saved = JSON.parse(localStorage.getItem('opb_resultado...
+     Solucao: Envolver em try-catch
+
+  >> JSON.parse sem try-catch
+     Arquivo: cerebro\perfil-empreendedor-solo\js\pages.js:1528
+     Codigo: const saved = JSON.parse(localStorage.getItem('opb_resultado...
+     Solucao: Envolver em try-catch
+
+  >> JSON.parse sem try-catch
+     Arquivo: cerebro\perfil-empreendedor-solo\js\pages.js:1723
+     Codigo: const saved = JSON.parse(localStorage.getItem('opb_resultado...
+     Solucao: Envolver em try-catch
+
+  >> async sem await
+     Arquivo: cerebro\perfil-empreendedor-solo\js\pages.js:239
+     Codigo: async function gerarCarrossel() {...
+     Solucao: Adicionar await ou .catch()
+
+  >> async sem await
+     Arquivo: cerebro\perfil-empreendedor-solo\js\pages.js:398
+     Codigo: gerarCarrossel();...
+     Solucao: Adicionar await ou .catch()
+
+  >> async sem await
+     Arquivo: cerebro\perfil-empreendedor-solo\js\pages.js:1564
+     Codigo: runTextGenerator();...
+     Solucao: Adicionar await ou .catch()
+
+  >> async sem await
+     Arquivo: cerebro\perfil-empreendedor-solo\js\pages.js:1709
+     Codigo: async function runTextGenerator() {...
+     Solucao: Adicionar await ou .catch()
+
+  >> clipboard sem catch
+     Arquivo: cerebro\perfil-empreendedor-solo\js\pages.js:311
+     Codigo: navigator.clipboard.writeText(window._carrosselSlides[idx].t...
+     Solucao: Adicionar .catch() com fallback
+
+  >> clipboard sem catch
+     Arquivo: cerebro\perfil-empreendedor-solo\js\pages.js:318
+     Codigo: navigator.clipboard.writeText(text);...
+     Solucao: Adicionar .catch() com fallback
+
+  >> clipboard sem catch
+     Arquivo: cerebro\perfil-empreendedor-solo\js\pages.js:985
+     Codigo: navigator.clipboard.writeText(text).then(() => {...
+     Solucao: Adicionar .catch() com fallback
+
+  >> clipboard sem catch
+     Arquivo: cerebro\perfil-empreendedor-solo\js\pages.js:1419
+     Codigo: navigator.clipboard.writeText(text);...
+     Solucao: Adicionar .catch() com fallback
+
+  >> clipboard sem catch
+     Arquivo: cerebro\perfil-empreendedor-solo\js\pages.js:1455
+     Codigo: navigator.clipboard.writeText(text);...
+     Solucao: Adicionar .catch() com fallback
+
+  >> clipboard sem catch
+     Arquivo: cerebro\perfil-empreendedor-solo\js\pages.js:1468
+     Codigo: navigator.clipboard.writeText(text);...
+     Solucao: Adicionar .catch() com fallback
+
+  >> clipboard sem catch
+     Arquivo: cerebro\perfil-empreendedor-solo\js\pages.js:1523
+     Codigo: navigator.clipboard.writeText(saved[idx].texto);...
+     Solucao: Adicionar .catch() com fallback
+
+  >> clipboard sem catch
+     Arquivo: cerebro\perfil-empreendedor-solo\js\pages.js:1892
+     Codigo: navigator.clipboard.writeText(text);...
+     Solucao: Adicionar .catch() com fallback
+
+────────────────────────────────────────────────────────────
+  [MEDIO] MEDIUM (51)
+────────────────────────────────────────────────────────────
+
+  >> Sys.path em loop
+     Arquivo: api_server.py:976
+     Codigo: sys.path.insert(0, str(PROJECT_PATH / "utils"))...
+     Solucao: Mover para início do arquivo
+
+  >> Sys.path em loop
+     Arquivo: api_server.py:2169
+     Codigo: sys.path.insert(0, str(PROJECT_PATH / "utils"))...
+     Solucao: Mover para início do arquivo
+
+  >> Sys.path em loop
+     Arquivo: api_server.py:2202
+     Codigo: sys.path.insert(0, str(PROJECT_PATH / "utils"))...
+     Solucao: Mover para início do arquivo
+
+  >> Sys.path em loop
+     Arquivo: api_server.py:2227
+     Codigo: sys.path.insert(0, str(PROJECT_PATH / "utils"))...
+     Solucao: Mover para início do arquivo
+
+  >> Sys.path em loop
+     Arquivo: api_server.py:2239
+     Codigo: sys.path.insert(0, str(PROJECT_PATH / "utils"))...
+     Solucao: Mover para início do arquivo
+
+  >> Sys.path em loop
+     Arquivo: api_server.py:2251
+     Codigo: sys.path.insert(0, str(PROJECT_PATH / "utils"))...
+     Solucao: Mover para início do arquivo
+
+  >> Sys.path em loop
+     Arquivo: api_server.py:2269
+     Codigo: sys.path.insert(0, str(PROJECT_PATH / "utils"))...
+     Solucao: Mover para início do arquivo
+
+  >> Sys.path em loop
+     Arquivo: api_server.py:2293
+     Codigo: sys.path.insert(0, str(PROJECT_PATH / "utils"))...
+     Solucao: Mover para início do arquivo
+
+  >> Sys.path em loop
+     Arquivo: api_server.py:2384
+     Codigo: sys.path.insert(0, str(QUADRO_PATH))...
+     Solucao: Mover para início do arquivo
+
+  >> Sys.path em loop
+     Arquivo: api_server.py:2402
+     Codigo: sys.path.insert(0, str(QUADRO_PATH))...
+     Solucao: Mover para início do arquivo
+
+  >> Sys.path em loop
+     Arquivo: api_server.py:2413
+     Codigo: sys.path.insert(0, str(QUADRO_PATH))...
+     Solucao: Mover para início do arquivo
+
+  >> Sys.path em loop
+     Arquivo: api_server.py:2426
+     Codigo: sys.path.insert(0, str(QUADRO_PATH))...
+     Solucao: Mover para início do arquivo
+
+  >> Glob sem sort por data
+     Arquivo: api_server.py:886
+     Codigo: files = sorted(carrossel_path.glob("*.md"), key=lambda f: f....
+     Solucao: Usar key=lambda f: f.stat().st_mtime
+
+  >> Glob sem sort por data
+     Arquivo: api_server.py:908
+     Codigo: files = sorted(carrossel_path.glob("*.md"), key=lambda f: f....
+     Solucao: Usar key=lambda f: f.stat().st_mtime
+
+  >> Glob sem sort por data
+     Arquivo: api_server.py:1073
+     Codigo: for f in sorted(d.glob("*.md"), reverse=True):...
+     Solucao: Usar key=lambda f: f.stat().st_mtime
+
+  >> Glob sem sort por data
+     Arquivo: api_server.py:1246
+     Codigo: for f in sorted(ideias_path.glob("*.md"), reverse=True)[:lim...
+     Solucao: Usar key=lambda f: f.stat().st_mtime
+
+  >> Glob sem sort por data
+     Arquivo: api_server.py:1358
+     Codigo: files = sorted(carrossel_path.glob("*.md"), key=lambda f: f....
+     Solucao: Usar key=lambda f: f.stat().st_mtime
+
+  >> Glob sem sort por data
+     Arquivo: api_server.py:1562
+     Codigo: for f in sorted(transc_path.glob("*.md"), reverse=True):...
+     Solucao: Usar key=lambda f: f.stat().st_mtime
+
+  >> Glob sem sort por data
+     Arquivo: api_server.py:1876
+     Codigo: files = sorted(inbox_dir.glob("*.md"), key=lambda f: f.stat(...
+     Solucao: Usar key=lambda f: f.stat().st_mtime
+
+  >> Glob sem sort por data
+     Arquivo: api_server.py:1880
+     Codigo: files = sorted(ideias_dir.glob("*.md"), key=lambda f: f.stat...
+     Solucao: Usar key=lambda f: f.stat().st_mtime
+
+  >> Glob sem sort por data
+     Arquivo: gerar_snapshot.py:42
+     Codigo: for f in sorted(p.glob("*.md"), key=lambda x: x.stat().st_mt...
+     Solucao: Usar key=lambda f: f.stat().st_mtime
+
+  >> Glob sem sort por data
+     Arquivo: gerar_snapshot.py:52
+     Codigo: for f in sorted(p.glob("*.md"), key=lambda x: x.stat().st_mt...
+     Solucao: Usar key=lambda f: f.stat().st_mtime
+
+  >> Glob sem sort por data
+     Arquivo: gerar_snapshot.py:61
+     Codigo: for f in sorted(p.glob("*.md"), key=lambda x: x.stat().st_mt...
+     Solucao: Usar key=lambda f: f.stat().st_mtime
+
+  >> Sys.path em loop
+     Arquivo: tests\test_multi_profile.py:18
+     Codigo: sys.path.insert(0, str(PROJECT_ROOT))...
+     Solucao: Mover para início do arquivo
+
+  >> Sys.path em loop
+     Arquivo: tests\test_radagast_multiprofile.py:2
+     Codigo: sys.path.insert(0, 'utils')...
+     Solucao: Mover para início do arquivo
+
+  >> Sys.path em loop
+     Arquivo: tests\test_radagast_multiprofile.py:5
+     Codigo: sys.path.insert(0, 'agents/radagast')...
+     Solucao: Mover para início do arquivo
+
+  >> Sys.path em loop
+     Arquivo: tests\test_radagast_paths.py:4
+     Codigo: sys.path.insert(0, 'utils')...
+     Solucao: Mover para início do arquivo
+
+  >> Sys.path em loop
+     Arquivo: tests\test_radagast_paths.py:5
+     Codigo: sys.path.insert(0, 'agents/radagast')...
+     Solucao: Mover para início do arquivo
+
+  >> Sys.path em loop
+     Arquivo: utils\llm_provider.py:87
+     Codigo: _sys.path.insert(0, str(_pdir))...
+     Solucao: Mover para início do arquivo
+
+  >> Glob sem sort por data
+     Arquivo: agents\capa_video\main.py:162
+     Codigo: capas = sorted(_output_path(pid).glob("*.md"), reverse=True)...
+     Solucao: Usar key=lambda f: f.stat().st_mtime
+
+  >> Glob sem sort por data
+     Arquivo: agents\carrossel\main.py:394
+     Codigo: files = sorted(_output_path(perfil_id).glob("*.md"), reverse...
+     Solucao: Usar key=lambda f: f.stat().st_mtime
+
+  >> Glob sem sort por data
+     Arquivo: agents\consultor-negocios\main.py:65
+     Codigo: for f in sorted(pesquisas_dir.glob("*.md"), reverse=True)[:3...
+     Solucao: Usar key=lambda f: f.stat().st_mtime
+
+  >> Glob sem sort por data
+     Arquivo: agents\consumo\main.py:625
+     Codigo: arquivos = sorted(ACERVO_PATH.glob("*.md"))...
+     Solucao: Usar key=lambda f: f.stat().st_mtime
+
+  >> Sys.path em loop
+     Arquivo: agents\consumo\save_notion.py:4
+     Codigo: sys.path.insert(0, '/'.join(__file__.replace('\\','/').split...
+     Solucao: Mover para início do arquivo
+
+  >> Sys.path em loop
+     Arquivo: agents\consumo\save_notion.py:5
+     Codigo: sys.path.insert(0, str(Path(__file__).parent.parent.parent /...
+     Solucao: Mover para início do arquivo
+
+  >> Sys.path em loop
+     Arquivo: agents\narvi\main.py:7
+     Codigo: sys.path.insert(0, str(Path(__file__).parent))...
+     Solucao: Mover para início do arquivo
+
+  >> Sys.path em loop
+     Arquivo: agents\narvi\narvi.py:52
+     Codigo: sys.path.insert(0, str(Path(__file__).resolve().parent))...
+     Solucao: Mover para início do arquivo
+
+  >> Glob sem sort por data
+     Arquivo: agents\posicionamento\main.py:374
+     Codigo: relatorios = sorted((ACERVO_PATH / "relatorios").glob("*.md"...
+     Solucao: Usar key=lambda f: f.stat().st_mtime
+
+  >> Sys.path em loop
+     Arquivo: agents\radagast\analyzer.py:150
+     Codigo: os.sys.path.insert(0, base)...
+     Solucao: Mover para início do arquivo
+
+  >> Sys.path em loop
+     Arquivo: agents\radagast\analyzer.py:153
+     Codigo: os.sys.path.insert(0, utils_path)...
+     Solucao: Mover para início do arquivo
+
+  >> Sys.path em loop
+     Arquivo: agents\radagast\main.py:7
+     Codigo: sys.path.insert(0, str(Path(__file__).parent))...
+     Solucao: Mover para início do arquivo
+
+  >> Sys.path em loop
+     Arquivo: agents\radagast\radagast.py:23
+     Codigo: sys.path.insert(0, str(PROJECT_DIR))...
+     Solucao: Mover para início do arquivo
+
+  >> Sys.path em loop
+     Arquivo: agents\radagast\radagast.py:24
+     Codigo: sys.path.insert(0, str(PROJECT_DIR / "utils"))...
+     Solucao: Mover para início do arquivo
+
+  >> Glob sem sort por data
+     Arquivo: agents\telegram_bot\main.py:207
+     Codigo: ideias = sorted(ACERVO_PATH.glob("*.md"), reverse=True)[:5]...
+     Solucao: Usar key=lambda f: f.stat().st_mtime
+
+  >> Glob sem sort por data
+     Arquivo: agents\telegram_bot\main.py:359
+     Codigo: ideias = sorted(ACERVO_PATH.glob("*.md"), reverse=True)[:10]...
+     Solucao: Usar key=lambda f: f.stat().st_mtime
+
+  >> Glob sem sort por data
+     Arquivo: agents\transcricao\main.py:195
+     Codigo: arquivos = sorted(ACERVO_PATH.glob("*.md"), reverse=True)...
+     Solucao: Usar key=lambda f: f.stat().st_mtime
+
+  >> Sys.path em loop
+     Arquivo: agents\gimli\tests\test_smoke.py:18
+     Codigo: sys.path.insert(0, str(ROOT))...
+     Solucao: Mover para início do arquivo
+
+  >> Null check ausente
+     Arquivo: perfis\toque-de-paz\cerebro\perfil-empreendedor-solo\js\pages.js:422
+     Codigo: function resetPomodoro(){clearInterval(pI1);pR1=false;pS1=25...
+     Solucao: Adicionar verificação null
+
+  >> Null check ausente
+     Arquivo: perfis\paz-na-conta\cerebro\perfil-empreendedor-solo\js\pages.js:422
+     Codigo: function resetPomodoro(){clearInterval(pI1);pR1=false;pS1=25...
+     Solucao: Adicionar verificação null
+
+  >> Null check ausente
+     Arquivo: perfis\caminho-vida\cerebro\perfil-empreendedor-solo\js\pages.js:422
+     Codigo: function resetPomodoro(){clearInterval(pI1);pR1=false;pS1=25...
+     Solucao: Adicionar verificação null
+
+  >> Null check ausente
+     Arquivo: cerebro\perfil-empreendedor-solo\js\pages.js:873
+     Codigo: function resetPomodoro(){clearInterval(pI1);pR1=false;pS1=25...
+     Solucao: Adicionar verificação null
+
+────────────────────────────────────────────────────────────
+  [BAIXO] LOW (384)
+────────────────────────────────────────────────────────────
+
+  >> Empty catch block
+     Arquivo: cerebro\perfil-empreendedor-solo\js\pages.js:1659
+     Codigo: } catch {}...
+     Solucao: Adicionar console.error() ou tratamento
+
+  >> Inline style excessivo
+     Arquivo: hub.html:290
+     Codigo: <div class="nav-item" onclick="window.location.href='/plataf...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: hub.html:597
+     Codigo: <div class="p-3 rounded" style="background:${h.done ? '#D1FA...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: index.html:407
+     Codigo: <p style="text-align:center;padding:40px;font-family:Inter,s...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: snapshot.html:75
+     Codigo: <pre style="background:var(--card);border-radius:8px;padding...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: snapshot.html:78
+     Codigo: <p style="text-align:center;color:var(--text2);font-size:13p...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\toque-de-paz\cerebro\perfil-empreendedor-solo\auth.html:463
+     Codigo: <p style="color: var(--text-secondary); font-size: 14px; mar...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\toque-de-paz\cerebro\perfil-empreendedor-solo\auth.html:483
+     Codigo: <p style="text-align: center; margin-top: 24px; color: var(-...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\toque-de-paz\cerebro\perfil-empreendedor-solo\dashboard.html:402
+     Codigo: <div id="tarefas-lista" style="font-size:12px;text-align:lef...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\toque-de-paz\cerebro\perfil-empreendedor-solo\dashboard.html:605
+     Codigo: html += `<div style="display:flex;align-items:center;gap:8px...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\toque-de-paz\cerebro\perfil-empreendedor-solo\formulario.html:635
+     Codigo: <div class="card" style="text-align:center; background: line...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\toque-de-paz\cerebro\perfil-empreendedor-solo\formulario.html:637
+     Codigo: <p style="color:rgba(255,255,255,0.9); max-width:600px; marg...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\toque-de-paz\cerebro\perfil-empreendedor-solo\formulario.html:645
+     Codigo: <button class="btn" onclick="saveAll()" style="background:rg...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\toque-de-paz\cerebro\perfil-empreendedor-solo\formulario.html:648
+     Codigo: <button class="btn" onclick="loadAll()" style="background:rg...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\toque-de-paz\cerebro\perfil-empreendedor-solo\formulario.html:820
+     Codigo: <label style="display:flex;align-items:center;gap:0.3rem;fon...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\toque-de-paz\cerebro\perfil-empreendedor-solo\formulario.html:847
+     Codigo: <div style="display:flex;gap:0.5rem;align-items:center;margi...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\toque-de-paz\cerebro\perfil-empreendedor-solo\formulario.html:849
+     Codigo: <label style="display:flex;align-items:center;gap:0.3rem;fon...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\toque-de-paz\cerebro\perfil-empreendedor-solo\plataforma - new.html:557
+     Codigo: <div style="text-align:center; padding:30px; color:var(--tex...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\toque-de-paz\cerebro\perfil-empreendedor-solo\plataforma - new.html:605
+     Codigo: <div style="font-size:3.5rem; font-weight:700; font-family:'...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\toque-de-paz\cerebro\perfil-empreendedor-solo\plataforma - new.html:610
+     Codigo: <div style="display:flex; gap:8px; justify-content:center; m...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\toque-de-paz\cerebro\perfil-empreendedor-solo\plataforma - new.html:698
+     Codigo: <div style="margin-top:16px; padding-top:12px; border-top:1p...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\toque-de-paz\cerebro\perfil-empreendedor-solo\plataforma - new.html:779
+     Codigo: <p style="font-size:0.8rem; color:var(--text-muted); margin-...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\toque-de-paz\cerebro\perfil-empreendedor-solo\plataforma - new.html:828
+     Codigo: <div style="display:flex; justify-content:space-between; ali...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\toque-de-paz\cerebro\perfil-empreendedor-solo\plataforma - new.html:829
+     Codigo: <h2 style="font-size:0.9rem; font-family:'JetBrains Mono', m...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\toque-de-paz\cerebro\perfil-empreendedor-solo\plataforma - new.html:830
+     Codigo: <button onclick="closeAlimentarModal()" style="background:no...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\toque-de-paz\cerebro\perfil-empreendedor-solo\plataforma.html:146
+     Codigo: <div style="font-size:0.75rem;color:var(--muted);margin-bott...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\toque-de-paz\cerebro\perfil-empreendedor-solo\plataforma.html:213
+     Codigo: <div style="text-align:center;padding:20px;color:var(--text-...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\toque-de-paz\cerebro\perfil-empreendedor-solo\plataforma.html:257
+     Codigo: <div class="todo-item" style="display:flex;align-items:cente...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\toque-de-paz\cerebro\perfil-empreendedor-solo\plataforma.html:258
+     Codigo: <div class="todo-item" style="display:flex;align-items:cente...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\toque-de-paz\cerebro\perfil-empreendedor-solo\plataforma.html:259
+     Codigo: <div class="todo-item" style="display:flex;align-items:cente...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\toque-de-paz\cerebro\perfil-empreendedor-solo\plataforma.html:260
+     Codigo: <div class="todo-item" style="display:flex;align-items:cente...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\toque-de-paz\cerebro\perfil-empreendedor-solo\plataforma.html:261
+     Codigo: <div class="todo-item" style="display:flex;align-items:cente...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\toque-de-paz\cerebro\perfil-empreendedor-solo\plataforma.html:266
+     Codigo: <div class="todo-item" style="display:flex;align-items:cente...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\toque-de-paz\cerebro\perfil-empreendedor-solo\plataforma.html:267
+     Codigo: <div class="todo-item" style="display:flex;align-items:cente...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\toque-de-paz\cerebro\perfil-empreendedor-solo\plataforma.html:268
+     Codigo: <div class="todo-item" style="display:flex;align-items:cente...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\toque-de-paz\cerebro\perfil-empreendedor-solo\plataforma.html:269
+     Codigo: <div class="todo-item" style="display:flex;align-items:cente...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\toque-de-paz\cerebro\perfil-empreendedor-solo\plataforma.html:270
+     Codigo: <div class="todo-item" style="display:flex;align-items:cente...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\toque-de-paz\cerebro\perfil-empreendedor-solo\plataforma.html:278
+     Codigo: <div style="font-size:5rem;font-weight:800;color:var(--text-...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\toque-de-paz\cerebro\perfil-empreendedor-solo\plataforma.html:404
+     Codigo: <div class="carrossel-actions" style="margin-top:12px;paddin...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\toque-de-paz\cerebro\perfil-empreendedor-solo\plataforma.html:457
+     Codigo: <div class="todo-item" style="display:flex;align-items:cente...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\toque-de-paz\cerebro\perfil-empreendedor-solo\plataforma.html:458
+     Codigo: <div class="todo-item" style="display:flex;align-items:cente...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\toque-de-paz\cerebro\perfil-empreendedor-solo\plataforma.html:459
+     Codigo: <div class="todo-item" style="display:flex;align-items:cente...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\toque-de-paz\cerebro\perfil-empreendedor-solo\plataforma.html:460
+     Codigo: <div class="todo-item" style="display:flex;align-items:cente...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\toque-de-paz\cerebro\perfil-empreendedor-solo\plataforma.html:461
+     Codigo: <div class="todo-item" style="display:flex;align-items:cente...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\toque-de-paz\cerebro\perfil-empreendedor-solo\plataforma.html:526
+     Codigo: <div class="preview-colors" style="display:flex;gap:12px;mar...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\toque-de-paz\cerebro\perfil-empreendedor-solo\plataforma.html:569
+     Codigo: <div class="agent-card" onclick="navigateTo('perfil')"><div ...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\toque-de-paz\cerebro\perfil-empreendedor-solo\plataforma.html:571
+     Codigo: <div class="agent-card" onclick="navigateTo('perfil')"><div ...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\toque-de-paz\cerebro\perfil-empreendedor-solo\plataforma.html:572
+     Codigo: <div class="agent-card" onclick="navigateTo('perfil')"><div ...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\toque-de-paz\cerebro\perfil-empreendedor-solo\plataforma.html:574
+     Codigo: <div class="agent-card" onclick="navigateTo('perfil')"><div ...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\toque-de-paz\cerebro\perfil-empreendedor-solo\plataforma.html:595
+     Codigo: <div style="padding:12px;background:var(--bg-input);border-r...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\toque-de-paz\cerebro\perfil-empreendedor-solo\plataforma.html:596
+     Codigo: <div style="padding:12px;background:var(--bg-input);border-r...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\toque-de-paz\cerebro\perfil-empreendedor-solo\plataforma.html:597
+     Codigo: <div style="padding:12px;background:var(--bg-input);border-r...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\toque-de-paz\cerebro\perfil-empreendedor-solo\plataforma.html:598
+     Codigo: <div style="padding:12px;background:var(--bg-input);border-r...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\toque-de-paz\cerebro\perfil-empreendedor-solo\plataforma.html:620
+     Codigo: <div style="padding:10px;background:var(--bg-input);border-r...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\toque-de-paz\cerebro\perfil-empreendedor-solo\plataforma.html:621
+     Codigo: <div style="padding:10px;background:var(--bg-input);border-r...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\toque-de-paz\cerebro\perfil-empreendedor-solo\plataforma.html:622
+     Codigo: <div style="padding:10px;background:var(--bg-input);border-r...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\toque-de-paz\cerebro\perfil-empreendedor-solo\plataforma.html:666
+     Codigo: <div style="margin-bottom:20px;display:flex;justify-content:...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\toque-de-paz\cerebro\perfil-empreendedor-solo\plataforma.html:676
+     Codigo: <div style="margin-bottom:16px;display:flex;gap:8px;flex-wra...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\toque-de-paz\cerebro\perfil-empreendedor-solo\plataforma.html:701
+     Codigo: <div style="display:flex;align-items:center;justify-content:...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\toque-de-paz\cerebro\perfil-empreendedor-solo\plataforma.html:702
+     Codigo: <div style="display:flex;align-items:center;justify-content:...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\toque-de-paz\cerebro\perfil-empreendedor-solo\plataforma.html:703
+     Codigo: <div style="display:flex;align-items:center;justify-content:...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\toque-de-paz\cerebro\perfil-empreendedor-solo\plataforma.html:709
+     Codigo: <div style="width:60px;height:60px;background:var(--accent);...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\toque-de-paz\cerebro\perfil-empreendedor-solo\plataforma.html:710
+     Codigo: <div><h3 style="margin-bottom:4px">OPB Sistema v2.3</h3><p s...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\toque-de-paz\cerebro\perfil-empreendedor-solo\plataforma.html:715
+     Codigo: <div style="display:flex;align-items:center;justify-content:...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\toque-de-paz\cerebro\perfil-empreendedor-solo\plataforma.html:718
+     Codigo: <p style="font-size:0.8rem;color:var(--text-muted);margin-to...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\toque-de-paz\cerebro\perfil-empreendedor-solo\plataforma.html:729
+     Codigo: <div style="display:flex;justify-content:space-between;align...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\paz-na-conta\cerebro\perfil-empreendedor-solo\auth.html:463
+     Codigo: <p style="color: var(--text-secondary); font-size: 14px; mar...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\paz-na-conta\cerebro\perfil-empreendedor-solo\auth.html:483
+     Codigo: <p style="text-align: center; margin-top: 24px; color: var(-...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\paz-na-conta\cerebro\perfil-empreendedor-solo\dashboard.html:402
+     Codigo: <div id="tarefas-lista" style="font-size:12px;text-align:lef...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\paz-na-conta\cerebro\perfil-empreendedor-solo\dashboard.html:605
+     Codigo: html += `<div style="display:flex;align-items:center;gap:8px...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\paz-na-conta\cerebro\perfil-empreendedor-solo\formulario.html:635
+     Codigo: <div class="card" style="text-align:center; background: line...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\paz-na-conta\cerebro\perfil-empreendedor-solo\formulario.html:637
+     Codigo: <p style="color:rgba(255,255,255,0.9); max-width:600px; marg...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\paz-na-conta\cerebro\perfil-empreendedor-solo\formulario.html:645
+     Codigo: <button class="btn" onclick="saveAll()" style="background:rg...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\paz-na-conta\cerebro\perfil-empreendedor-solo\formulario.html:648
+     Codigo: <button class="btn" onclick="loadAll()" style="background:rg...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\paz-na-conta\cerebro\perfil-empreendedor-solo\formulario.html:820
+     Codigo: <label style="display:flex;align-items:center;gap:0.3rem;fon...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\paz-na-conta\cerebro\perfil-empreendedor-solo\formulario.html:847
+     Codigo: <div style="display:flex;gap:0.5rem;align-items:center;margi...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\paz-na-conta\cerebro\perfil-empreendedor-solo\formulario.html:849
+     Codigo: <label style="display:flex;align-items:center;gap:0.3rem;fon...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\paz-na-conta\cerebro\perfil-empreendedor-solo\plataforma - new.html:557
+     Codigo: <div style="text-align:center; padding:30px; color:var(--tex...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\paz-na-conta\cerebro\perfil-empreendedor-solo\plataforma - new.html:605
+     Codigo: <div style="font-size:3.5rem; font-weight:700; font-family:'...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\paz-na-conta\cerebro\perfil-empreendedor-solo\plataforma - new.html:610
+     Codigo: <div style="display:flex; gap:8px; justify-content:center; m...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\paz-na-conta\cerebro\perfil-empreendedor-solo\plataforma - new.html:698
+     Codigo: <div style="margin-top:16px; padding-top:12px; border-top:1p...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\paz-na-conta\cerebro\perfil-empreendedor-solo\plataforma - new.html:779
+     Codigo: <p style="font-size:0.8rem; color:var(--text-muted); margin-...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\paz-na-conta\cerebro\perfil-empreendedor-solo\plataforma - new.html:828
+     Codigo: <div style="display:flex; justify-content:space-between; ali...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\paz-na-conta\cerebro\perfil-empreendedor-solo\plataforma - new.html:829
+     Codigo: <h2 style="font-size:0.9rem; font-family:'JetBrains Mono', m...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\paz-na-conta\cerebro\perfil-empreendedor-solo\plataforma - new.html:830
+     Codigo: <button onclick="closeAlimentarModal()" style="background:no...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\paz-na-conta\cerebro\perfil-empreendedor-solo\plataforma.html:146
+     Codigo: <div style="font-size:0.75rem;color:var(--muted);margin-bott...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\paz-na-conta\cerebro\perfil-empreendedor-solo\plataforma.html:213
+     Codigo: <div style="text-align:center;padding:20px;color:var(--text-...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\paz-na-conta\cerebro\perfil-empreendedor-solo\plataforma.html:257
+     Codigo: <div class="todo-item" style="display:flex;align-items:cente...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\paz-na-conta\cerebro\perfil-empreendedor-solo\plataforma.html:258
+     Codigo: <div class="todo-item" style="display:flex;align-items:cente...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\paz-na-conta\cerebro\perfil-empreendedor-solo\plataforma.html:259
+     Codigo: <div class="todo-item" style="display:flex;align-items:cente...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\paz-na-conta\cerebro\perfil-empreendedor-solo\plataforma.html:260
+     Codigo: <div class="todo-item" style="display:flex;align-items:cente...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\paz-na-conta\cerebro\perfil-empreendedor-solo\plataforma.html:261
+     Codigo: <div class="todo-item" style="display:flex;align-items:cente...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\paz-na-conta\cerebro\perfil-empreendedor-solo\plataforma.html:266
+     Codigo: <div class="todo-item" style="display:flex;align-items:cente...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\paz-na-conta\cerebro\perfil-empreendedor-solo\plataforma.html:267
+     Codigo: <div class="todo-item" style="display:flex;align-items:cente...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\paz-na-conta\cerebro\perfil-empreendedor-solo\plataforma.html:268
+     Codigo: <div class="todo-item" style="display:flex;align-items:cente...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\paz-na-conta\cerebro\perfil-empreendedor-solo\plataforma.html:269
+     Codigo: <div class="todo-item" style="display:flex;align-items:cente...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\paz-na-conta\cerebro\perfil-empreendedor-solo\plataforma.html:270
+     Codigo: <div class="todo-item" style="display:flex;align-items:cente...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\paz-na-conta\cerebro\perfil-empreendedor-solo\plataforma.html:278
+     Codigo: <div style="font-size:5rem;font-weight:800;color:var(--text-...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\paz-na-conta\cerebro\perfil-empreendedor-solo\plataforma.html:404
+     Codigo: <div class="carrossel-actions" style="margin-top:12px;paddin...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\paz-na-conta\cerebro\perfil-empreendedor-solo\plataforma.html:457
+     Codigo: <div class="todo-item" style="display:flex;align-items:cente...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\paz-na-conta\cerebro\perfil-empreendedor-solo\plataforma.html:458
+     Codigo: <div class="todo-item" style="display:flex;align-items:cente...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\paz-na-conta\cerebro\perfil-empreendedor-solo\plataforma.html:459
+     Codigo: <div class="todo-item" style="display:flex;align-items:cente...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\paz-na-conta\cerebro\perfil-empreendedor-solo\plataforma.html:460
+     Codigo: <div class="todo-item" style="display:flex;align-items:cente...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\paz-na-conta\cerebro\perfil-empreendedor-solo\plataforma.html:461
+     Codigo: <div class="todo-item" style="display:flex;align-items:cente...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\paz-na-conta\cerebro\perfil-empreendedor-solo\plataforma.html:526
+     Codigo: <div class="preview-colors" style="display:flex;gap:12px;mar...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\paz-na-conta\cerebro\perfil-empreendedor-solo\plataforma.html:569
+     Codigo: <div class="agent-card" onclick="navigateTo('perfil')"><div ...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\paz-na-conta\cerebro\perfil-empreendedor-solo\plataforma.html:571
+     Codigo: <div class="agent-card" onclick="navigateTo('perfil')"><div ...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\paz-na-conta\cerebro\perfil-empreendedor-solo\plataforma.html:572
+     Codigo: <div class="agent-card" onclick="navigateTo('perfil')"><div ...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\paz-na-conta\cerebro\perfil-empreendedor-solo\plataforma.html:574
+     Codigo: <div class="agent-card" onclick="navigateTo('perfil')"><div ...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\paz-na-conta\cerebro\perfil-empreendedor-solo\plataforma.html:595
+     Codigo: <div style="padding:12px;background:var(--bg-input);border-r...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\paz-na-conta\cerebro\perfil-empreendedor-solo\plataforma.html:596
+     Codigo: <div style="padding:12px;background:var(--bg-input);border-r...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\paz-na-conta\cerebro\perfil-empreendedor-solo\plataforma.html:597
+     Codigo: <div style="padding:12px;background:var(--bg-input);border-r...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\paz-na-conta\cerebro\perfil-empreendedor-solo\plataforma.html:598
+     Codigo: <div style="padding:12px;background:var(--bg-input);border-r...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\paz-na-conta\cerebro\perfil-empreendedor-solo\plataforma.html:620
+     Codigo: <div style="padding:10px;background:var(--bg-input);border-r...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\paz-na-conta\cerebro\perfil-empreendedor-solo\plataforma.html:621
+     Codigo: <div style="padding:10px;background:var(--bg-input);border-r...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\paz-na-conta\cerebro\perfil-empreendedor-solo\plataforma.html:622
+     Codigo: <div style="padding:10px;background:var(--bg-input);border-r...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\paz-na-conta\cerebro\perfil-empreendedor-solo\plataforma.html:666
+     Codigo: <div style="margin-bottom:20px;display:flex;justify-content:...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\paz-na-conta\cerebro\perfil-empreendedor-solo\plataforma.html:676
+     Codigo: <div style="margin-bottom:16px;display:flex;gap:8px;flex-wra...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\paz-na-conta\cerebro\perfil-empreendedor-solo\plataforma.html:701
+     Codigo: <div style="display:flex;align-items:center;justify-content:...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\paz-na-conta\cerebro\perfil-empreendedor-solo\plataforma.html:702
+     Codigo: <div style="display:flex;align-items:center;justify-content:...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\paz-na-conta\cerebro\perfil-empreendedor-solo\plataforma.html:703
+     Codigo: <div style="display:flex;align-items:center;justify-content:...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\paz-na-conta\cerebro\perfil-empreendedor-solo\plataforma.html:709
+     Codigo: <div style="width:60px;height:60px;background:var(--accent);...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\paz-na-conta\cerebro\perfil-empreendedor-solo\plataforma.html:710
+     Codigo: <div><h3 style="margin-bottom:4px">OPB Sistema v2.3</h3><p s...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\paz-na-conta\cerebro\perfil-empreendedor-solo\plataforma.html:715
+     Codigo: <div style="display:flex;align-items:center;justify-content:...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\paz-na-conta\cerebro\perfil-empreendedor-solo\plataforma.html:718
+     Codigo: <p style="font-size:0.8rem;color:var(--text-muted);margin-to...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\paz-na-conta\cerebro\perfil-empreendedor-solo\plataforma.html:729
+     Codigo: <div style="display:flex;justify-content:space-between;align...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\caminho-vida\cerebro\perfil-empreendedor-solo\auth.html:463
+     Codigo: <p style="color: var(--text-secondary); font-size: 14px; mar...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\caminho-vida\cerebro\perfil-empreendedor-solo\auth.html:483
+     Codigo: <p style="text-align: center; margin-top: 24px; color: var(-...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\caminho-vida\cerebro\perfil-empreendedor-solo\dashboard.html:402
+     Codigo: <div id="tarefas-lista" style="font-size:12px;text-align:lef...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\caminho-vida\cerebro\perfil-empreendedor-solo\dashboard.html:605
+     Codigo: html += `<div style="display:flex;align-items:center;gap:8px...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\caminho-vida\cerebro\perfil-empreendedor-solo\formulario.html:635
+     Codigo: <div class="card" style="text-align:center; background: line...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\caminho-vida\cerebro\perfil-empreendedor-solo\formulario.html:637
+     Codigo: <p style="color:rgba(255,255,255,0.9); max-width:600px; marg...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\caminho-vida\cerebro\perfil-empreendedor-solo\formulario.html:645
+     Codigo: <button class="btn" onclick="saveAll()" style="background:rg...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\caminho-vida\cerebro\perfil-empreendedor-solo\formulario.html:648
+     Codigo: <button class="btn" onclick="loadAll()" style="background:rg...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\caminho-vida\cerebro\perfil-empreendedor-solo\formulario.html:820
+     Codigo: <label style="display:flex;align-items:center;gap:0.3rem;fon...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\caminho-vida\cerebro\perfil-empreendedor-solo\formulario.html:847
+     Codigo: <div style="display:flex;gap:0.5rem;align-items:center;margi...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\caminho-vida\cerebro\perfil-empreendedor-solo\formulario.html:849
+     Codigo: <label style="display:flex;align-items:center;gap:0.3rem;fon...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\caminho-vida\cerebro\perfil-empreendedor-solo\plataforma - new.html:557
+     Codigo: <div style="text-align:center; padding:30px; color:var(--tex...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\caminho-vida\cerebro\perfil-empreendedor-solo\plataforma - new.html:605
+     Codigo: <div style="font-size:3.5rem; font-weight:700; font-family:'...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\caminho-vida\cerebro\perfil-empreendedor-solo\plataforma - new.html:610
+     Codigo: <div style="display:flex; gap:8px; justify-content:center; m...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\caminho-vida\cerebro\perfil-empreendedor-solo\plataforma - new.html:698
+     Codigo: <div style="margin-top:16px; padding-top:12px; border-top:1p...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\caminho-vida\cerebro\perfil-empreendedor-solo\plataforma - new.html:779
+     Codigo: <p style="font-size:0.8rem; color:var(--text-muted); margin-...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\caminho-vida\cerebro\perfil-empreendedor-solo\plataforma - new.html:828
+     Codigo: <div style="display:flex; justify-content:space-between; ali...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\caminho-vida\cerebro\perfil-empreendedor-solo\plataforma - new.html:829
+     Codigo: <h2 style="font-size:0.9rem; font-family:'JetBrains Mono', m...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\caminho-vida\cerebro\perfil-empreendedor-solo\plataforma - new.html:830
+     Codigo: <button onclick="closeAlimentarModal()" style="background:no...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\caminho-vida\cerebro\perfil-empreendedor-solo\plataforma.html:146
+     Codigo: <div style="font-size:0.75rem;color:var(--muted);margin-bott...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\caminho-vida\cerebro\perfil-empreendedor-solo\plataforma.html:213
+     Codigo: <div style="text-align:center;padding:20px;color:var(--text-...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\caminho-vida\cerebro\perfil-empreendedor-solo\plataforma.html:257
+     Codigo: <div class="todo-item" style="display:flex;align-items:cente...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\caminho-vida\cerebro\perfil-empreendedor-solo\plataforma.html:258
+     Codigo: <div class="todo-item" style="display:flex;align-items:cente...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\caminho-vida\cerebro\perfil-empreendedor-solo\plataforma.html:259
+     Codigo: <div class="todo-item" style="display:flex;align-items:cente...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\caminho-vida\cerebro\perfil-empreendedor-solo\plataforma.html:260
+     Codigo: <div class="todo-item" style="display:flex;align-items:cente...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\caminho-vida\cerebro\perfil-empreendedor-solo\plataforma.html:261
+     Codigo: <div class="todo-item" style="display:flex;align-items:cente...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\caminho-vida\cerebro\perfil-empreendedor-solo\plataforma.html:266
+     Codigo: <div class="todo-item" style="display:flex;align-items:cente...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\caminho-vida\cerebro\perfil-empreendedor-solo\plataforma.html:267
+     Codigo: <div class="todo-item" style="display:flex;align-items:cente...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\caminho-vida\cerebro\perfil-empreendedor-solo\plataforma.html:268
+     Codigo: <div class="todo-item" style="display:flex;align-items:cente...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\caminho-vida\cerebro\perfil-empreendedor-solo\plataforma.html:269
+     Codigo: <div class="todo-item" style="display:flex;align-items:cente...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\caminho-vida\cerebro\perfil-empreendedor-solo\plataforma.html:270
+     Codigo: <div class="todo-item" style="display:flex;align-items:cente...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\caminho-vida\cerebro\perfil-empreendedor-solo\plataforma.html:278
+     Codigo: <div style="font-size:5rem;font-weight:800;color:var(--text-...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\caminho-vida\cerebro\perfil-empreendedor-solo\plataforma.html:404
+     Codigo: <div class="carrossel-actions" style="margin-top:12px;paddin...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\caminho-vida\cerebro\perfil-empreendedor-solo\plataforma.html:457
+     Codigo: <div class="todo-item" style="display:flex;align-items:cente...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\caminho-vida\cerebro\perfil-empreendedor-solo\plataforma.html:458
+     Codigo: <div class="todo-item" style="display:flex;align-items:cente...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\caminho-vida\cerebro\perfil-empreendedor-solo\plataforma.html:459
+     Codigo: <div class="todo-item" style="display:flex;align-items:cente...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\caminho-vida\cerebro\perfil-empreendedor-solo\plataforma.html:460
+     Codigo: <div class="todo-item" style="display:flex;align-items:cente...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\caminho-vida\cerebro\perfil-empreendedor-solo\plataforma.html:461
+     Codigo: <div class="todo-item" style="display:flex;align-items:cente...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\caminho-vida\cerebro\perfil-empreendedor-solo\plataforma.html:526
+     Codigo: <div class="preview-colors" style="display:flex;gap:12px;mar...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\caminho-vida\cerebro\perfil-empreendedor-solo\plataforma.html:569
+     Codigo: <div class="agent-card" onclick="navigateTo('perfil')"><div ...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\caminho-vida\cerebro\perfil-empreendedor-solo\plataforma.html:571
+     Codigo: <div class="agent-card" onclick="navigateTo('perfil')"><div ...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\caminho-vida\cerebro\perfil-empreendedor-solo\plataforma.html:572
+     Codigo: <div class="agent-card" onclick="navigateTo('perfil')"><div ...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\caminho-vida\cerebro\perfil-empreendedor-solo\plataforma.html:574
+     Codigo: <div class="agent-card" onclick="navigateTo('perfil')"><div ...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\caminho-vida\cerebro\perfil-empreendedor-solo\plataforma.html:595
+     Codigo: <div style="padding:12px;background:var(--bg-input);border-r...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\caminho-vida\cerebro\perfil-empreendedor-solo\plataforma.html:596
+     Codigo: <div style="padding:12px;background:var(--bg-input);border-r...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\caminho-vida\cerebro\perfil-empreendedor-solo\plataforma.html:597
+     Codigo: <div style="padding:12px;background:var(--bg-input);border-r...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\caminho-vida\cerebro\perfil-empreendedor-solo\plataforma.html:598
+     Codigo: <div style="padding:12px;background:var(--bg-input);border-r...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\caminho-vida\cerebro\perfil-empreendedor-solo\plataforma.html:620
+     Codigo: <div style="padding:10px;background:var(--bg-input);border-r...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\caminho-vida\cerebro\perfil-empreendedor-solo\plataforma.html:621
+     Codigo: <div style="padding:10px;background:var(--bg-input);border-r...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\caminho-vida\cerebro\perfil-empreendedor-solo\plataforma.html:622
+     Codigo: <div style="padding:10px;background:var(--bg-input);border-r...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\caminho-vida\cerebro\perfil-empreendedor-solo\plataforma.html:666
+     Codigo: <div style="margin-bottom:20px;display:flex;justify-content:...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\caminho-vida\cerebro\perfil-empreendedor-solo\plataforma.html:676
+     Codigo: <div style="margin-bottom:16px;display:flex;gap:8px;flex-wra...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\caminho-vida\cerebro\perfil-empreendedor-solo\plataforma.html:701
+     Codigo: <div style="display:flex;align-items:center;justify-content:...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\caminho-vida\cerebro\perfil-empreendedor-solo\plataforma.html:702
+     Codigo: <div style="display:flex;align-items:center;justify-content:...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\caminho-vida\cerebro\perfil-empreendedor-solo\plataforma.html:703
+     Codigo: <div style="display:flex;align-items:center;justify-content:...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\caminho-vida\cerebro\perfil-empreendedor-solo\plataforma.html:709
+     Codigo: <div style="width:60px;height:60px;background:var(--accent);...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\caminho-vida\cerebro\perfil-empreendedor-solo\plataforma.html:710
+     Codigo: <div><h3 style="margin-bottom:4px">OPB Sistema v2.3</h3><p s...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\caminho-vida\cerebro\perfil-empreendedor-solo\plataforma.html:715
+     Codigo: <div style="display:flex;align-items:center;justify-content:...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\caminho-vida\cerebro\perfil-empreendedor-solo\plataforma.html:718
+     Codigo: <p style="font-size:0.8rem;color:var(--text-muted);margin-to...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: perfis\caminho-vida\cerebro\perfil-empreendedor-solo\plataforma.html:729
+     Codigo: <div style="display:flex;justify-content:space-between;align...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\auth.html:463
+     Codigo: <p style="color: var(--text-secondary); font-size: 14px; mar...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\auth.html:483
+     Codigo: <p style="text-align: center; margin-top: 24px; color: var(-...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\dashboard.html:402
+     Codigo: <div id="tarefas-lista" style="font-size:12px;text-align:lef...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\dashboard.html:605
+     Codigo: html += `<div style="display:flex;align-items:center;gap:8px...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\formulario.html:388
+     Codigo: <div style="margin-top:12px;display:flex;gap:10px;justify-co...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\formulario.html:389
+     Codigo: <a href="entrevista.html" style="background:rgba(255,255,255...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\formulario.html:390
+     Codigo: <span style="color:rgba(255,255,255,0.7);font-size:0.8rem;al...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\formulario.html:639
+     Codigo: <div class="card" style="text-align:center; background: line...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\formulario.html:641
+     Codigo: <p style="color:rgba(255,255,255,0.9); max-width:600px; marg...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\formulario.html:649
+     Codigo: <button class="btn" onclick="saveAll()" style="background:rg...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\formulario.html:652
+     Codigo: <button class="btn" onclick="loadAll()" style="background:rg...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\formulario.html:824
+     Codigo: <label style="display:flex;align-items:center;gap:0.3rem;fon...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\formulario.html:851
+     Codigo: <div style="display:flex;gap:0.5rem;align-items:center;margi...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\formulario.html:853
+     Codigo: <label style="display:flex;align-items:center;gap:0.3rem;fon...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma - new.html:499
+     Codigo: <select class="profile-switcher" id="profileSwitcher" onchan...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma - new.html:558
+     Codigo: <div style="text-align:center; padding:30px; color:var(--tex...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma - new.html:606
+     Codigo: <div style="font-size:3.5rem; font-weight:700; font-family:'...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma - new.html:611
+     Codigo: <div style="display:flex; gap:8px; justify-content:center; m...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma - new.html:699
+     Codigo: <div style="margin-top:16px; padding-top:12px; border-top:1p...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma - new.html:780
+     Codigo: <p style="font-size:0.8rem; color:var(--text-muted); margin-...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma - new.html:829
+     Codigo: <div style="display:flex; justify-content:space-between; ali...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma - new.html:830
+     Codigo: <h2 style="font-size:0.9rem; font-family:'JetBrains Mono', m...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma - new.html:831
+     Codigo: <button onclick="closeAlimentarModal()" style="background:no...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:157
+     Codigo: <div style="font-size:0.75rem;color:var(--muted);margin-bott...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:244
+     Codigo: <div style="text-align:center;padding:20px;color:var(--text-...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:288
+     Codigo: <div class="todo-item" style="display:flex;align-items:cente...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:289
+     Codigo: <div class="todo-item" style="display:flex;align-items:cente...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:290
+     Codigo: <div class="todo-item" style="display:flex;align-items:cente...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:291
+     Codigo: <div class="todo-item" style="display:flex;align-items:cente...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:292
+     Codigo: <div class="todo-item" style="display:flex;align-items:cente...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:297
+     Codigo: <div class="todo-item" style="display:flex;align-items:cente...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:298
+     Codigo: <div class="todo-item" style="display:flex;align-items:cente...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:299
+     Codigo: <div class="todo-item" style="display:flex;align-items:cente...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:300
+     Codigo: <div class="todo-item" style="display:flex;align-items:cente...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:301
+     Codigo: <div class="todo-item" style="display:flex;align-items:cente...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:309
+     Codigo: <div style="font-size:5rem;font-weight:800;color:var(--text-...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:346
+     Codigo: <div style="display:grid;grid-template-columns:repeat(4,1fr)...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:585
+     Codigo: <div class="todo-item" style="display:flex;align-items:cente...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:586
+     Codigo: <div class="todo-item" style="display:flex;align-items:cente...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:587
+     Codigo: <div class="todo-item" style="display:flex;align-items:cente...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:588
+     Codigo: <div class="todo-item" style="display:flex;align-items:cente...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:589
+     Codigo: <div class="todo-item" style="display:flex;align-items:cente...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:666
+     Codigo: <div class="preview-colors" style="display:flex;gap:12px;mar...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:700
+     Codigo: <div id="perfil-concorrentes-display" style="background:var(...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:704
+     Codigo: <summary style="cursor:pointer;font-size:0.8rem;color:var(--...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:705
+     Codigo: <div id="perfil-analise-concorrentes" style="background:var(...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:725
+     Codigo: <div class="agent-card" onclick="navigateTo('perfil')"><div ...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:727
+     Codigo: <div class="agent-card" onclick="navigateTo('perfil')"><div ...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:728
+     Codigo: <div class="agent-card" onclick="navigateTo('perfil')"><div ...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:730
+     Codigo: <div class="agent-card" onclick="navigateTo('perfil')"><div ...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:751
+     Codigo: <div style="padding:12px;background:var(--bg-input);border-r...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:752
+     Codigo: <div style="padding:12px;background:var(--bg-input);border-r...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:753
+     Codigo: <div style="padding:12px;background:var(--bg-input);border-r...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:754
+     Codigo: <div style="padding:12px;background:var(--bg-input);border-r...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:776
+     Codigo: <div style="padding:10px;background:var(--bg-input);border-r...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:777
+     Codigo: <div style="padding:10px;background:var(--bg-input);border-r...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:778
+     Codigo: <div style="padding:10px;background:var(--bg-input);border-r...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:860
+     Codigo: <div style="margin-bottom:20px;display:flex;justify-content:...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:870
+     Codigo: <div style="margin-bottom:16px;display:flex;gap:8px;flex-wra...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:895
+     Codigo: <div style="display:flex;align-items:center;justify-content:...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:896
+     Codigo: <div style="display:flex;align-items:center;justify-content:...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:897
+     Codigo: <div style="display:flex;align-items:center;justify-content:...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:903
+     Codigo: <div style="width:60px;height:60px;background:var(--accent);...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:904
+     Codigo: <div><h3 style="margin-bottom:4px">OPB Sistema v2.3</h3><p s...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:910
+     Codigo: <p style="font-size:0.85rem;color:var(--text-muted);margin-b...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:911
+     Codigo: <div id="obsidian-status" style="display:flex;align-items:ce...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:928
+     Codigo: <p style="font-size:0.85rem;color:var(--text-muted);margin-b...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:936
+     Codigo: <div id="notion-status" style="font-size:0.8rem;color:var(--...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:945
+     Codigo: <div style="display:flex;align-items:center;justify-content:...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:948
+     Codigo: <p style="font-size:0.8rem;color:var(--text-muted);margin-to...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:962
+     Codigo: <div class="card" style="margin-bottom:24px;background:linea...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:965
+     Codigo: <div style="margin-top:20px;display:flex;gap:12px;justify-co...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:966
+     Codigo: <span style="background:rgba(255,255,255,0.2);padding:6px 16...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:967
+     Codigo: <span style="background:rgba(255,255,255,0.2);padding:6px 16...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:968
+     Codigo: <span style="background:rgba(255,255,255,0.2);padding:6px 16...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:969
+     Codigo: <span style="background:rgba(255,255,255,0.2);padding:6px 16...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:977
+     Codigo: <div class="console-output" id="aprendizados-doc" style="mar...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:984
+     Codigo: <div style="display:flex;justify-content:space-between;paddi...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:985
+     Codigo: <div style="display:flex;justify-content:space-between;paddi...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:986
+     Codigo: <div style="display:flex;justify-content:space-between;paddi...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:987
+     Codigo: <div style="display:flex;justify-content:space-between;paddi...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:988
+     Codigo: <div style="display:flex;justify-content:space-between;paddi...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:994
+     Codigo: <div style="display:flex;justify-content:space-between;paddi...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:995
+     Codigo: <div style="display:flex;justify-content:space-between;paddi...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:996
+     Codigo: <div style="display:flex;justify-content:space-between;paddi...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:997
+     Codigo: <div style="display:flex;justify-content:space-between;paddi...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:998
+     Codigo: <div style="display:flex;justify-content:space-between;paddi...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:1008
+     Codigo: <button class="btn btn-sm" style="background:linear-gradient...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:1017
+     Codigo: <div style="display:flex;flex-direction:column;gap:12px;padd...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:1018
+     Codigo: <div style="display:flex;gap:12px;align-items:start;padding:...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:1019
+     Codigo: <span style="background:var(--accent);color:white;border-rad...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:1022
+     Codigo: <div style="display:flex;gap:12px;align-items:start;padding:...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:1023
+     Codigo: <span style="background:var(--accent);color:white;border-rad...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:1026
+     Codigo: <div style="display:flex;gap:12px;align-items:start;padding:...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:1027
+     Codigo: <span style="background:var(--accent);color:white;border-rad...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:1030
+     Codigo: <div style="display:flex;gap:12px;align-items:start;padding:...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:1031
+     Codigo: <span style="background:var(--accent);color:white;border-rad...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:1034
+     Codigo: <div style="display:flex;gap:12px;align-items:start;padding:...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:1035
+     Codigo: <span style="background:var(--accent);color:white;border-rad...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:1038
+     Codigo: <div style="display:flex;gap:12px;align-items:start;padding:...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:1039
+     Codigo: <span style="background:var(--accent);color:white;border-rad...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:1042
+     Codigo: <div style="display:flex;gap:12px;align-items:start;padding:...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:1043
+     Codigo: <span style="background:var(--accent);color:white;border-rad...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:1046
+     Codigo: <div style="display:flex;gap:12px;align-items:start;padding:...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:1047
+     Codigo: <span style="background:var(--accent);color:white;border-rad...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:1050
+     Codigo: <div style="display:flex;gap:12px;align-items:start;padding:...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:1051
+     Codigo: <span style="background:var(--accent);color:white;border-rad...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:1054
+     Codigo: <div style="display:flex;gap:12px;align-items:start;padding:...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:1055
+     Codigo: <span style="background:var(--accent);color:white;border-rad...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:1070
+     Codigo: <div class="card" style="margin-bottom:24px;background:linea...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:1073
+     Codigo: <div style="margin-top:20px;display:flex;gap:12px;justify-co...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:1074
+     Codigo: <span style="background:rgba(255,255,255,0.2);padding:6px 16...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:1075
+     Codigo: <span style="background:rgba(255,255,255,0.2);padding:6px 16...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:1076
+     Codigo: <span style="background:rgba(255,255,255,0.2);padding:6px 16...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:1090
+     Codigo: <div class="card jornada-dia" style="margin-bottom:16px;padd...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:1091
+     Codigo: <div style="display:flex;justify-content:space-between;align...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:1093
+     Codigo: <span style="background:var(--primary);color:white;padding:4...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:1098
+     Codigo: <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:w...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:1099
+     Codigo: <span class="jornada-tag" style="background:#E0E7FF;color:#4...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:1100
+     Codigo: <span class="jornada-tag" style="background:#E0E7FF;color:#4...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:1101
+     Codigo: <span class="jornada-tag" style="background:#E0E7FF;color:#4...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:1106
+     Codigo: <div class="card jornada-dia" style="margin-bottom:16px;padd...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:1107
+     Codigo: <div style="display:flex;justify-content:space-between;align...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:1109
+     Codigo: <span style="background:#10B981;color:white;padding:4px 12px...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:1114
+     Codigo: <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:w...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:1115
+     Codigo: <span class="jornada-tag" style="background:#D1FAE5;color:#0...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:1116
+     Codigo: <span class="jornada-tag" style="background:#D1FAE5;color:#0...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:1117
+     Codigo: <span class="jornada-tag" style="background:#D1FAE5;color:#0...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:1122
+     Codigo: <div class="card jornada-dia" style="margin-bottom:16px;padd...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:1123
+     Codigo: <div style="display:flex;justify-content:space-between;align...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:1125
+     Codigo: <span style="background:#F59E0B;color:white;padding:4px 12px...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:1130
+     Codigo: <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:w...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:1131
+     Codigo: <span class="jornada-tag" style="background:#FEF3C7;color:#9...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:1132
+     Codigo: <span class="jornada-tag" style="background:#FEF3C7;color:#9...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:1133
+     Codigo: <span class="jornada-tag" style="background:#FEF3C7;color:#9...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:1138
+     Codigo: <div class="card jornada-dia" style="margin-bottom:16px;padd...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:1139
+     Codigo: <div style="display:flex;justify-content:space-between;align...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:1141
+     Codigo: <span style="background:#8B5CF6;color:white;padding:4px 12px...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:1146
+     Codigo: <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:w...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:1147
+     Codigo: <span class="jornada-tag" style="background:#EDE9FE;color:#5...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:1148
+     Codigo: <span class="jornada-tag" style="background:#EDE9FE;color:#5...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:1149
+     Codigo: <span class="jornada-tag" style="background:#EDE9FE;color:#5...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:1154
+     Codigo: <div class="card jornada-dia" style="margin-bottom:16px;padd...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:1155
+     Codigo: <div style="display:flex;justify-content:space-between;align...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:1157
+     Codigo: <span style="background:#EF4444;color:white;padding:4px 12px...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:1162
+     Codigo: <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:w...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:1163
+     Codigo: <span class="jornada-tag" style="background:#FEE2E2;color:#9...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:1164
+     Codigo: <span class="jornada-tag" style="background:#FEE2E2;color:#9...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:1165
+     Codigo: <span class="jornada-tag" style="background:#FEE2E2;color:#9...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:1166
+     Codigo: <span class="jornada-tag" style="background:#FEE2E2;color:#9...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:1171
+     Codigo: <div class="card jornada-dia" style="margin-bottom:16px;padd...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:1172
+     Codigo: <div style="display:flex;justify-content:space-between;align...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:1174
+     Codigo: <span style="background:#EC4899;color:white;padding:4px 12px...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:1179
+     Codigo: <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:w...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:1180
+     Codigo: <span class="jornada-tag" style="background:#FCE7F3;color:#9...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:1181
+     Codigo: <span class="jornada-tag" style="background:#FCE7F3;color:#9...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:1182
+     Codigo: <span class="jornada-tag" style="background:#FCE7F3;color:#9...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:1183
+     Codigo: <span class="jornada-tag" style="background:#FCE7F3;color:#9...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:1188
+     Codigo: <div class="card jornada-dia" style="margin-bottom:16px;padd...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:1189
+     Codigo: <div style="display:flex;justify-content:space-between;align...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:1191
+     Codigo: <span style="background:#06B6D4;color:white;padding:4px 12px...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:1196
+     Codigo: <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:w...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:1197
+     Codigo: <span class="jornada-tag" style="background:#CFFAFE;color:#1...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:1198
+     Codigo: <span class="jornada-tag" style="background:#CFFAFE;color:#1...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:1199
+     Codigo: <span class="jornada-tag" style="background:#CFFAFE;color:#1...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:1200
+     Codigo: <span class="jornada-tag" style="background:#CFFAFE;color:#1...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:1205
+     Codigo: <div class="card" style="margin:32px 0 24px;padding:32px;bac...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:1207
+     Codigo: <div style="display:grid;grid-template-columns:repeat(auto-f...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:1208
+     Codigo: <div style="text-align:center;padding:16px;background:rgba(2...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:1212
+     Codigo: <div style="text-align:center;padding:16px;background:rgba(2...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:1216
+     Codigo: <div style="text-align:center;padding:16px;background:rgba(2...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:1220
+     Codigo: <div style="text-align:center;padding:16px;background:rgba(2...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:1224
+     Codigo: <div style="text-align:center;padding:16px;background:rgba(2...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:1228
+     Codigo: <div style="text-align:center;padding:16px;background:rgba(2...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:1238
+     Codigo: <div style="display:flex;flex-direction:column;gap:12px;marg...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:1240
+     Codigo: <span style="background:var(--primary);color:white;border-ra...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:1244
+     Codigo: <span style="background:var(--primary);color:white;border-ra...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:1248
+     Codigo: <span style="background:var(--primary);color:white;border-ra...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:1252
+     Codigo: <span style="background:var(--primary);color:white;border-ra...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:1256
+     Codigo: <span style="background:var(--primary);color:white;border-ra...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:1263
+     Codigo: <div class="card" style="margin-bottom:24px;padding:32px;bor...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:1266
+     Codigo: <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:1273
+     Codigo: <p style="margin-top:12px;color:var(--text-muted);font-size:...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:1306
+     Codigo: <div id="gimli-status" style="padding:16px;text-align:center...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:1314
+     Codigo: <div style="display:flex;justify-content:space-between;align...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:1325
+     Codigo: <div style="display:flex;justify-content:space-between;align...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:1327
+     Codigo: <button onclick="closeShareModal()" style="background:none;b...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:1329
+     Codigo: <p style="color:var(--text-muted);font-size:0.85rem;margin-b...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:1330
+     Codigo: <textarea class="form-textarea" id="shareEditor" rows="16" s...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:1331
+     Codigo: <div style="display:flex;gap:10px;margin-top:12px;flex-wrap:...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\plataforma.html:1335
+     Codigo: <span style="margin-left:auto;color:var(--text-muted);font-s...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\snapshot.html:75
+     Codigo: <pre style="background:var(--card);border-radius:8px;padding...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: cerebro\perfil-empreendedor-solo\snapshot.html:78
+     Codigo: <p style="text-align:center;color:var(--text2);font-size:13p...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: agents\gimli\templates\email_base.html:9
+     Codigo: <body style="margin: 0; padding: 0; background-color: #f5f5f...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: agents\gimli\templates\email_base.html:13
+     Codigo: <table role="presentation" width="600" cellpadding="0" cells...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: agents\gimli\templates\email_base.html:17
+     Codigo: <td style="padding: 40px 32px; font-family: 'Quicksand', san...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: agents\gimli\templates\email_base.html:27
+     Codigo: <td style="padding: 24px 32px; border-top: 1px solid #e0e0e0...
+     Solucao: Mover para classe CSS
+
+  >> Inline style excessivo
+     Arquivo: agents\gimli\templates\email_base.html:28
+     Codigo: <p style="margin: 0; font-size: 13px; color: #999999; text-a...
+     Solucao: Mover para classe CSS
+
+════════════════════════════════════════════════════════════
+  SUGESTOES DE MELHORIA
+════════════════════════════════════════════════════════════
+
+  [CAROUSEL]
+     - Adicionar preview do carrossel antes de gerar (swipe nos slides)
+     - Botão 'Gerar Varições' - criar 3 versões do mesmo carrossel
+     - Timeline visual dos slides (arrastar para reordenar)
+     - Exportar como PNG individuais (cada slide = 1 imagem)
+     - Salvar como rascunho e continuar depois
+     - Histórico de carrosséis gerados com busca
+
+  [MOBILE]
+     - Swipe entre páginas (gesto de arrastar)
+     - Pull-to-refresh no dashboard
+     - Botão flutuante 'Gerar Conteúdo' sempre visível
+     - Bottom sheet para ações (em vez de modais)
+     - Haptic feedback ao salvar (vibração)
+     - Modo offline com cache de últimos resultados
+
+  [PIPELINE]
+     - Agendamento de pipeline (horário fixo diário)
+     - Notificação quando pipeline completa
+     - Fila de ideias (adicionar várias, processar em batch)
+     - Comparar versões (antes/depois de editar)
+     - Estatísticas de produção (posts/dia, carrosséis/semana)
+
+  [PERFIL]
+     - Quiz gamificado (barra de progresso animada)
+     - Dicas contextuais durante o preenchimento
+     - Preview do perfil (como outros veem)
+     - Importar dados do Instagram (bio, posts)
+     - Sugestões automáticas baseadas nas respostas
+
+────────────────────────────────────────────────────────────
+  PAGINAS SEM HANDLER NO loadPageData
+────────────────────────────────────────────────────────────
+     - rotinas
+     - pipeline
+     - capa-video
+     - consumo
+     - text-generator
+     - narvi
+     - radagast
+     - consultor-negocios
+     - jornada-ia
+     - produtividade
+     - aprendizados
+
+════════════════════════════════════════════════════════════
+  FIM DO RELATORIO
+════════════════════════════════════════════════════════════

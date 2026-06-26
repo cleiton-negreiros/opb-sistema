@@ -31,7 +31,7 @@ except Exception:
 PROJECT_PATH = Path(__file__).parent.resolve()
 FRONTEND_PATH = PROJECT_PATH / "cerebro" / "perfil-empreendedor-solo"
 PORT = 5000
-DEBUG = True
+DEBUG = False  # NUNCA True em produção - expõe console Werkzeug
 
 app = Flask(__name__, static_folder=str(FRONTEND_PATH), static_url_path='')
 CORS(app)
@@ -723,13 +723,22 @@ def api_cerebro_ler():
     if not caminho:
         return jsonify({"error": "Parâmetro 'caminho' obrigatório"}), 400
 
+    # Sanitize path - prevent traversal
+    if '..' in caminho:
+        return jsonify({"error": "Caminho inválido"}), 400
+
     # Try profile-specific path first, fallback to global
     full_path = resolve_cerebro_path(caminho)
     if not full_path.exists():
-        # Last resort: try absolute path from PROJECT_PATH
+        # Last resort: try absolute path from PROJECT_PATH (still within project)
         full_path = PROJECT_PATH / caminho
         if not full_path.exists():
             return jsonify({"error": "Arquivo não encontrado"}), 404
+        # Ensure resolved path is within PROJECT_PATH
+        try:
+            full_path.resolve().relative_to(PROJECT_PATH.resolve())
+        except ValueError:
+            return jsonify({"error": "Acesso negado"}), 403
 
     conteudo = read_file_safe(full_path)
     return jsonify({
@@ -1240,6 +1249,7 @@ def _list_ideias(perfil_id: str = None, limit: int = 20):
             titulo = f.stem
             hook = ""
             pilar = ""
+            angulo = ""
             linhas = content.split('\n')
             for linha in linhas:
                 if linha.startswith('# ') and titulo == f.stem:
@@ -1248,12 +1258,15 @@ def _list_ideias(perfil_id: str = None, limit: int = 20):
                     hook = linha.split(':', 1)[1].strip().strip('"').strip("'")
                 if linha.lower().startswith('pilar:'):
                     pilar = linha.split(':', 1)[1].strip()
+                if linha.lower().startswith('angulo:') or linha.lower().startswith('ângulo:'):
+                    angulo = linha.split(':', 1)[1].strip()
             ideias.append({
                 "titulo": titulo[:80],
                 "arquivo": f.name,
                 "data": f.stem[:16] if len(f.stem) > 16 else f.stem,
                 "hook": hook[:100],
                 "pilar": pilar,
+                "angulo": angulo,
                 "perfil": perfil_resolvido,
             })
 
@@ -1581,6 +1594,9 @@ def api_ler_transcricao():
     nome = data.get('nome', '')
     if not nome:
         return jsonify({"error": "Nome não informado"}), 400
+    # Sanitize - prevent path traversal
+    if '..' in nome or '/' in nome or '\\' in nome:
+        return jsonify({"error": "Nome inválido"}), 400
     path = get_acervo_path_for_user() / "transcricoes" / nome
     if not path.exists():
         arquivos = list((get_acervo_path_for_user() / "transcricoes").glob(f"*{nome}*.md"))
@@ -2023,6 +2039,12 @@ def api_save_profile():
     modulo = data.get('modulo', '')
     content = data.get('content', '')
     filename = data.get('filename', '')
+    
+    # Sanitize filename - prevent path traversal
+    if '..' in filename or '/' in filename or '\\' in filename:
+        return jsonify({"error": "Nome de arquivo inválido"}), 400
+    if not filename.endswith('.md'):
+        return jsonify({"error": "Apenas arquivos .md são permitidos"}), 400
 
     if not filename:
         return jsonify({"error": "Nome do arquivo não informado"}), 400

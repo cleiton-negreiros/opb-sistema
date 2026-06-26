@@ -358,26 +358,83 @@ Ou executar:
 
 ## 🗓️ Progresso — 25/06/2026 (Quarta)
 
-### Feito hoje
+### Feito hoje (manhã)
 - **Caminho Vida — perfil corrigido**: PUBLICO-ALVO tinha conteúdo errado sobre "emagrecer" (copiado do projeto Macminho Vida). Reescrito para "Formação e espiritualidade católica". Config.json atualizado com nicho, problema e pilares.
 - **Toque de Paz — perfil completo**: REGRAS-ESCRITA.md criado (tom acolhedor, técnico, comunitário). NARRATIVA, PUBLICO-ALVO, POSICIONAMENTO, PERFIL.md expandidos com conteúdo real. Config.json atualizado.
 - **Pipeline de conteúdo multi-perfil**: `pipeline-conteudo.bat` e `pipeline-conteudo.sh` agora leem perfil ativo de `perfis.json` via PowerShell/Python. Todos os agentes (carrossel, reels, video, text_generator) recebem `--perfil` dinâmico.
 - **Profile Analyzer** (`utils/profile_analyzer.py`): detector de lacunas (placeholders, campos ausentes) + análise de consistência cross-seção (nicho↔posicionamento, problema↔público, missão). Score 0-100%. Testado nos 3 perfis (todos 100%).
 - **Endpoints REST**: `GET /api/perfil/analyze` e `GET /api/perfil/analyze/all` para análise de perfil via API.
 
-### Arquivos alterados
-- `perfis/caminho-vida/perfil/*` — 6 arquivos reescritos (PERFIL, NARRATIVA, PUBLICO-ALVO, POSICIONAMENTO, REGRAS-ESCRITA, config.json)
-- `perfis/toque-de-paz/perfil/*` — 6 arquivos reescritos/criados
-- `utils/profile_analyzer.py` — NOVO: análise de consistência e lacunas
-- `api_server.py` — novos endpoints `/api/perfil/analyze` e `/api/perfil/analyze/all`
-- `pipeline-conteudo.bat` — lê perfil ativo de perfis.json
-- `pipeline-conteudo.sh` — lê perfil ativo de perfis.json
+### Feito hoje (tarde — Revisão completa + Melhorias)
+
+#### Bugs Corrigidos (10 críticos)
+| Bug | Arquivo | Correção |
+|-----|---------|----------|
+| Gimli `apiCall` args trocados | pages.js:1911,1947 | `apiCall(url, 'POST', body)` |
+| Narvi `showResult` args trocados | pages.js:676 | `showResult(id, null, text, extra)` |
+| Perfil abas invertidas | pages.js:783 | Lógica corrigida para mostrar módulos |
+| `readMap()` inexistente | pages.js:191 | Função criada com modal |
+| `botStatus` null | pages.js:957 | Null check adicionado |
+| `audio-transcriber` sem PAGES | navigation.js:4 | Adicionado ao objeto PAGES |
+| `arquivos` sem PAGES | navigation.js:4 | Adicionado ao objeto PAGES |
+| Sem `hashchange` listener | navigation.js | Botão Voltar/Avançar funciona |
+| Path traversal (3 endpoints) | api_server.py | Validação `..` e sanitização |
+| `DEBUG=True` | api_server.py:34 | Alterado para `False` |
+
+#### Agente de Melhoria Contínua
+- **Localização**: `agents/melhoria-continua/main.py`
+- **Uso**: `python agents/melhoria-continua/main.py`
+- **Função**: Escaneia projeto, classifica bugs por severidade, gera relatório em `acervo/relatorios/`
+
+#### Carousel v5.0 (12 features implementadas)
+| Feature | Status |
+|---------|--------|
+| Preview swipeável dos slides | ✅ |
+| Botão Gerar Varições (3 versões) | ✅ |
+| Timeline visual com drag para reordenar | ✅ |
+| Exportar slides como PNG | ✅ |
+| Salvar rascunho automaticamente | ✅ |
+| Histórico de carrosséis com busca | ✅ |
+| Swipe entre páginas (mobile) | ✅ |
+| Pull-to-refresh no dashboard | ✅ |
+| Botão flutuante Gerar Conteúdo (FAB) | ✅ |
+| Bottom sheet em vez de modais | ✅ |
+| Haptic feedback ao salvar | ✅ |
+| Estatísticas de produção no dashboard | ✅ |
+
+#### Perfil Paz na Conta — Estratégia de Conteúdo Diário
+- **Objetivo**: Postar 1 carrossel/dia no @paznaconta
+- **Fórmula**: Liturgia do dia → Conexão com finanças → Ensino da Igreja → Dica prática
+- **Arquivos atualizados**:
+  - `perfis/paz-na-conta/perfil/PERFIL.md` — Seção "Estratégia de Conteúdo Diário"
+  - `perfis/paz-na-conta/perfil/NARRATIVA.md` — Seção "Meta de Conteúdo Diário"
+  - `perfis/paz-na-conta/perfil/REGRAS-ESCRITA.md` — Regras para carrosséis litúrgicos
+  - `perfis/paz-na-conta/perfil/config.json` — Objeto `estrategia_conteudo`
+
+#### Carrossel Litúrgico — 26/06/2026
+- **Arquivo**: `perfis/paz-na-conta/acervo/carrossel/liturgia-26-06-2026-exilio-babilonia.md`
+- **Tema**: O Exílio na Babilônia e a Cura do Leproso
+- **Leituras**: 2Rs 25,1-12 · Sl 136 · Mt 8,1-4
+- **Slides**: 6 (Capa, Liturgia, Conexão, DSI, 3 Passos, Chamada)
+- **Correções de português**: 7 erros corrigidos (acentos, concordância, crase, formas verbais)
+
+### Arquivos alterados (tarde)
+- `cerebro/perfil-empreendedor-solo/js/pages.js` — +400 linhas (preview, timeline, variações, FAB, bottom sheet, haptic, stats)
+- `cerebro/perfil-empreendedor-solo/js/navigation.js` — hashchange listener + PAGES atualizado
+- `cerebro/perfil-empreendedor-solo/js/app.js` — Inicialização das novas features
+- `cerebro/perfil-empreendedor-solo/styles/main.css` — +200 linhas de CSS
+- `cerebro/perfil-empreendedor-solo/plataforma.html` — HTML para novas features
+- `api_server.py` — Path traversal fix, DEBUG=False, extração de angulo
+- `agents/melhoria-continua/main.py` — NOVO: agente de melhoria contínua
+- `perfis/paz-na-conta/perfil/*` — 4 arquivos atualizados com estratégia de conteúdo
+- `perfis/paz-na-conta/acervo/carrossel/*` — Carrossel litúrgico criado
 
 ### Pendente
 - [ ] **Fase 4 — Sincronização:** Banner "Atualizar do celular?", sync silencioso, dropdown de perfil no form
-- [ ] Carrossel: implementar `--ideia <arquivo>` (carrossel a partir de ideia salva)
 - [ ] Endpoint `/api/ideias/lista` filtrado por perfil ativo
 - [ ] UI da plataforma: dropdown de ideias salvas no formulário de carrossel
+- [ ] Integrar API de liturgia diária (Catholic API ou Lecionário)
+- [ ] Pipeline automático: gerar carrossel litúrgico todo dia às 17h
 
 ---
 

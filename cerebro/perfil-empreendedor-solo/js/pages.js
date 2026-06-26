@@ -95,7 +95,7 @@ async function loadPerfilData() {
 }
 
 async function loadPageData(page) {
-    if (page === 'perfil') { await loadPerfilData(); }
+    if (page === 'perfil') { await loadPerfilData(); await loadQuizProgress(); }
     if (page === 'posicionamento') { await loadPosicionamentoPage(); }
     else if (page === 'arquivos') { loadFileBrowser(); }
     else if (page === 'transcricao') { loadTranscricoes(); }
@@ -128,6 +128,9 @@ async function loadPageData(page) {
             renderHeatmap({});
             renderStreak({});
         }
+        // Production stats
+        const prodStats = document.getElementById('production-stats');
+        if (prodStats) prodStats.innerHTML = renderProductionStats();
         const health = await apiCall('/api/health');
         const si = document.getElementById('statusIndicator');
         const tag = document.getElementById('api-status-tag');
@@ -143,6 +146,10 @@ async function loadPageData(page) {
             tag.textContent = 'API Offline';
         }
         await checkAgentsApi();
+        await loadProfileHealth();
+        // Production stats
+        const statsContainer = document.getElementById('production-stats');
+        if (statsContainer) statsContainer.innerHTML = renderProductionStats();
     }
     if (page === 'cerebro') {
         await loadCerebroTree();
@@ -191,6 +198,22 @@ async function loadMapas() {
         `).join('');
     } else {
         tbody.innerHTML = '<tr><td colspan="3" style="text-align:center;color:var(--text-muted)">Nenhum MAPA encontrado</td></tr>';
+    }
+}
+
+async function readMap(caminho) {
+    const r = await apiCall('/api/cerebro/ler', 'POST', { caminho });
+    if (r && r.conteudo) {
+        const modal = document.getElementById('modalOverlay');
+        const title = document.getElementById('modalTitle');
+        const body = document.getElementById('modalBody');
+        if (modal && title && body) {
+            title.textContent = caminho;
+            body.innerHTML = `<pre style="white-space:pre-wrap;font-size:0.85rem;line-height:1.6;max-height:60vh;overflow:auto">${escapeHtml(r.conteudo)}</pre>`;
+            modal.classList.add('active');
+        }
+    } else {
+        showToast('Erro ao ler arquivo', 'error');
     }
 }
 
@@ -267,6 +290,10 @@ function renderCarrosselSlides(texto, area) {
     area.innerHTML = html;
     document.getElementById('carrossel-count').textContent = slides.length + ' slides';
     window._carrosselSlides = slides;
+    
+    // v5.0: Render preview and timeline
+    renderSwipePreview(slides);
+    renderTimeline(slides);
 }
 
 function parseCarrosselSlides(texto) {
@@ -322,7 +349,7 @@ async function loadCarrosselIdeias() {
         return;
     }
     container.innerHTML = r.ideias.map(ideia => `
-        <div class="ideia-card" onclick="usarIdeiaSalva('${escapeHtml(ideia.arquivo)}', '${escapeHtml(ideia.titulo)}')">
+        <div class="ideia-card" onclick="usarIdeiaSalva('${escapeHtml(ideia.arquivo)}', '${escapeHtml(ideia.titulo)}', '${escapeHtml(ideia.hook || '')}', '${escapeHtml(ideia.pilar || '')}', '${escapeHtml(ideia.angulo || '')}')">
             <div class="ideia-titulo">${escapeHtml(ideia.titulo)}</div>
             ${ideia.hook ? `<div class="ideia-hook">${escapeHtml(ideia.hook)}</div>` : ''}
             <div class="ideia-meta">
@@ -333,8 +360,12 @@ async function loadCarrosselIdeias() {
     `).join('');
 }
 
-async function usarIdeiaSalva(arquivo, titulo) {
-    document.getElementById('carrossel-ideia').value = titulo;
+async function usarIdeiaSalva(arquivo, titulo, hook, pilar, angulo) {
+    let contexto = titulo;
+    if (hook) contexto += `\n\nGancho: ${hook}`;
+    if (pilar) contexto += `\nPilar: ${pilar}`;
+    if (angulo) contexto += `\nÂngulo: ${angulo}`;
+    document.getElementById('carrossel-ideia').value = contexto;
     switchCarrosselTab('criar');
     showToast(`Ideia carregada: ${titulo}`, 'info');
     await gerarCarrossel();
@@ -375,6 +406,600 @@ function quickIdeia(texto) {
     document.getElementById('carrossel-ideia').value = texto;
     switchCarrosselTab('criar');
     gerarCarrossel();
+}
+
+// ============================================
+// CAROUSEL v5.0 — SWIPE PREVIEW
+// ============================================
+let swipeIndex = 0;
+
+function renderSwipePreview(slides) {
+    const container = document.getElementById('carrossel-preview-container');
+    const track = document.getElementById('swipe-track');
+    const dotsContainer = document.getElementById('swipe-dots');
+    if (!container || !track || !slides || !slides.length) return;
+    
+    container.style.display = 'block';
+    swipeIndex = 0;
+    
+    track.innerHTML = slides.map((s, i) => `
+        <div class="swipe-preview-slide">
+            <h3>${escapeHtml(s.titulo)}</h3>
+            <p>${escapeHtml(s.texto)}</p>
+        </div>
+    `).join('');
+    
+    dotsContainer.innerHTML = slides.map((_, i) => `
+        <div class="swipe-dot ${i === 0 ? 'active' : ''}" onclick="goToSlide(${i})"></div>
+    `).join('');
+    
+    updateSwipePosition();
+    
+    // Touch swipe support
+    const preview = document.getElementById('swipe-preview');
+    let startX = 0;
+    preview.addEventListener('touchstart', e => { startX = e.touches[0].clientX; });
+    preview.addEventListener('touchend', e => {
+        const diff = startX - e.changedTouches[0].clientX;
+        if (Math.abs(diff) > 50) swipePreview(diff > 0 ? 1 : -1);
+    });
+}
+
+function swipePreview(dir) {
+    if (!window._carrosselSlides) return;
+    swipeIndex = Math.max(0, Math.min(swipeIndex + dir, window._carrosselSlides.length - 1));
+    updateSwipePosition();
+}
+
+function goToSlide(idx) {
+    swipeIndex = idx;
+    updateSwipePosition();
+}
+
+function updateSwipePosition() {
+    const track = document.getElementById('swipe-track');
+    if (track) track.style.transform = `translateX(-${swipeIndex * 100}%)`;
+    document.querySelectorAll('.swipe-dot').forEach((d, i) => {
+        d.classList.toggle('active', i === swipeIndex);
+    });
+}
+
+// ============================================
+// CAROUSEL v5.0 — TIMELINE EDITOR (DRAG TO REORDER)
+// ============================================
+function renderTimeline(slides) {
+    const container = document.getElementById('carrossel-timeline-container');
+    const editor = document.getElementById('timeline-editor');
+    if (!container || !editor || !slides || !slides.length) return;
+    
+    container.style.display = 'block';
+    
+    editor.innerHTML = slides.map((s, i) => `
+        <div class="timeline-editor-item" draggable="true" data-idx="${i}" 
+             ondragstart="dragSlide(event,${i})" ondragover="event.preventDefault()" 
+             ondrop="dropSlide(event,${i})" ondragend="dragEnd(event)">
+            <span class="drag-handle"><i class="fas fa-grip-vertical"></i></span>
+            <span class="slide-num">${i + 1}</span>
+            <span class="slide-title">${escapeHtml(s.titulo)}</span>
+        </div>
+    `).join('');
+}
+
+let dragIdx = null;
+
+function dragSlide(e, idx) {
+    dragIdx = idx;
+    e.target.classList.add('dragging');
+    e.dataTransfer.effectAllowed = 'move';
+}
+
+function dropSlide(e, targetIdx) {
+    e.preventDefault();
+    if (dragIdx === null || dragIdx === targetIdx) return;
+    
+    const slides = window._carrosselSlides;
+    const [moved] = slides.splice(dragIdx, 1);
+    slides.splice(targetIdx, 0, moved);
+    
+    renderTimeline(slides);
+    renderSwipePreview(slides);
+    showToast('Slides reordenados!', 'info');
+}
+
+function dragEnd(e) {
+    e.target.classList.remove('dragging');
+    dragIdx = null;
+}
+
+// ============================================
+// CAROUSEL v5.0 — GENERATE 3 VARIATIONS
+// ============================================
+async function gerarVariacoes() {
+    const tema = document.getElementById('carrossel-ideia').value;
+    if (!tema.trim()) { showToast('Descreva sua ideia primeiro', 'error'); return; }
+    
+    const container = document.getElementById('carrossel-variations-container');
+    const grid = document.getElementById('variations-grid');
+    container.style.display = 'block';
+    grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:20px"><i class="fas fa-spinner fa-spin" style="color:var(--accent)"></i><p style="margin-top:8px;color:var(--text-muted)">Gerando 3 variações...</p></div>';
+    
+    const tipo = document.getElementById('carrossel-tipo').value;
+    const promises = [1, 2, 3].map(i => 
+        apiCall('/api/carrossel', 'POST', { tema: tema + ` (variação ${i})`, tipo })
+    );
+    
+    const results = await Promise.allSettled(promises);
+    
+    grid.innerHTML = results.map((r, i) => {
+        if (r.status === 'fulfilled' && r.value?.sucesso) {
+            const texto = r.value.saida || r.value.mensagem || '';
+            const preview = texto.slice(0, 120) + '...';
+            return `
+                <div class="variation-card" onclick="applyVariation(${i})">
+                    <div class="var-label">Variação ${i + 1}</div>
+                    <div class="var-preview">${escapeHtml(preview)}</div>
+                    <button class="btn btn-sm btn-outline" style="margin-top:8px;width:100%">Aplicar</button>
+                </div>`;
+        }
+        return `
+            <div class="variation-card" style="opacity:0.5">
+                <div class="var-label">Variação ${i + 1}</div>
+                <div class="var-preview">Erro ao gerar</div>
+            </div>`;
+    }).join('');
+    
+    window._variations = results.map(r => 
+        r.status === 'fulfilled' ? (r.value?.saida || '') : ''
+    );
+    
+    showToast('3 variações geradas!', 'success');
+}
+
+function applyVariation(idx) {
+    if (!window._variations || !window._variations[idx]) return;
+    const area = document.getElementById('carrossel-output-area');
+    renderCarrosselSlides(window._variations[idx], area);
+    showToast(`Variação ${idx + 1} aplicada!`, 'success');
+}
+
+// ============================================
+// CAROUSEL v5.0 — EXPORT AS PNG (html2canvas fallback)
+// ============================================
+async function exportarSlidesPNG() {
+    if (!window._carrosselSlides || !window._carrosselSlides.length) {
+        showToast('Gere um carrossel primeiro', 'error');
+        return;
+    }
+    
+    showToast('Preparando exportação...', 'info');
+    
+    // Create a temporary container for rendering
+    const tempDiv = document.createElement('div');
+    tempDiv.style.cssText = 'position:fixed;left:-9999px;top:0;width:1080px;padding:60px;background:white;color:#1a1a2e;font-family:Inter,sans-serif;';
+    document.body.appendChild(tempDiv);
+    
+    for (let i = 0; i < window._carrosselSlides.length; i++) {
+        const s = window._carrosselSlides[i];
+        tempDiv.innerHTML = `
+            <div style="width:1080px;height:1080px;display:flex;flex-direction:column;justify-content:center;padding:80px;box-sizing:border-box;">
+                <div style="font-size:14px;color:#666;margin-bottom:20px;font-weight:600;">SLIDE ${i + 1}/${window._carrosselSlides.length}</div>
+                <h2 style="font-size:36px;margin:0 0 24px;color:#1a1a2e;line-height:1.3;">${escapeHtml(s.titulo)}</h2>
+                <p style="font-size:20px;line-height:1.6;color:#333;white-space:pre-wrap;">${escapeHtml(s.texto)}</p>
+            </div>`;
+        
+        try {
+            // Try html2canvas if available
+            if (window.html2canvas) {
+                const canvas = await html2canvas(tempDiv.firstElementChild);
+                const link = document.createElement('a');
+                link.download = `slide_${i + 1}.png`;
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            } else {
+                // Fallback: copy text
+                await navigator.clipboard.writeText(`SLIDE ${i + 1}/${window._carrosselSlides.length}\n${s.titulo}\n\n${s.texto}`);
+            }
+        } catch (e) {
+            console.error('Export error:', e);
+        }
+    }
+    
+    document.body.removeChild(tempDiv);
+    
+    if (window.html2canvas) {
+        showToast(`${window._carrosselSlides.length} slides exportados como PNG!`, 'success');
+    } else {
+        showToast('Texto copiado (html2canvas não disponível)', 'info');
+    }
+}
+
+// ============================================
+// CAROUSEL v5.0 — AUTO-SAVE DRAFT
+// ============================================
+let autoSaveTimeout = null;
+
+function setupAutoSave() {
+    const textarea = document.getElementById('carrossel-ideia');
+    if (!textarea) return;
+    
+    textarea.addEventListener('input', () => {
+        clearTimeout(autoSaveTimeout);
+        autoSaveTimeout = setTimeout(() => {
+            const text = textarea.value;
+            if (text.trim()) {
+                localStorage.setItem('opb_carrossel_draft', JSON.stringify({
+                    text,
+                    tipo: document.getElementById('carrossel-tipo')?.value || 'educacional',
+                    timestamp: Date.now()
+                }));
+            }
+        }, 2000); // Auto-save after 2s of inactivity
+    });
+}
+
+function loadDraft() {
+    const draft = localStorage.getItem('opb_carrossel_draft');
+    if (!draft) return;
+    
+    try {
+        const { text, tipo, timestamp } = JSON.parse(draft);
+        const age = Date.now() - timestamp;
+        
+        // Show draft if less than 24h old
+        if (age < 86400000 && text) {
+            const textarea = document.getElementById('carrossel-ideia');
+            if (textarea) {
+                textarea.value = text;
+                const tipoSelect = document.getElementById('carrossel-tipo');
+                if (tipoSelect) tipoSelect.value = tipo;
+                showToast('Rascunho anterior restaurado', 'info');
+            }
+        }
+    } catch (e) {}
+}
+
+function clearDraft() {
+    localStorage.removeItem('opb_carrossel_draft');
+}
+
+// ============================================
+// CAROUSEL v5.0 — HISTORY WITH SEARCH
+// ============================================
+function renderCarouselHistory() {
+    const saved = JSON.parse(localStorage.getItem('opb_resultados') || '[]');
+    const carrosseis = saved.filter(r => r.tag === 'carrossel');
+    
+    if (!carrosseis.length) return '';
+    
+    return `
+        <div class="history-search">
+            <i class="fas fa-search"></i>
+            <input type="text" placeholder="Buscar carrosséis..." oninput="filterCarouselHistory(this.value)">
+        </div>
+        <div id="carousel-history-list">
+            ${carrosseis.map((c, i) => `
+                <div class="timeline-item history-item" data-search="${(c.texto || '').toLowerCase()}">
+                    <div class="timeline-dot purple"></div>
+                    <div class="timeline-text">
+                        <div class="tl-title">Carrossel #${carrosseis.length - i}</div>
+                        <div class="tl-time">${c.data || 'Data desconhecida'}</div>
+                        <div style="font-size:0.75rem;color:var(--text-muted);margin-top:4px;max-height:40px;overflow:hidden">${escapeHtml((c.texto || '').slice(0, 100))}...</div>
+                    </div>
+                    <button class="btn btn-sm btn-outline" onclick="loadCarouselFromHistory(${i})">Carregar</button>
+                </div>
+            `).join('')}
+        </div>`;
+}
+
+function filterCarouselHistory(query) {
+    const items = document.querySelectorAll('.history-item');
+    const q = query.toLowerCase();
+    items.forEach(item => {
+        const search = item.getAttribute('data-search') || '';
+        item.style.display = search.includes(q) ? 'flex' : 'none';
+    });
+}
+
+function loadCarouselFromHistory(idx) {
+    const saved = JSON.parse(localStorage.getItem('opb_resultados') || '[]');
+    const carrosseis = saved.filter(r => r.tag === 'carrossel');
+    if (carrosseis[idx]) {
+        const area = document.getElementById('carrossel-output-area');
+        renderCarrosselSlides(carrosseis[idx].texto, area);
+        showToast('Carrossel carregado do histórico!', 'info');
+    }
+}
+
+// ============================================
+// MOBILE — FAB (FLOATING ACTION BUTTON)
+// ============================================
+let fabOpen = false;
+
+function toggleFabMenu() {
+    fabOpen = !fabOpen;
+    const menu = document.getElementById('fab-menu');
+    const fab = document.getElementById('fab');
+    if (menu) menu.style.display = fabOpen ? 'flex' : 'none';
+    if (fab) fab.innerHTML = fabOpen ? '<i class="fas fa-times"></i>' : '<i class="fas fa-plus"></i>';
+}
+
+function fabAction(action) {
+    toggleFabMenu();
+    navigateTo(action);
+    if (action === 'carrossel') {
+        setTimeout(() => {
+            const textarea = document.getElementById('carrossel-ideia');
+            if (textarea) textarea.focus();
+        }, 300);
+    }
+}
+
+// ============================================
+// MOBILE — BOTTOM SHEET
+// ============================================
+function showBottomSheet(title, contentHtml) {
+    const overlay = document.getElementById('bottomSheetOverlay');
+    const titleEl = document.getElementById('bottomSheetTitle');
+    const content = document.getElementById('bottomSheetContent');
+    if (overlay) overlay.classList.add('active');
+    if (titleEl) titleEl.textContent = title;
+    if (content) content.innerHTML = contentHtml;
+}
+
+function closeBottomSheet() {
+    const overlay = document.getElementById('bottomSheetOverlay');
+    if (overlay) overlay.classList.remove('active');
+}
+
+// ============================================
+// MOBILE — PULL TO REFRESH
+// ============================================
+let ptrStartY = 0;
+let ptrActive = false;
+
+function setupPullToRefresh() {
+    const content = document.querySelector('.page-content');
+    if (!content) return;
+    
+    content.addEventListener('touchstart', e => {
+        if (content.scrollTop === 0) {
+            ptrStartY = e.touches[0].clientY;
+            ptrActive = true;
+        }
+    });
+    
+    content.addEventListener('touchmove', e => {
+        if (!ptrActive) return;
+        const diff = e.touches[0].clientY - ptrStartY;
+        if (diff > 60) {
+            const indicator = document.getElementById('ptrIndicator');
+            if (indicator) indicator.classList.add('visible');
+        }
+    });
+    
+    content.addEventListener('touchend', async () => {
+        if (!ptrActive) return;
+        ptrActive = false;
+        const indicator = document.getElementById('ptrIndicator');
+        if (indicator && indicator.classList.contains('visible')) {
+            indicator.classList.add('refreshing');
+            document.getElementById('ptrText').textContent = 'Atualizando...';
+            
+            // Refresh current page
+            const activePage = document.querySelector('.page.active');
+            if (activePage) {
+                const pageId = activePage.id.replace('page-', '');
+                await loadPageData(pageId);
+            }
+            
+            // Haptic feedback
+            if (navigator.vibrate) navigator.vibrate(50);
+            
+            indicator.classList.remove('visible', 'refreshing');
+            document.getElementById('ptrText').textContent = 'Puxe para atualizar';
+            showToast('Atualizado!', 'success');
+        }
+    });
+}
+
+// ============================================
+// MOBILE — HAPTIC FEEDBACK
+// ============================================
+function haptic(type = 'light') {
+    if (!navigator.vibrate) return;
+    switch (type) {
+        case 'light': navigator.vibrate(10); break;
+        case 'medium': navigator.vibrate(30); break;
+        case 'heavy': navigator.vibrate([50, 30, 50]); break;
+        case 'success': navigator.vibrate([10, 50, 10]); break;
+    }
+}
+
+// ============================================
+// PIPELINE — PRODUCTION STATS
+// ============================================
+function renderProductionStats() {
+    const saved = JSON.parse(localStorage.getItem('opb_resultados') || '[]');
+    const now = new Date();
+    const today = now.toISOString().split('T')[0];
+    const thisWeek = new Date(now.setDate(now.getDate() - 7)).toISOString();
+    
+    const todayCount = saved.filter(r => r.data && r.data.includes(today)).length;
+    const weekCount = saved.filter(r => r.data && new Date(r.data) > new Date(thisWeek)).length;
+    const totalCount = saved.length;
+    const carrosselCount = saved.filter(r => r.tag === 'carrossel').length;
+    
+    return `
+        <div class="stats-grid">
+            <div class="stat-item">
+                <div class="stat-value">${todayCount}</div>
+                <div class="stat-label">Hoje</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">${weekCount}</div>
+                <div class="stat-label">Esta Semana</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">${totalCount}</div>
+                <div class="stat-label">Total</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">${carrosselCount}</div>
+                <div class="stat-label">Carrosséis</div>
+            </div>
+        </div>`;
+}
+
+// ============================================
+// QUIZ PROGRESS
+// ============================================
+async function loadQuizProgress() {
+    const container = document.getElementById('quiz-progress');
+    if (!container) return;
+
+    const r = await apiCall('/api/perfil/quiz/state', 'GET');
+    if (!r || r.error) {
+        container.innerHTML = '<div style="text-align:center;padding:16px;color:var(--text-muted)">Quiz indisponível</div>';
+        return;
+    }
+
+    const pct = r.percent || 0;
+    const answered = r.answered || 0;
+    const total = r.total || 21;
+    const missing = r.missing_ids || [];
+
+    let nextQHtml = '';
+    if (r.next_question && pct < 100) {
+        nextQHtml = `<div style="margin-top:12px;padding:10px;background:rgba(255,255,255,0.03);border-radius:6px">
+            <div style="font-size:0.78rem;color:var(--text-muted)">Próxima pergunta:</div>
+            <div style="font-size:0.88rem;margin-top:4px">${escapeHtml(r.next_question.text || '')}</div>
+            <button class="btn btn-sm btn-primary" style="margin-top:8px" onclick="window.open('entrevista.html','_blank')"><i class="fas fa-arrow-right"></i> Responder</button>
+        </div>`;
+    }
+
+    container.innerHTML = `
+        <div style="display:flex;align-items:center;gap:16px;margin-bottom:12px">
+            <div style="width:56px;height:56px;border-radius:50%;border:3px solid ${pct >= 80 ? 'var(--success)' : pct >= 50 ? 'var(--warning)' : 'var(--accent)'};display:flex;align-items:center;justify-content:center;font-size:1.1rem;font-weight:800;background:var(--bg-input)">
+                ${pct}%
+            </div>
+            <div>
+                <div style="font-size:1.2rem;font-weight:700">${answered} de ${total} perguntas</div>
+                <div style="font-size:0.8rem;color:var(--text-muted)">${pct >= 80 ? '✅ Perfil completo!' : pct >= 50 ? '⚡ Quase lá!' : '🩹 Complete para gerar conteúdo'}</div>
+            </div>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
+        ${nextQHtml}`;
+}
+
+// ============================================
+// PROFILE HEALTH ANALYZER
+// ============================================
+async function loadProfileHealth() {
+    const container = document.getElementById('profile-health');
+    if (!container) return;
+    container.innerHTML = '<div style="text-align:center;padding:20px"><i class="fas fa-spinner fa-spin" style="color:var(--accent)"></i></div>';
+
+    const r = await apiCall('/api/perfil/analyze', 'GET');
+    if (!r || r.error) {
+        container.innerHTML = '<div style="text-align:center;padding:20px;color:var(--text-muted)">Não foi possível analisar o perfil</div>';
+        return;
+    }
+
+    const score = r.overall_score || 0;
+    const color = score >= 80 ? 'var(--success)' : score >= 50 ? 'var(--warning)' : 'var(--danger)';
+    const emoji = score >= 80 ? '💪' : score >= 50 ? '⚡' : '🩹';
+
+    let sectionsHtml = '';
+    if (r.sections) {
+        for (const [name, data] of Object.entries(r.sections)) {
+            const sColor = data.score >= 80 ? 'var(--success)' : data.score >= 50 ? 'var(--warning)' : 'var(--danger)';
+            sectionsHtml += `
+                <div style="display:flex;align-items:center;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border-subtle)">
+                    <span style="font-size:0.82rem">${escapeHtml(name)}</span>
+                    <div style="display:flex;align-items:center;gap:8px">
+                        <div style="width:60px;height:4px;background:var(--bg-input);border-radius:2px;overflow:hidden">
+                            <div style="width:${data.score}%;height:100%;background:${sColor};border-radius:2px"></div>
+                        </div>
+                        <span style="font-size:0.75rem;color:${sColor};font-weight:600;min-width:30px;text-align:right">${data.score}%</span>
+                    </div>
+                </div>`;
+        }
+    }
+
+    let recsHtml = '';
+    if (r.recommendations && r.recommendations.length) {
+        recsHtml = '<div style="margin-top:12px;padding:10px;background:rgba(255,255,255,0.03);border-radius:6px">' +
+            r.recommendations.map(rec => `<div style="font-size:0.78rem;color:var(--text-muted);padding:3px 0">• ${escapeHtml(rec)}</div>`).join('') +
+            '</div>';
+    }
+
+    container.innerHTML = `
+        <div style="display:flex;align-items:center;gap:16px;margin-bottom:16px">
+            <div style="width:64px;height:64px;border-radius:50%;border:4px solid ${color};display:flex;align-items:center;justify-content:center;font-size:1.5rem;background:var(--bg-input)">
+                ${emoji}
+            </div>
+            <div>
+                <div style="font-size:2rem;font-weight:800;color:${color}">${score}%</div>
+                <div style="font-size:0.8rem;color:var(--text-muted)">${r.total_issues || 0} problemas encontrados</div>
+            </div>
+        </div>
+        ${sectionsHtml}
+        ${recsHtml}
+        <div style="margin-top:12px;text-align:center">
+            <button class="btn btn-sm btn-outline" onclick="navigateTo('perfil')"><i class="fas fa-edit"></i> Editar Perfil</button>
+        </div>`;
+}
+
+// ============================================
+// PIPELINE DIÁRIO
+// ============================================
+async function runPipeline() {
+    const ideia = document.getElementById('pipeline-ideia').value.trim();
+    const btn = document.getElementById('pipeline-btn');
+    const output = document.getElementById('pipeline-output');
+    const result = document.getElementById('pipeline-result');
+
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processando...';
+    output.style.display = 'block';
+    output.innerHTML = '<div style="text-align:center;padding:20px"><i class="fas fa-spinner fa-spin" style="font-size:1.5rem;color:var(--accent)"></i><p style="margin-top:12px;color:var(--text-muted)">Gerando 4 formatos... Isso pode levar 1-2 minutos.</p></div>';
+
+    const body = {};
+    if (ideia) body.arquivo_ideia = ideia;
+
+    const r = await apiCall('/api/pipeline/diario', 'POST', body);
+
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fas fa-play"></i> Rodar Pipeline Completo';
+
+    if (r && r.sucesso) {
+        const resumo = r.resumo || {};
+        result.innerHTML = `
+            <div style="padding:16px;background:rgba(34,197,94,0.1);border-radius:8px;border-left:3px solid var(--success);margin-bottom:12px">
+                <div style="font-weight:600;color:var(--success)">${escapeHtml(r.mensagem || 'Pipeline concluído!')}</div>
+                <div style="font-size:0.8rem;color:var(--text-muted);margin-top:4px">Ideia: ${escapeHtml(r.ideia_usada || '')}</div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+                <div style="padding:12px;background:var(--bg-input);border-radius:8px;border-left:3px solid ${resumo.carrossel === '✅' ? 'var(--success)' : 'var(--danger)'}">
+                    <div style="font-weight:600;font-size:0.85rem">🎠 Carrossel ${resumo.carrossel}</div>
+                </div>
+                <div style="padding:12px;background:var(--bg-input);border-radius:8px;border-left:3px solid ${resumo.reels === '✅' ? 'var(--success)' : 'var(--danger)'}">
+                    <div style="font-weight:600;font-size:0.85rem">📱 Reels ${resumo.reels}</div>
+                </div>
+                <div style="padding:12px;background:var(--bg-input);border-radius:8px;border-left:3px solid ${resumo.video_10min === '✅' ? 'var(--success)' : 'var(--danger)'}">
+                    <div style="font-weight:600;font-size:0.85rem">🎬 Vídeo ${resumo.video_10min}</div>
+                </div>
+                <div style="padding:12px;background:var(--bg-input);border-radius:8px;border-left:3px solid ${resumo.text_post === '✅' ? 'var(--success)' : 'var(--danger)'}">
+                    <div style="font-weight:600;font-size:0.85rem">📝 Post ${resumo.text_post}</div>
+                </div>
+            </div>`;
+        output.style.display = 'none';
+        showToast('Pipeline concluído!', 'success');
+    } else {
+        result.innerHTML = `<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><h3>Erro no pipeline</h3><p>${escapeHtml(r?.error || r?.mensagem || 'Tente novamente')}</p></div>`;
+        output.style.display = 'none';
+        showToast('Erro no pipeline', 'error');
+    }
 }
 
 async function runTranscricao() {
@@ -516,7 +1141,7 @@ async function runNarvi() {
     const r = await apiCall('/api/narvi','POST',{video_path:videoPath, corte:document.getElementById('narvi-corte').value, ratio:document.getElementById('narvi-ratio').value});
     out.innerHTML = '';
     if (r && r.sucesso) {
-        showResult('narvi-output', r.saida, '', 'narvi');
+        showResult('narvi-output', null, r.saida, 'narvi');
         if (r.saida_pasta) {
             out.innerHTML += `<div style="margin-top:12px;padding:12px;background:var(--bg-input);border-radius:8px"><strong>📁 Saída:</strong> <code>${escapeHtml(r.saida_pasta)}</code></div>`;
         }
@@ -623,7 +1248,7 @@ function showPerfilTab(tab, el) {
         if (sec) sec.style.display = (s === tab) ? 'block' : 'none';
     });
     const modulos = document.getElementById('perfil-modulos');
-    if (modulos) modulos.style.display = (tab === 'basico') ? 'block' : 'none';
+    if (modulos) modulos.style.display = (tab === 'basico' || tab === 'habilidades' || tab === 'historias' || tab === 'cosmovisao') ? 'block' : 'none';
 }
 
 async function savePerfil(){
@@ -640,7 +1265,7 @@ async function savePerfil(){
     const content='---\nname: "Basico"\nupdated_at: '+new Date().toISOString().split('T')[0]+'\n---\n\n## Nome\n\n'+n+'\n\n## Nome Publico\n\n'+document.getElementById('perfil-nome-publico').value+'\n\n## Nicho\n\n'+document.getElementById('perfil-nicho').value+'\n\n## Publico Alvo\n\n'+document.getElementById('perfil-publico').value+'\n\n## Problema\n\n'+document.getElementById('perfil-problema').value+'\n';
     try{
         const r=await apiCall('/api/save-profile','POST',{modulo:'basico',content,filename:'PERFIL.md'});
-        if(r.success||r.sucesso)showToast('Perfil salvo!','success');
+        if(r.success||r.sucesso){showToast('Perfil salvo!','success');haptic('success');clearDraft();}
         else showToast('Erro: '+(r.error||r.erro||''),'error');
     }catch(e){showToast('Erro ao salvar: '+e.message,'error')}
 }
@@ -797,8 +1422,9 @@ function saveConfig(){
 async function startBot(){
     showToast('Iniciando Telegram Bot...','info');
     const r=await apiCall('/api/bot/start','POST',{});
-    if(r&&r.sucesso){showToast('🤖 Bot iniciado!','success');document.getElementById('botStatus').textContent='Bot: Online'}
-    else{showToast('Erro: '+(r?.erro||''),'error');document.getElementById('botStatus').textContent='Bot: Offline'}
+    const statusEl = document.getElementById('botStatus');
+    if(r&&r.sucesso){showToast('🤖 Bot iniciado!','success');if(statusEl)statusEl.textContent='Bot: Online'}
+    else{showToast('Erro: '+(r?.erro||''),'error');if(statusEl)statusEl.textContent='Bot: Offline'}
 }
 
 function checkDeps(){showToast('Verificando dependências... (verifique no terminal)','info')}
@@ -1751,7 +2377,7 @@ async function runGimli() {
     output.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Executando Gimli...';
     copyBtn.style.display = 'none';
     try {
-        const res = await apiCall('/api/gimli/executar', { comando }, 'POST');
+        const res = await apiCall('/api/gimli/executar', 'POST', { comando });
         const text = res.stdout || res.stderr || 'Sem resposta';
         const isErr = !res.sucesso;
         showResult('gimli-output', 'gimli-copy-btn', text, null);
@@ -1770,7 +2396,7 @@ async function runGimliAgora() {
     output.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Disparando email agora...';
     copyBtn.style.display = 'none';
     try {
-        const res = await apiCall('/api/gimli/executar', { comando: 'agora:' + titulo }, 'POST');
+        const res = await apiCall('/api/gimli/executar', 'POST', { comando: 'agora:' + titulo });
         const text = res.stdout || res.stderr || 'Sem resposta';
         showResult('gimli-output', 'gimli-copy-btn', text, null);
     } catch (e) {
